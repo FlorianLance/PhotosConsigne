@@ -1,3 +1,19 @@
+
+# misc
+*.pdf
+
+
+# C++
+*.obj
+moc_*.cpp
+*.exe
+*.pdb
+Makefile.Debug
+Makefile.Release
+Makefile
+ui_*.h
+
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
