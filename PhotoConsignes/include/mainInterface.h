@@ -38,15 +38,15 @@ public slots:
 
     void unlockUI();
 
-    void updateUIParameter(QFont notUsedValue);
+    void updateUIParameters(QFont notUsedValue);
 
-    void updateUIParameter(bool notUsedValue);
+    void updateUIParameters(bool notUsedValue);
 
-    void updateUIParameter(int notUsedValue);
+    void updateUIParameters(int notUsedValue);
 
-    void updateUIParameter(double notUsedValue);
+    void updateUIParameters(double notUsedValue);
 
-    void updateUIParameter();
+    void updateUIParameters();
 
     void setColorText();
 
@@ -56,6 +56,7 @@ public slots:
 
     void setImageRightRotation();
 
+    void removeCurrentPhotoFromList();
 
 signals :
 
@@ -65,7 +66,7 @@ signals :
 
     void generatePreview(int);
 
-    void sentParameters(int,double,QFont, QString, QColor,int, int);
+    void sentParameters(QVector<bool>, int,int,double,QFont, QString, QColor,int, int, bool, double, double, double, double, double, bool, bool, bool, bool, bool);
 
     void updateRotation(int, bool);
 
@@ -77,6 +78,8 @@ private:
     QString m_photosDirectory;
 
     QColor m_colorText;
+
+    QVector<bool> m_photoRemovedList; /**< indicates if a photo is removed from the list */
 
 //    //threads / workers
     InterfaceWorker  *m_interfaceWorker;

@@ -16,7 +16,7 @@
 #include "imagelabel.h"
 
 
-enum Alignment { Left, Right, Center};
+enum Alignment { BottomLeft, BottomRight, TopLeft, TopRight, Bottom, Top, CenterLeft, CenterRight, Center};
 
 class InterfaceWorker : public QObject
 {
@@ -36,7 +36,8 @@ class InterfaceWorker : public QObject
 
         void generatePreview(int currentRowPhoto);
 
-        void updateParameters(int nbImagesPage,double ratio,QFont font, QString text, QColor textColor, int imageAlignment, int textAlignment);
+        void updateParameters(QVector<bool> removePhotoList,int nbImagesPageV, int nbImagesPageH, double ratio,QFont font, QString text, QColor textColor, int imageAlignment, int textAlignment, bool orientation,
+                              double leftMargin, double rightMargin, double topMargin, double bottomMargin, double betweenMargin, bool cutLines, bool zExternMargins, bool zInterMargins, bool zPhotos,  bool zConsignes);
 
         void updateRotationImage(int index, bool rightRotation);
 
@@ -60,17 +61,34 @@ class InterfaceWorker : public QObject
 
 
         bool m_exit;
+        bool m_landScapeOrientation;
+        bool m_isAllPhotoRemoved;
+        bool m_cutLines;
+        bool m_zExternMargins;
+        bool m_zInterMargins;
+        bool m_zPhotos;
+        bool m_zConsignes;
 
         QColor m_textColor;
 
         QStringList m_imagesDir;
         QVector<QImage> m_loadedImages;
 
-        Alignment m_textAlignment;
-        Alignment m_imageAlignment;
+        int m_textAlignment;
+        int m_imageAlignment;
 
-        int m_nbImagesPage;
+        int m_nbImagesPageH;
+        int m_nbImagesPageV;
+
         double m_ratio;
+        double m_leftMargin;
+        double m_rightMargin;
+        double m_topMargin;
+        double m_bottomMargin;
+        double m_betweenMargin;
+
+        QVector<bool> m_removePhotoList;
+
         QFont m_font;
         QString m_text;
 
