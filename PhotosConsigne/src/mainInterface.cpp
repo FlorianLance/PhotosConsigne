@@ -151,8 +151,10 @@ MainInterface::MainInterface(QWidget *parent) :
     QObject::connect(this, SIGNAL(sendImagesDir(QString, QStringList)), m_interfaceWorker, SLOT(loadImages(QString, QStringList)));
     QObject::connect(this, SIGNAL(generatePDFSignal(QString)), m_interfaceWorker, SLOT(generatePDF(QString)));
     QObject::connect(this, SIGNAL(generatePreview(int)), m_interfaceWorker, SLOT(generatePreview(int)));
-    QObject::connect(this, SIGNAL(sentParameters(QVector<bool>,int, int,double,QFont,QString, QColor, int, int, bool, double, double, double, double, double, bool, bool, bool, bool, bool)),m_interfaceWorker,
-                     SLOT(updateParameters(QVector<bool>,int,int, double,QFont,QString, QColor,int, int, bool, double, double, double, double, double, bool, bool, bool, bool, bool )));
+
+    QObject::connect(this, SIGNAL(sentParameters(UIParameters)),m_interfaceWorker, SLOT(updateParameters(UIParameters)));
+//    QObject::connect(this, SIGNAL(sentParameters(QVector<bool>,int, int,double,QFont,QString, QColor, int, int, bool, double, double, double, double, double, bool, bool, bool, bool, bool)),m_interfaceWorker,
+//                     SLOT(updateParameters(QVector<bool>,int,int, double,QFont,QString, QColor,int, int, bool, double, double, double, double, double, bool, bool, bool, bool, bool )));
     QObject::connect(this, SIGNAL(updateRotation(int,bool)), m_interfaceWorker, SLOT(updateRotationImage(int,bool)));
     QObject::connect(this, SIGNAL(askForPhoto(int)), m_interfaceWorker, SLOT(sendPhoto(int)));
     // worker -> interface
@@ -468,10 +470,33 @@ void MainInterface::updateUIParameters()
         }
     }
 
+    UIParameters params;
+    params.removePhotoList = m_photoRemovedList;
+    params.nbImagesPageH = nbImagesVPage;
+    params.nbImagesPageV = nbImagesHPage;
+    params.ratio = ratio;
+    params.font = font;
+    params.consignText = text;
+    params.consignColor = m_colorText;
+    params.imageAlignment = imageAlignment;
+    params.consignAlignment = textAlignment;
+    params.orientation = ui->rbPortrait->isChecked();
+    params.leftMargin = ui->dsLeftMargins->value();
+    params.rightMargin = ui->dsRightMargins->value();
+    params.topMargin = ui->dsTopMargins->value();
+    params.bottomMargin = ui->dsBottomMargins->value();
+    params.betweenMargin = ui->dsBetween->value();
+    params.cutLines = ui->cbCutLines->isChecked();
+    params.zExternMargins = ui->cbZoneExternMargins->isChecked();
+    params.zInterMargins = ui->cbZoneInternMargins->isChecked();
+    params.zPhotos = ui->cbZonePhotos->isChecked();
+    params.orientation = ui->cbZoneConsignes->isChecked();
 
-    emit sentParameters(m_photoRemovedList, nbImagesVPage,nbImagesHPage, ratio, font, text, m_colorText, imageAlignment, textAlignment, ui->rbPortrait->isChecked(),
-                        ui->dsLeftMargins->value(),ui->dsRightMargins->value(),ui->dsTopMargins->value(),ui->dsBottomMargins->value(),ui->dsBetween->value(),
-                        ui->cbCutLines->isChecked() ,ui->cbZoneExternMargins->isChecked(), ui->cbZoneInternMargins->isChecked(), ui->cbZonePhotos->isChecked(), ui->cbZoneConsignes->isChecked());
+    emit sentParameters(params);
+
+//    emit sentParameters(m_photoRemovedList, nbImagesVPage,nbImagesHPage, ratio, font, text, m_colorText, imageAlignment, textAlignment, ui->rbPortrait->isChecked(),
+//                        ui->dsLeftMargins->value(),ui->dsRightMargins->value(),ui->dsTopMargins->value(),ui->dsBottomMargins->value(),ui->dsBetween->value(),
+//                        ui->cbCutLines->isChecked() ,ui->cbZoneExternMargins->isChecked(), ui->cbZoneInternMargins->isChecked(), ui->cbZonePhotos->isChecked(), ui->cbZoneConsignes->isChecked());
 
     if(ui->lwPhotos->count() > 0)
     {

@@ -98,6 +98,8 @@ signals :
 
     void generatePreview(int);
 
+    void sentParameters(UIParameters);
+
     void sentParameters(QVector<bool>, int,int,double,QFont, QString, QColor,int, int, bool, double, double, double, double, double, bool, bool, bool, bool, bool);
 
     void updateRotation(int, bool);

@@ -42,6 +42,21 @@
 #include "imagelabel.h"
 
 /**
+ * @brief UI parameters of the pdf generation.
+ */
+struct UIParameters
+{
+    bool orientation, cutLines, zExternMargins, zInterMargins, zPhotos, zConsigns;
+    int nbImagesPageV, nbImagesPageH, imageAlignment, consignAlignment;
+    double ratio,leftMargin,rightMargin, topMargin, bottomMargin, betweenMargin;
+    QFont font;
+    QString consignText;
+    QColor consignColor;
+    QVector<bool> removePhotoList;
+};
+
+
+/**
  * @brief Qt Worker used by the interface, a dedicated thread for doing the computing work
  */
 class InterfaceWorker : public QObject
@@ -76,6 +91,12 @@ class InterfaceWorker : public QObject
         * @param [in] currentRowPhoto : start id photo for the preview
         */
         void generatePreview(int currentRowPhoto);
+
+        /**
+         * @brief Update pdf generation parameters.
+         * @param [in] params
+         */
+        void updateParameters(UIParameters params);
 
         /**
          * @brief updateParameters

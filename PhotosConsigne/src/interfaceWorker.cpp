@@ -39,6 +39,7 @@ InterfaceWorker::InterfaceWorker(ImageLabel *preview)
 {
     m_preview = preview;
     qRegisterMetaType<QVector<bool>>("QVector<bool>");
+    qRegisterMetaType<UIParameters>("UIParameters");
 }
 
 void InterfaceWorker::loadImages(QString path, QStringList imagesList)
@@ -446,14 +447,6 @@ void InterfaceWorker::generatePreview(int currentRowPhoto)
             }
 
 
-            // draw consigne rectangle
-//            if(m_zConsignes)
-//            {
-//                QRect rect = QRect(offsetBetweenHMargin  + hPositionConsigne + jj*widthPhotoAndConsigne,
-//                                   offsetBetweenVMargin + vPositionConsigne + ii*heightPhotoAndConsigne,widthConsigne, heightConsigne);
-//                painter.fillRect(rect, Qt::cyan);
-//            }
-
             // draw consigne
             painter.drawText(offsetBetweenHMargin  + hPositionConsigne + jj*widthPhotoAndConsigne,
                              offsetBetweenVMargin + vPositionConsigne + ii*heightPhotoAndConsigne,widthConsigne, heightConsigne, m_consignAlignment, m_consignText);
@@ -524,14 +517,6 @@ void InterfaceWorker::generatePreview(int currentRowPhoto)
                 }
             }
 
-//            // draw photo rectangle
-//            if(m_zPhotos)
-//            {
-//                rect = QRect(offsetBetweenHMargin + hPositionPhoto + jj*widthPhotoAndConsigne,
-//                             offsetBetweenVMargin + vPositionPhoto + heightPhotoAndConsigne*ii,widthPhoto, heightPhoto);
-//                painter.fillRect(rect, Qt::yellow);
-//            }
-
             painter.drawPixmap(photoRect,QPixmap::fromImage(rPhoto));
         }
     }
@@ -545,6 +530,43 @@ void InterfaceWorker::generatePreview(int currentRowPhoto)
     // unlock ui
     if(m_loadedImages.size() > 0)
         emit unlockSignal();
+}
+
+void InterfaceWorker::updateParameters(UIParameters params)
+{
+    m_nbImagesPageV = params.nbImagesPageV;
+    m_nbImagesPageH = params.nbImagesPageH;
+    m_ratio = params.ratio;
+    m_font = params.font;
+    m_consignText = params.consignText;
+    m_consignColor = params.consignColor;
+    m_imageAlignment = params.imageAlignment;
+    m_consignAlignment = params.consignAlignment | Qt::TextWordWrap;
+    m_landScapeOrientation = !params.orientation;
+
+    m_leftMargin = params.leftMargin;
+    m_rightMargin = params.rightMargin;
+    m_topMargin = params.topMargin;
+    m_bottomMargin = params.bottomMargin;
+    m_innerMargin = params.betweenMargin;
+    m_removedImageList = params.removePhotoList;
+
+    m_cutLines = params.cutLines;
+    m_zExternMargins = params.zExternMargins;
+    m_zInterMargins = params.zInterMargins;
+    m_zPhotos = params.zPhotos;
+    m_zConsigns = params.zConsigns;
+
+
+    m_isAllPhotoRemoved = true;
+    for(int ii = 0; ii < m_removedImageList.count(); ++ii)
+    {
+        if(!m_removedImageList[ii])
+        {
+            m_isAllPhotoRemoved = false;
+            break;
+        }
+    }
 }
 
 void InterfaceWorker::updateParameters(QVector<bool> removePhotoList,int nbImagesPageV, int nbImagesPageH, double ratio, QFont font, QString text, QColor textColor, int imageAlignment, int textAlignment, bool orientation,
