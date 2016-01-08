@@ -1,31 +1,44 @@
+/*******************************************************************************
+**                                                                            **
+**  PhotosConsigne                                                            **
+**  An interface for generating pdf containing images sequences with a common **
+**  text. Intended to be used by teachers for making printed documents        **
+**  containing child work from infant school.                                 **
+**                                                                            **
+**  This program is free software: you can redistribute it and/or modify      **
+**  it under the terms of the GNU Lesser General Public License as published  **
+**  by the Free Software Foundation, either version 3 of the License, or      **
+**  (at your option) any later version.                                       **
+**                                                                            **
+**  This program is distributed in the hope that it will be useful,           **
+**  but WITHOUT ANY WARRANTY; without even the implied warranty of            **
+**  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             **
+**  GNU Lesser General Public License for more details.                       **
+**                                                                            **
+**  You should have received a copy of the GNU Lesser General Public License  **
+**  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.           **
+**                                                                            **
+********************************************************************************/
 
+/**
+ * \file interfaceWorker.cpp
+ * \brief defines InterfaceWorker
+ * \author Florian Lance
+ * \date 01/11/15
+ */
 
-
-#include "InterfaceWorker.h"
-
-
+// Qt
 #include <QtWidgets>
 #include <QPrinter>
-#include <QtGui>
-
 #include <QMarginsF>
 
+// Photos consigne
+#include "InterfaceWorker.h"
 
 InterfaceWorker::InterfaceWorker(ImageLabel *preview)
 {
     m_preview = preview;
-    m_exit = false;
-
-
     qRegisterMetaType<QVector<bool>>("QVector<bool>");
-}
-
-void InterfaceWorker::checkEvent()
-{
-//    while()
-//    {
-
-//    }
 }
 
 void InterfaceWorker::loadImages(QString path, QStringList imagesList)
@@ -83,7 +96,7 @@ void InterfaceWorker::generatePDF(QString pdfFileName)
 
     // init painter
     QPainter painter(&pdfWriter);
-    painter.setPen(m_textColor);
+    painter.setPen(m_consignColor);
     QFont pdfFont = m_font;
     pdfFont.setPixelSize(m_font.pixelSize()*15/4);
     painter.setFont(pdfFont);
@@ -105,8 +118,8 @@ void InterfaceWorker::generatePDF(QString pdfFileName)
     int widthTotal = width * (1.0 - m_leftMargin - m_rightMargin);
 
     // bewteen margin
-    int heightMargin =  heightTotal * m_betweenMargin;
-    int widthMargin  = widthTotal * m_betweenMargin;
+    int heightMargin =  heightTotal * m_innerMargin;
+    int widthMargin  = widthTotal * m_innerMargin;
 
     // photo and margin
     int heightPhotoAndConsigne = (heightTotal  - (m_nbImagesPageV-1) * heightMargin) / m_nbImagesPageV;
@@ -128,34 +141,13 @@ void InterfaceWorker::generatePDF(QString pdfFileName)
     int vPositionPhoto = vPositionConsigne + heightConsigne;
     int hPositionPhoto = m_leftMargin * width;
 
-    // draw cut lines
-    if(m_cutLines)
-    {
-        QPen currentPen = painter.pen();
-        currentPen.setStyle(Qt::DashLine);
-        currentPen.setWidth(1);
-        painter.setPen(currentPen);
-        for(int ii = 0; ii < m_nbImagesPageV-1; ++ii)
-        {
-            painter.drawLine(0, vPositionConsigne + (ii+1)*heightPhotoAndConsigne + ii*heightMargin + heightMargin/2, width, vPositionConsigne + (ii+1)*heightPhotoAndConsigne + ii*heightMargin + heightMargin/2);
-        }
-        for(int ii = 0; ii < m_nbImagesPageH-1; ++ii)
-        {
-            painter.drawLine(hPositionConsigne + (ii+1)*widthPhotoAndConsigne + ii*widthMargin + widthMargin/2, 0, hPositionConsigne + (ii+1)*widthPhotoAndConsigne + ii*widthMargin + widthMargin/2,height);
-        }
-        currentPen.setStyle(Qt::SolidLine);
-        painter.setPen(currentPen);
-    }
-
-
     // compute nb photos removes
     int photosRemoved = 0;
-    for(int ii = 0; ii < m_removePhotoList.count();++ii)
+    for(int ii = 0; ii < m_removedImageList.count();++ii)
     {
-        if(m_removePhotoList[ii])
+        if(m_removedImageList[ii])
             photosRemoved++;
     }
-
 
     int nbPages = (m_loadedImages.size()-photosRemoved) / (m_nbImagesPageV*m_nbImagesPageH);
     if(nbPages == 0)
@@ -163,7 +155,26 @@ void InterfaceWorker::generatePDF(QString pdfFileName)
 
     int idPhoto = 0;
     for(int aa = 0; aa < nbPages; ++aa)
-    {
+    {        
+        // draw cut lines
+        if(m_cutLines)
+        {
+            QPen currentPen = painter.pen();
+            currentPen.setStyle(Qt::DashLine);
+            currentPen.setWidth(1);
+            painter.setPen(currentPen);
+            for(int ii = 0; ii < m_nbImagesPageV-1; ++ii)
+            {
+                painter.drawLine(0, vPositionConsigne + (ii+1)*heightPhotoAndConsigne + ii*heightMargin + heightMargin/2, width, vPositionConsigne + (ii+1)*heightPhotoAndConsigne + ii*heightMargin + heightMargin/2);
+            }
+            for(int ii = 0; ii < m_nbImagesPageH-1; ++ii)
+            {
+                painter.drawLine(hPositionConsigne + (ii+1)*widthPhotoAndConsigne + ii*widthMargin + widthMargin/2, 0, hPositionConsigne + (ii+1)*widthPhotoAndConsigne + ii*widthMargin + widthMargin/2,height);
+            }
+            currentPen.setStyle(Qt::SolidLine);
+            painter.setPen(currentPen);
+        }
+
         for(int ii = 0; ii < m_nbImagesPageV; ++ii)
         {
             for(int jj = 0; jj < m_nbImagesPageH; ++jj)
@@ -176,7 +187,7 @@ void InterfaceWorker::generatePDF(QString pdfFileName)
 
                 for(int kk = 0; kk < m_loadedImages.size(); ++kk)
                 {
-                    if(!m_removePhotoList[idPhoto])
+                    if(!m_removedImageList[idPhoto])
                     {
                         break;
                     }
@@ -189,7 +200,7 @@ void InterfaceWorker::generatePDF(QString pdfFileName)
 
                 // draw consigne
                 painter.drawText(offsetBetweenHMargin  + hPositionConsigne + jj*widthPhotoAndConsigne,
-                                 offsetBetweenVMargin + vPositionConsigne + ii*heightPhotoAndConsigne,widthConsigne, heightConsigne, m_textAlignment, m_text);
+                                 offsetBetweenVMargin + vPositionConsigne + ii*heightPhotoAndConsigne,widthConsigne, heightConsigne, m_consignAlignment, m_consignText);
 
                 if(m_isAllPhotoRemoved)
                     continue;
@@ -299,7 +310,6 @@ void InterfaceWorker::generatePreview(int currentRowPhoto)
     {
         height = 1500;
         width = height*0.7070;
-
     }
 
     QImage image(width, height, QImage::Format_RGB32);
@@ -315,8 +325,8 @@ void InterfaceWorker::generatePreview(int currentRowPhoto)
     int widthTotal = width * (1.0 - m_leftMargin - m_rightMargin);
 
     // bewteen margin
-    int heightMargin =  heightTotal * m_betweenMargin;
-    int widthMargin  = widthTotal * m_betweenMargin;
+    int heightMargin =  heightTotal * m_innerMargin;
+    int widthMargin  = widthTotal * m_innerMargin;
 
     // photo and margin
     int heightPhotoAndConsigne = (heightTotal  - (m_nbImagesPageV-1) * heightMargin) / m_nbImagesPageV;
@@ -382,8 +392,36 @@ void InterfaceWorker::generatePreview(int currentRowPhoto)
     }
 
     // define font/pen
-    painter.setPen(m_textColor);
+    painter.setPen(m_consignColor);
     painter.setFont(m_font);
+
+
+
+    for(int ii = 0; ii < m_nbImagesPageV; ++ii)
+    {
+        for(int jj = 0; jj < m_nbImagesPageH; ++jj)
+        {
+            int offsetBetweenVMargin = ii * heightMargin;
+            int offsetBetweenHMargin = jj * widthMargin;
+
+            // draw consigne rectangle
+            if(m_zConsigns)
+            {
+                QRect rect = QRect(offsetBetweenHMargin  + hPositionConsigne + jj*widthPhotoAndConsigne,
+                                   offsetBetweenVMargin + vPositionConsigne + ii*heightPhotoAndConsigne,widthConsigne, heightConsigne);
+                painter.fillRect(rect, Qt::cyan);
+            }
+
+            // draw photo rectangle
+            if(m_zPhotos)
+            {
+                rect = QRect(offsetBetweenHMargin + hPositionPhoto + jj*widthPhotoAndConsigne,
+                             offsetBetweenVMargin + vPositionPhoto + heightPhotoAndConsigne*ii,widthPhoto, heightPhoto);
+                painter.fillRect(rect, Qt::yellow);
+            }
+        }
+    }
+
 
     int currPhoto = 0;
     for(int ii = 0; ii < m_nbImagesPageV; ++ii)
@@ -401,7 +439,7 @@ void InterfaceWorker::generatePreview(int currentRowPhoto)
             {
                 idPhoto = (currentRowPhoto + (currPhoto++) )% m_loadedImages.size();
 
-                if(!m_removePhotoList[idPhoto])
+                if(!m_removedImageList[idPhoto])
                 {
                     break;
                 }
@@ -409,16 +447,16 @@ void InterfaceWorker::generatePreview(int currentRowPhoto)
 
 
             // draw consigne rectangle
-            if(m_zConsignes)
-            {
-                QRect rect = QRect(offsetBetweenHMargin  + hPositionConsigne + jj*widthPhotoAndConsigne,
-                                   offsetBetweenVMargin + vPositionConsigne + ii*heightPhotoAndConsigne,widthConsigne, heightConsigne);
-                painter.fillRect(rect, Qt::cyan);
-            }
+//            if(m_zConsignes)
+//            {
+//                QRect rect = QRect(offsetBetweenHMargin  + hPositionConsigne + jj*widthPhotoAndConsigne,
+//                                   offsetBetweenVMargin + vPositionConsigne + ii*heightPhotoAndConsigne,widthConsigne, heightConsigne);
+//                painter.fillRect(rect, Qt::cyan);
+//            }
 
             // draw consigne
             painter.drawText(offsetBetweenHMargin  + hPositionConsigne + jj*widthPhotoAndConsigne,
-                             offsetBetweenVMargin + vPositionConsigne + ii*heightPhotoAndConsigne,widthConsigne, heightConsigne, m_textAlignment, m_text);
+                             offsetBetweenVMargin + vPositionConsigne + ii*heightPhotoAndConsigne,widthConsigne, heightConsigne, m_consignAlignment, m_consignText);
 
             if(m_isAllPhotoRemoved)
                 continue;
@@ -486,13 +524,13 @@ void InterfaceWorker::generatePreview(int currentRowPhoto)
                 }
             }
 
-            // draw photo rectangle
-            if(m_zPhotos)
-            {
-                rect = QRect(offsetBetweenHMargin + hPositionPhoto + jj*widthPhotoAndConsigne,
-                             offsetBetweenVMargin + vPositionPhoto + heightPhotoAndConsigne*ii,widthPhoto, heightPhoto);
-                painter.fillRect(rect, Qt::yellow);
-            }
+//            // draw photo rectangle
+//            if(m_zPhotos)
+//            {
+//                rect = QRect(offsetBetweenHMargin + hPositionPhoto + jj*widthPhotoAndConsigne,
+//                             offsetBetweenVMargin + vPositionPhoto + heightPhotoAndConsigne*ii,widthPhoto, heightPhoto);
+//                painter.fillRect(rect, Qt::yellow);
+//            }
 
             painter.drawPixmap(photoRect,QPixmap::fromImage(rPhoto));
         }
@@ -516,30 +554,30 @@ void InterfaceWorker::updateParameters(QVector<bool> removePhotoList,int nbImage
     m_nbImagesPageH = nbImagesPageH;
     m_ratio = ratio;
     m_font = font;
-    m_text = text;
-    m_textColor = textColor;
+    m_consignText = text;
+    m_consignColor = textColor;
     m_imageAlignment = imageAlignment;
-    m_textAlignment = textAlignment | Qt::TextWordWrap;
+    m_consignAlignment = textAlignment | Qt::TextWordWrap;
     m_landScapeOrientation = !orientation;
 
     m_leftMargin = leftMargin;
     m_rightMargin = rightMargin;
     m_topMargin = topMargin;
     m_bottomMargin = bottomMargin;
-    m_betweenMargin = betweenMargin;
-    m_removePhotoList = removePhotoList;
+    m_innerMargin = betweenMargin;
+    m_removedImageList = removePhotoList;
 
     m_cutLines = cutLines;
     m_zExternMargins = zExternMargins;
     m_zInterMargins = zInterMargins;
     m_zPhotos = zPhotos;
-    m_zConsignes = zConsignes;
+    m_zConsigns = zConsignes;
 
 
     m_isAllPhotoRemoved = true;
-    for(int ii = 0; ii < m_removePhotoList.count(); ++ii)
+    for(int ii = 0; ii < m_removedImageList.count(); ++ii)
     {
-        if(!m_removePhotoList[ii])
+        if(!m_removedImageList[ii])
         {
             m_isAllPhotoRemoved = false;
             break;
@@ -557,7 +595,6 @@ void InterfaceWorker::updateRotationImage(int index, bool rightRotation)
 
     sendPhoto(index);
 }
-
 
 
 void InterfaceWorker::sendPhoto(int index)

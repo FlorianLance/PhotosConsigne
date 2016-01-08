@@ -11,9 +11,12 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = Photos_consigne
 TEMPLATE = app
 
-CONFIG += warn_on
+CONFIG+= warn_on
+CONFIG += gui
 
-QMAKE_CXXFLAGS_RELEASE += /O2 /openmp
+QMAKE_CXXFLAGS_RELEASE += /O2 /openmp # Od
+
+DEFINES += _CRT_SECURE_NO_WARNINGS
 
 
 ############# CFG
@@ -77,6 +80,8 @@ INCLUDEPATH += "./include"
 #}
 
 message("Build : "$$ARCH" "$$CFG)
+#D:\_software\GnuWin32\lib
+
 
 
 SOURCES += \
@@ -85,11 +90,17 @@ SOURCES += \
     src/interfaceWorker.cpp \
     src/imagelabel.cpp
 
+
+
+
 HEADERS += \
     include/mainInterface.h \
     include/interfaceWorker.h \
     include/imagelabel.h
 
+
+
+#include/demo/grid_sheet.h
 
 
 DISTFILES +=
