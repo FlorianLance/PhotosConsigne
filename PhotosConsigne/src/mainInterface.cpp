@@ -359,7 +359,7 @@ void MainInterface::updateUIParameters()
     double ratio = ui->dsbRatio->value();
 
     QFont font = ui->fcbConsignes->currentFont();
-    font.setPixelSize(sizeText);
+    font.setPixelSize(13);
     font.setBold(ui->cbBold->isChecked());
     font.setItalic(ui->cbItalic->isChecked());
 
@@ -367,6 +367,8 @@ void MainInterface::updateUIParameters()
     ui->pteConsigne->setFont(font);    
     ui->pteConsigne->setStyleSheet("QPlainTextEdit{color: rgb("+ QString::number(m_colorText.red()) +
                                    ", " + QString::number(m_colorText.green()) + ", " + QString::number(m_colorText.blue()) +")};");
+
+    font.setPixelSize(sizeText);
 
     // image alignment
     int imageAlignment = 0 ;
@@ -472,8 +474,8 @@ void MainInterface::updateUIParameters()
 
     UIParameters params;
     params.removePhotoList = m_photoRemovedList;
-    params.nbImagesPageH = nbImagesVPage;
-    params.nbImagesPageV = nbImagesHPage;
+    params.nbImagesPageH = nbImagesHPage;
+    params.nbImagesPageV = nbImagesVPage;
     params.ratio = ratio;
     params.font = font;
     params.consignText = text;
@@ -490,7 +492,8 @@ void MainInterface::updateUIParameters()
     params.zExternMargins = ui->cbZoneExternMargins->isChecked();
     params.zInterMargins = ui->cbZoneInternMargins->isChecked();
     params.zPhotos = ui->cbZonePhotos->isChecked();
-    params.orientation = ui->cbZoneConsignes->isChecked();
+    params.orientation = ui->rbPortrait->isChecked();
+    params.zConsigns = ui->cbZoneConsignes->isChecked();
 
     emit sentParameters(params);
 

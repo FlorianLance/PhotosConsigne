@@ -99,7 +99,8 @@ void InterfaceWorker::generatePDF(QString pdfFileName)
     QPainter painter(&pdfWriter);
     painter.setPen(m_consignColor);
     QFont pdfFont = m_font;
-    pdfFont.setPixelSize(m_font.pixelSize()*15/4);
+
+    pdfFont.setPixelSize(m_font.pixelSize());//*15/4);
     painter.setFont(pdfFont);
 
     int width, height;
@@ -150,8 +151,11 @@ void InterfaceWorker::generatePDF(QString pdfFileName)
             photosRemoved++;
     }
 
-    int nbPages = (m_loadedImages.size()-photosRemoved) / (m_nbImagesPageV*m_nbImagesPageH);
-    if(nbPages == 0)
+    int nbPhotosPerPage = m_nbImagesPageV*m_nbImagesPageH;
+    int nbPhotosTotal = m_loadedImages.size()-photosRemoved;
+    int nbPages = nbPhotosTotal / nbPhotosPerPage;
+    int rest = nbPhotosTotal % nbPhotosPerPage;
+    if(nbPages == 0 || rest != 0)
         ++nbPages;
 
     int idPhoto = 0;
@@ -303,14 +307,19 @@ void InterfaceWorker::generatePreview(int currentRowPhoto)
     int width, height;
     if(m_landScapeOrientation)
     {
-        width = 1500;
-        height = width*0.7070;
+//        width = 1500;
+//        height = width*0.7070;
 
+        width = 3507;
+        height = 2480;
     }
     else
     {
-        height = 1500;
-        width = height*0.7070;
+//        height = 1500;
+//        width = height*0.7070;
+
+        width = 2480;
+        height = 3507;
     }
 
     QImage image(width, height, QImage::Format_RGB32);

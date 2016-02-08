@@ -103,10 +103,13 @@ HEADERS += \
 #include/demo/grid_sheet.h
 
 
-DISTFILES +=
 
 FORMS += \
     ui/mainUI.ui
+
+DISTFILES += \
+    deploiement/PhotosConsigne_x64.iss \
+    deploiement/PhotosConsigne_x86.iss
 
 
 
