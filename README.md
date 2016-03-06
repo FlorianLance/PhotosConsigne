@@ -23,19 +23,13 @@ Le résultat :
 
 ![PhotosConsigne_img3](http://i.imgur.com/Vs90e2l.png "PDF généré")
 
-...
-
+Il s'agit d'un projet réalisé sur mon temps de loisir en quelques weekends, mais selon les différents retours, je ne manquerai pas d'ajouter des fonctionnalités si elles s'avèrent cohérentes avec l'ensemble.
 
 Téléchargement :
-- [Release 1.0 Windows x86] (https://github.com)
-- [Release 1.0 Windows x64] (https://github.com)
+ - soon
 
 Tutorials :
-- ...
-
-Build :
- - [Avec MSV2013](https://github.com)
+- video soon
 
 Documentation :
- - [Doxygen](https://github.com)
-
+ - soon
