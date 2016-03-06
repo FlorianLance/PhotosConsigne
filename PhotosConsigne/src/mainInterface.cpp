@@ -52,9 +52,11 @@ MainInterface::MainInterface(QWidget *parent) :
 {
     ui->setupUi(this);
 
+//    Q_INIT_RESOURCE(resources);
+
     // set icon/title
     this->setWindowTitle(QString("PhotosConsigne"));
-    this->setWindowIcon(QIcon("../PhotosConsigne/images/icon.png"));
+    this->setWindowIcon(QIcon(":/images/icon"));
 
 //    QString l_text("<p>An interface for language learning with neuron computing using GPU acceleration.<br /><br />");
 //     l_text += "Developped in the Robotic Cognition Laboratory of the <a href=\"http://www.sbri.fr/\"> SBRI</a> under the direction of  <b>Peter Ford Dominey. </b>";

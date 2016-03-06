@@ -111,6 +111,9 @@ DISTFILES += \
     deploiement/PhotosConsigne_x64.iss \
     deploiement/PhotosConsigne_x86.iss
 
+RESOURCES += \
+    src/resources.qrc
+
 
 
 
