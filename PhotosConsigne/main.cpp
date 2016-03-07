@@ -20,13 +20,21 @@
 **                                                                            **
 ********************************************************************************/
 
+/**
+ * \file main.cpp
+ * \brief entry point
+ * \author Florian Lance
+ * \date 01/11/15
+ */
+
+
 // Qt
 #include <QApplication>
 #include <QTranslator>
 #include <QLibraryInfo>
 
 // Photos consigne
-#include "mainInterface.h"
+#include "MainInterface.h"
 
 
 int main(int argc,char** argv)

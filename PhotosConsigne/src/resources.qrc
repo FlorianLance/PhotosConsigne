@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/images">
         <file alias="icon">../resources/images/icon.png</file>
+        <file alias="rightArrow">../resources/images/rightArrow.png</file>
+        <file alias="leftArrow">../resources/images/leftArrow.png</file>
+        <file alias="rotateLeft">../resources/images/rotateLeft.png</file>
+        <file alias="rotateRight">../resources/images/rotateRight.png</file>
     </qresource>
 </RCC>

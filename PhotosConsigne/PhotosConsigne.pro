@@ -86,17 +86,17 @@ message("Build : "$$ARCH" "$$CFG)
 
 SOURCES += \
     main.cpp \
-    src/mainInterface.cpp \
-    src/interfaceWorker.cpp \
-    src/imagelabel.cpp
+    src/MainInterface.cpp \
+    src/InterfaceWorker.cpp \
+    src/ImageLabel.cpp
 
 
 
 
 HEADERS += \
-    include/mainInterface.h \
-    include/interfaceWorker.h \
-    include/imagelabel.h
+    include/InterfaceWorker.h \
+    include/MainInterface.h \
+    include/ImageLabel.h
 
 
 

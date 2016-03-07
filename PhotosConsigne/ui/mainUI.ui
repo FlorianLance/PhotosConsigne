@@ -598,13 +598,6 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="Line" name="line_11">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item>
                  <widget class="QLabel" name="laNbImagesH">
                   <property name="text">
                    <string>Horizontalement</string>
@@ -621,6 +614,20 @@
                   </property>
                   <property name="value">
                    <number>1</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="Line" name="line_13">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="laNbPages">
+                  <property name="text">
+                   <string>0 page</string>
                   </property>
                  </widget>
                 </item>
@@ -994,7 +1001,64 @@
               </attribute>
               <layout class="QVBoxLayout" name="vlImage">
                <item>
-                <layout class="QHBoxLayout" name="hlImageActions">
+                <layout class="QHBoxLayout" name="horizontalLayout_2">
+                 <item>
+                  <spacer name="horizontalSpacer_5">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pbRotationLeft">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>50</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>50</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pbLeftImage">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>150</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>150</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
                  <item>
                   <widget class="QPushButton" name="pbRemovePhoto">
                    <property name="enabled">
@@ -1006,24 +1070,36 @@
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>100</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="text">
-                    <string>Retirer photo</string>
+                    <string>X</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pbRotationLeft">
+                  <widget class="QPushButton" name="pbRightImage">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>0</width>
+                     <width>150</width>
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>150</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="text">
-                    <string>Rotation 90° gauche</string>
+                    <string/>
                    </property>
                   </widget>
                  </item>
@@ -1034,17 +1110,23 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>0</width>
+                     <width>50</width>
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>50</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
                    <property name="text">
-                    <string>Rotation 90° droite</string>
+                    <string/>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <spacer name="horizontalSpacer_5">
+                  <spacer name="horizontalSpacer_13">
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
                    </property>
@@ -1182,10 +1264,10 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_5"/>
   <buttongroup name="buttonGroup_3"/>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_4"/>
+  <buttongroup name="buttonGroup_5"/>
   <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>

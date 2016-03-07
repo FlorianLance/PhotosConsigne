@@ -22,7 +22,7 @@
 ********************************************************************************/
 
 /**
- * \file imageLabel.h
+ * \file ImageLabel.h
  * \brief defines ImageLabel
  * \author Florian Lance
  * \date 01/11/15

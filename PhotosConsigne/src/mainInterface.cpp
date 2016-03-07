@@ -21,14 +21,14 @@
 ********************************************************************************/
 
 /**
- * \file mainInterface.cpp
+ * \file MainInterface.cpp
  * \brief defines MainInterface
  * \author Florian Lance
  * \date 01/11/15
  */
 
 
-#include "mainInterface.h"
+#include "MainInterface.h"
 
 
 // qt
@@ -52,11 +52,23 @@ MainInterface::MainInterface(QWidget *parent) :
 {
     ui->setupUi(this);
 
-//    Q_INIT_RESOURCE(resources);
-
     // set icon/title
     this->setWindowTitle(QString("PhotosConsigne"));
     this->setWindowIcon(QIcon(":/images/icon"));
+
+
+    // load images
+    ui->pbLeftImage->setIcon(QIcon(":/images/leftArrow"));
+    ui->pbLeftImage->setIconSize(QSize(150,50));
+    ui->pbRightImage->setIcon(QIcon(":/images/rightArrow"));
+    ui->pbRightImage->setIconSize(QSize(150,50));
+
+    ui->pbRotationLeft->setIcon(QIcon(":/images/rotateLeft"));
+    ui->pbRotationLeft->setIconSize(QSize(50,50));
+
+    ui->pbRotationRight->setIcon(QIcon(":/images/rotateRight"));
+    ui->pbRotationRight->setIconSize(QSize(50,50));
+
 
 //    QString l_text("<p>An interface for language learning with neuron computing using GPU acceleration.<br /><br />");
 //     l_text += "Developped in the Robotic Cognition Laboratory of the <a href=\"http://www.sbri.fr/\"> SBRI</a> under the direction of  <b>Peter Ford Dominey. </b>";
@@ -68,27 +80,21 @@ MainInterface::MainInterface(QWidget *parent) :
     ui->laLegend->setText(legend);
 
 
-    // stylesheet
-//    ui->gbParametres->setStyleSheet("* { font-weight: bold }");
-    setStyleSheet("QGroupBox { padding: 10 0px 0 0px; color: blue; border: 1px solid gray; border-radius: 5px; margin-top: 1ex; /* leave space at the top for the title */}");
-
-//    ui->hlDisplayElements->
-
     // set styles
+    setStyleSheet("QGroupBox { padding: 10 0px 0 0px; color: blue; border: 1px solid gray; border-radius: 5px; margin-top: 1ex; /* leave space at the top for the title */}");        
     ui->tabPreview->setStyleSheet("background-color: rgb(122,122,122);");
-
     ui->wPreviewLegend->setStyleSheet("background-color: rgb(0,0,0);");
     ui->wDisplayElements->setStyleSheet("background-color: rgb(255,255,255);");
+    ui->pbChoosColor->setStyleSheet("background-color: rgb(0,0,0);");
 
     // color
     m_colorText = Qt::GlobalColor::black;
-    ui->pbChoosColor->setStyleSheet("background-color: rgb(0,0,0);");
 
 
     // init interface widgets
     //  image labels
     m_imageLabel = new ImageLabel(this);
-    ui->vlImage->insertWidget(1, m_imageLabel);
+    ui->vlImage->insertWidget(0, m_imageLabel);
 
     m_previewLabel = new ImageLabel(this);
     ui->hlPreviewImage->insertWidget(0, m_previewLabel);
@@ -107,6 +113,8 @@ MainInterface::MainInterface(QWidget *parent) :
     QObject::connect(ui->pbRotationLeft, SIGNAL(clicked()), this, SLOT(setImageLeftRotation()));
     QObject::connect(ui->pbRotationRight, SIGNAL(clicked()), this, SLOT(setImageRightRotation()));
     QObject::connect(ui->pbRemovePhoto, SIGNAL(clicked()), this, SLOT(removeCurrentPhotoFromList()));
+    QObject::connect(ui->pbLeftImage, SIGNAL(clicked()), this, SLOT(leftPhoto()));
+    QObject::connect(ui->pbRightImage, SIGNAL(clicked()), this, SLOT(rightPhoto()));
 
     //  list widget
     QObject::connect(ui->lwPhotos,SIGNAL(currentRowChanged(int)), this, SLOT(updatePhotoIndex(int)));
@@ -150,19 +158,17 @@ MainInterface::MainInterface(QWidget *parent) :
     QObject::connect(ui->cbZoneConsignes, SIGNAL(toggled(bool)), this, SLOT(updateUIParameters(bool)));
     QObject::connect(ui->cbZonePhotos, SIGNAL(toggled(bool)), this, SLOT(updateUIParameters(bool)));
     //  interface -> worker
-    QObject::connect(this, SIGNAL(sendImagesDir(QString, QStringList)), m_interfaceWorker, SLOT(loadImages(QString, QStringList)));
+    QObject::connect(this, SIGNAL(sendImagesDirSignal(QString, QStringList)), m_interfaceWorker, SLOT(loadImages(QString, QStringList)));
     QObject::connect(this, SIGNAL(generatePDFSignal(QString)), m_interfaceWorker, SLOT(generatePDF(QString)));
-    QObject::connect(this, SIGNAL(generatePreview(int)), m_interfaceWorker, SLOT(generatePreview(int)));
+    QObject::connect(this, SIGNAL(generatePreviewSignal(int)), m_interfaceWorker, SLOT(generatePreview(int)));
 
-    QObject::connect(this, SIGNAL(sentParameters(UIParameters)),m_interfaceWorker, SLOT(updateParameters(UIParameters)));
-//    QObject::connect(this, SIGNAL(sentParameters(QVector<bool>,int, int,double,QFont,QString, QColor, int, int, bool, double, double, double, double, double, bool, bool, bool, bool, bool)),m_interfaceWorker,
-//                     SLOT(updateParameters(QVector<bool>,int,int, double,QFont,QString, QColor,int, int, bool, double, double, double, double, double, bool, bool, bool, bool, bool )));
-    QObject::connect(this, SIGNAL(updateRotation(int,bool)), m_interfaceWorker, SLOT(updateRotationImage(int,bool)));
-    QObject::connect(this, SIGNAL(askForPhoto(int)), m_interfaceWorker, SLOT(sendPhoto(int)));
+    QObject::connect(this, SIGNAL(sentParametersSignal(UIParameters)),m_interfaceWorker, SLOT(updateParameters(UIParameters)));
+    QObject::connect(this, SIGNAL(updateRotationSignal(int,bool)), m_interfaceWorker, SLOT(updateRotationImage(int,bool)));
+    QObject::connect(this, SIGNAL(askForPhotoSignal(int)), m_interfaceWorker, SLOT(sendPhoto(int)));
     // worker -> interface
     QObject::connect(m_interfaceWorker, SIGNAL(unlockSignal()), this, SLOT(unlockUI()));
-    QObject::connect(m_interfaceWorker, SIGNAL(setProgressBarState(int)), this, SLOT(setProgressBatState(int)));
-    QObject::connect(m_interfaceWorker, SIGNAL(displayPhoto(QImage)), this, SLOT(updatePhotoDisplay(QImage)));
+    QObject::connect(m_interfaceWorker, SIGNAL(setProgressBarStateSignal(int)), this, SLOT(setProgressBatState(int)));
+    QObject::connect(m_interfaceWorker, SIGNAL(displayPhotoSignal(QImage)), this, SLOT(updatePhotoDisplay(QImage)));
 
 
     // init thread
@@ -170,7 +176,11 @@ MainInterface::MainInterface(QWidget *parent) :
     m_workerThread.start();
 
     // init parameters with default ui values
-    updateUIParameters();
+    updateUIParameters(false, false, true);
+
+    QImage nullImage(QSize(500,500), QImage::Format_ARGB32);
+    nullImage.fill(Qt::GlobalColor::white);
+    m_interfaceWorker->sendPhoto(nullImage);
 }
 
 MainInterface::~MainInterface()
@@ -190,6 +200,8 @@ void MainInterface::unlockUI()
     ui->pbRotationLeft->setEnabled(true);
     ui->pbRotationRight->setEnabled(true);
     ui->pbRemovePhoto->setEnabled(true);
+    ui->pbLeftImage->setEnabled(true);
+    ui->pbRightImage->setEnabled(true);
 }
 
 void MainInterface::setPhotosDirectory()
@@ -237,12 +249,10 @@ void MainInterface::setPhotosDirectory()
         ui->lwPhotos->setCurrentRow(0);
     }
 
-    emit sendImagesDir(m_photosDirectory, fileList);
+    emit sendImagesDirSignal(m_photosDirectory, fileList);
 
-    updateUIParameters();
+    updateUIParameters(false, false, true);
 }
-
-
 
 void MainInterface::updatePhotoDisplay(QImage image)
 {
@@ -255,6 +265,32 @@ void MainInterface::updatePhotoIndex(QModelIndex index)
     updatePhotoIndex(index.row());
 }
 
+void MainInterface::leftPhoto()
+{
+    if(ui->lwPhotos->currentRow() == 0)
+    {
+        ui->lwPhotos->setCurrentRow(m_photoRemovedList.size()-1);
+    }
+    else
+    {
+        ui->lwPhotos->setCurrentRow(ui->lwPhotos->currentRow()-1);
+    }
+    updatePhotoIndex(ui->lwPhotos->currentRow());
+}
+
+void MainInterface::rightPhoto()
+{
+    if(ui->lwPhotos->currentRow() == m_photoRemovedList.size()-1)
+    {
+        ui->lwPhotos->setCurrentRow(0);
+    }
+    else
+    {
+        ui->lwPhotos->setCurrentRow(ui->lwPhotos->currentRow() + 1);
+    }
+    updatePhotoIndex(ui->lwPhotos->currentRow());
+}
+
 
 void MainInterface::updatePhotoIndex(int index)
 {
@@ -262,7 +298,7 @@ void MainInterface::updatePhotoIndex(int index)
 
     if(index >= 0  && index < ui->lwPhotos->count())
     {
-        emit askForPhoto(index);
+        emit askForPhotoSignal(index);
     }
 
     if(!m_photoRemovedList[ui->lwPhotos->currentRow()])
@@ -293,9 +329,8 @@ void MainInterface::removeCurrentPhotoFromList()
     }
 
     ui->lwPhotos->currentItem()->setForeground(brush);
-    updateUIParameters();
+    updateUIParameters(false, false, false);
 }
-
 
 void MainInterface::generatePDF()
 {
@@ -323,37 +358,40 @@ void MainInterface::generatePreview()
     ui->pbPreview->setEnabled(false);
     ui->tabDisplay->setCurrentIndex(1);
 
-    emit generatePreview(ui->lwPhotos->currentIndex().row());
+    emit generatePreviewSignal(ui->lwPhotos->currentIndex().row());
 }
 
+void MainInterface::updateUIParameters()
+{
+    updateUIParameters(false, false, true);
+}
 
 
 void MainInterface::updateUIParameters(QFont notUsedValue)
 {
     Q_UNUSED(notUsedValue);
-    updateUIParameters();
+    updateUIParameters(false, false, true);
 }
 
 void MainInterface::updateUIParameters(bool notUsedValue)
 {
     Q_UNUSED(notUsedValue);
-    updateUIParameters();
+    updateUIParameters(false, false, true);
 }
-
 
 void MainInterface::updateUIParameters(int notUsedValue)
 {
     Q_UNUSED(notUsedValue);
-    updateUIParameters();
+    updateUIParameters(false, false, true);
 }
 
 void MainInterface::updateUIParameters(double notUsedValue)
 {
     Q_UNUSED(notUsedValue);
-    updateUIParameters();
+    updateUIParameters(false, false, true);
 }
 
-void MainInterface::updateUIParameters()
+void MainInterface::updateUIParameters(bool notUsedValue1, bool notUsedValue2, bool updatePreview)
 {
     int nbImagesVPage = ui->sbNbImagesV->value();
     int nbImagesHPage = ui->sbNbImagesH->value();
@@ -474,6 +512,32 @@ void MainInterface::updateUIParameters()
         }
     }
 
+
+    // display pages number
+    int photosRemoved = 0;
+    for(int ii = 0; ii < m_photoRemovedList.count();++ii)
+    {
+        if(m_photoRemovedList[ii])
+            photosRemoved++;
+    }
+
+    int nbPhotosTotal = m_photoRemovedList.size()-photosRemoved;
+    int nbPhotosPerPage = nbImagesVPage*nbImagesHPage;
+    int nbPages = nbPhotosTotal / nbPhotosPerPage;
+    int rest = nbPhotosTotal % nbPhotosPerPage;
+    if( rest != 0)
+        ++nbPages;
+
+    if(nbPages <= 1)
+    {
+        ui->laNbPages->setText(QString::number(nbPages) + " page");
+    }
+    else
+    {
+        ui->laNbPages->setText(QString::number(nbPages) + " pages");
+    }
+
+
     UIParameters params;
     params.removePhotoList = m_photoRemovedList;
     params.nbImagesPageH = nbImagesHPage;
@@ -497,13 +561,10 @@ void MainInterface::updateUIParameters()
     params.orientation = ui->rbPortrait->isChecked();
     params.zConsigns = ui->cbZoneConsignes->isChecked();
 
-    emit sentParameters(params);
+    emit sentParametersSignal(params);
 
-//    emit sentParameters(m_photoRemovedList, nbImagesVPage,nbImagesHPage, ratio, font, text, m_colorText, imageAlignment, textAlignment, ui->rbPortrait->isChecked(),
-//                        ui->dsLeftMargins->value(),ui->dsRightMargins->value(),ui->dsTopMargins->value(),ui->dsBottomMargins->value(),ui->dsBetween->value(),
-//                        ui->cbCutLines->isChecked() ,ui->cbZoneExternMargins->isChecked(), ui->cbZoneInternMargins->isChecked(), ui->cbZonePhotos->isChecked(), ui->cbZoneConsignes->isChecked());
 
-    if(ui->lwPhotos->count() > 0)
+    if(ui->lwPhotos->count() > 0 && updatePreview)
     {
         generatePreview();
     }
@@ -518,7 +579,7 @@ void MainInterface::setColorText()
     ui->pbChoosColor->setStyleSheet("background-color: rgb("+ QString::number(m_colorText.red()) +
                                     ", " + QString::number(m_colorText.green()) + ", " + QString::number(m_colorText.blue()) +");");
 
-    updateUIParameters();
+    updateUIParameters(false, false, true);
 }
 
 void MainInterface::setProgressBatState(int state)
@@ -529,13 +590,13 @@ void MainInterface::setProgressBatState(int state)
 void MainInterface::setImageLeftRotation()
 {
     ui->tabDisplay->setCurrentIndex(0);
-    emit updateRotation(ui->lwPhotos->currentIndex().row(), false);
+    emit updateRotationSignal(ui->lwPhotos->currentIndex().row(), false);
 }
 
 void MainInterface::setImageRightRotation()
 {
     ui->tabDisplay->setCurrentIndex(0);
-    emit updateRotation(ui->lwPhotos->currentIndex().row(), true);
+    emit updateRotationSignal(ui->lwPhotos->currentIndex().row(), true);
 }
 
 
