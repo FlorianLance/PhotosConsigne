@@ -11,6 +11,10 @@ L'avantage de **PhotosConsigne** est d'accélérer grandement le processus en n'
 
 Une prévisualisation du résultat est disponible à chaque changement de paramètre afin de cerner très rapidement leur impact. Le rendu en PDF sera identique à celui-ci.
 
+[Téléchargement version beta](https://github.com/FlorianLance/PhotosConsigne/files/161848/PhotosConsigne.zip "pre-release v0.9")
+ 
+--------------
+
 Exemple de mise en page :
 
 ![PhotosConsigne_img1](http://i.imgur.com/jvYIHRp.png "PhtosConsigne interface 1")
@@ -24,9 +28,6 @@ Le résultat :
 ![PhotosConsigne_img3](http://i.imgur.com/Vs90e2l.png "PDF généré")
 
 Il s'agit d'un projet réalisé sur mon temps de loisir en quelques weekends, mais selon les différents retours, je ne manquerai pas d'ajouter des fonctionnalités si elles s'avèrent cohérentes avec l'ensemble.
-
-Téléchargement :
- - soon
 
 Tutorials :
 - video soon
