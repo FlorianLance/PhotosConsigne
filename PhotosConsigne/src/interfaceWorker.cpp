@@ -300,6 +300,8 @@ void InterfaceWorker::generatePDF(QString pdfFileName)
         emit unlockSignal();
 
     emit setProgressBarStateSignal(100);
+
+    emit pdfGeneratedSignal();
 }
 
 void InterfaceWorker::generatePreview(int currentRowPhoto)

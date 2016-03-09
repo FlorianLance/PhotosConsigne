@@ -35,7 +35,8 @@
 #include <QFileDialog>
 #include <QStandardItemModel>
 #include <QColorDialog>
-
+#include <QDesktopServices>
+#include <QMessageBox>
 
 // std
 #include <iostream>
@@ -99,8 +100,6 @@ MainInterface::MainInterface(QWidget *parent) :
     m_previewLabel = new ImageLabel(this);
     ui->hlPreviewImage->insertWidget(0, m_previewLabel);
 
-
-
     // init worker
     m_interfaceWorker = new InterfaceWorker(m_previewLabel);
 
@@ -115,6 +114,7 @@ MainInterface::MainInterface(QWidget *parent) :
     QObject::connect(ui->pbRemovePhoto, SIGNAL(clicked()), this, SLOT(removeCurrentPhotoFromList()));
     QObject::connect(ui->pbLeftImage, SIGNAL(clicked()), this, SLOT(leftPhoto()));
     QObject::connect(ui->pbRightImage, SIGNAL(clicked()), this, SLOT(rightPhoto()));
+    QObject::connect(ui->pbOpenPDF, SIGNAL(clicked()), this, SLOT(openPDF()));
 
     //  list widget
     QObject::connect(ui->lwPhotos,SIGNAL(currentRowChanged(int)), this, SLOT(updatePhotoIndex(int)));
@@ -169,6 +169,7 @@ MainInterface::MainInterface(QWidget *parent) :
     QObject::connect(m_interfaceWorker, SIGNAL(unlockSignal()), this, SLOT(unlockUI()));
     QObject::connect(m_interfaceWorker, SIGNAL(setProgressBarStateSignal(int)), this, SLOT(setProgressBatState(int)));
     QObject::connect(m_interfaceWorker, SIGNAL(displayPhotoSignal(QImage)), this, SLOT(updatePhotoDisplay(QImage)));
+    QObject::connect(m_interfaceWorker, SIGNAL(pdfGeneratedSignal()), this, SLOT(unlockOpenPDF()));
 
 
     // init thread
@@ -211,18 +212,28 @@ void MainInterface::setPhotosDirectory()
     ui->pbSelectPhotos->setEnabled(false);    
     ui->pbRotationLeft->setEnabled(false);
     ui->pbRotationRight->setEnabled(false);
-    ui->pbRemovePhoto->setEnabled(false);
+    ui->pbRemovePhoto->setEnabled(false);    
 
+    QString previousDirectory = m_photosDirectory;
     m_photosDirectory = QFileDialog::getExistingDirectory(this, "Sélection du répertoire de photos");
 
     // no directory selected
-    if(m_photosDirectory.size() == 0)
+    if(m_photosDirectory.size() == 0 )
     {
         ui->pbSelectPhotos->setEnabled(true);
-        return;
-    }
 
-    ui->laPhotosDir->setText(m_photosDirectory);
+        if(previousDirectory.size() != 0)
+        {
+            ui->pbPreview->setEnabled(true);
+            ui->pbRotationLeft->setEnabled(true);
+            ui->pbRotationRight->setEnabled(true);
+            ui->pbRemovePhoto->setEnabled(true);
+            ui->pbGeneration->setEnabled(true);
+            m_photosDirectory = previousDirectory;
+        }
+
+        return;
+    }   
 
     QDir dir(m_photosDirectory);
     dir.setFilter(QDir::Files);
@@ -233,8 +244,25 @@ void MainInterface::setPhotosDirectory()
     if(fileList.size() == 0)
     {
         ui->pbSelectPhotos->setEnabled(true);
+
+//        QMessageBox messageBox;
+//        messageBox.critical(0,"Error","An error has occured !");
+//        messageBox.setFixedSize(500,200);
+
+        if(previousDirectory.size() != 0)
+        {
+            ui->pbPreview->setEnabled(true);
+            ui->pbRotationLeft->setEnabled(true);
+            ui->pbRotationRight->setEnabled(true);
+            ui->pbRemovePhoto->setEnabled(true);
+            ui->pbGeneration->setEnabled(true);
+            m_photosDirectory = previousDirectory;
+        }
+
         return;
     }
+
+    ui->laPhotosDir->setText(m_photosDirectory);
 
     ui->lwPhotos->clear();
     m_photoRemovedList.clear();
@@ -301,13 +329,15 @@ void MainInterface::updatePhotoIndex(int index)
         emit askForPhotoSignal(index);
     }
 
-    if(!m_photoRemovedList[ui->lwPhotos->currentRow()])
+    if(m_photoRemovedList[ui->lwPhotos->currentRow()])
     {
-        ui->pbRemovePhoto->setText("Retirer photo");
+        ui->pbRemovePhoto->setText("Ajouter photo");
+        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(0,0,255); color: rgb(255,255,255);");
     }
     else
     {
-        ui->pbRemovePhoto->setText("Ajouter photo");
+        ui->pbRemovePhoto->setText("Retirer photo");
+        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(255,0,0); color: rgb(255,255,255);");
     }
 }
 
@@ -320,16 +350,28 @@ void MainInterface::removeCurrentPhotoFromList()
         brush.setColor(Qt::red);
         m_photoRemovedList[ui->lwPhotos->currentRow()] = true;
         ui->pbRemovePhoto->setText("Ajouter photo");
+        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(0,0,255); color: rgb(255,255,255);");
     }
     else
     {
         brush.setColor(Qt::black);
         m_photoRemovedList[ui->lwPhotos->currentRow()] = false;
-        ui->pbRemovePhoto->setText("Retirer photo");
+        ui->pbRemovePhoto->setText("Retirer photo");       
+        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(255,0,0); color: rgb(255,255,255);");
     }
 
     ui->lwPhotos->currentItem()->setForeground(brush);
     updateUIParameters(false, false, false);
+}
+
+void MainInterface::unlockOpenPDF()
+{
+    ui->pbOpenPDF->setEnabled(true);
+}
+
+void MainInterface::openPDF()
+{
+    QDesktopServices::openUrl(QUrl::fromLocalFile(m_pdfFileName));
 }
 
 void MainInterface::generatePDF()
@@ -338,17 +380,23 @@ void MainInterface::generatePDF()
     ui->pbPreview->setEnabled(false);
     ui->pbSelectPhotos->setEnabled(false);
 
-    QString pdfFileName = QFileDialog::getSaveFileName(this, "Nom du fichier pdf", QString(), "*.pdf");
+    m_pdfFileName = QFileDialog::getSaveFileName(this, "Nom du fichier pdf", QString(), "*.pdf");
 
-    if(pdfFileName.size() == 0)
-        return;
-
-    if(pdfFileName.right(4) != ".pdf")
+    if(m_pdfFileName.size() == 0)
     {
-        pdfFileName += ".pdf";
+        ui->pbGeneration->setEnabled(true);
+        ui->pbPreview->setEnabled(true);
+        ui->pbSelectPhotos->setEnabled(true);
+        return;
     }
 
-    emit generatePDFSignal(pdfFileName);
+    if(m_pdfFileName.right(4) != ".pdf")
+    {
+        m_pdfFileName += ".pdf";
+    }
+
+
+    emit generatePDFSignal(m_pdfFileName);
 }
 
 

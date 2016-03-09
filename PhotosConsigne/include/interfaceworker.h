@@ -135,6 +135,11 @@ class InterfaceWorker : public QObject
          */
         void displayPhotoSignal(QImage);
 
+        /**
+         * @brief pdfGeneratedSignal
+         */
+        void pdfGeneratedSignal();
+
     private :
 
         /**

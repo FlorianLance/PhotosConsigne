@@ -179,6 +179,16 @@ public slots:
      */
     void removeCurrentPhotoFromList();
 
+    /**
+     * @brief unlock the open PDF button
+     */
+    void unlockOpenPDF();
+
+    /**
+     * @brief Open the generated PDF file with the default extern program
+     */
+    void openPDF();
+
 signals :
 
     void sendImagesDirSignal(QString, QStringList);
@@ -197,6 +207,7 @@ private:
 
     QColor m_colorText;                 /**< color of the text */
     QString m_photosDirectory;          /**< the photos directory */
+    QString m_pdfFileName;              /**< path of the generated PDF file */
     QVector<bool> m_photoRemovedList;   /**< indicates if a photo is removed from the list */
 
     QThread  m_workerThread;                /**< worker thread */

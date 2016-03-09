@@ -106,7 +106,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>552</width>
-                   <height>158</height>
+                   <height>163</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -933,22 +933,6 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pbPreview">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Pré-affichage</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
                  <widget class="QPushButton" name="pbGeneration">
                   <property name="enabled">
                    <bool>false</bool>
@@ -956,7 +940,7 @@
                   <property name="minimumSize">
                    <size>
                     <width>100</width>
-                    <height>50</height>
+                    <height>40</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -966,7 +950,23 @@
                    </size>
                   </property>
                   <property name="text">
-                   <string>Génération du pdf</string>
+                   <string>Sauvegarde du PDF</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pbOpenPDF">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Ouvrir dernier PDF</string>
                   </property>
                  </widget>
                 </item>
@@ -1014,6 +1014,22 @@
                     </size>
                    </property>
                   </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pbPreview">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>100</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Pré-affichage</string>
+                   </property>
+                  </widget>
                  </item>
                  <item>
                   <widget class="QPushButton" name="pbRotationLeft">
@@ -1073,11 +1089,15 @@
                    <property name="maximumSize">
                     <size>
                      <width>100</width>
-                     <height>16777215</height>
+                     <height>50</height>
                     </size>
                    </property>
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgb(255, 0, 0);
+color: rgb(255, 255, 255);</string>
+                   </property>
                    <property name="text">
-                    <string>X</string>
+                    <string>Retirer</string>
                    </property>
                   </widget>
                  </item>
@@ -1264,10 +1284,10 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_3"/>
-  <buttongroup name="buttonGroup_4"/>
-  <buttongroup name="buttonGroup_5"/>
   <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup_5"/>
+  <buttongroup name="buttonGroup_4"/>
+  <buttongroup name="buttonGroup_3"/>
   <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>
