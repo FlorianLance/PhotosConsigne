@@ -47,9 +47,7 @@
 
 
 
-MainInterface::MainInterface(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainInterface)
+MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
 {
     ui->setupUi(this);
 
@@ -60,15 +58,25 @@ MainInterface::MainInterface(QWidget *parent) :
 
     // load images
     ui->pbLeftImage->setIcon(QIcon(":/images/leftArrow"));
-    ui->pbLeftImage->setIconSize(QSize(150,50));
+    ui->pbLeftImage->setIconSize(QSize(100,50));
     ui->pbRightImage->setIcon(QIcon(":/images/rightArrow"));
-    ui->pbRightImage->setIconSize(QSize(150,50));
+    ui->pbRightImage->setIconSize(QSize(100,50));
 
     ui->pbRotationLeft->setIcon(QIcon(":/images/rotateLeft"));
     ui->pbRotationLeft->setIconSize(QSize(50,50));
 
     ui->pbRotationRight->setIcon(QIcon(":/images/rotateRight"));
     ui->pbRotationRight->setIconSize(QSize(50,50));
+
+
+
+//    QFile file(":/style/rotateLeft");
+//    file.open(QFile::ReadOnly);
+//    QString styleSheet = QLatin1String(file.readAll());
+//    ui->pbRotationLeft->setStyleSheet(styleSheet);
+//    ui->pbRotationRight->setStyleSheet(styleSheet);
+
+
 
 
 //    QString l_text("<p>An interface for language learning with neuron computing using GPU acceleration.<br /><br />");
@@ -83,10 +91,8 @@ MainInterface::MainInterface(QWidget *parent) :
 
     // set styles
     setStyleSheet("QGroupBox { padding: 10 0px 0 0px; color: blue; border: 1px solid gray; border-radius: 5px; margin-top: 1ex; /* leave space at the top for the title */}");        
-    ui->tabPreview->setStyleSheet("background-color: rgb(122,122,122);");
-    ui->wPreviewLegend->setStyleSheet("background-color: rgb(0,0,0);");
-    ui->wDisplayElements->setStyleSheet("background-color: rgb(255,255,255);");
-    ui->pbChoosColor->setStyleSheet("background-color: rgb(0,0,0);");
+//    ui->tabPreview->setStyleSheet("background-color: rgb(122,122,122);");
+//    ui->pbChooseColor->setStyleSheet("background-color: rgb(0,0,0);");
 
     // color
     m_colorText = Qt::GlobalColor::black;
@@ -104,11 +110,14 @@ MainInterface::MainInterface(QWidget *parent) :
     m_interfaceWorker = new InterfaceWorker(m_previewLabel);
 
     // connections
+    QObject::connect(ui->actionExit, SIGNAL(triggered()), parent, SLOT(quit()));
+    QObject::connect(ui->actionOnlineDocumentation, SIGNAL(triggered()), this, SLOT(openOnlineDocumentation()));
+    QObject::connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(openAboutWindow()));
     //  push button
     QObject::connect(ui->pbSelectPhotos,SIGNAL(clicked()), this, SLOT(setPhotosDirectory()));
     QObject::connect(ui->pbGeneration,SIGNAL(clicked()), this, SLOT(generatePDF()));
     QObject::connect(ui->pbPreview,SIGNAL(clicked()), this, SLOT(generatePreview()));
-    QObject::connect(ui->pbChoosColor,SIGNAL(clicked()), this, SLOT(setColorText()));
+    QObject::connect(ui->pbChooseColor,SIGNAL(clicked()), this, SLOT(setColorText()));
     QObject::connect(ui->pbRotationLeft, SIGNAL(clicked()), this, SLOT(setImageLeftRotation()));
     QObject::connect(ui->pbRotationRight, SIGNAL(clicked()), this, SLOT(setImageRightRotation()));
     QObject::connect(ui->pbRemovePhoto, SIGNAL(clicked()), this, SLOT(removeCurrentPhotoFromList()));
@@ -332,12 +341,13 @@ void MainInterface::updatePhotoIndex(int index)
     if(m_photoRemovedList[ui->lwPhotos->currentRow()])
     {
         ui->pbRemovePhoto->setText("Ajouter photo");
-        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(0,0,255); color: rgb(255,255,255);");
+
+//        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(0,0,255); color: rgb(255,255,255);");
     }
     else
     {
         ui->pbRemovePhoto->setText("Retirer photo");
-        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(255,0,0); color: rgb(255,255,255);");
+//        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(255,0,0); color: rgb(255,255,255);");
     }
 }
 
@@ -350,14 +360,14 @@ void MainInterface::removeCurrentPhotoFromList()
         brush.setColor(Qt::red);
         m_photoRemovedList[ui->lwPhotos->currentRow()] = true;
         ui->pbRemovePhoto->setText("Ajouter photo");
-        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(0,0,255); color: rgb(255,255,255);");
+//        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(0,0,255); color: rgb(255,255,255);");
     }
     else
     {
         brush.setColor(Qt::black);
         m_photoRemovedList[ui->lwPhotos->currentRow()] = false;
         ui->pbRemovePhoto->setText("Retirer photo");       
-        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(255,0,0); color: rgb(255,255,255);");
+//        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(255,0,0); color: rgb(255,255,255);");
     }
 
     ui->lwPhotos->currentItem()->setForeground(brush);
@@ -372,6 +382,23 @@ void MainInterface::unlockOpenPDF()
 void MainInterface::openPDF()
 {
     QDesktopServices::openUrl(QUrl::fromLocalFile(m_pdfFileName));
+}
+
+
+void MainInterface::openAboutWindow()
+{
+    QString text("<p>PhotosConsigne est un logiciel léger et rapide servant à générer des PDF contenant des images associées à un texte commun.<br />");
+    text += "Tous les paramètres sont facilement modifiables (quantités d'images par page, orientation, alignements, police du texte...). <br /><br /></b>";
+    text += "Ce logiciel est principalement destiné aux professeurs des écoles, mais si d'autres lui trouve une autre utilité j'en serai ravi.<br /><br /></b>";
+    text += "N'hésitez à pas me faire partager vos retours et vos idées d'amélioration, selon mon temps il est possible que j'implémente les plus justifitées.<br /> Addresse email lance.florian@gmail.com ";
+    text += "<br /><br /> Auteur : <b>Lance Florian </b> <a href=\"https://github.com/FlorianLance\"> Github profile</a>";
+    text += "<a href=\"https://github.com/FlorianLance/PhotosConsigne\">Dépôt github</a>";
+    QMessageBox::about(this, "A propos du logiciel", text);
+}
+
+void MainInterface::openOnlineDocumentation()
+{
+    QDesktopServices::openUrl(QUrl("https://github.com/FlorianLance/PhotosConsigne", QUrl::TolerantMode));
 }
 
 void MainInterface::generatePDF()
@@ -441,6 +468,9 @@ void MainInterface::updateUIParameters(double notUsedValue)
 
 void MainInterface::updateUIParameters(bool notUsedValue1, bool notUsedValue2, bool updatePreview)
 {
+    Q_UNUSED(notUsedValue1);
+    Q_UNUSED(notUsedValue2);
+
     int nbImagesVPage = ui->sbNbImagesV->value();
     int nbImagesHPage = ui->sbNbImagesH->value();
     int sizeText = ui->sbSizeTexte->value();
@@ -624,7 +654,7 @@ void MainInterface::setColorText()
     colorDialog.setCurrentColor(m_colorText);
     colorDialog.exec();
     m_colorText = colorDialog.selectedColor();
-    ui->pbChoosColor->setStyleSheet("background-color: rgb("+ QString::number(m_colorText.red()) +
+    ui->pbChooseColor->setStyleSheet("background-color: rgb("+ QString::number(m_colorText.red()) +
                                     ", " + QString::number(m_colorText.green()) + ", " + QString::number(m_colorText.blue()) +");");
 
     updateUIParameters(false, false, true);

@@ -44,13 +44,13 @@ int main(int argc,char** argv)
     qtTranslator.load("qt_" + QLocale::system().name(),
             QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
 
     //2 : Installation of language setting
-    a.installTranslator(&qtTranslator);
+    app.installTranslator(&qtTranslator);
 
-    MainInterface w;
+    MainInterface w(&app);
     w.show();
 
-    return a.exec();
+    return app.exec();
 }

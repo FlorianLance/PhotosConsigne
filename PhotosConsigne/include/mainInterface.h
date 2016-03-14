@@ -58,7 +58,7 @@ public:
      * @brief MainInterface constructor
      * @param [in,out] parent
      */
-    explicit MainInterface(QWidget *parent = 0);
+    MainInterface(QApplication *parent = 0);
 
     /**
      * @brief MainInterface destructor
@@ -188,6 +188,16 @@ public slots:
      * @brief Open the generated PDF file with the default extern program
      */
     void openPDF();
+
+    /**
+     * @brief Open the online documentation
+     */
+    void openOnlineDocumentation();
+
+    /**
+     * @brief Open the about window
+     */
+    void openAboutWindow();
 
 signals :
 

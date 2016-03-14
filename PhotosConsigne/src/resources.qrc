@@ -6,4 +6,8 @@
         <file alias="rotateLeft">../resources/images/rotateLeft.png</file>
         <file alias="rotateRight">../resources/images/rotateRight.png</file>
     </qresource>
+    <qresource prefix="/style">
+        <file alias="buttons">../resources/style/buttons.qss</file>
+        <file alias="rotateLeft">../resources/style/leftRotationPushButton.qss</file>
+    </qresource>
 </RCC>
