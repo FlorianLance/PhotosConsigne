@@ -21,7 +21,7 @@
 ********************************************************************************/
 
 /**
- * \file interfaceWorker.h
+ * \file InterfaceWorker.h
  * \brief defines InterfaceWorker
  * \author Florian Lance
  * \date 01/11/15
@@ -39,7 +39,7 @@
 #include <QTime>
 
 // photos consigne
-#include "imagelabel.h"
+#include "ImageLabel.h"
 
 /**
  * @brief UI parameters of the pdf generation.
@@ -99,32 +99,6 @@ class InterfaceWorker : public QObject
         void updateParameters(UIParameters params);
 
         /**
-         * @brief updateParameters
-         * @param removePhotoList
-         * @param nbImagesPageV
-         * @param nbImagesPageH
-         * @param ratio
-         * @param font
-         * @param text
-         * @param textColor
-         * @param imageAlignment
-         * @param textAlignment
-         * @param orientation
-         * @param leftMargin
-         * @param rightMargin
-         * @param topMargin
-         * @param bottomMargin
-         * @param betweenMargin
-         * @param cutLines
-         * @param zExternMargins
-         * @param zInterMargins
-         * @param zPhotos
-         * @param zConsignes
-         */
-        void updateParameters(QVector<bool> removePhotoList,int nbImagesPageV, int nbImagesPageH, double ratio,QFont font, QString text, QColor textColor, int imageAlignment, int textAlignment, bool orientation,
-                              double leftMargin, double rightMargin, double topMargin, double bottomMargin, double betweenMargin, bool cutLines, bool zExternMargins, bool zInterMargins, bool zPhotos,  bool zConsignes);
-
-        /**
          * @brief Update the rotation of a photo
          * @param [in] index : id of the photo in the list
          * @param [in] rightRotation : if true, it's a 90° right rotation, else it's 90° left
@@ -137,6 +111,13 @@ class InterfaceWorker : public QObject
          */
         void sendPhoto(int index);
 
+        /**
+         * @brief Send a photo to be displayed in the image label in the main interface.
+         * @param [in] image
+         */
+        void sendPhoto(QImage image);
+
+
     signals :
 
         /**
@@ -147,12 +128,17 @@ class InterfaceWorker : public QObject
         /**
          * @brief signal for defining the current state of the progress bar
          */
-        void setProgressBarState(int);
+        void setProgressBarStateSignal(int);
 
         /**
          * @brief Send a photo to be displayed in the image label in the main interface.
          */
-        void displayPhoto(QImage);
+        void displayPhotoSignal(QImage);
+
+        /**
+         * @brief pdfGeneratedSignal
+         */
+        void pdfGeneratedSignal();
 
     private :
 

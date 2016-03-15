@@ -21,7 +21,7 @@
 ********************************************************************************/
 
 /**
- * \file interfaceWorker.cpp
+ * \file InterfaceWorker.cpp
  * \brief defines InterfaceWorker
  * \author Florian Lance
  * \date 01/11/15
@@ -44,27 +44,27 @@ InterfaceWorker::InterfaceWorker(ImageLabel *preview)
 
 void InterfaceWorker::loadImages(QString path, QStringList imagesList)
 {
-    emit setProgressBarState(0);
+    emit setProgressBarStateSignal(0);
 
     m_loadedImages.resize(imagesList.count());
     for(int ii = 0; ii < imagesList.count(); ++ii)
     {
         m_loadedImages[ii] = QImage(path + "/" + imagesList[ii]);
-        emit setProgressBarState(ii * (100/imagesList.count()));
+        emit setProgressBarStateSignal(ii * (100/imagesList.count()));
     }
 
     if(imagesList.count() > 0)
         emit unlockSignal();
 
-    emit setProgressBarState(100);
+    emit setProgressBarStateSignal(100);
 
     if(m_loadedImages.size() > 0)
-        emit displayPhoto(m_loadedImages[0]);
+        emit displayPhotoSignal(m_loadedImages[0]);
 }
 
 void InterfaceWorker::generatePDF(QString pdfFileName)
 {
-    emit setProgressBarState(0);
+    emit setProgressBarStateSignal(0);
 
     // init writer
     QPdfWriter pdfWriter(pdfFileName);
@@ -275,7 +275,7 @@ void InterfaceWorker::generatePDF(QString pdfFileName)
 
                 painter.drawPixmap(photoRect,QPixmap::fromImage(rPhoto));
 
-                emit setProgressBarState(idPhoto * (100/m_loadedImages.size()));
+                emit setProgressBarStateSignal(idPhoto * (100/m_loadedImages.size()));
 
                 ++idPhoto;
             }
@@ -299,7 +299,9 @@ void InterfaceWorker::generatePDF(QString pdfFileName)
     if(m_loadedImages.size() > 0)
         emit unlockSignal();
 
-    emit setProgressBarState(100);
+    emit setProgressBarStateSignal(100);
+
+    emit pdfGeneratedSignal();
 }
 
 void InterfaceWorker::generatePreview(int currentRowPhoto)
@@ -578,44 +580,6 @@ void InterfaceWorker::updateParameters(UIParameters params)
     }
 }
 
-void InterfaceWorker::updateParameters(QVector<bool> removePhotoList,int nbImagesPageV, int nbImagesPageH, double ratio, QFont font, QString text, QColor textColor, int imageAlignment, int textAlignment, bool orientation,
-                                       double leftMargin, double rightMargin, double topMargin, double bottomMargin, double betweenMargin, bool cutLines, bool zExternMargins, bool zInterMargins, bool zPhotos,  bool zConsignes)
-{
-    m_nbImagesPageV = nbImagesPageV;
-    m_nbImagesPageH = nbImagesPageH;
-    m_ratio = ratio;
-    m_font = font;
-    m_consignText = text;
-    m_consignColor = textColor;
-    m_imageAlignment = imageAlignment;
-    m_consignAlignment = textAlignment | Qt::TextWordWrap;
-    m_landScapeOrientation = !orientation;
-
-    m_leftMargin = leftMargin;
-    m_rightMargin = rightMargin;
-    m_topMargin = topMargin;
-    m_bottomMargin = bottomMargin;
-    m_innerMargin = betweenMargin;
-    m_removedImageList = removePhotoList;
-
-    m_cutLines = cutLines;
-    m_zExternMargins = zExternMargins;
-    m_zInterMargins = zInterMargins;
-    m_zPhotos = zPhotos;
-    m_zConsigns = zConsignes;
-
-
-    m_isAllPhotoRemoved = true;
-    for(int ii = 0; ii < m_removedImageList.count(); ++ii)
-    {
-        if(!m_removedImageList[ii])
-        {
-            m_isAllPhotoRemoved = false;
-            break;
-        }
-    }
-}
-
 void InterfaceWorker::updateRotationImage(int index, bool rightRotation)
 {
     QTransform t;
@@ -627,11 +591,15 @@ void InterfaceWorker::updateRotationImage(int index, bool rightRotation)
     sendPhoto(index);
 }
 
+void InterfaceWorker::sendPhoto(QImage image)
+{
+    emit displayPhotoSignal(image);
+}
 
 void InterfaceWorker::sendPhoto(int index)
 {
     if(index < m_loadedImages.count() && index >= 0)
-        emit displayPhoto(m_loadedImages[index]);
+        emit displayPhotoSignal(m_loadedImages[index]);
 }
 
 void InterfaceWorker::addContourPreview(QImage &image)

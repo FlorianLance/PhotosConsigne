@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1435</width>
-    <height>962</height>
+    <width>1280</width>
+    <height>849</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,20 +32,42 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
-            <layout class="QHBoxLayout" name="hlPhotosSelection">
+            <layout class="QHBoxLayout" name="hlPhotosSelection" stretch="2,1,0">
              <item>
               <widget class="QPushButton" name="pbSelectPhotos">
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
+                 <width>82</width>
                  <height>35</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>200</width>
+                 <width>250</width>
                  <height>16777215</height>
                 </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton {
+    border: 1px solid #8f8f91;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
                </property>
                <property name="text">
                 <string>Sélection du dossier de photos</string>
@@ -81,7 +103,7 @@
             </layout>
            </item>
            <item>
-            <widget class="QGroupBox" name="dzqddzqd">
+            <widget class="QGroupBox" name="gbListePhotos">
              <property name="title">
               <string>LISTE DES PHOTOS</string>
              </property>
@@ -105,13 +127,19 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>552</width>
-                   <height>158</height>
+                   <width>519</width>
+                   <height>107</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">
                   <item>
                    <widget class="QListWidget" name="lwPhotos">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>50</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>10000</width>
@@ -135,7 +163,7 @@
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>100</height>
+               <height>0</height>
               </size>
              </property>
              <property name="font">
@@ -170,7 +198,7 @@
                    </layout>
                   </item>
                   <item>
-                   <layout class="QHBoxLayout" name="hlHText">
+                   <layout class="QHBoxLayout" name="hlHText" stretch="2,1,1,1,1">
                     <item>
                      <widget class="QLabel" name="laHorizontalText">
                       <property name="text">
@@ -230,7 +258,7 @@
                    </layout>
                   </item>
                   <item>
-                   <layout class="QHBoxLayout" name="hlVText">
+                   <layout class="QHBoxLayout" name="hlVText" stretch="2,1,1,1,1">
                     <item>
                      <widget class="QLabel" name="laVerticalText">
                       <property name="text">
@@ -297,6 +325,12 @@
                    <layout class="QHBoxLayout" name="hlFont">
                     <item>
                      <widget class="QFontComboBox" name="fcbConsignes">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>20</height>
+                       </size>
+                      </property>
                       <property name="editable">
                        <bool>false</bool>
                       </property>
@@ -376,7 +410,10 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pbChoosColor">
+                     <widget class="QPushButton" name="pbChooseColor">
+                      <property name="styleSheet">
+                       <string notr="true">background-color: rgb(0, 0, 0);</string>
+                      </property>
                       <property name="text">
                        <string/>
                       </property>
@@ -399,6 +436,12 @@
                   </item>
                   <item>
                    <widget class="QPlainTextEdit" name="pteConsigne">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>75</height>
+                     </size>
+                    </property>
                     <property name="plainText">
                      <string>Tapez la consigne ici.</string>
                     </property>
@@ -435,7 +478,7 @@
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="hlPhotoHorizontal">
+               <layout class="QHBoxLayout" name="hlPhotoHorizontal" stretch="2,1,1,1,1">
                 <item>
                  <widget class="QLabel" name="laHorizontalImage">
                   <property name="text">
@@ -492,7 +535,7 @@
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="hlPhotoVertical">
+               <layout class="QHBoxLayout" name="hlPhotoVertical" stretch="2,1,1,1,1">
                 <item>
                  <widget class="QLabel" name="laVerticalImage">
                   <property name="text">
@@ -500,7 +543,7 @@
                   </property>
                  </widget>
                 </item>
-                <item>
+                <item alignment="Qt::AlignLeft">
                  <widget class="QRadioButton" name="rbBottomImage">
                   <property name="text">
                    <string>en bas</string>
@@ -510,7 +553,7 @@
                   </attribute>
                  </widget>
                 </item>
-                <item>
+                <item alignment="Qt::AlignLeft">
                  <widget class="QRadioButton" name="rbVCenterImage">
                   <property name="text">
                    <string>centré</string>
@@ -523,7 +566,7 @@
                   </attribute>
                  </widget>
                 </item>
-                <item>
+                <item alignment="Qt::AlignLeft">
                  <widget class="QRadioButton" name="rbTopImage">
                   <property name="text">
                    <string>en haut</string>
@@ -598,13 +641,6 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="Line" name="line_11">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item>
                  <widget class="QLabel" name="laNbImagesH">
                   <property name="text">
                    <string>Horizontalement</string>
@@ -621,6 +657,20 @@
                   </property>
                   <property name="value">
                    <number>1</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="Line" name="line_13">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="laNbPages">
+                  <property name="text">
+                   <string>0 page</string>
                   </property>
                  </widget>
                 </item>
@@ -649,7 +699,7 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
               <item>
-               <layout class="QHBoxLayout" name="hlOrientation">
+               <layout class="QHBoxLayout" name="hlOrientation" stretch="2,1,1,2">
                 <item>
                  <widget class="QLabel" name="label">
                   <property name="text">
@@ -917,27 +967,11 @@
                </widget>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="hlActions">
+               <layout class="QHBoxLayout" name="hlActions" stretch="5,3,3">
                 <item>
                  <widget class="QProgressBar" name="pbLoading">
                   <property name="value">
                    <number>0</number>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pbPreview">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>100</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Pré-affichage</string>
                   </property>
                  </widget>
                 </item>
@@ -948,8 +982,8 @@
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>100</width>
-                    <height>50</height>
+                    <width>82</width>
+                    <height>40</height>
                    </size>
                   </property>
                   <property name="maximumSize">
@@ -958,8 +992,68 @@
                     <height>16777215</height>
                    </size>
                   </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+    border: 1px solid #8f8f91;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+                  </property>
                   <property name="text">
-                   <string>Génération du pdf</string>
+                   <string>Sauvegarde du PDF</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pbOpenPDF">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>82</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+    border: 1px solid #8f8f91;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+                  </property>
+                  <property name="text">
+                   <string>Ouvrir dernier PDF</string>
                   </property>
                  </widget>
                 </item>
@@ -989,27 +1083,27 @@
               <number>0</number>
              </property>
              <widget class="QWidget" name="tabImage">
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(122, 122, 122);</string>
+              </property>
               <attribute name="title">
                <string>Affichage photo selectionnée</string>
               </attribute>
               <layout class="QVBoxLayout" name="vlImage">
                <item>
-                <layout class="QHBoxLayout" name="hlImageActions">
+                <layout class="QHBoxLayout" name="horizontalLayout_2">
                  <item>
-                  <widget class="QPushButton" name="pbRemovePhoto">
-                   <property name="enabled">
-                    <bool>false</bool>
+                  <spacer name="horizontalSpacer_5">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
                    </property>
-                   <property name="minimumSize">
+                   <property name="sizeHint" stdset="0">
                     <size>
-                     <width>0</width>
-                     <height>50</height>
+                     <width>40</width>
+                     <height>20</height>
                     </size>
                    </property>
-                   <property name="text">
-                    <string>Retirer photo</string>
-                   </property>
-                  </widget>
+                  </spacer>
                  </item>
                  <item>
                   <widget class="QPushButton" name="pbRotationLeft">
@@ -1018,12 +1112,253 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>0</width>
+                     <width>84</width>
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>50</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="mouseTracking">
+                    <bool>true</bool>
+                   </property>
+                   <property name="toolTip">
+                    <string/>
+                   </property>
+                   <property name="whatsThis">
+                    <string/>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">
+
+QPushButton {
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}
+
+
+/*
+QPushButton#myPushButton
+{
+    background-color: transparent;
+    background-image: url(&quot;:/transparent_image.png&quot;);
+    background-repeat: none;
+    border: none;
+}
+*/
+</string>
+                   </property>
                    <property name="text">
-                    <string>Rotation 90° gauche</string>
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pbLeftImage">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>84</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>150</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QPushButton {
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pbPreview">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>84</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>100</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QPushButton {
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+                   </property>
+                   <property name="text">
+                    <string>Pré-affichage</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pbRemovePhoto">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>84</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>100</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">
+
+QPushButton {
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}
+
+
+/*
+QPushButton#myPushButton
+{
+    background-color: transparent;
+    background-image: url(&quot;:/transparent_image.png&quot;);
+    background-repeat: none;
+    border: none;
+}
+*/
+</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pbRightImage">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>84</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>150</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QPushButton {
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+                   </property>
+                   <property name="text">
+                    <string/>
                    </property>
                   </widget>
                  </item>
@@ -1034,17 +1369,45 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>0</width>
+                     <width>84</width>
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>50</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QPushButton {
+    border: 2px solid #8f8f91;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+                   </property>
                    <property name="text">
-                    <string>Rotation 90° droite</string>
+                    <string/>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <spacer name="horizontalSpacer_5">
+                  <spacer name="horizontalSpacer_13">
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
                    </property>
@@ -1061,12 +1424,18 @@
               </layout>
              </widget>
              <widget class="QWidget" name="tabPreview">
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(122,122,122);</string>
+              </property>
               <attribute name="title">
                <string>Pré-affichage du pdf</string>
               </attribute>
               <layout class="QVBoxLayout" name="vlPreview" stretch="0,0,25">
                <item>
                 <widget class="QWidget" name="wPreviewLegend" native="true">
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(0,0,0);</string>
+                 </property>
                  <layout class="QHBoxLayout" name="hlPreviewLegend">
                   <item>
                    <widget class="QLabel" name="laLegend">
@@ -1093,6 +1462,9 @@
                </item>
                <item>
                 <widget class="QWidget" name="wDisplayElements" native="true">
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(255,255,255);</string>
+                 </property>
                  <layout class="QHBoxLayout" name="hlDisplayElements">
                   <item>
                    <widget class="QLabel" name="laZones">
@@ -1107,17 +1479,23 @@
                      <string>marges extérieures</string>
                     </property>
                     <property name="checked">
-                     <bool>true</bool>
+                     <bool>false</bool>
+                    </property>
+                    <property name="tristate">
+                     <bool>false</bool>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QCheckBox" name="cbZoneInternMargins">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
                     <property name="text">
                      <string>marges intérieures</string>
                     </property>
                     <property name="checked">
-                     <bool>true</bool>
+                     <bool>false</bool>
                     </property>
                    </widget>
                   </item>
@@ -1172,20 +1550,50 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1435</width>
+     <width>1280</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFichier">
+    <property name="title">
+     <string>Fichier</string>
+    </property>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuAide">
+    <property name="title">
+     <string>Aide</string>
+    </property>
+    <addaction name="actionOnlineDocumentation"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFichier"/>
+   <addaction name="menuAide"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionExit">
+   <property name="text">
+    <string>Quitter</string>
+   </property>
+  </action>
+  <action name="actionOnlineDocumentation">
+   <property name="text">
+    <string>Tutoriel</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>A propos</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_5"/>
-  <buttongroup name="buttonGroup_3"/>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_4"/>
+  <buttongroup name="buttonGroup_5"/>
   <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_3"/>
  </buttongroups>
 </ui>

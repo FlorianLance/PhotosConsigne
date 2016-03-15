@@ -21,21 +21,22 @@
 ********************************************************************************/
 
 /**
- * \file mainInterface.cpp
+ * \file MainInterface.cpp
  * \brief defines MainInterface
  * \author Florian Lance
  * \date 01/11/15
  */
 
 
-#include "mainInterface.h"
+#include "MainInterface.h"
 
 
 // qt
 #include <QFileDialog>
 #include <QStandardItemModel>
 #include <QColorDialog>
-
+#include <QDesktopServices>
+#include <QMessageBox>
 
 // std
 #include <iostream>
@@ -46,67 +47,80 @@
 
 
 
-MainInterface::MainInterface(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainInterface)
+MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
 {
     ui->setupUi(this);
-
-//    Q_INIT_RESOURCE(resources);
 
     // set icon/title
     this->setWindowTitle(QString("PhotosConsigne"));
     this->setWindowIcon(QIcon(":/images/icon"));
 
-//    QString l_text("<p>An interface for language learning with neuron computing using GPU acceleration.<br /><br />");
-//     l_text += "Developped in the Robotic Cognition Laboratory of the <a href=\"http://www.sbri.fr/\"> SBRI</a> under the direction of  <b>Peter Ford Dominey. </b>";
-//     l_text += "<br /><br /> Author : <b>Lance Florian </b> <a href=\"https://github.com/FlorianLance\"> Github profile</a>";
-//     l_text += "<br /><br /> Language model by <b>Xavier Hinaut</b> and <b>Colas Droin</b>. <br /></p>";
-//     l_text += "<a href=\"https://github.com/FlorianLance/neuron-computing-cuda\">Repository</a>";
+    // load images
+    ui->pbLeftImage->setIcon(QIcon(":/images/leftArrow"));
+    ui->pbLeftImage->setIconSize(QSize(100,45));
+    ui->pbLeftImage->setToolTip(tr("Image précédente"));
+
+    ui->pbRightImage->setIcon(QIcon(":/images/rightArrow"));
+    ui->pbRightImage->setIconSize(QSize(100,45));
+    ui->pbRightImage->setToolTip(tr("Image suivante."));
+
+    ui->pbRotationLeft->setIcon(QIcon(":/images/rotateLeft"));
+    ui->pbRotationLeft->setIconSize(QSize(50,45));
+    ui->pbRotationLeft->setToolTip(tr("Rotation de l'image à gauche de 90°"));
+
+    ui->pbRotationRight->setIcon(QIcon(":/images/rotateRight"));
+    ui->pbRotationRight->setIconSize(QSize(50,45));
+    ui->pbRotationRight->setToolTip(tr("Rotation de l'image à droite de 90°"));
+
+    ui->pbPreview->setToolTip(tr("Affiche la prévisualisation du PDF"));
+
+    ui->pbGeneration->setToolTip(tr("Lance la génération du PDF et le sauvegarde"));
+
+    ui->pbOpenPDF->setToolTip(tr("Ouvre le dernier PDF généré avec le lecteur par défaut"));
+
+    m_addPhotoIcon = QIcon(":/images/add");
+    m_removePhotoIcon = QIcon(":/images/remove");
+
+    ui->pbRemovePhoto->setIcon(m_removePhotoIcon);
+    ui->pbRemovePhoto->setIconSize(QSize(50,50));
+    ui->pbRemovePhoto->setToolTip(tr("Retirer l'image de la liste"));
 
     QString legend("<p><font color=white>LEGENDE :</font> &nbsp;&nbsp;&nbsp;<font color=red>MARGES EXTERIEURES</font> &nbsp;&nbsp;&nbsp;<font color=green>MARGES INTERIEURES</font> &nbsp;&nbsp;&nbsp;<font color=cyan>ESPACE CONSIGNE</font> &nbsp;&nbsp;&nbsp;<font color=yellow>ESPACE PHOTO</font></p>");
     ui->laLegend->setText(legend);
 
-
-    // stylesheet
-//    ui->gbParametres->setStyleSheet("* { font-weight: bold }");
-    setStyleSheet("QGroupBox { padding: 10 0px 0 0px; color: blue; border: 1px solid gray; border-radius: 5px; margin-top: 1ex; /* leave space at the top for the title */}");
-
-//    ui->hlDisplayElements->
-
     // set styles
-    ui->tabPreview->setStyleSheet("background-color: rgb(122,122,122);");
-
-    ui->wPreviewLegend->setStyleSheet("background-color: rgb(0,0,0);");
-    ui->wDisplayElements->setStyleSheet("background-color: rgb(255,255,255);");
+    setStyleSheet("QGroupBox { padding: 10 0px 0 0px; color: blue; border: 1px solid gray; border-radius: 5px; margin-top: 1ex; /* leave space at the top for the title */}");        
 
     // color
     m_colorText = Qt::GlobalColor::black;
-    ui->pbChoosColor->setStyleSheet("background-color: rgb(0,0,0);");
-
 
     // init interface widgets
     //  image labels
     m_imageLabel = new ImageLabel(this);
-    ui->vlImage->insertWidget(1, m_imageLabel);
+    ui->vlImage->insertWidget(0, m_imageLabel);
+//    ui->vlImage->setAlignment(m_imageLabel,Qt::AlignCenter);
 
     m_previewLabel = new ImageLabel(this);
-    ui->hlPreviewImage->insertWidget(0, m_previewLabel);
-
-
+    ui->hlPreviewImage->insertWidget(0, m_previewLabel, Qt::AlignHCenter);
 
     // init worker
     m_interfaceWorker = new InterfaceWorker(m_previewLabel);
 
     // connections
+    QObject::connect(ui->actionExit, SIGNAL(triggered()), parent, SLOT(quit()));
+    QObject::connect(ui->actionOnlineDocumentation, SIGNAL(triggered()), this, SLOT(openOnlineDocumentation()));
+    QObject::connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(openAboutWindow()));
     //  push button
     QObject::connect(ui->pbSelectPhotos,SIGNAL(clicked()), this, SLOT(setPhotosDirectory()));
     QObject::connect(ui->pbGeneration,SIGNAL(clicked()), this, SLOT(generatePDF()));
     QObject::connect(ui->pbPreview,SIGNAL(clicked()), this, SLOT(generatePreview()));
-    QObject::connect(ui->pbChoosColor,SIGNAL(clicked()), this, SLOT(setColorText()));
+    QObject::connect(ui->pbChooseColor,SIGNAL(clicked()), this, SLOT(setColorText()));
     QObject::connect(ui->pbRotationLeft, SIGNAL(clicked()), this, SLOT(setImageLeftRotation()));
     QObject::connect(ui->pbRotationRight, SIGNAL(clicked()), this, SLOT(setImageRightRotation()));
     QObject::connect(ui->pbRemovePhoto, SIGNAL(clicked()), this, SLOT(removeCurrentPhotoFromList()));
+    QObject::connect(ui->pbLeftImage, SIGNAL(clicked()), this, SLOT(leftPhoto()));
+    QObject::connect(ui->pbRightImage, SIGNAL(clicked()), this, SLOT(rightPhoto()));
+    QObject::connect(ui->pbOpenPDF, SIGNAL(clicked()), this, SLOT(openPDF()));
 
     //  list widget
     QObject::connect(ui->lwPhotos,SIGNAL(currentRowChanged(int)), this, SLOT(updatePhotoIndex(int)));
@@ -150,19 +164,18 @@ MainInterface::MainInterface(QWidget *parent) :
     QObject::connect(ui->cbZoneConsignes, SIGNAL(toggled(bool)), this, SLOT(updateUIParameters(bool)));
     QObject::connect(ui->cbZonePhotos, SIGNAL(toggled(bool)), this, SLOT(updateUIParameters(bool)));
     //  interface -> worker
-    QObject::connect(this, SIGNAL(sendImagesDir(QString, QStringList)), m_interfaceWorker, SLOT(loadImages(QString, QStringList)));
+    QObject::connect(this, SIGNAL(sendImagesDirSignal(QString, QStringList)), m_interfaceWorker, SLOT(loadImages(QString, QStringList)));
     QObject::connect(this, SIGNAL(generatePDFSignal(QString)), m_interfaceWorker, SLOT(generatePDF(QString)));
-    QObject::connect(this, SIGNAL(generatePreview(int)), m_interfaceWorker, SLOT(generatePreview(int)));
+    QObject::connect(this, SIGNAL(generatePreviewSignal(int)), m_interfaceWorker, SLOT(generatePreview(int)));
 
-    QObject::connect(this, SIGNAL(sentParameters(UIParameters)),m_interfaceWorker, SLOT(updateParameters(UIParameters)));
-//    QObject::connect(this, SIGNAL(sentParameters(QVector<bool>,int, int,double,QFont,QString, QColor, int, int, bool, double, double, double, double, double, bool, bool, bool, bool, bool)),m_interfaceWorker,
-//                     SLOT(updateParameters(QVector<bool>,int,int, double,QFont,QString, QColor,int, int, bool, double, double, double, double, double, bool, bool, bool, bool, bool )));
-    QObject::connect(this, SIGNAL(updateRotation(int,bool)), m_interfaceWorker, SLOT(updateRotationImage(int,bool)));
-    QObject::connect(this, SIGNAL(askForPhoto(int)), m_interfaceWorker, SLOT(sendPhoto(int)));
+    QObject::connect(this, SIGNAL(sentParametersSignal(UIParameters)),m_interfaceWorker, SLOT(updateParameters(UIParameters)));
+    QObject::connect(this, SIGNAL(updateRotationSignal(int,bool)), m_interfaceWorker, SLOT(updateRotationImage(int,bool)));
+    QObject::connect(this, SIGNAL(askForPhotoSignal(int)), m_interfaceWorker, SLOT(sendPhoto(int)));
     // worker -> interface
     QObject::connect(m_interfaceWorker, SIGNAL(unlockSignal()), this, SLOT(unlockUI()));
-    QObject::connect(m_interfaceWorker, SIGNAL(setProgressBarState(int)), this, SLOT(setProgressBatState(int)));
-    QObject::connect(m_interfaceWorker, SIGNAL(displayPhoto(QImage)), this, SLOT(updatePhotoDisplay(QImage)));
+    QObject::connect(m_interfaceWorker, SIGNAL(setProgressBarStateSignal(int)), this, SLOT(setProgressBatState(int)));
+    QObject::connect(m_interfaceWorker, SIGNAL(displayPhotoSignal(QImage)), this, SLOT(updatePhotoDisplay(QImage)));
+    QObject::connect(m_interfaceWorker, SIGNAL(pdfGeneratedSignal()), this, SLOT(unlockOpenPDF()));
 
 
     // init thread
@@ -170,7 +183,11 @@ MainInterface::MainInterface(QWidget *parent) :
     m_workerThread.start();
 
     // init parameters with default ui values
-    updateUIParameters();
+    updateUIParameters(false, false, true);
+
+    QImage nullImage(QSize(500,500), QImage::Format_ARGB32);
+    nullImage.fill(Qt::GlobalColor::white);
+    m_interfaceWorker->sendPhoto(nullImage);
 }
 
 MainInterface::~MainInterface()
@@ -190,6 +207,8 @@ void MainInterface::unlockUI()
     ui->pbRotationLeft->setEnabled(true);
     ui->pbRotationRight->setEnabled(true);
     ui->pbRemovePhoto->setEnabled(true);
+    ui->pbLeftImage->setEnabled(true);
+    ui->pbRightImage->setEnabled(true);
 }
 
 void MainInterface::setPhotosDirectory()
@@ -199,18 +218,28 @@ void MainInterface::setPhotosDirectory()
     ui->pbSelectPhotos->setEnabled(false);    
     ui->pbRotationLeft->setEnabled(false);
     ui->pbRotationRight->setEnabled(false);
-    ui->pbRemovePhoto->setEnabled(false);
+    ui->pbRemovePhoto->setEnabled(false);    
 
+    QString previousDirectory = m_photosDirectory;
     m_photosDirectory = QFileDialog::getExistingDirectory(this, "Sélection du répertoire de photos");
 
     // no directory selected
-    if(m_photosDirectory.size() == 0)
+    if(m_photosDirectory.size() == 0 )
     {
         ui->pbSelectPhotos->setEnabled(true);
-        return;
-    }
 
-    ui->laPhotosDir->setText(m_photosDirectory);
+        if(previousDirectory.size() != 0)
+        {
+            ui->pbPreview->setEnabled(true);
+            ui->pbRotationLeft->setEnabled(true);
+            ui->pbRotationRight->setEnabled(true);
+            ui->pbRemovePhoto->setEnabled(true);
+            ui->pbGeneration->setEnabled(true);
+            m_photosDirectory = previousDirectory;
+        }
+
+        return;
+    }   
 
     QDir dir(m_photosDirectory);
     dir.setFilter(QDir::Files);
@@ -221,8 +250,22 @@ void MainInterface::setPhotosDirectory()
     if(fileList.size() == 0)
     {
         ui->pbSelectPhotos->setEnabled(true);
+
+        if(previousDirectory.size() != 0)
+        {
+            ui->pbPreview->setEnabled(true);
+            ui->pbRotationLeft->setEnabled(true);
+            ui->pbRotationRight->setEnabled(true);
+            ui->pbRemovePhoto->setEnabled(true);
+            ui->pbGeneration->setEnabled(true);
+            m_photosDirectory = previousDirectory;
+        }
+
+        QMessageBox::warning(this, tr("Avertissement"), tr("Aucune phtoto n'a pu être trouvée dans ce répertoire, veuillez en selectionner un autre.\n"),QMessageBox::Ok);
         return;
     }
+
+    ui->laPhotosDir->setText(m_photosDirectory);
 
     ui->lwPhotos->clear();
     m_photoRemovedList.clear();
@@ -237,12 +280,10 @@ void MainInterface::setPhotosDirectory()
         ui->lwPhotos->setCurrentRow(0);
     }
 
-    emit sendImagesDir(m_photosDirectory, fileList);
+    emit sendImagesDirSignal(m_photosDirectory, fileList);
 
-    updateUIParameters();
+    updateUIParameters(false, false, true);
 }
-
-
 
 void MainInterface::updatePhotoDisplay(QImage image)
 {
@@ -255,6 +296,32 @@ void MainInterface::updatePhotoIndex(QModelIndex index)
     updatePhotoIndex(index.row());
 }
 
+void MainInterface::leftPhoto()
+{
+    if(ui->lwPhotos->currentRow() == 0)
+    {
+        ui->lwPhotos->setCurrentRow(m_photoRemovedList.size()-1);
+    }
+    else
+    {
+        ui->lwPhotos->setCurrentRow(ui->lwPhotos->currentRow()-1);
+    }
+    updatePhotoIndex(ui->lwPhotos->currentRow());
+}
+
+void MainInterface::rightPhoto()
+{
+    if(ui->lwPhotos->currentRow() == m_photoRemovedList.size()-1)
+    {
+        ui->lwPhotos->setCurrentRow(0);
+    }
+    else
+    {
+        ui->lwPhotos->setCurrentRow(ui->lwPhotos->currentRow() + 1);
+    }
+    updatePhotoIndex(ui->lwPhotos->currentRow());
+}
+
 
 void MainInterface::updatePhotoIndex(int index)
 {
@@ -262,16 +329,20 @@ void MainInterface::updatePhotoIndex(int index)
 
     if(index >= 0  && index < ui->lwPhotos->count())
     {
-        emit askForPhoto(index);
+        emit askForPhotoSignal(index);
     }
 
-    if(!m_photoRemovedList[ui->lwPhotos->currentRow()])
+    if(m_photoRemovedList[ui->lwPhotos->currentRow()])
     {
-        ui->pbRemovePhoto->setText("Retirer photo");
+        ui->pbRemovePhoto->setIcon(m_addPhotoIcon);
+        ui->pbRemovePhoto->setIconSize(QSize(50,50));
+        ui->pbRemovePhoto->setToolTip(tr("Rajouter l'image dans la liste"));
     }
     else
     {
-        ui->pbRemovePhoto->setText("Ajouter photo");
+        ui->pbRemovePhoto->setIcon(m_removePhotoIcon);
+        ui->pbRemovePhoto->setIconSize(QSize(50,50));
+        ui->pbRemovePhoto->setToolTip(tr("Retirer l'image de la liste"));
     }
 }
 
@@ -283,19 +354,55 @@ void MainInterface::removeCurrentPhotoFromList()
     {
         brush.setColor(Qt::red);
         m_photoRemovedList[ui->lwPhotos->currentRow()] = true;
-        ui->pbRemovePhoto->setText("Ajouter photo");
+        ui->pbRemovePhoto->setIcon(m_addPhotoIcon);
+        ui->pbRemovePhoto->setIconSize(QSize(50,50));
+        ui->pbRemovePhoto->setToolTip(tr("Rajouter l'image dans la liste"));
     }
     else
     {
         brush.setColor(Qt::black);
         m_photoRemovedList[ui->lwPhotos->currentRow()] = false;
-        ui->pbRemovePhoto->setText("Retirer photo");
+        ui->pbRemovePhoto->setIcon(m_removePhotoIcon);
+        ui->pbRemovePhoto->setIconSize(QSize(50,50));
+        ui->pbRemovePhoto->setToolTip(tr("Retirer l'image de la liste"));
     }
 
     ui->lwPhotos->currentItem()->setForeground(brush);
-    updateUIParameters();
+    updateUIParameters(false, false, false);
 }
 
+void MainInterface::unlockOpenPDF()
+{
+    ui->pbOpenPDF->setEnabled(true);
+}
+
+void MainInterface::openPDF()
+{
+    bool success = QDesktopServices::openUrl(QUrl::fromLocalFile(m_pdfFileName));
+    if(!success)
+    {
+        QMessageBox::warning(this, tr("Avertissement"), tr("Le PDF n'a pu être lancé.\nVeuillez vous assurez que vous disposez d'un logiciel de lecture de PDF (ex : SumatraPDF, AdobeReader...) .\n"),QMessageBox::Ok);
+    }
+}
+
+void MainInterface::openAboutWindow()
+{
+    QString text("<p>PhotosConsigne est un logiciel léger et rapide servant à générer des PDF contenant des images associées à un texte commun.<br />");
+    text += "Tous les paramètres sont facilement modifiables (quantités d'images par page, orientation, alignements, police du texte...). <br /><br /></b>";
+    text += "Ce logiciel est principalement destiné aux professeurs des écoles, mais si d'autres lui trouve une autre utilité j'en serai ravi.<br /><br /></b>";
+    text += "N'hésitez à pas me faire partager vos retours et vos idées d'amélioration, selon mon temps il est possible que j'implémente les plus justifitées.<br /> Contact : <a href=\"mailto:lance.florian@gmail.com?subject=PhotosConsigne&body=...\">email</a> ";
+    text += "<br /><br /> Auteur : <b>Lance Florian </b> <a href=\"https://github.com/FlorianLance\"> Github du logiciel </a>";
+    QMessageBox::about(this, "A propos du logiciel", text);
+}
+
+void MainInterface::openOnlineDocumentation()
+{
+    bool success = QDesktopServices::openUrl(QUrl("https://github.com/FlorianLance/PhotosConsigne", QUrl::TolerantMode));
+    if(!success)
+    {
+        QMessageBox::warning(this, tr("Avertissement"), tr("Le site internet du tutoriel n'a pu être lancé, aucun logiciel de navigation web n'a été trouvé.' .\n"),QMessageBox::Ok);
+    }
+}
 
 void MainInterface::generatePDF()
 {
@@ -303,17 +410,23 @@ void MainInterface::generatePDF()
     ui->pbPreview->setEnabled(false);
     ui->pbSelectPhotos->setEnabled(false);
 
-    QString pdfFileName = QFileDialog::getSaveFileName(this, "Nom du fichier pdf", QString(), "*.pdf");
+    m_pdfFileName = QFileDialog::getSaveFileName(this, "Nom du fichier pdf", QString(), "*.pdf");
 
-    if(pdfFileName.size() == 0)
-        return;
-
-    if(pdfFileName.right(4) != ".pdf")
+    if(m_pdfFileName.size() == 0)
     {
-        pdfFileName += ".pdf";
+        ui->pbGeneration->setEnabled(true);
+        ui->pbPreview->setEnabled(true);
+        ui->pbSelectPhotos->setEnabled(true);
+        return;
     }
 
-    emit generatePDFSignal(pdfFileName);
+    if(m_pdfFileName.right(4) != ".pdf")
+    {
+        m_pdfFileName += ".pdf";
+    }
+
+
+    emit generatePDFSignal(m_pdfFileName);
 }
 
 
@@ -323,38 +436,44 @@ void MainInterface::generatePreview()
     ui->pbPreview->setEnabled(false);
     ui->tabDisplay->setCurrentIndex(1);
 
-    emit generatePreview(ui->lwPhotos->currentIndex().row());
+    emit generatePreviewSignal(ui->lwPhotos->currentIndex().row());
 }
 
+void MainInterface::updateUIParameters()
+{
+    updateUIParameters(false, false, true);
+}
 
 
 void MainInterface::updateUIParameters(QFont notUsedValue)
 {
     Q_UNUSED(notUsedValue);
-    updateUIParameters();
+    updateUIParameters(false, false, true);
 }
 
 void MainInterface::updateUIParameters(bool notUsedValue)
 {
     Q_UNUSED(notUsedValue);
-    updateUIParameters();
+    updateUIParameters(false, false, true);
 }
-
 
 void MainInterface::updateUIParameters(int notUsedValue)
 {
     Q_UNUSED(notUsedValue);
-    updateUIParameters();
+    updateUIParameters(false, false, true);
 }
 
 void MainInterface::updateUIParameters(double notUsedValue)
 {
     Q_UNUSED(notUsedValue);
-    updateUIParameters();
+    updateUIParameters(false, false, true);
 }
 
-void MainInterface::updateUIParameters()
+void MainInterface::updateUIParameters(bool notUsedValue1, bool notUsedValue2, bool updatePreview)
 {
+    Q_UNUSED(notUsedValue1);
+    Q_UNUSED(notUsedValue2);
+
     int nbImagesVPage = ui->sbNbImagesV->value();
     int nbImagesHPage = ui->sbNbImagesH->value();
     int sizeText = ui->sbSizeTexte->value();
@@ -474,6 +593,32 @@ void MainInterface::updateUIParameters()
         }
     }
 
+
+    // display pages number
+    int photosRemoved = 0;
+    for(int ii = 0; ii < m_photoRemovedList.count();++ii)
+    {
+        if(m_photoRemovedList[ii])
+            photosRemoved++;
+    }
+
+    int nbPhotosTotal = m_photoRemovedList.size()-photosRemoved;
+    int nbPhotosPerPage = nbImagesVPage*nbImagesHPage;
+    int nbPages = nbPhotosTotal / nbPhotosPerPage;
+    int rest = nbPhotosTotal % nbPhotosPerPage;
+    if( rest != 0)
+        ++nbPages;
+
+    if(nbPages <= 1)
+    {
+        ui->laNbPages->setText(QString::number(nbPages) + " page");
+    }
+    else
+    {
+        ui->laNbPages->setText(QString::number(nbPages) + " pages");
+    }
+
+
     UIParameters params;
     params.removePhotoList = m_photoRemovedList;
     params.nbImagesPageH = nbImagesHPage;
@@ -497,13 +642,10 @@ void MainInterface::updateUIParameters()
     params.orientation = ui->rbPortrait->isChecked();
     params.zConsigns = ui->cbZoneConsignes->isChecked();
 
-    emit sentParameters(params);
+    emit sentParametersSignal(params);
 
-//    emit sentParameters(m_photoRemovedList, nbImagesVPage,nbImagesHPage, ratio, font, text, m_colorText, imageAlignment, textAlignment, ui->rbPortrait->isChecked(),
-//                        ui->dsLeftMargins->value(),ui->dsRightMargins->value(),ui->dsTopMargins->value(),ui->dsBottomMargins->value(),ui->dsBetween->value(),
-//                        ui->cbCutLines->isChecked() ,ui->cbZoneExternMargins->isChecked(), ui->cbZoneInternMargins->isChecked(), ui->cbZonePhotos->isChecked(), ui->cbZoneConsignes->isChecked());
 
-    if(ui->lwPhotos->count() > 0)
+    if(ui->lwPhotos->count() > 0 && updatePreview)
     {
         generatePreview();
     }
@@ -515,10 +657,10 @@ void MainInterface::setColorText()
     colorDialog.setCurrentColor(m_colorText);
     colorDialog.exec();
     m_colorText = colorDialog.selectedColor();
-    ui->pbChoosColor->setStyleSheet("background-color: rgb("+ QString::number(m_colorText.red()) +
+    ui->pbChooseColor->setStyleSheet("background-color: rgb("+ QString::number(m_colorText.red()) +
                                     ", " + QString::number(m_colorText.green()) + ", " + QString::number(m_colorText.blue()) +");");
 
-    updateUIParameters();
+    updateUIParameters(false, false, true);
 }
 
 void MainInterface::setProgressBatState(int state)
@@ -529,13 +671,13 @@ void MainInterface::setProgressBatState(int state)
 void MainInterface::setImageLeftRotation()
 {
     ui->tabDisplay->setCurrentIndex(0);
-    emit updateRotation(ui->lwPhotos->currentIndex().row(), false);
+    emit updateRotationSignal(ui->lwPhotos->currentIndex().row(), false);
 }
 
 void MainInterface::setImageRightRotation()
 {
     ui->tabDisplay->setCurrentIndex(0);
-    emit updateRotation(ui->lwPhotos->currentIndex().row(), true);
+    emit updateRotationSignal(ui->lwPhotos->currentIndex().row(), true);
 }
 
 

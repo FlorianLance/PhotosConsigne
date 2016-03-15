@@ -56,7 +56,8 @@ void ImageLabel::paintEvent(QPaintEvent *event) {
                                    Qt::SmoothTransformation
                                    );
 
-    painter.drawPixmap(QPoint(), scaledPix);
+    painter.drawPixmap(width()/2-scaledPix.size().width()/2,height()/2-scaledPix.size().height()/2,scaledPix);
+//    painter.drawPixmap(QPoint(), scaledPix);
 
 }
 
