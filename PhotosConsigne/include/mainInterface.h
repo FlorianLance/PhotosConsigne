@@ -215,6 +215,9 @@ signals :
 
 private:
 
+    QIcon m_addPhotoIcon;
+    QIcon m_removePhotoIcon;
+
     QColor m_colorText;                 /**< color of the text */
     QString m_photosDirectory;          /**< the photos directory */
     QString m_pdfFileName;              /**< path of the generated PDF file */

@@ -5,6 +5,8 @@
         <file alias="leftArrow">../resources/images/leftArrow.png</file>
         <file alias="rotateLeft">../resources/images/rotateLeft.png</file>
         <file alias="rotateRight">../resources/images/rotateRight.png</file>
+        <file alias="remove">../resources/images/remove.png</file>
+        <file alias="add">../resources/images/add.png</file>
     </qresource>
     <qresource prefix="/style">
         <file alias="buttons">../resources/style/buttons.qss</file>

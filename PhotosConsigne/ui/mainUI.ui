@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1435</width>
-    <height>962</height>
+    <width>1280</width>
+    <height>849</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -103,7 +103,7 @@ QPushButton:default {
             </layout>
            </item>
            <item>
-            <widget class="QGroupBox" name="dzqddzqd">
+            <widget class="QGroupBox" name="gbListePhotos">
              <property name="title">
               <string>LISTE DES PHOTOS</string>
              </property>
@@ -127,13 +127,19 @@ QPushButton:default {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>552</width>
-                   <height>163</height>
+                   <width>519</width>
+                   <height>107</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">
                   <item>
                    <widget class="QListWidget" name="lwPhotos">
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>50</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>10000</width>
@@ -157,7 +163,7 @@ QPushButton:default {
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>100</height>
+               <height>0</height>
               </size>
              </property>
              <property name="font">
@@ -192,7 +198,7 @@ QPushButton:default {
                    </layout>
                   </item>
                   <item>
-                   <layout class="QHBoxLayout" name="hlHText">
+                   <layout class="QHBoxLayout" name="hlHText" stretch="2,1,1,1,1">
                     <item>
                      <widget class="QLabel" name="laHorizontalText">
                       <property name="text">
@@ -252,7 +258,7 @@ QPushButton:default {
                    </layout>
                   </item>
                   <item>
-                   <layout class="QHBoxLayout" name="hlVText">
+                   <layout class="QHBoxLayout" name="hlVText" stretch="2,1,1,1,1">
                     <item>
                      <widget class="QLabel" name="laVerticalText">
                       <property name="text">
@@ -319,6 +325,12 @@ QPushButton:default {
                    <layout class="QHBoxLayout" name="hlFont">
                     <item>
                      <widget class="QFontComboBox" name="fcbConsignes">
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>20</height>
+                       </size>
+                      </property>
                       <property name="editable">
                        <bool>false</bool>
                       </property>
@@ -424,6 +436,12 @@ QPushButton:default {
                   </item>
                   <item>
                    <widget class="QPlainTextEdit" name="pteConsigne">
+                    <property name="minimumSize">
+                     <size>
+                      <width>100</width>
+                      <height>75</height>
+                     </size>
+                    </property>
                     <property name="plainText">
                      <string>Tapez la consigne ici.</string>
                     </property>
@@ -460,7 +478,7 @@ QPushButton:default {
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="hlPhotoHorizontal">
+               <layout class="QHBoxLayout" name="hlPhotoHorizontal" stretch="2,1,1,1,1">
                 <item>
                  <widget class="QLabel" name="laHorizontalImage">
                   <property name="text">
@@ -517,7 +535,7 @@ QPushButton:default {
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="hlPhotoVertical">
+               <layout class="QHBoxLayout" name="hlPhotoVertical" stretch="2,1,1,1,1">
                 <item>
                  <widget class="QLabel" name="laVerticalImage">
                   <property name="text">
@@ -525,7 +543,7 @@ QPushButton:default {
                   </property>
                  </widget>
                 </item>
-                <item>
+                <item alignment="Qt::AlignLeft">
                  <widget class="QRadioButton" name="rbBottomImage">
                   <property name="text">
                    <string>en bas</string>
@@ -535,7 +553,7 @@ QPushButton:default {
                   </attribute>
                  </widget>
                 </item>
-                <item>
+                <item alignment="Qt::AlignLeft">
                  <widget class="QRadioButton" name="rbVCenterImage">
                   <property name="text">
                    <string>centré</string>
@@ -548,7 +566,7 @@ QPushButton:default {
                   </attribute>
                  </widget>
                 </item>
-                <item>
+                <item alignment="Qt::AlignLeft">
                  <widget class="QRadioButton" name="rbTopImage">
                   <property name="text">
                    <string>en haut</string>
@@ -681,7 +699,7 @@ QPushButton:default {
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
               <item>
-               <layout class="QHBoxLayout" name="hlOrientation">
+               <layout class="QHBoxLayout" name="hlOrientation" stretch="2,1,1,2">
                 <item>
                  <widget class="QLabel" name="label">
                   <property name="text">
@@ -1104,6 +1122,15 @@ QPushButton:default {
                      <height>16777215</height>
                     </size>
                    </property>
+                   <property name="mouseTracking">
+                    <bool>true</bool>
+                   </property>
+                   <property name="toolTip">
+                    <string/>
+                   </property>
+                   <property name="whatsThis">
+                    <string/>
+                   </property>
                    <property name="styleSheet">
                     <string notr="true">
 
@@ -1287,7 +1314,7 @@ QPushButton#myPushButton
 </string>
                    </property>
                    <property name="text">
-                    <string>Retirer</string>
+                    <string/>
                    </property>
                   </widget>
                  </item>
@@ -1452,7 +1479,7 @@ QPushButton:default {
                      <string>marges extérieures</string>
                     </property>
                     <property name="checked">
-                     <bool>true</bool>
+                     <bool>false</bool>
                     </property>
                     <property name="tristate">
                      <bool>false</bool>
@@ -1468,7 +1495,7 @@ QPushButton:default {
                      <string>marges intérieures</string>
                     </property>
                     <property name="checked">
-                     <bool>true</bool>
+                     <bool>false</bool>
                     </property>
                    </widget>
                   </item>
@@ -1523,7 +1550,7 @@ QPushButton:default {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1435</width>
+     <width>1280</width>
      <height>21</height>
     </rect>
    </property>
@@ -1563,10 +1590,10 @@ QPushButton:default {
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_2"/>
-  <buttongroup name="buttonGroup_5"/>
-  <buttongroup name="buttonGroup_3"/>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_4"/>
+  <buttongroup name="buttonGroup_5"/>
+  <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_3"/>
  </buttongroups>
 </ui>

@@ -55,56 +55,53 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     this->setWindowTitle(QString("PhotosConsigne"));
     this->setWindowIcon(QIcon(":/images/icon"));
 
-
     // load images
     ui->pbLeftImage->setIcon(QIcon(":/images/leftArrow"));
-    ui->pbLeftImage->setIconSize(QSize(100,50));
+    ui->pbLeftImage->setIconSize(QSize(100,45));
+    ui->pbLeftImage->setToolTip(tr("Image précédente"));
+
     ui->pbRightImage->setIcon(QIcon(":/images/rightArrow"));
-    ui->pbRightImage->setIconSize(QSize(100,50));
+    ui->pbRightImage->setIconSize(QSize(100,45));
+    ui->pbRightImage->setToolTip(tr("Image suivante."));
 
     ui->pbRotationLeft->setIcon(QIcon(":/images/rotateLeft"));
-    ui->pbRotationLeft->setIconSize(QSize(50,50));
+    ui->pbRotationLeft->setIconSize(QSize(50,45));
+    ui->pbRotationLeft->setToolTip(tr("Rotation de l'image à gauche de 90°"));
 
     ui->pbRotationRight->setIcon(QIcon(":/images/rotateRight"));
-    ui->pbRotationRight->setIconSize(QSize(50,50));
+    ui->pbRotationRight->setIconSize(QSize(50,45));
+    ui->pbRotationRight->setToolTip(tr("Rotation de l'image à droite de 90°"));
 
+    ui->pbPreview->setToolTip(tr("Affiche la prévisualisation du PDF"));
 
+    ui->pbGeneration->setToolTip(tr("Lance la génération du PDF et le sauvegarde"));
 
-//    QFile file(":/style/rotateLeft");
-//    file.open(QFile::ReadOnly);
-//    QString styleSheet = QLatin1String(file.readAll());
-//    ui->pbRotationLeft->setStyleSheet(styleSheet);
-//    ui->pbRotationRight->setStyleSheet(styleSheet);
+    ui->pbOpenPDF->setToolTip(tr("Ouvre le dernier PDF généré avec le lecteur par défaut"));
 
+    m_addPhotoIcon = QIcon(":/images/add");
+    m_removePhotoIcon = QIcon(":/images/remove");
 
-
-
-//    QString l_text("<p>An interface for language learning with neuron computing using GPU acceleration.<br /><br />");
-//     l_text += "Developped in the Robotic Cognition Laboratory of the <a href=\"http://www.sbri.fr/\"> SBRI</a> under the direction of  <b>Peter Ford Dominey. </b>";
-//     l_text += "<br /><br /> Author : <b>Lance Florian </b> <a href=\"https://github.com/FlorianLance\"> Github profile</a>";
-//     l_text += "<br /><br /> Language model by <b>Xavier Hinaut</b> and <b>Colas Droin</b>. <br /></p>";
-//     l_text += "<a href=\"https://github.com/FlorianLance/neuron-computing-cuda\">Repository</a>";
+    ui->pbRemovePhoto->setIcon(m_removePhotoIcon);
+    ui->pbRemovePhoto->setIconSize(QSize(50,50));
+    ui->pbRemovePhoto->setToolTip(tr("Retirer l'image de la liste"));
 
     QString legend("<p><font color=white>LEGENDE :</font> &nbsp;&nbsp;&nbsp;<font color=red>MARGES EXTERIEURES</font> &nbsp;&nbsp;&nbsp;<font color=green>MARGES INTERIEURES</font> &nbsp;&nbsp;&nbsp;<font color=cyan>ESPACE CONSIGNE</font> &nbsp;&nbsp;&nbsp;<font color=yellow>ESPACE PHOTO</font></p>");
     ui->laLegend->setText(legend);
 
-
     // set styles
     setStyleSheet("QGroupBox { padding: 10 0px 0 0px; color: blue; border: 1px solid gray; border-radius: 5px; margin-top: 1ex; /* leave space at the top for the title */}");        
-//    ui->tabPreview->setStyleSheet("background-color: rgb(122,122,122);");
-//    ui->pbChooseColor->setStyleSheet("background-color: rgb(0,0,0);");
 
     // color
     m_colorText = Qt::GlobalColor::black;
-
 
     // init interface widgets
     //  image labels
     m_imageLabel = new ImageLabel(this);
     ui->vlImage->insertWidget(0, m_imageLabel);
+//    ui->vlImage->setAlignment(m_imageLabel,Qt::AlignCenter);
 
     m_previewLabel = new ImageLabel(this);
-    ui->hlPreviewImage->insertWidget(0, m_previewLabel);
+    ui->hlPreviewImage->insertWidget(0, m_previewLabel, Qt::AlignHCenter);
 
     // init worker
     m_interfaceWorker = new InterfaceWorker(m_previewLabel);
@@ -254,10 +251,6 @@ void MainInterface::setPhotosDirectory()
     {
         ui->pbSelectPhotos->setEnabled(true);
 
-//        QMessageBox messageBox;
-//        messageBox.critical(0,"Error","An error has occured !");
-//        messageBox.setFixedSize(500,200);
-
         if(previousDirectory.size() != 0)
         {
             ui->pbPreview->setEnabled(true);
@@ -268,6 +261,7 @@ void MainInterface::setPhotosDirectory()
             m_photosDirectory = previousDirectory;
         }
 
+        QMessageBox::warning(this, tr("Avertissement"), tr("Aucune phtoto n'a pu être trouvée dans ce répertoire, veuillez en selectionner un autre.\n"),QMessageBox::Ok);
         return;
     }
 
@@ -340,14 +334,15 @@ void MainInterface::updatePhotoIndex(int index)
 
     if(m_photoRemovedList[ui->lwPhotos->currentRow()])
     {
-        ui->pbRemovePhoto->setText("Ajouter photo");
-
-//        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(0,0,255); color: rgb(255,255,255);");
+        ui->pbRemovePhoto->setIcon(m_addPhotoIcon);
+        ui->pbRemovePhoto->setIconSize(QSize(50,50));
+        ui->pbRemovePhoto->setToolTip(tr("Rajouter l'image dans la liste"));
     }
     else
     {
-        ui->pbRemovePhoto->setText("Retirer photo");
-//        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(255,0,0); color: rgb(255,255,255);");
+        ui->pbRemovePhoto->setIcon(m_removePhotoIcon);
+        ui->pbRemovePhoto->setIconSize(QSize(50,50));
+        ui->pbRemovePhoto->setToolTip(tr("Retirer l'image de la liste"));
     }
 }
 
@@ -359,15 +354,17 @@ void MainInterface::removeCurrentPhotoFromList()
     {
         brush.setColor(Qt::red);
         m_photoRemovedList[ui->lwPhotos->currentRow()] = true;
-        ui->pbRemovePhoto->setText("Ajouter photo");
-//        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(0,0,255); color: rgb(255,255,255);");
+        ui->pbRemovePhoto->setIcon(m_addPhotoIcon);
+        ui->pbRemovePhoto->setIconSize(QSize(50,50));
+        ui->pbRemovePhoto->setToolTip(tr("Rajouter l'image dans la liste"));
     }
     else
     {
         brush.setColor(Qt::black);
         m_photoRemovedList[ui->lwPhotos->currentRow()] = false;
-        ui->pbRemovePhoto->setText("Retirer photo");       
-//        ui->pbRemovePhoto->setStyleSheet("background-color: rgb(255,0,0); color: rgb(255,255,255);");
+        ui->pbRemovePhoto->setIcon(m_removePhotoIcon);
+        ui->pbRemovePhoto->setIconSize(QSize(50,50));
+        ui->pbRemovePhoto->setToolTip(tr("Retirer l'image de la liste"));
     }
 
     ui->lwPhotos->currentItem()->setForeground(brush);
@@ -381,24 +378,30 @@ void MainInterface::unlockOpenPDF()
 
 void MainInterface::openPDF()
 {
-    QDesktopServices::openUrl(QUrl::fromLocalFile(m_pdfFileName));
+    bool success = QDesktopServices::openUrl(QUrl::fromLocalFile(m_pdfFileName));
+    if(!success)
+    {
+        QMessageBox::warning(this, tr("Avertissement"), tr("Le PDF n'a pu être lancé.\nVeuillez vous assurez que vous disposez d'un logiciel de lecture de PDF (ex : SumatraPDF, AdobeReader...) .\n"),QMessageBox::Ok);
+    }
 }
-
 
 void MainInterface::openAboutWindow()
 {
     QString text("<p>PhotosConsigne est un logiciel léger et rapide servant à générer des PDF contenant des images associées à un texte commun.<br />");
     text += "Tous les paramètres sont facilement modifiables (quantités d'images par page, orientation, alignements, police du texte...). <br /><br /></b>";
     text += "Ce logiciel est principalement destiné aux professeurs des écoles, mais si d'autres lui trouve une autre utilité j'en serai ravi.<br /><br /></b>";
-    text += "N'hésitez à pas me faire partager vos retours et vos idées d'amélioration, selon mon temps il est possible que j'implémente les plus justifitées.<br /> Addresse email lance.florian@gmail.com ";
-    text += "<br /><br /> Auteur : <b>Lance Florian </b> <a href=\"https://github.com/FlorianLance\"> Github profile</a>";
-    text += "<a href=\"https://github.com/FlorianLance/PhotosConsigne\">Dépôt github</a>";
+    text += "N'hésitez à pas me faire partager vos retours et vos idées d'amélioration, selon mon temps il est possible que j'implémente les plus justifitées.<br /> Contact : <a href=\"mailto:lance.florian@gmail.com?subject=PhotosConsigne&body=...\">email</a> ";
+    text += "<br /><br /> Auteur : <b>Lance Florian </b> <a href=\"https://github.com/FlorianLance\"> Github du logiciel </a>";
     QMessageBox::about(this, "A propos du logiciel", text);
 }
 
 void MainInterface::openOnlineDocumentation()
 {
-    QDesktopServices::openUrl(QUrl("https://github.com/FlorianLance/PhotosConsigne", QUrl::TolerantMode));
+    bool success = QDesktopServices::openUrl(QUrl("https://github.com/FlorianLance/PhotosConsigne", QUrl::TolerantMode));
+    if(!success)
+    {
+        QMessageBox::warning(this, tr("Avertissement"), tr("Le site internet du tutoriel n'a pu être lancé, aucun logiciel de navigation web n'a été trouvé.' .\n"),QMessageBox::Ok);
+    }
 }
 
 void MainInterface::generatePDF()
