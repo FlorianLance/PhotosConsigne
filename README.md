@@ -13,6 +13,13 @@ Une prévisualisation du résultat est disponible à chaque changement de param�
 
 [Téléchargement version beta](https://github.com/FlorianLance/PhotosConsigne/files/172984/PhotosConsigne.zip "pre-release v0.9")
 
+
+Si ce logiciel vous a été utile et que vous souhaitez m'encourager, je serai ravi d'accepter un don :
+<a href='https://pledgie.com/campaigns/31286'><img alt='Click here to lend your support to: Développement logiciel éducation/recherche open-source and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/31286.png?skin_name=chrome' border='0' ></a>
+
+Tutorials :
+- video soon
+
 --------------
 
 Exemple de mise en page :
@@ -29,8 +36,6 @@ Le résultat :
 
 Il s'agit d'un projet réalisé sur mon temps de loisir en quelques weekends, mais selon les différents retours, je ne manquerai pas d'ajouter des fonctionnalités si elles s'avèrent cohérentes avec l'ensemble.
 
-Tutorials :
-- video soon
 
 Documentation :
  - soon
