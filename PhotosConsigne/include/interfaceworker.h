@@ -48,11 +48,19 @@ struct UIParameters
 {
     bool orientation, cutLines, zExternMargins, zInterMargins, zPhotos, zConsigns;
     int nbImagesPageV, nbImagesPageH, imageAlignment, consignAlignment;
-    double ratio,leftMargin,rightMargin, topMargin, bottomMargin, betweenMargin;
+    double ratio,leftMargin,rightMargin, topMargin, bottomMargin, interMarginWidth, interMarginHeight;
     QFont font;
     QString consignText;
     QColor consignColor;
     QVector<bool> removePhotoList;
+
+    /**
+     * @brief Save the current profile to the input file path
+     * @param [in] pathProFile
+     * @return true if success else false
+     */
+    bool saveProfileTo(const QString &pathProFile);
+
 };
 
 
@@ -117,6 +125,21 @@ class InterfaceWorker : public QObject
          */
         void sendPhoto(QImage image);
 
+        /**
+         * @brief Save the current profil to the input path
+         * @param [in] pathProFile
+         */
+        void saveProfileTo(QString pathProFile);
+
+        /**
+         * @brief Save the current profil to the current profile path
+         */
+        void saveProfile();
+
+//        /**
+//         * @brief Save the current profil to the default profile path
+//         */
+//        void saveDefaultProfile();
 
     signals :
 
@@ -166,12 +189,16 @@ class InterfaceWorker : public QObject
         double m_rightMargin;       /**< ratio of the right margin of the pdf */
         double m_topMargin;         /**< ratio of the top margin of the pdf */
         double m_bottomMargin;      /**< ratio of the bottom margin of the pdf */
-        double m_innerMargin;       /**< ratio of the inner margin of the pdf */
+        double m_innerMarginWidth;  /**< ratio of the inner margin widht of the pdf */
+        double m_innerMarginHeight; /**< ratio of the inner margin height of the pdf */
 
         QFont m_font;               /**< font of the consign text */
         QString m_consignText;      /**< text of the consign */
         QColor m_consignColor;      /**< consign text color */
         ImageLabel *m_preview;      /**< preview label pointer */
+
+        QString m_profilePath;      /**< name of the current profile file */
+        UIParameters m_params;      /**< current params*/
 
         QVector<bool> m_removedImageList;   /**< mask of the removed images */
         QVector<QImage> m_loadedImages;     /**< loaded images to be used for the pdf generation */

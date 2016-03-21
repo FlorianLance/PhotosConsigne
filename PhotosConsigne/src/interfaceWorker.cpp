@@ -120,8 +120,8 @@ void InterfaceWorker::generatePDF(QString pdfFileName)
     int widthTotal = width * (1.0 - m_leftMargin - m_rightMargin);
 
     // bewteen margin
-    int heightMargin =  heightTotal * m_innerMargin;
-    int widthMargin  = widthTotal * m_innerMargin;
+    int heightMargin =  heightTotal * m_innerMarginHeight;
+    int widthMargin  = widthTotal * m_innerMarginWidth;
 
     // photo and margin
     int heightPhotoAndConsigne = (heightTotal  - (m_nbImagesPageV-1) * heightMargin) / m_nbImagesPageV;
@@ -337,8 +337,8 @@ void InterfaceWorker::generatePreview(int currentRowPhoto)
     int widthTotal = width * (1.0 - m_leftMargin - m_rightMargin);
 
     // bewteen margin
-    int heightMargin =  heightTotal * m_innerMargin;
-    int widthMargin  = widthTotal * m_innerMargin;
+    int heightMargin =  heightTotal * m_innerMarginHeight;
+    int widthMargin  = widthTotal * m_innerMarginWidth;
 
     // photo and margin
     int heightPhotoAndConsigne = (heightTotal  - (m_nbImagesPageV-1) * heightMargin) / m_nbImagesPageV;
@@ -559,7 +559,8 @@ void InterfaceWorker::updateParameters(UIParameters params)
     m_rightMargin = params.rightMargin;
     m_topMargin = params.topMargin;
     m_bottomMargin = params.bottomMargin;
-    m_innerMargin = params.betweenMargin;
+    m_innerMarginWidth = params.interMarginWidth;
+    m_innerMarginHeight = params.interMarginHeight;
     m_removedImageList = params.removePhotoList;
 
     m_cutLines = params.cutLines;
@@ -567,6 +568,8 @@ void InterfaceWorker::updateParameters(UIParameters params)
     m_zInterMargins = params.zInterMargins;
     m_zPhotos = params.zPhotos;
     m_zConsigns = params.zConsigns;
+
+    m_params = params;
 
 
     m_isAllPhotoRemoved = true;
@@ -596,6 +599,35 @@ void InterfaceWorker::sendPhoto(QImage image)
     emit displayPhotoSignal(image);
 }
 
+
+void InterfaceWorker::saveProfile()
+{
+    if(!m_params.saveProfileTo(m_profilePath))
+    {
+         // TODO : manage error
+    }
+}
+
+//void InterfaceWorker::saveDefaultProfile()
+//{
+//    if(!m_params.saveProfileTo(":/profils/default"))
+//    {
+//         // TODO : manage error
+//    }
+//}
+
+void InterfaceWorker::saveProfileTo(QString pathProFile)
+{
+    if(m_params.saveProfileTo(pathProFile))
+    {
+        m_profilePath = pathProFile;
+    }
+    else
+    {
+        // TODO : manage error
+    }
+}
+
 void InterfaceWorker::sendPhoto(int index)
 {
     if(index < m_loadedImages.count() && index >= 0)
@@ -612,4 +644,21 @@ void InterfaceWorker::addContourPreview(QImage &image)
     painter.end();
 
     image = img;
+}
+
+bool UIParameters::saveProfileTo(const QString &pathProFile)
+{
+    QFile proFile(pathProFile);
+    if(proFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream stream(&proFile);
+        stream << "PhotosConsigne parameters :\n";
+        stream << orientation << " " << cutLines << " " << zExternMargins << " " << zInterMargins << " " << zPhotos  << " " << zConsigns << endl;
+        stream << nbImagesPageV << " " << nbImagesPageH << " " << imageAlignment << " " << consignAlignment  << endl;
+        stream << ratio << " " << leftMargin << " " << rightMargin << " " << topMargin  << " " << bottomMargin << " " << interMarginWidth << " " << interMarginHeight << endl;
+        stream << font.italic() << " " << font.bold() << " " << font.family() << " " << consignColor.red() << " " << consignColor.green() << " " << consignColor.blue() <<  endl;
+        return true;
+    }
+
+    return false;
 }

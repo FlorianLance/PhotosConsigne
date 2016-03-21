@@ -56,35 +56,50 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     this->setWindowIcon(QIcon(":/images/icon"));
 
     // load images
+    // left image
     ui->pbLeftImage->setIcon(QIcon(":/images/leftArrow"));
     ui->pbLeftImage->setIconSize(QSize(100,45));
     ui->pbLeftImage->setToolTip(tr("Image précédente"));
-
+    // right image
     ui->pbRightImage->setIcon(QIcon(":/images/rightArrow"));
     ui->pbRightImage->setIconSize(QSize(100,45));
     ui->pbRightImage->setToolTip(tr("Image suivante."));
-
+    // left rotation
     ui->pbRotationLeft->setIcon(QIcon(":/images/rotateLeft"));
     ui->pbRotationLeft->setIconSize(QSize(50,45));
     ui->pbRotationLeft->setToolTip(tr("Rotation de l'image à gauche de 90°"));
-
+    // right rotation
     ui->pbRotationRight->setIcon(QIcon(":/images/rotateRight"));
     ui->pbRotationRight->setIconSize(QSize(50,45));
     ui->pbRotationRight->setToolTip(tr("Rotation de l'image à droite de 90°"));
-
+    // preview
+    ui->pbPreview->setIcon(QIcon(":/images/preview"));
+    ui->pbPreview->setIconSize(QSize(100,50));
     ui->pbPreview->setToolTip(tr("Affiche la prévisualisation du PDF"));
 
-    ui->pbGeneration->setToolTip(tr("Lance la génération du PDF et le sauvegarde"));
-
-    ui->pbOpenPDF->setToolTip(tr("Ouvre le dernier PDF généré avec le lecteur par défaut"));
-
+    // remove photo
     m_addPhotoIcon = QIcon(":/images/add");
     m_removePhotoIcon = QIcon(":/images/remove");
-
     ui->pbRemovePhoto->setIcon(m_removePhotoIcon);
     ui->pbRemovePhoto->setIconSize(QSize(50,50));
     ui->pbRemovePhoto->setToolTip(tr("Retirer l'image de la liste"));
 
+    // open photos dir
+    ui->pbSelectPhotos->setIcon(QIcon(":/images/dirImages"));
+    ui->pbSelectPhotos->setIconSize(QSize(25,25));
+    ui->pbSelectPhotos->setToolTip(tr("Définir le dossier contenant les photos à charger dans le PDF"));
+
+    // pdf generation
+    ui->pbGeneration->setIcon(QIcon(":/images/save"));
+    ui->pbGeneration->setIconSize(QSize(35,35));
+    ui->pbGeneration->setToolTip(tr("Lance la génération du PDF et le sauvegarde"));
+
+    // open pdf
+    ui->pbOpenPDF->setIcon(QIcon(":/images/pdf"));
+    ui->pbOpenPDF->setIconSize(QSize(35,35));
+    ui->pbOpenPDF->setToolTip(tr("Ouvre le dernier PDF généré avec le lecteur par défaut"));
+
+    // legend
     QString legend("<p><font color=white>LEGENDE :</font> &nbsp;&nbsp;&nbsp;<font color=red>MARGES EXTERIEURES</font> &nbsp;&nbsp;&nbsp;<font color=green>MARGES INTERIEURES</font> &nbsp;&nbsp;&nbsp;<font color=cyan>ESPACE CONSIGNE</font> &nbsp;&nbsp;&nbsp;<font color=yellow>ESPACE PHOTO</font></p>");
     ui->laLegend->setText(legend);
 
@@ -95,11 +110,11 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     m_colorText = Qt::GlobalColor::black;
 
     // init interface widgets
-    //  image labels
+    //  image label
     m_imageLabel = new ImageLabel(this);
     ui->vlImage->insertWidget(0, m_imageLabel);
-//    ui->vlImage->setAlignment(m_imageLabel,Qt::AlignCenter);
 
+    //  preview label
     m_previewLabel = new ImageLabel(this);
     ui->hlPreviewImage->insertWidget(0, m_previewLabel, Qt::AlignHCenter);
 
@@ -107,9 +122,14 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     m_interfaceWorker = new InterfaceWorker(m_previewLabel);
 
     // connections
+    //  menu
     QObject::connect(ui->actionExit, SIGNAL(triggered()), parent, SLOT(quit()));
     QObject::connect(ui->actionOnlineDocumentation, SIGNAL(triggered()), this, SLOT(openOnlineDocumentation()));
     QObject::connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(openAboutWindow()));
+    QObject::connect(ui->actionDonate, SIGNAL(triggered()), this, SLOT(openDonatePage()));
+    QObject::connect(ui->actionSaveProfileTo, SIGNAL(triggered()), this, SLOT(saveProfileTo()));
+    QObject::connect(ui->actionSaveProfile, SIGNAL(triggered()), m_interfaceWorker, SLOT(saveProfile()));
+//    QObject::connect(ui->actionSetDefaultProfile, SIGNAL(triggered()), m_interfaceWorker, SLOT(saveDefaultProfile()));
     //  push button
     QObject::connect(ui->pbSelectPhotos,SIGNAL(clicked()), this, SLOT(setPhotosDirectory()));
     QObject::connect(ui->pbGeneration,SIGNAL(clicked()), this, SLOT(generatePDF()));
@@ -121,12 +141,10 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     QObject::connect(ui->pbLeftImage, SIGNAL(clicked()), this, SLOT(leftPhoto()));
     QObject::connect(ui->pbRightImage, SIGNAL(clicked()), this, SLOT(rightPhoto()));
     QObject::connect(ui->pbOpenPDF, SIGNAL(clicked()), this, SLOT(openPDF()));
-
     //  list widget
     QObject::connect(ui->lwPhotos,SIGNAL(currentRowChanged(int)), this, SLOT(updatePhotoIndex(int)));
     QObject::connect(ui->lwPhotos, SIGNAL(clicked(QModelIndex)), this, SLOT(updatePhotoIndex(QModelIndex)));
-
-    // radio button
+    //  radio button
     QObject::connect(ui->rbLeftImage, SIGNAL(clicked(bool)), this, SLOT(updateUIParameters(bool)));
     QObject::connect(ui->rbRightImage, SIGNAL(clicked(bool)), this, SLOT(updateUIParameters(bool)));
     QObject::connect(ui->rbHCenterImage, SIGNAL(clicked(bool)), this, SLOT(updateUIParameters(bool)));
@@ -150,7 +168,8 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     QObject::connect(ui->dsLeftMargins, SIGNAL(valueChanged(double)), this, SLOT(updateUIParameters(double)));
     QObject::connect(ui->dsRightMargins, SIGNAL(valueChanged(double)), this, SLOT(updateUIParameters(double)));
     QObject::connect(ui->dsTopMargins, SIGNAL(valueChanged(double)), this, SLOT(updateUIParameters(double)));
-    QObject::connect(ui->dsBetween, SIGNAL(valueChanged(double)), this, SLOT(updateUIParameters(double)));
+    QObject::connect(ui->dsInterMarginsWidth, SIGNAL(valueChanged(double)), this, SLOT(updateUIParameters(double)));
+    QObject::connect(ui->dsInterMarginsHeight, SIGNAL(valueChanged(double)), this, SLOT(updateUIParameters(double)));
     // font
     QObject::connect(ui->fcbConsignes, SIGNAL(currentFontChanged(QFont)), this, SLOT(updateUIParameters(QFont)));
     // QPlainText
@@ -167,10 +186,10 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     QObject::connect(this, SIGNAL(sendImagesDirSignal(QString, QStringList)), m_interfaceWorker, SLOT(loadImages(QString, QStringList)));
     QObject::connect(this, SIGNAL(generatePDFSignal(QString)), m_interfaceWorker, SLOT(generatePDF(QString)));
     QObject::connect(this, SIGNAL(generatePreviewSignal(int)), m_interfaceWorker, SLOT(generatePreview(int)));
-
     QObject::connect(this, SIGNAL(sentParametersSignal(UIParameters)),m_interfaceWorker, SLOT(updateParameters(UIParameters)));
     QObject::connect(this, SIGNAL(updateRotationSignal(int,bool)), m_interfaceWorker, SLOT(updateRotationImage(int,bool)));
     QObject::connect(this, SIGNAL(askForPhotoSignal(int)), m_interfaceWorker, SLOT(sendPhoto(int)));
+    QObject::connect(this, SIGNAL(saveProfileToSignal(QString)), m_interfaceWorker, SLOT(saveProfileTo(QString)));
     // worker -> interface
     QObject::connect(m_interfaceWorker, SIGNAL(unlockSignal()), this, SLOT(unlockUI()));
     QObject::connect(m_interfaceWorker, SIGNAL(setProgressBarStateSignal(int)), this, SLOT(setProgressBatState(int)));
@@ -187,7 +206,7 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
 
     QImage nullImage(QSize(500,500), QImage::Format_ARGB32);
     nullImage.fill(Qt::GlobalColor::white);
-    m_interfaceWorker->sendPhoto(nullImage);
+    m_interfaceWorker->sendPhoto(QImage(":/images/null"));
 }
 
 MainInterface::~MainInterface()
@@ -261,9 +280,11 @@ void MainInterface::setPhotosDirectory()
             m_photosDirectory = previousDirectory;
         }
 
-        QMessageBox::warning(this, tr("Avertissement"), tr("Aucune phtoto n'a pu être trouvée dans ce répertoire, veuillez en selectionner un autre.\n"),QMessageBox::Ok);
+        QMessageBox::warning(this, tr("Avertissement"), tr("Aucune photo n'a pu être trouvée dans ce répertoire, veuillez en selectionner un autre.\n"),QMessageBox::Ok);
         return;
     }
+
+    ui->laLoading->setText("Chargement des photos...");
 
     ui->laPhotosDir->setText(m_photosDirectory);
 
@@ -282,7 +303,7 @@ void MainInterface::setPhotosDirectory()
 
     emit sendImagesDirSignal(m_photosDirectory, fileList);
 
-    updateUIParameters(false, false, true);
+    updateUIParameters(false, false, false);
 }
 
 void MainInterface::updatePhotoDisplay(QImage image)
@@ -395,6 +416,24 @@ void MainInterface::openAboutWindow()
     QMessageBox::about(this, "A propos du logiciel", text);
 }
 
+void MainInterface::openDonatePage()
+{
+    bool success = QDesktopServices::openUrl(QUrl("https://pledgie.com/campaigns/31286#donors", QUrl::TolerantMode));
+    if(!success)
+    {
+        QMessageBox::warning(this, tr("Avertissement"), tr("Le site internet du tutoriel n'a pu être lancé, aucun logiciel de navigation web n'a été trouvé.' .\n"),QMessageBox::Ok);
+    }
+}
+
+void MainInterface::saveProfileTo()
+{
+    QString pathProFile = QFileDialog::getSaveFileName(this, "Sélection du fichier de profil :", QDir::currentPath() + "/resources/profils", "Profils (*.profil)");
+    if(pathProFile.size() > 0)
+    {
+        emit saveProfileToSignal(pathProFile);
+    }
+}
+
 void MainInterface::openOnlineDocumentation()
 {
     bool success = QDesktopServices::openUrl(QUrl("https://github.com/FlorianLance/PhotosConsigne", QUrl::TolerantMode));
@@ -426,6 +465,7 @@ void MainInterface::generatePDF()
     }
 
 
+    ui->laLoading->setText("Génération du pdf...");
     emit generatePDFSignal(m_pdfFileName);
 }
 
@@ -634,7 +674,9 @@ void MainInterface::updateUIParameters(bool notUsedValue1, bool notUsedValue2, b
     params.rightMargin = ui->dsRightMargins->value();
     params.topMargin = ui->dsTopMargins->value();
     params.bottomMargin = ui->dsBottomMargins->value();
-    params.betweenMargin = ui->dsBetween->value();
+    params.interMarginWidth = ui->dsInterMarginsWidth->value();
+    params.interMarginHeight = ui->dsInterMarginsHeight->value();
+
     params.cutLines = ui->cbCutLines->isChecked();
     params.zExternMargins = ui->cbZoneExternMargins->isChecked();
     params.zInterMargins = ui->cbZoneInternMargins->isChecked();
@@ -666,6 +708,9 @@ void MainInterface::setColorText()
 void MainInterface::setProgressBatState(int state)
 {
     ui->pbLoading->setValue(state);
+
+    if(state == 100)
+        ui->laLoading->setText("Prêt");
 }
 
 void MainInterface::setImageLeftRotation()

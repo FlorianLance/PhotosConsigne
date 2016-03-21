@@ -7,9 +7,17 @@
         <file alias="rotateRight">../resources/images/rotateRight.png</file>
         <file alias="remove">../resources/images/remove.png</file>
         <file alias="add">../resources/images/add.png</file>
+        <file alias="preview">../resources/images/preview.png</file>
+        <file alias="dirImages">../resources/images/dirImages.png</file>
+        <file alias="save">../resources/images/save.png</file>
+        <file alias="pdf">../resources/images/pdf.png</file>
+        <file alias="null">../resources/images/nullImage.png</file>
     </qresource>
     <qresource prefix="/style">
         <file alias="buttons">../resources/style/buttons.qss</file>
         <file alias="rotateLeft">../resources/style/leftRotationPushButton.qss</file>
+    </qresource>
+    <qresource prefix="/profils">
+        <file alias="default">../resources/profils/default.profil</file>
     </qresource>
 </RCC>

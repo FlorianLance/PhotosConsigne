@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
-    <height>849</height>
+    <width>1404</width>
+    <height>862</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,9 +16,9 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_6">
+     <layout class="QVBoxLayout" name="vlMain">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <layout class="QHBoxLayout" name="hlCenter">
         <item>
          <widget class="QGroupBox" name="gbParametres">
           <property name="maximumSize">
@@ -43,7 +43,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>250</width>
+                 <width>200</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -127,8 +127,8 @@ QPushButton:default {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>519</width>
-                   <height>107</height>
+                   <width>560</width>
+                   <height>103</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -151,9 +151,6 @@ QPushButton:default {
                  </layout>
                 </widget>
                </widget>
-              </item>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_3"/>
               </item>
              </layout>
             </widget>
@@ -243,7 +240,7 @@ QPushButton:default {
                      </widget>
                     </item>
                     <item>
-                     <spacer name="horizontalSpacer_6">
+                     <spacer name="hsAlignHoriz">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
                       </property>
@@ -300,7 +297,7 @@ QPushButton:default {
                      </widget>
                     </item>
                     <item>
-                     <spacer name="horizontalSpacer_8">
+                     <spacer name="hsAlignVertic">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
                       </property>
@@ -315,7 +312,7 @@ QPushButton:default {
                    </layout>
                   </item>
                   <item>
-                   <widget class="Line" name="line_2">
+                   <widget class="Line" name="lTextEdot">
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
                     </property>
@@ -342,7 +339,7 @@ QPushButton:default {
                      </widget>
                     </item>
                     <item>
-                     <widget class="Line" name="line_4">
+                     <widget class="Line" name="lFont1">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
                       </property>
@@ -375,7 +372,7 @@ QPushButton:default {
                      </widget>
                     </item>
                     <item>
-                     <widget class="Line" name="line_5">
+                     <widget class="Line" name="lFont2">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
                       </property>
@@ -396,7 +393,7 @@ QPushButton:default {
                      </widget>
                     </item>
                     <item>
-                     <widget class="Line" name="line_6">
+                     <widget class="Line" name="lFont3">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
                       </property>
@@ -420,7 +417,7 @@ QPushButton:default {
                      </widget>
                     </item>
                     <item>
-                     <spacer name="horizontalSpacer_2">
+                     <spacer name="hsFont">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
                       </property>
@@ -577,7 +574,7 @@ QPushButton:default {
                  </widget>
                 </item>
                 <item>
-                 <spacer name="horizontalSpacer_7">
+                 <spacer name="hsAlignVertiPhotos">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -592,7 +589,7 @@ QPushButton:default {
                </layout>
               </item>
               <item>
-               <widget class="Line" name="line_3">
+               <widget class="Line" name="lEdit2">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -634,7 +631,7 @@ QPushButton:default {
                  </widget>
                 </item>
                 <item>
-                 <widget class="Line" name="line_12">
+                 <widget class="Line" name="lNbImages1">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -661,7 +658,7 @@ QPushButton:default {
                  </widget>
                 </item>
                 <item>
-                 <widget class="Line" name="line_13">
+                 <widget class="Line" name="lNbImages2">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
@@ -675,7 +672,7 @@ QPushButton:default {
                  </widget>
                 </item>
                 <item>
-                 <spacer name="horizontalSpacer_3">
+                 <spacer name="hsNbImages">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -701,7 +698,7 @@ QPushButton:default {
               <item>
                <layout class="QHBoxLayout" name="hlOrientation" stretch="2,1,1,2">
                 <item>
-                 <widget class="QLabel" name="label">
+                 <widget class="QLabel" name="laOrientationPage">
                   <property name="text">
                    <string>   Orientation de la page :</string>
                   </property>
@@ -746,15 +743,22 @@ QPushButton:default {
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="hlMarges">
+               <widget class="Line" name="line_4">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="hlMarges" stretch="4,2,2,1,2,2,1,2,2,1,2,2,2">
                 <item>
-                 <widget class="QLabel" name="laMarges">
+                 <widget class="QLabel" name="laExternMargins">
                   <property name="text">
-                   <string>   Marges :</string>
+                   <string>   Marges extérieures :</string>
                   </property>
                  </widget>
                 </item>
-                <item>
+                <item alignment="Qt::AlignHCenter">
                  <widget class="QLabel" name="laLeftMargins">
                   <property name="text">
                    <string>Gauche</string>
@@ -775,13 +779,13 @@ QPushButton:default {
                  </widget>
                 </item>
                 <item>
-                 <widget class="Line" name="line_7">
+                 <widget class="Line" name="lMargins1">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
                  </widget>
                 </item>
-                <item>
+                <item alignment="Qt::AlignHCenter">
                  <widget class="QLabel" name="laRightMargins">
                   <property name="text">
                    <string>Droite</string>
@@ -802,13 +806,13 @@ QPushButton:default {
                  </widget>
                 </item>
                 <item>
-                 <widget class="Line" name="line_8">
+                 <widget class="Line" name="lMargins2">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
                  </widget>
                 </item>
-                <item>
+                <item alignment="Qt::AlignHCenter">
                  <widget class="QLabel" name="laTopMargins">
                   <property name="text">
                    <string>Haut</string>
@@ -829,13 +833,13 @@ QPushButton:default {
                  </widget>
                 </item>
                 <item>
-                 <widget class="Line" name="line_9">
+                 <widget class="Line" name="lMargins3">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
                  </widget>
                 </item>
-                <item>
+                <item alignment="Qt::AlignHCenter">
                  <widget class="QLabel" name="laBottomMargins">
                   <property name="text">
                    <string>Bas</string>
@@ -856,21 +860,38 @@ QPushButton:default {
                  </widget>
                 </item>
                 <item>
-                 <widget class="Line" name="line_10">
+                 <spacer name="hsMargins">
                   <property name="orientation">
-                   <enum>Qt::Vertical</enum>
+                   <enum>Qt::Horizontal</enum>
                   </property>
-                 </widget>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
                 </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="hlInternMargins" stretch="4,2,2,1,2,2,9">
                 <item>
-                 <widget class="QLabel" name="laBetween">
+                 <widget class="QLabel" name="laInterMargins">
                   <property name="text">
-                   <string>Entre</string>
+                   <string>   Marges intérieures :</string>
+                  </property>
+                 </widget>
+                </item>
+                <item alignment="Qt::AlignHCenter">
+                 <widget class="QLabel" name="laInternMarginsWidth">
+                  <property name="text">
+                   <string>Largeur :</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QDoubleSpinBox" name="dsBetween">
+                 <widget class="QDoubleSpinBox" name="dsInterMarginsWidth">
                   <property name="decimals">
                    <number>3</number>
                   </property>
@@ -886,7 +907,37 @@ QPushButton:default {
                  </widget>
                 </item>
                 <item>
-                 <spacer name="horizontalSpacer_10">
+                 <widget class="Line" name="line_2">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item alignment="Qt::AlignHCenter">
+                 <widget class="QLabel" name="label">
+                  <property name="text">
+                   <string>Hauteur </string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QDoubleSpinBox" name="dsInterMarginsHeight">
+                  <property name="decimals">
+                   <number>3</number>
+                  </property>
+                  <property name="maximum">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.010000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_2">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -899,6 +950,13 @@ QPushButton:default {
                  </spacer>
                 </item>
                </layout>
+              </item>
+              <item>
+               <widget class="Line" name="line_3">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+               </widget>
               </item>
               <item>
                <layout class="QHBoxLayout" name="hlRatioCI">
@@ -940,12 +998,12 @@ QPushButton:default {
                    <string>Dessiner lignes de découpe</string>
                   </property>
                   <property name="checked">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <spacer name="horizontalSpacer_4">
+                 <spacer name="hsRatio">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -965,99 +1023,6 @@ QPushButton:default {
                  <enum>Qt::Horizontal</enum>
                 </property>
                </widget>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="hlActions" stretch="5,3,3">
-                <item>
-                 <widget class="QProgressBar" name="pbLoading">
-                  <property name="value">
-                   <number>0</number>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pbGeneration">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>82</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>200</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: 1px solid #8f8f91;
-    border-radius: 6px;
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
-    min-width: 80px;
-}
-
-QPushButton:pressed {
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
-}
-
-QPushButton:flat {
-    border: none; /* no border for a flat push button */
-}
-
-QPushButton:default {
-    border-color: navy; /* make the default button prominent */
-}</string>
-                  </property>
-                  <property name="text">
-                   <string>Sauvegarde du PDF</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pbOpenPDF">
-                  <property name="enabled">
-                   <bool>false</bool>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>82</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QPushButton {
-    border: 1px solid #8f8f91;
-    border-radius: 6px;
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
-    min-width: 80px;
-}
-
-QPushButton:pressed {
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
-}
-
-QPushButton:flat {
-    border: none; /* no border for a flat push button */
-}
-
-QPushButton:default {
-    border-color: navy; /* make the default button prominent */
-}</string>
-                  </property>
-                  <property name="text">
-                   <string>Ouvrir dernier PDF</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
               </item>
              </layout>
             </widget>
@@ -1087,13 +1052,13 @@ QPushButton:default {
                <string notr="true">background-color: rgb(122, 122, 122);</string>
               </property>
               <attribute name="title">
-               <string>Affichage photo selectionnée</string>
+               <string>Photos</string>
               </attribute>
               <layout class="QVBoxLayout" name="vlImage">
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_2">
+                <layout class="QHBoxLayout" name="hlPhotosButtons">
                  <item>
-                  <spacer name="horizontalSpacer_5">
+                  <spacer name="hsLeft">
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
                    </property>
@@ -1256,7 +1221,7 @@ QPushButton:default {
 }</string>
                    </property>
                    <property name="text">
-                    <string>Pré-affichage</string>
+                    <string/>
                    </property>
                   </widget>
                  </item>
@@ -1407,7 +1372,7 @@ QPushButton:default {
                   </widget>
                  </item>
                  <item>
-                  <spacer name="horizontalSpacer_13">
+                  <spacer name="hsRight">
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
                    </property>
@@ -1428,9 +1393,9 @@ QPushButton:default {
                <string notr="true">background-color: rgb(122,122,122);</string>
               </property>
               <attribute name="title">
-               <string>Pré-affichage du pdf</string>
+               <string>Aperçu du PDF</string>
               </attribute>
-              <layout class="QVBoxLayout" name="vlPreview" stretch="0,0,25">
+              <layout class="QVBoxLayout" name="vlPreview" stretch="0,0,25,0">
                <item>
                 <widget class="QWidget" name="wPreviewLegend" native="true">
                  <property name="styleSheet">
@@ -1445,7 +1410,7 @@ QPushButton:default {
                    </widget>
                   </item>
                   <item>
-                   <spacer name="horizontalSpacer_11">
+                   <spacer name="hsPreview">
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
                     </property>
@@ -1469,7 +1434,7 @@ QPushButton:default {
                   <item>
                    <widget class="QLabel" name="laZones">
                     <property name="text">
-                     <string>Affichage des zones (uniquement pré-affichage) :</string>
+                     <string>Affichage des zones (uniquement dans l'aperçu) :</string>
                     </property>
                    </widget>
                   </item>
@@ -1514,7 +1479,7 @@ QPushButton:default {
                    </widget>
                   </item>
                   <item>
-                   <spacer name="horizontalSpacer_12">
+                   <spacer name="hsZones">
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
                     </property>
@@ -1532,11 +1497,154 @@ QPushButton:default {
                <item>
                 <layout class="QHBoxLayout" name="hlPreviewImage"/>
                </item>
+               <item>
+                <layout class="QHBoxLayout" name="hlActions" stretch="2,1,1">
+                 <item>
+                  <spacer name="hsActions">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pbGeneration">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>82</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>150</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QPushButton {
+    border: 1px solid #8f8f91;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+                   </property>
+                   <property name="text">
+                    <string>Sauvegarde du PDF</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pbOpenPDF">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>82</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>150</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QPushButton {
+    border: 1px solid #8f8f91;
+    border-radius: 6px;
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #f6f7fa, stop: 1 #dadbde);
+    min-width: 80px;
+}
+
+QPushButton:pressed {
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QPushButton:flat {
+    border: none; /* no border for a flat push button */
+}
+
+QPushButton:default {
+    border-color: navy; /* make the default button prominent */
+}</string>
+                   </property>
+                   <property name="text">
+                    <string>Ouvrir dernier PDF</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
               </layout>
              </widget>
             </widget>
            </item>
           </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="hlBottomBar" stretch="0,0,5,0">
+        <item>
+         <widget class="QLabel" name="laProfile">
+          <property name="text">
+           <string>Profil :</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="laProfileName">
+          <property name="text">
+           <string>défaut</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="pbLoading">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>15</height>
+           </size>
+          </property>
+          <property name="value">
+           <number>0</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="laLoading">
+          <property name="text">
+           <string>Prêt</string>
+          </property>
          </widget>
         </item>
        </layout>
@@ -1550,14 +1658,21 @@ QPushButton:default {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1280</width>
+     <width>1404</width>
      <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFichier">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="title">
      <string>Fichier</string>
     </property>
+    <addaction name="actionLoadProfile"/>
+    <addaction name="actionSaveProfile"/>
+    <addaction name="actionSaveProfileTo"/>
+    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuAide">
@@ -1565,6 +1680,8 @@ QPushButton:default {
      <string>Aide</string>
     </property>
     <addaction name="actionOnlineDocumentation"/>
+    <addaction name="separator"/>
+    <addaction name="actionDonate"/>
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFichier"/>
@@ -1574,6 +1691,9 @@ QPushButton:default {
   <action name="actionExit">
    <property name="text">
     <string>Quitter</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="actionOnlineDocumentation">
@@ -1586,14 +1706,64 @@ QPushButton:default {
     <string>A propos</string>
    </property>
   </action>
+  <action name="actionSaveProfileTo">
+   <property name="text">
+    <string>Sauvegarder profil sous...</string>
+   </property>
+   <property name="shortcut">
+    <string/>
+   </property>
+  </action>
+  <action name="actionSetDefaultProfile">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Définir profil par défaut</string>
+   </property>
+  </action>
+  <action name="actionLoadProfile">
+   <property name="text">
+    <string>Charger profil</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSaveProfile">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Sauvegarder profil</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionReset">
+   <property name="text">
+    <string>Réinitialiser profil</string>
+   </property>
+  </action>
+  <action name="actionDonate">
+   <property name="text">
+    <string>Faire un don</string>
+   </property>
+  </action>
+  <action name="actionSignaler_un_bug">
+   <property name="text">
+    <string>Signaler un bug</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
  <buttongroups>
+  <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup_4"/>
   <buttongroup name="buttonGroup_5"/>
-  <buttongroup name="buttonGroup_2"/>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_3"/>
  </buttongroups>
 </ui>

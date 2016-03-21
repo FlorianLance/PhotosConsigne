@@ -199,6 +199,17 @@ public slots:
      */
     void openAboutWindow();
 
+    /**
+     * @brief Open the donate web page
+     */
+    void openDonatePage();
+
+    /**
+     * @brief Save the current profile to a pro file
+     */
+    void saveProfileTo();
+
+
 signals :
 
     void sendImagesDirSignal(QString, QStringList);
@@ -212,6 +223,8 @@ signals :
     void updateRotationSignal(int, bool);
 
     void askForPhotoSignal(int);
+
+    void saveProfileToSignal(QString);
 
 private:
 
