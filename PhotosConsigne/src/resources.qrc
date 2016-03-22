@@ -17,7 +17,5 @@
         <file alias="buttons">../resources/style/buttons.qss</file>
         <file alias="rotateLeft">../resources/style/leftRotationPushButton.qss</file>
     </qresource>
-    <qresource prefix="/profils">
-        <file alias="default">../resources/profils/default.profil</file>
-    </qresource>
+    <qresource prefix="/profils"/>
 </RCC>

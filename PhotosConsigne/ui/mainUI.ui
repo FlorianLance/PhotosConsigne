@@ -1673,6 +1673,8 @@ QPushButton:default {
     <addaction name="actionSaveProfile"/>
     <addaction name="actionSaveProfileTo"/>
     <addaction name="separator"/>
+    <addaction name="actionSaveDefault"/>
+    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuAide">
@@ -1756,6 +1758,11 @@ QPushButton:default {
     <string>Signaler un bug</string>
    </property>
   </action>
+  <action name="actionSaveDefault">
+   <property name="text">
+    <string>Sauvegarder profil par défaut</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
@@ -1763,7 +1770,7 @@ QPushButton:default {
   <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup_4"/>
-  <buttongroup name="buttonGroup_5"/>
   <buttongroup name="buttonGroup_3"/>
+  <buttongroup name="buttonGroup_5"/>
  </buttongroups>
 </ui>

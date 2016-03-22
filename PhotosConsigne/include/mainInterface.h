@@ -209,6 +209,24 @@ public slots:
      */
     void saveProfileTo();
 
+    /**
+     * @brief Unlock the save profile menu item
+     * @param [in] profileName
+     */
+    void unlockSaveProfile(QString profileName);
+
+    /**
+     * @brief Load a profile
+     */
+    void loadProfile();
+
+    /**
+     * @brief Update the UI with the loaded profile and update worker
+     * @param [in] profileName
+     * @param [in] params
+     */
+    void profileLoaded(QString profileName, UIParameters params);
+
 
 signals :
 
@@ -225,6 +243,10 @@ signals :
     void askForPhotoSignal(int);
 
     void saveProfileToSignal(QString);
+
+    void loadProfileSignal(QString);
+
+    void loadDefautProfileSignal(QString);
 
 private:
 

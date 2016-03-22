@@ -602,25 +602,73 @@ void InterfaceWorker::sendPhoto(QImage image)
 
 void InterfaceWorker::saveProfile()
 {
-    if(!m_params.saveProfileTo(m_profilePath))
+    if(m_params.saveProfileTo(m_profilePath))
     {
-         // TODO : manage error
+        emit endSaveProfileSignal("");
+    }
+    else
+    {
+        // TODO : manage error
     }
 }
 
-//void InterfaceWorker::saveDefaultProfile()
-//{
-//    if(!m_params.saveProfileTo(":/profils/default"))
-//    {
-//         // TODO : manage error
-//    }
-//}
+void InterfaceWorker::loadProfile(QString pathProfileFile)
+{
+    if(m_params.loadProfile(pathProfileFile))
+    {
+        m_profilePath = pathProfileFile;
+        QStringList elements = pathProfileFile.split('/');
+        QString profileName = elements[elements.size()-1];
+        emit endLoadProfileSignal(profileName, m_params);
+    }
+    else
+    {
+        // TODO : manage error
+    }
+}
+
+void InterfaceWorker::loadDefaultProfile(QString defaultProfileFile)
+{
+    if(m_params.loadProfile(defaultProfileFile))
+    {
+        QStringList elements = defaultProfileFile.split('/');
+        QString profileName = elements[elements.size()-1];
+        emit endLoadProfileSignal(profileName, m_params);
+    }
+    else
+    {
+        // TODO : manage error
+    }
+}
+
+void InterfaceWorker::saveDefaultProfile()
+{
+    QString defaultProfilPath = QDir::currentPath();
+    if(QDir(defaultProfilPath + "/resources").exists())
+    {
+        defaultProfilPath += "/resources/profils/default.profil";
+    }
+    else
+    {
+        defaultProfilPath += "/../PhotosConsigne/resources/profils/default.profil";
+    }
+
+    if(!m_params.saveProfileTo(defaultProfilPath))
+    {
+        // TODO : manage error
+    }
+}
 
 void InterfaceWorker::saveProfileTo(QString pathProFile)
 {
     if(m_params.saveProfileTo(pathProFile))
     {
         m_profilePath = pathProFile;
+
+        QStringList elements = pathProFile.split('/');
+        QString profileName = elements[elements.size()-1];
+
+        emit endSaveProfileSignal(profileName);
     }
     else
     {
@@ -656,9 +704,72 @@ bool UIParameters::saveProfileTo(const QString &pathProFile)
         stream << orientation << " " << cutLines << " " << zExternMargins << " " << zInterMargins << " " << zPhotos  << " " << zConsigns << endl;
         stream << nbImagesPageV << " " << nbImagesPageH << " " << imageAlignment << " " << consignAlignment  << endl;
         stream << ratio << " " << leftMargin << " " << rightMargin << " " << topMargin  << " " << bottomMargin << " " << interMarginWidth << " " << interMarginHeight << endl;
-        stream << font.italic() << " " << font.bold() << " " << font.family() << " " << consignColor.red() << " " << consignColor.green() << " " << consignColor.blue() <<  endl;
+        stream << font.pixelSize() << " " << font.italic() << " " << font.bold() << " " << font.family() << " " << consignColor.red() << " " << consignColor.green() << " " << consignColor.blue() <<  endl;
         return true;
     }
 
     return false;
 }
+
+bool UIParameters::loadProfile(const QString &pathProFile)
+{
+    QFile proFile(pathProFile);
+    if (proFile.open(QIODevice::ReadOnly))
+    {
+       QTextStream in(&proFile);
+
+       QString line = in.readLine();
+       line = in.readLine();
+       QStringList elements = line.split(' ');
+
+       if(elements.size() != 6)
+           return false;
+
+       orientation = (elements[0].toInt() == 1);
+       cutLines = (elements[1].toInt() == 1);
+       zExternMargins = (elements[2].toInt() == 1);
+       zInterMargins = (elements[3].toInt() == 1);
+       zPhotos = (elements[4].toInt() == 1);
+       zConsigns = (elements[5].toInt() == 1);
+
+       line = in.readLine();
+       elements = line.split(' ');
+       if(elements.size() != 4)
+           return false;
+
+       nbImagesPageV = elements[0].toInt();
+       nbImagesPageH = elements[1].toInt();
+       imageAlignment = elements[2].toInt();
+       consignAlignment = elements[3].toInt();
+
+       line = in.readLine();
+       elements = line.split(' ');
+       if(elements.size() != 7)
+           return false;
+
+       ratio = elements[0].toDouble();
+       leftMargin = elements[1].toDouble();
+       rightMargin = elements[2].toDouble();
+       topMargin = elements[3].toDouble();
+       bottomMargin = elements[4].toDouble();
+       interMarginWidth = elements[5].toDouble();
+       interMarginHeight = elements[6].toDouble();
+
+       line = in.readLine();
+       elements = line.split(' ');
+       if(elements.size() != 7)
+           return false;
+
+       font.setPixelSize(elements[0].toInt());
+       font.setItalic((elements[1].toInt() == 1));
+       font.setBold((elements[2].toInt() == 1));
+       font.setFamily(elements[3]);
+       consignColor = QColor(elements[4].toInt(),elements[5].toInt(),elements[6].toInt());
+
+       proFile.close();
+       return true;
+    }
+
+    return false;
+}
+

@@ -8,7 +8,7 @@ QT       += core gui printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Photos_consigne
+TARGET = launch
 TEMPLATE = app
 
 CONFIG+= warn_on

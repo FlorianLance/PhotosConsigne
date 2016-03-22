@@ -129,7 +129,8 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     QObject::connect(ui->actionDonate, SIGNAL(triggered()), this, SLOT(openDonatePage()));
     QObject::connect(ui->actionSaveProfileTo, SIGNAL(triggered()), this, SLOT(saveProfileTo()));
     QObject::connect(ui->actionSaveProfile, SIGNAL(triggered()), m_interfaceWorker, SLOT(saveProfile()));
-//    QObject::connect(ui->actionSetDefaultProfile, SIGNAL(triggered()), m_interfaceWorker, SLOT(saveDefaultProfile()));
+    QObject::connect(ui->actionLoadProfile, SIGNAL(triggered()), this, SLOT(loadProfile()));
+    QObject::connect(ui->actionSaveDefault, SIGNAL(triggered()), m_interfaceWorker, SLOT(saveDefaultProfile()));
     //  push button
     QObject::connect(ui->pbSelectPhotos,SIGNAL(clicked()), this, SLOT(setPhotosDirectory()));
     QObject::connect(ui->pbGeneration,SIGNAL(clicked()), this, SLOT(generatePDF()));
@@ -190,11 +191,15 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     QObject::connect(this, SIGNAL(updateRotationSignal(int,bool)), m_interfaceWorker, SLOT(updateRotationImage(int,bool)));
     QObject::connect(this, SIGNAL(askForPhotoSignal(int)), m_interfaceWorker, SLOT(sendPhoto(int)));
     QObject::connect(this, SIGNAL(saveProfileToSignal(QString)), m_interfaceWorker, SLOT(saveProfileTo(QString)));
+    QObject::connect(this, SIGNAL(loadProfileSignal(QString)), m_interfaceWorker, SLOT(loadProfile(QString)));
+    QObject::connect(this, SIGNAL(loadDefautProfileSignal(QString)), m_interfaceWorker, SLOT(loadDefaultProfile(QString)));
     // worker -> interface
     QObject::connect(m_interfaceWorker, SIGNAL(unlockSignal()), this, SLOT(unlockUI()));
     QObject::connect(m_interfaceWorker, SIGNAL(setProgressBarStateSignal(int)), this, SLOT(setProgressBatState(int)));
     QObject::connect(m_interfaceWorker, SIGNAL(displayPhotoSignal(QImage)), this, SLOT(updatePhotoDisplay(QImage)));
     QObject::connect(m_interfaceWorker, SIGNAL(pdfGeneratedSignal()), this, SLOT(unlockOpenPDF()));
+    QObject::connect(m_interfaceWorker, SIGNAL(endSaveProfileSignal(QString)), this, SLOT(unlockSaveProfile(QString)));
+    QObject::connect(m_interfaceWorker, SIGNAL(endLoadProfileSignal(QString, UIParameters)), this, SLOT(profileLoaded(QString, UIParameters)));
 
 
     // init thread
@@ -207,6 +212,23 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     QImage nullImage(QSize(500,500), QImage::Format_ARGB32);
     nullImage.fill(Qt::GlobalColor::white);
     m_interfaceWorker->sendPhoto(QImage(":/images/null"));
+
+
+    QString defaultProfilPath = QDir::currentPath();
+    if(QDir(defaultProfilPath + "/resources").exists())
+    {
+        defaultProfilPath += "/resources/profils/default.profil";
+    }
+    else
+    {
+        defaultProfilPath += "/../PhotosConsigne/resources/profils/default.profil";
+    }
+
+    // load default profile
+    if(QFile(defaultProfilPath).exists())
+    {
+        emit loadDefautProfileSignal(defaultProfilPath);
+    }
 }
 
 MainInterface::~MainInterface()
@@ -240,7 +262,7 @@ void MainInterface::setPhotosDirectory()
     ui->pbRemovePhoto->setEnabled(false);    
 
     QString previousDirectory = m_photosDirectory;
-    m_photosDirectory = QFileDialog::getExistingDirectory(this, "Sélection du répertoire de photos");
+    m_photosDirectory = QFileDialog::getExistingDirectory(this, "Sélection du répertoire de photos", QDir::homePath());
 
     // no directory selected
     if(m_photosDirectory.size() == 0 )
@@ -427,11 +449,243 @@ void MainInterface::openDonatePage()
 
 void MainInterface::saveProfileTo()
 {
-    QString pathProFile = QFileDialog::getSaveFileName(this, "Sélection du fichier de profil :", QDir::currentPath() + "/resources/profils", "Profils (*.profil)");
+    QString defaultPath = QDir::currentPath();
+    if(QDir(defaultPath + "/resources").exists())
+    {
+        defaultPath += "/resources/profils";
+    }
+    else
+    {
+        defaultPath += "/../PhotosConsigne/resources/profils";
+    }
+
+    QString pathProFile = QFileDialog::getSaveFileName(this, "Sélection du fichier de profil :", defaultPath , "Profils (*.profil)");
     if(pathProFile.size() > 0)
     {
         emit saveProfileToSignal(pathProFile);
     }
+}
+
+
+
+void MainInterface::unlockSaveProfile(QString profileName)
+{
+    ui->actionSaveProfile->setEnabled(true);
+
+    if(profileName != "")
+    {
+        ui->laProfileName->setText(profileName);
+    }
+}
+
+void MainInterface::loadProfile()
+{
+    QString defaultPath = QDir::currentPath();
+    if(QDir(defaultPath + "/resources").exists())
+    {
+        defaultPath += "/resources/profils";
+    }
+    else
+    {
+        defaultPath += "/../PhotosConsigne/resources/profils";
+    }
+
+    QString pathProFile = QFileDialog::getOpenFileName(this, "Fichier de profile", defaultPath, "*.profil");
+    if(pathProFile.size() > 0)
+    {
+        emit loadProfileSignal(pathProFile);
+    }
+}
+
+void MainInterface::profileLoaded(QString profileName, UIParameters params)
+{
+    ui->laProfileName->setText(profileName);
+
+    // image alignment
+    if((params.imageAlignment & Qt::AlignVCenter) == Qt::AlignVCenter)
+    {
+        ui->rbVCenterImage->setChecked(true);
+
+        if((params.imageAlignment & Qt::AlignHCenter) == Qt::AlignHCenter)
+        {
+            ui->rbHCenterImage->setChecked(true);
+        }
+        else if((params.imageAlignment & Qt::AlignRight) == Qt::AlignRight)
+        {
+            ui->rbRightImage->setChecked(true);
+        }
+        else
+        {
+            ui->rbLeftImage->setChecked(true);
+        }
+    }
+    else if((params.imageAlignment & Qt::AlignTop) == Qt::AlignTop)
+    {
+        ui->rbTopImage->setChecked(true);
+
+        if((params.imageAlignment & Qt::AlignHCenter) == Qt::AlignHCenter)
+        {
+            ui->rbHCenterImage->setChecked(true);
+        }
+        else if((params.imageAlignment & Qt::AlignRight) == Qt::AlignRight)
+        {
+            ui->rbRightImage->setChecked(true);
+        }
+        else
+        {
+            ui->rbLeftImage->setChecked(true);
+        }
+    }
+    else
+    {
+        ui->rbBottomImage->setChecked(true);
+
+        if((params.imageAlignment & Qt::AlignHCenter) == Qt::AlignHCenter)
+        {
+            ui->rbHCenterImage->setChecked(true);
+        }
+        else if((params.imageAlignment & Qt::AlignRight) == Qt::AlignRight)
+        {
+            ui->rbRightImage->setChecked(true);
+        }
+        else
+        {
+            ui->rbLeftImage->setChecked(true);
+        }
+
+    }
+
+    // consign alignment
+    if((params.consignAlignment & Qt::AlignVCenter) == Qt::AlignVCenter)
+    {
+        ui->rbVCenterText->setChecked(true);
+
+        if((params.consignAlignment & Qt::AlignHCenter) == Qt::AlignHCenter)
+        {
+            ui->rbHCenterText->setChecked(true);
+        }
+        else if((params.consignAlignment & Qt::AlignRight) == Qt::AlignRight)
+        {
+            ui->rbRightText->setChecked(true);
+        }
+        else
+        {
+            ui->rbLeftText->setChecked(true);
+        }
+    }
+    else if((params.consignAlignment & Qt::AlignTop) == Qt::AlignTop)
+    {
+        ui->rbTopText->setChecked(true);
+
+        if((params.consignAlignment & Qt::AlignHCenter) == Qt::AlignHCenter)
+        {
+            ui->rbHCenterText->setChecked(true);
+        }
+        else if((params.consignAlignment & Qt::AlignRight) == Qt::AlignRight)
+        {
+            ui->rbRightText->setChecked(true);
+        }
+        else
+        {
+            ui->rbLeftText->setChecked(true);
+        }
+    }
+    else
+    {
+        ui->rbBottomText->setChecked(true);
+
+        if((params.consignAlignment & Qt::AlignHCenter) == Qt::AlignHCenter)
+        {
+            ui->rbHCenterText->setChecked(true);
+        }
+        else if((params.consignAlignment & Qt::AlignRight) == Qt::AlignRight)
+        {
+            ui->rbRightText->setChecked(true);
+        }
+        else
+        {
+            ui->rbLeftText->setChecked(true);
+        }
+    }
+
+
+    // nb pages
+    ui->sbNbImagesH->setValue(params.nbImagesPageH);
+    ui->sbNbImagesV->setValue(params.nbImagesPageV);
+
+    // ratio
+    ui->dsbRatio->setValue(params.ratio);
+
+    // margins
+    ui->dsBottomMargins->setValue(params.bottomMargin);
+    ui->dsTopMargins->setValue(params.topMargin);
+    ui->dsRightMargins->setValue(params.rightMargin);
+    ui->dsLeftMargins->setValue(params.leftMargin);
+    ui->dsInterMarginsWidth->setValue(params.interMarginWidth);
+    ui->dsInterMarginsHeight->setValue(params.interMarginHeight);
+
+    // orientation
+    ui->rbPortrait->setChecked(params.orientation);
+
+    // cut lines
+    ui->cbCutLines->setChecked(params.cutLines);
+
+    // zones
+    ui->cbZoneExternMargins->setChecked(params.zExternMargins);
+    ui->cbZoneInternMargins->setChecked(params.zInterMargins);
+    ui->cbZonePhotos->setChecked(params.zPhotos);
+    ui->cbZoneConsignes->setChecked(params.zConsigns);
+
+    // update font
+    QFont font = ui->fcbConsignes->font();
+    font.setFamily(params.font.family());
+    ui->fcbConsignes->setCurrentFont(font);
+    ui->cbBold->setChecked(font.bold());
+    ui->cbItalic->setChecked(font.italic());
+
+    font = params.font;
+    font.setPixelSize(13);
+    ui->pteConsigne->setFont(font);
+    ui->pteConsigne->setStyleSheet("QPlainTextEdit{color: rgb("+ QString::number(params.consignColor.red()) +
+                                   ", " + QString::number(params.consignColor.green()) + ", " + QString::number(params.consignColor.blue()) +")};");
+
+    ui->pbChooseColor->setStyleSheet("background-color: rgb("+ QString::number(params.consignColor.red()) +
+                                    ", " + QString::number(params.consignColor.green()) + ", " + QString::number(params.consignColor.blue()) +");");
+    ui->sbSizeTexte->setValue(params.font.pixelSize());
+
+    // display pages number
+    int photosRemoved = 0;
+    for(int ii = 0; ii < m_photoRemovedList.count();++ii)
+    {
+        if(m_photoRemovedList[ii])
+            photosRemoved++;
+    }
+
+    int nbPhotosTotal = m_photoRemovedList.size()-photosRemoved;
+    int nbPhotosPerPage = params.nbImagesPageV*params.nbImagesPageH;
+    int nbPages = nbPhotosTotal / nbPhotosPerPage;
+    int rest = nbPhotosTotal % nbPhotosPerPage;
+    if( rest != 0)
+        ++nbPages;
+
+    if(nbPages <= 1)
+    {
+        ui->laNbPages->setText(QString::number(nbPages) + " page");
+    }
+    else
+    {
+        ui->laNbPages->setText(QString::number(nbPages) + " pages");
+    }
+
+
+    emit sentParametersSignal(params);
+
+    if(ui->lwPhotos->count() > 0)
+    {
+        generatePreview();
+    }
+
+    unlockSaveProfile("");
 }
 
 void MainInterface::openOnlineDocumentation()
@@ -449,7 +703,7 @@ void MainInterface::generatePDF()
     ui->pbPreview->setEnabled(false);
     ui->pbSelectPhotos->setEnabled(false);
 
-    m_pdfFileName = QFileDialog::getSaveFileName(this, "Nom du fichier pdf", QString(), "*.pdf");
+    m_pdfFileName = QFileDialog::getSaveFileName(this, "Nom du fichier pdf",  QDir::homePath(), "*.pdf");
 
     if(m_pdfFileName.size() == 0)
     {

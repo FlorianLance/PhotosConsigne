@@ -61,6 +61,13 @@ struct UIParameters
      */
     bool saveProfileTo(const QString &pathProFile);
 
+
+    /**
+     * @brief Load the current profile to the input file path
+     * @param [in] pathProFile
+     * @return true if success else false
+     */
+    bool loadProfile(const QString &pathProFile);
 };
 
 
@@ -136,10 +143,22 @@ class InterfaceWorker : public QObject
          */
         void saveProfile();
 
-//        /**
-//         * @brief Save the current profil to the default profile path
-//         */
-//        void saveDefaultProfile();
+        /**
+         * @brief Save the current profil to the default profile path
+         */
+        void saveDefaultProfile();
+
+        /**
+         * @brief Load the input profile file
+         * @param [in] pathProfileFile
+         */
+        void loadProfile(QString pathProfileFile);
+
+        /**
+         * @brief Load the input default profile file
+         * @param [in] defaultProfileFile
+         */
+        void loadDefaultProfile(QString defaultProfileFile);
 
     signals :
 
@@ -159,9 +178,20 @@ class InterfaceWorker : public QObject
         void displayPhotoSignal(QImage);
 
         /**
-         * @brief pdfGeneratedSignal
+         * @brief Signal for indicating the ending of a pdf generation
          */
         void pdfGeneratedSignal();
+
+        /**
+         * @brief Signal of the end of the sacing of a profile file
+         */
+        void endSaveProfileSignal(QString);
+
+        /**
+         * @brief Signal of the end of the loading of a profile file, the input parameter is the profile name
+         */
+        void endLoadProfileSignal(QString, UIParameters);
+
 
     private :
 
