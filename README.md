@@ -34,8 +34,6 @@ Le résultat :
 
 ![PhotosConsigne_img3](http://i.imgur.com/Vs90e2l.png "PDF généré")
 
-Il s'agit d'un projet réalisé sur mon temps de loisir en quelques weekends, mais selon les différents retours, je ne manquerai pas d'ajouter des fonctionnalités si elles s'avèrent cohérentes avec l'ensemble.
-
 
 Documentation :
  - soon
