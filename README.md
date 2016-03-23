@@ -24,15 +24,15 @@ Tutorials :
 
 Exemple de mise en page :
 
-![PhotosConsigne_img1](http://i.imgur.com/jvYIHRp.png "PhtosConsigne interface 1")
+![PhotosConsigne_img1](http://i.imgur.com/PHaDGMZ.png "PhtosConsigne interface 1")
 
 Edition de la consigne :
 
-![PhotosConsigne_img2](http://i.imgur.com/VAjVPIi.png "PhtosConsigne interface 2")
+![PhotosConsigne_img2](http://i.imgur.com/wsySVsb.png "PhtosConsigne interface 2")
 
-Le résultat :
+Un PDF généré :
 
-![PhotosConsigne_img3](http://i.imgur.com/Vs90e2l.png "PDF généré")
+![PhotosConsigne_img3](http://i.imgur.com/LMcRTGl.png "PDF généré")
 
 
 Documentation :
