@@ -14,7 +14,7 @@ Une prévisualisation du résultat est disponible à chaque changement de param�
 [Téléchargement v1.0 (version sans installeur)](https://github.com/FlorianLance/PhotosConsigne/files/185153/PhotosConsigne.zip "release v1.0")
 
 
-Si ce logiciel vous a été utile et que vous souhaitez m'encourager, je serai ravi d'accepter un don :
+Ce logiciel est **gratuit**, mais si il vous a été utile et que vous souhaitez m'encourager, vous pouvez me faire un don :
 <a href='https://pledgie.com/campaigns/31286'><img alt='Click here to lend your support to: Développement logiciel éducation/recherche open-source and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/31286.png?skin_name=chrome' border='0' ></a>
 
 Tutorials :
