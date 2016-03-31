@@ -17,25 +17,21 @@ Une prévisualisation du résultat est disponible à chaque changement de param�
 Ce logiciel est **gratuit**, mais si il vous a été utile et que vous souhaitez m'encourager, vous pouvez me faire un don :
 <a href='https://pledgie.com/campaigns/31286'><img alt='Click here to lend your support to: Développement logiciel éducation/recherche open-source and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/31286.png?skin_name=chrome' border='0' ></a>
 
-Vidéo youtube tutoriel :
+Tutoriel vidéo:
+---------------
 
 [![Demo](http://imgur.com/kfdeUSx.png)](https://www.youtube.com/watch?v=jazpY9XrCuc "Demo")
---------------
-
-Et voici quelques screenshots :
-
-Exemple de mise en page :
-
-![PhotosConsigne_img1](http://i.imgur.com/PHaDGMZ.png "PhtosConsigne interface 1")
-
-Edition de la consigne :
-
-![PhotosConsigne_img2](http://i.imgur.com/wsySVsb.png "PhtosConsigne interface 2")
-
-Un PDF généré :
-
-![PhotosConsigne_img3](http://i.imgur.com/LMcRTGl.png "PDF généré")
 
 
-Documentation :
+Captures d'écran:
+-----------------
+
+![PhotosConsigne_img1](http://i.imgur.com/PHaDGMZ.png "Exemple de mise en page")
+
+![PhotosConsigne_img2](http://i.imgur.com/wsySVsb.png "Edition de la consigne")
+
+![PhotosConsigne_img3](http://i.imgur.com/LMcRTGl.png "Un PDF généré")
+
+
+Documentation:
  - soon
