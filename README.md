@@ -19,10 +19,10 @@ Ce logiciel est **gratuit**, mais si il vous a été utile et que vous souhaitez
 
 Vidéo youtube tutoriel :
 
-[![Demo](http://img.youtube.com/vi/jazpY9XrCuc/0.jpg)](https://www.youtube.com/watch?v=jazpY9XrCuc)
-
-
+[![Demo](http://imgur.com/kfdeUSx.png)](https://www.youtube.com/watch?v=jazpY9XrCuc "Demo")
 --------------
+
+Et voici quelques screenshots :
 
 Exemple de mise en page :
 
