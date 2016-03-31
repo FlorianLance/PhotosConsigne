@@ -17,8 +17,9 @@ Une prévisualisation du résultat est disponible à chaque changement de param�
 Ce logiciel est **gratuit**, mais si il vous a été utile et que vous souhaitez m'encourager, vous pouvez me faire un don :
 <a href='https://pledgie.com/campaigns/31286'><img alt='Click here to lend your support to: Développement logiciel éducation/recherche open-source and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/31286.png?skin_name=chrome' border='0' ></a>
 
-Tutorials :
-- video soon
+Vidéo tutoriel :
+
+[![Demo](http://img.youtube.com/vi/jazpY9XrCuc/0.jpg)]https://www.youtube.com/watch?v=jazpY9XrCuc)
 
 --------------
 
