@@ -17,6 +17,7 @@ Téléchargements:
 Version portable sans installeur pour Windows 7/8/10 :
 
 [PhotosConsigne 1.0 x86](https://github.com/FlorianLance/PhotosConsigne/files/199763/PhotosConsigne.x86.zip "release v1.0") 
+
 [PhotosConsigne 1.0 x64](https://github.com/FlorianLance/PhotosConsigne/files/199763/PhotosConsigne.x64.zip "release v1.0")
 
 Si vous ne savez pas quelle version choisir, prenez la première.
