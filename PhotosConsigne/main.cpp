@@ -28,6 +28,7 @@
  */
 
 
+
 // Qt
 #include <QApplication>
 #include <QTranslator>

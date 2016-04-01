@@ -443,7 +443,7 @@ void MainInterface::openDonatePage()
     bool success = QDesktopServices::openUrl(QUrl("https://pledgie.com/campaigns/31286#donors", QUrl::TolerantMode));
     if(!success)
     {
-        QMessageBox::warning(this, tr("Avertissement"), tr("Le site internet du tutoriel n'a pu être lancé, aucun logiciel de navigation web n'a été trouvé.' .\n"),QMessageBox::Ok);
+        QMessageBox::warning(this, tr("Avertissement"), tr("Le site internet de don n'a pu être lancé, aucun logiciel de navigation web n'a été trouvé.' .\n"),QMessageBox::Ok);
     }
 }
 
@@ -690,7 +690,7 @@ void MainInterface::profileLoaded(QString profileName, UIParameters params)
 
 void MainInterface::openOnlineDocumentation()
 {
-    bool success = QDesktopServices::openUrl(QUrl("https://github.com/FlorianLance/PhotosConsigne", QUrl::TolerantMode));
+    bool success = QDesktopServices::openUrl(QUrl("https://www.youtube.com/watch?v=jazpY9XrCuc", QUrl::TolerantMode));
     if(!success)
     {
         QMessageBox::warning(this, tr("Avertissement"), tr("Le site internet du tutoriel n'a pu être lancé, aucun logiciel de navigation web n'a été trouvé.' .\n"),QMessageBox::Ok);

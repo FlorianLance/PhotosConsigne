@@ -6,6 +6,8 @@
 
 QT       += core gui printsupport
 
+
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = launch
@@ -35,6 +37,9 @@ win32-msvc*:contains(QMAKE_TARGET.arch, x86_64):{
 win32-msvc*:contains(QMAKE_TARGET.arch, x86):{
     ARCH = "x86"
 }
+
+
+message("---> : "$$ARCH" "$$CFG)
 
 ############# INCLUDEPATH
 # hbp
@@ -81,6 +86,7 @@ INCLUDEPATH += "./include"
 
 message("Build : "$$ARCH" "$$CFG)
 #D:\_software\GnuWin32\lib
+
 
 
 
