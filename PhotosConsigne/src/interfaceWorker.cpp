@@ -47,8 +47,9 @@ void InterfaceWorker::loadImages(QString path, QStringList imagesList)
     emit setProgressBarStateSignal(0);
 
     m_loadedImages.resize(imagesList.count());
+    m_individualTextes.resize(imagesList.count());
     for(int ii = 0; ii < imagesList.count(); ++ii)
-    {
+    {        
         m_loadedImages[ii] = QImage(path + "/" + imagesList[ii]);
         emit setProgressBarStateSignal(ii * (100/imagesList.count()));
     }
@@ -311,7 +312,6 @@ void InterfaceWorker::generatePreview(int currentRowPhoto)
     {
 //        width = 1500;
 //        height = width*0.7070;
-
         width = 3507;
         height = 2480;
     }
@@ -319,7 +319,6 @@ void InterfaceWorker::generatePreview(int currentRowPhoto)
     {
 //        height = 1500;
 //        width = height*0.7070;
-
         width = 2480;
         height = 3507;
     }

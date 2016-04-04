@@ -76,6 +76,10 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     ui->pbPreview->setIcon(QIcon(":/images/preview"));
     ui->pbPreview->setIconSize(QSize(100,50));
     ui->pbPreview->setToolTip(tr("Affiche la prévisualisation du PDF"));
+    // add consign
+    ui->pbAddTextPhoto->setIcon(QIcon(":/images/addConsign"));
+    ui->pbAddTextPhoto->setIconSize(QSize(100,50));
+    ui->pbAddTextPhoto->setToolTip(tr("Ajouter un texte unique pour cette photo"));
 
     // remove photo
     m_addPhotoIcon = QIcon(":/images/add");
@@ -105,6 +109,10 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
 
     // set styles
     setStyleSheet("QGroupBox { padding: 10 0px 0 0px; color: blue; border: 1px solid gray; border-radius: 5px; margin-top: 1ex; /* leave space at the top for the title */}");        
+
+    // individual consign
+    ui->laPhotoIndividualConsign->hide();
+    ui->tePhotoIndividualConsign->hide();
 
     // color
     m_colorText = Qt::GlobalColor::black;
@@ -142,6 +150,7 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     QObject::connect(ui->pbLeftImage, SIGNAL(clicked()), this, SLOT(leftPhoto()));
     QObject::connect(ui->pbRightImage, SIGNAL(clicked()), this, SLOT(rightPhoto()));
     QObject::connect(ui->pbOpenPDF, SIGNAL(clicked()), this, SLOT(openPDF()));
+    QObject::connect(ui->pbAddTextPhoto, SIGNAL(clicked()), this, SLOT(switchTextPhoto()));
     //  list widget
     QObject::connect(ui->lwPhotos,SIGNAL(currentRowChanged(int)), this, SLOT(updatePhotoIndex(int)));
     QObject::connect(ui->lwPhotos, SIGNAL(clicked(QModelIndex)), this, SLOT(updatePhotoIndex(QModelIndex)));
@@ -175,6 +184,8 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     QObject::connect(ui->fcbConsignes, SIGNAL(currentFontChanged(QFont)), this, SLOT(updateUIParameters(QFont)));
     // QPlainText
     QObject::connect(ui->pteConsigne, SIGNAL(textChanged()), this, SLOT(updateUIParameters()));
+    // text edit
+    QObject::connect(ui->tePhotoIndividualConsign, SIGNAL(textChanged()), this, SLOT(updateIndividualText()));
     // check box
     QObject::connect(ui->cbBold, SIGNAL(toggled(bool)), this, SLOT(updateUIParameters(bool)));
     QObject::connect(ui->cbItalic, SIGNAL(toggled(bool)), this, SLOT(updateUIParameters(bool)));
@@ -250,6 +261,7 @@ void MainInterface::unlockUI()
     ui->pbRemovePhoto->setEnabled(true);
     ui->pbLeftImage->setEnabled(true);
     ui->pbRightImage->setEnabled(true);
+    ui->pbAddTextPhoto->setEnabled(true);
 }
 
 void MainInterface::setPhotosDirectory()
@@ -259,7 +271,10 @@ void MainInterface::setPhotosDirectory()
     ui->pbSelectPhotos->setEnabled(false);    
     ui->pbRotationLeft->setEnabled(false);
     ui->pbRotationRight->setEnabled(false);
-    ui->pbRemovePhoto->setEnabled(false);    
+    ui->pbRemovePhoto->setEnabled(false);
+    ui->pbLeftImage->setEnabled(false);
+    ui->pbRightImage->setEnabled(false);
+    ui->pbAddTextPhoto->setEnabled(false);
 
     QString previousDirectory = m_photosDirectory;
     m_photosDirectory = QFileDialog::getExistingDirectory(this, "Sélection du répertoire de photos", QDir::homePath());
@@ -276,6 +291,9 @@ void MainInterface::setPhotosDirectory()
             ui->pbRotationRight->setEnabled(true);
             ui->pbRemovePhoto->setEnabled(true);
             ui->pbGeneration->setEnabled(true);
+            ui->pbAddTextPhoto->setEnabled(true);
+            ui->pbLeftImage->setEnabled(true);
+            ui->pbRightImage->setEnabled(true);
             m_photosDirectory = previousDirectory;
         }
 
@@ -299,6 +317,9 @@ void MainInterface::setPhotosDirectory()
             ui->pbRotationRight->setEnabled(true);
             ui->pbRemovePhoto->setEnabled(true);
             ui->pbGeneration->setEnabled(true);
+            ui->pbAddTextPhoto->setEnabled(true);
+            ui->pbLeftImage->setEnabled(true);
+            ui->pbRightImage->setEnabled(true);
             m_photosDirectory = previousDirectory;
         }
 
@@ -312,10 +333,14 @@ void MainInterface::setPhotosDirectory()
 
     ui->lwPhotos->clear();
     m_photoRemovedList.clear();
+    m_addTextPhotoEnabled.clear();
+    m_photosText.clear();
     for(int ii = 0; ii < fileList.size(); ++ii)
     {
         ui->lwPhotos->addItem(fileList[ii]);
         m_photoRemovedList.push_back(false);
+        m_addTextPhotoEnabled.push_back(false);
+        m_photosText.push_back("");
     }    
 
     if(fileList.size() > 0)
@@ -375,7 +400,8 @@ void MainInterface::updatePhotoIndex(int index)
         emit askForPhotoSignal(index);
     }
 
-    if(m_photoRemovedList[ui->lwPhotos->currentRow()])
+    int idPhoto = ui->lwPhotos->currentRow();
+    if(m_photoRemovedList[idPhoto])
     {
         ui->pbRemovePhoto->setIcon(m_addPhotoIcon);
         ui->pbRemovePhoto->setIconSize(QSize(50,50));
@@ -387,24 +413,31 @@ void MainInterface::updatePhotoIndex(int index)
         ui->pbRemovePhoto->setIconSize(QSize(50,50));
         ui->pbRemovePhoto->setToolTip(tr("Retirer l'image de la liste"));
     }
+
+    updateAddTextPhotoUI(idPhoto);
 }
 
 void MainInterface::removeCurrentPhotoFromList()
 {
     QBrush brush = ui->lwPhotos->currentItem()->foreground();
 
+    int id = ui->lwPhotos->currentRow();
     if(!m_photoRemovedList[ui->lwPhotos->currentRow()])
     {
         brush.setColor(Qt::red);
-        m_photoRemovedList[ui->lwPhotos->currentRow()] = true;
+        m_photoRemovedList[id] = true;
         ui->pbRemovePhoto->setIcon(m_addPhotoIcon);
         ui->pbRemovePhoto->setIconSize(QSize(50,50));
         ui->pbRemovePhoto->setToolTip(tr("Rajouter l'image dans la liste"));
     }
     else
     {
-        brush.setColor(Qt::black);
-        m_photoRemovedList[ui->lwPhotos->currentRow()] = false;
+        if(m_addTextPhotoEnabled[id])
+            brush.setColor(Qt::blue);
+        else
+            brush.setColor(Qt::black);
+
+        m_photoRemovedList[id] = false;
         ui->pbRemovePhoto->setIcon(m_removePhotoIcon);
         ui->pbRemovePhoto->setIconSize(QSize(50,50));
         ui->pbRemovePhoto->setToolTip(tr("Retirer l'image de la liste"));
@@ -686,6 +719,57 @@ void MainInterface::profileLoaded(QString profileName, UIParameters params)
     }
 
     unlockSaveProfile("");
+}
+
+void MainInterface::switchTextPhoto()
+{
+    int currentId = ui->lwPhotos->currentIndex().row();
+    m_addTextPhotoEnabled[currentId] = !m_addTextPhotoEnabled[currentId];
+    updateAddTextPhotoUI(currentId);
+}
+
+void MainInterface::updateAddTextPhotoUI(const int id)
+{
+    QBrush brush = ui->lwPhotos->currentItem()->foreground();
+
+
+    if(m_addTextPhotoEnabled[id])
+    {
+        if(m_photoRemovedList[id])
+            brush.setColor(Qt::red);
+        else
+            brush.setColor(Qt::blue);
+
+        ui->laPhotoIndividualConsign->show();
+        ui->tePhotoIndividualConsign->show();
+        ui->tePhotoIndividualConsign->setText(m_photosText[id]);
+        ui->pbAddTextPhoto->setIcon(QIcon(":/images/removeConsign"));
+        ui->pbAddTextPhoto->setIconSize(QSize(100,50));
+        ui->pbAddTextPhoto->setToolTip(tr("Retirer le texte unique pour cette photo"));
+        ui->tePhotoIndividualConsign->setText(m_photosText[id]);
+    }
+    else
+    {
+        if(m_photoRemovedList[id])
+            brush.setColor(Qt::red);
+        else
+            brush.setColor(Qt::black);
+
+        ui->laPhotoIndividualConsign->hide();
+        ui->tePhotoIndividualConsign->hide();
+        ui->pbAddTextPhoto->setIcon(QIcon(":/images/addConsign"));
+        ui->pbAddTextPhoto->setIconSize(QSize(100,50));
+        ui->pbAddTextPhoto->setToolTip(tr("Ajouter un texte unique pour cette photo"));
+        m_photosText[id] = "";
+    }
+
+    ui->lwPhotos->currentItem()->setForeground(brush);
+}
+
+void MainInterface::updateIndividualText()
+{
+    int id = ui->lwPhotos->currentIndex().row();
+    m_photosText[id] = ui->tePhotoIndividualConsign->toPlainText();
 }
 
 void MainInterface::openOnlineDocumentation()

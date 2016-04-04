@@ -232,6 +232,7 @@ class InterfaceWorker : public QObject
 
         QVector<bool> m_removedImageList;   /**< mask of the removed images */
         QVector<QImage> m_loadedImages;     /**< loaded images to be used for the pdf generation */
+        QVector<QString> m_individualTextes;/**< individual textes for each photo */
 };
 
 

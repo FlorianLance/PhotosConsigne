@@ -227,6 +227,22 @@ public slots:
      */
     void profileLoaded(QString profileName, UIParameters params);
 
+    /**
+     * @brief Switch between the two state of the add photo text button
+     */
+    void switchTextPhoto();
+
+    /**
+     * @brief Update the add photo text UI depending the current photo
+     * @param [in] id
+     */
+    void updateAddTextPhotoUI(const int id);
+
+    /**
+     * @brief Save individual text modifications
+     */
+    void updateIndividualText();
+
 
 signals :
 
@@ -257,6 +273,8 @@ private:
     QString m_photosDirectory;          /**< the photos directory */
     QString m_pdfFileName;              /**< path of the generated PDF file */
     QVector<bool> m_photoRemovedList;   /**< indicates if a photo is removed from the list */
+    QVector<bool> m_addTextPhotoEnabled;/**< indicats if photo has a custom individual text */
+    QVector<QString> m_photosText;      /**< individual text for each photo */
 
     QThread  m_workerThread;                /**< worker thread */
     ImageLabel *m_imageLabel;               /**< display photos widget */

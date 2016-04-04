@@ -12,6 +12,8 @@
         <file alias="save">../resources/images/save.png</file>
         <file alias="pdf">../resources/images/pdf.png</file>
         <file alias="null">../resources/images/nullImage.png</file>
+        <file alias="addConsign">../resources/images/addConsign.png</file>
+        <file alias="removeConsign">../resources/images/removeConsign.png</file>
     </qresource>
     <qresource prefix="/style">
         <file alias="buttons">../resources/style/buttons.qss</file>
