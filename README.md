@@ -35,6 +35,8 @@ Tutoriel vidéo:
 Captures d'écran:
 -----------------
 
+![PhotosConsigne_img1](http://i.imgur.com/KGaXlKe.png "Exemple avec consigne orientée vers le bas et textes individuels")
+
 ![PhotosConsigne_img1](http://i.imgur.com/PHaDGMZ.png "Exemple de mise en page")
 
 ![PhotosConsigne_img2](http://i.imgur.com/wsySVsb.png "Edition de la consigne")
