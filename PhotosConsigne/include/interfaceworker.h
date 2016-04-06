@@ -46,13 +46,15 @@
  */
 struct UIParameters
 {
-    bool orientation, cutLines, zExternMargins, zInterMargins, zPhotos, zConsigns;
+    bool topConsign, orientation, cutLines, zExternMargins, zInterMargins, zPhotos, zConsigns;
     int nbImagesPageV, nbImagesPageH, imageAlignment, consignAlignment;
     double ratio,leftMargin,rightMargin, topMargin, bottomMargin, interMarginWidth, interMarginHeight;
     QFont font;
     QString consignText;
     QColor consignColor;
     QVector<bool> removePhotoList;
+    QVector<bool> individualTextDefined;
+    QVector<QString> individualTexts;
 
     /**
      * @brief Save the current profile to the input file path
@@ -160,6 +162,7 @@ class InterfaceWorker : public QObject
          */
         void loadDefaultProfile(QString defaultProfileFile);
 
+
     signals :
 
         /**
@@ -201,6 +204,7 @@ class InterfaceWorker : public QObject
          */
         void addContourPreview(QImage &image);
 
+        bool m_topConsign;          /**< is the consign above the photo ? */
         bool m_landScapeOrientation;/**< landscapre orientation of the pdf */
         bool m_isAllPhotoRemoved;   /**< true if all the photo of the list have been removed */
         bool m_cutLines;            /**< draw cut lines ? */
@@ -231,8 +235,9 @@ class InterfaceWorker : public QObject
         UIParameters m_params;      /**< current params*/
 
         QVector<bool> m_removedImageList;   /**< mask of the removed images */
+        QVector<bool> m_individualTextDefined; /**< is an individual text disponible for each photo */
         QVector<QImage> m_loadedImages;     /**< loaded images to be used for the pdf generation */
-        QVector<QString> m_individualTextes;/**< individual textes for each photo */
+        QVector<QString> m_individualTexts; /**< individual texts for each photo */
 };
 
 

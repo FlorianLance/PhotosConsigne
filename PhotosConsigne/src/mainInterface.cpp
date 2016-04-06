@@ -49,10 +49,12 @@
 
 MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
 {
+    QString version = "1.01";
+
     ui->setupUi(this);
 
     // set icon/title
-    this->setWindowTitle(QString("PhotosConsigne"));
+    this->setWindowTitle(QString("PhotosConsigne ") + version);
     this->setWindowIcon(QIcon(":/images/icon"));
 
     // load images
@@ -111,7 +113,7 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     setStyleSheet("QGroupBox { padding: 10 0px 0 0px; color: blue; border: 1px solid gray; border-radius: 5px; margin-top: 1ex; /* leave space at the top for the title */}");        
 
     // individual consign
-    ui->laPhotoIndividualConsign->hide();
+//    ui->laPhotoIndividualConsign->hide();
     ui->tePhotoIndividualConsign->hide();
 
     // color
@@ -194,6 +196,7 @@ MainInterface::MainInterface(QApplication *parent) : ui(new Ui::MainInterface)
     QObject::connect(ui->cbZoneInternMargins, SIGNAL(toggled(bool)), this, SLOT(updateUIParameters(bool)));
     QObject::connect(ui->cbZoneConsignes, SIGNAL(toggled(bool)), this, SLOT(updateUIParameters(bool)));
     QObject::connect(ui->cbZonePhotos, SIGNAL(toggled(bool)), this, SLOT(updateUIParameters(bool)));
+    QObject::connect(ui->rbConsignPositionTop , SIGNAL(toggled(bool)), this, SLOT(updateUIParameters(bool)));
     //  interface -> worker
     QObject::connect(this, SIGNAL(sendImagesDirSignal(QString, QStringList)), m_interfaceWorker, SLOT(loadImages(QString, QStringList)));
     QObject::connect(this, SIGNAL(generatePDFSignal(QString)), m_interfaceWorker, SLOT(generatePDF(QString)));
@@ -327,14 +330,18 @@ void MainInterface::setPhotosDirectory()
         return;
     }
 
-    ui->laLoading->setText("Chargement des photos...");
 
+    ui->laLoading->setText("Chargement des photos...");
     ui->laPhotosDir->setText(m_photosDirectory);
 
+    lockLWPhotos = true;
     ui->lwPhotos->clear();
+    lockLWPhotos = false;
+
     m_photoRemovedList.clear();
     m_addTextPhotoEnabled.clear();
     m_photosText.clear();
+
     for(int ii = 0; ii < fileList.size(); ++ii)
     {
         ui->lwPhotos->addItem(fileList[ii]);
@@ -393,6 +400,9 @@ void MainInterface::rightPhoto()
 
 void MainInterface::updatePhotoIndex(int index)
 {
+    if(lockLWPhotos)
+        return;
+
     ui->tabDisplay->setCurrentIndex(0);
 
     if(index >= 0  && index < ui->lwPhotos->count())
@@ -499,8 +509,6 @@ void MainInterface::saveProfileTo()
     }
 }
 
-
-
 void MainInterface::unlockSaveProfile(QString profileName)
 {
     ui->actionSaveProfile->setEnabled(true);
@@ -585,7 +593,6 @@ void MainInterface::profileLoaded(QString profileName, UIParameters params)
         {
             ui->rbLeftImage->setChecked(true);
         }
-
     }
 
     // consign alignment
@@ -669,6 +676,9 @@ void MainInterface::profileLoaded(QString profileName, UIParameters params)
     ui->cbZonePhotos->setChecked(params.zPhotos);
     ui->cbZoneConsignes->setChecked(params.zConsigns);
 
+    // consign position
+    ui->rbConsignPositionTop->setChecked(params.topConsign);
+
     // update font
     QFont font = ui->fcbConsignes->font();
     font.setFamily(params.font.family());
@@ -676,6 +686,7 @@ void MainInterface::profileLoaded(QString profileName, UIParameters params)
     ui->cbBold->setChecked(font.bold());
     ui->cbItalic->setChecked(font.italic());
 
+    m_colorText = params.consignColor;
     font = params.font;
     font.setPixelSize(13);
     ui->pteConsigne->setFont(font);
@@ -718,7 +729,8 @@ void MainInterface::profileLoaded(QString profileName, UIParameters params)
         generatePreview();
     }
 
-    unlockSaveProfile("");
+    if(profileName != "default.profil")
+        unlockSaveProfile("");
 }
 
 void MainInterface::switchTextPhoto()
@@ -726,6 +738,7 @@ void MainInterface::switchTextPhoto()
     int currentId = ui->lwPhotos->currentIndex().row();
     m_addTextPhotoEnabled[currentId] = !m_addTextPhotoEnabled[currentId];
     updateAddTextPhotoUI(currentId);
+    updateUIParameters(false, false, false);
 }
 
 void MainInterface::updateAddTextPhotoUI(const int id)
@@ -740,7 +753,7 @@ void MainInterface::updateAddTextPhotoUI(const int id)
         else
             brush.setColor(Qt::blue);
 
-        ui->laPhotoIndividualConsign->show();
+//        ui->laPhotoIndividualConsign->show();
         ui->tePhotoIndividualConsign->show();
         ui->tePhotoIndividualConsign->setText(m_photosText[id]);
         ui->pbAddTextPhoto->setIcon(QIcon(":/images/removeConsign"));
@@ -755,7 +768,7 @@ void MainInterface::updateAddTextPhotoUI(const int id)
         else
             brush.setColor(Qt::black);
 
-        ui->laPhotoIndividualConsign->hide();
+//        ui->laPhotoIndividualConsign->hide();
         ui->tePhotoIndividualConsign->hide();
         ui->pbAddTextPhoto->setIcon(QIcon(":/images/addConsign"));
         ui->pbAddTextPhoto->setIconSize(QSize(100,50));
@@ -810,6 +823,8 @@ void MainInterface::generatePDF()
 
 void MainInterface::generatePreview()
 {    
+    updateUIParameters(false,false,false);
+
     ui->pbGeneration->setEnabled(false);
     ui->pbPreview->setEnabled(false);
     ui->tabDisplay->setCurrentIndex(1);
@@ -1021,6 +1036,10 @@ void MainInterface::updateUIParameters(bool notUsedValue1, bool notUsedValue2, b
     params.zPhotos = ui->cbZonePhotos->isChecked();
     params.orientation = ui->rbPortrait->isChecked();
     params.zConsigns = ui->cbZoneConsignes->isChecked();
+    params.topConsign = ui->rbConsignPositionTop->isChecked();
+    params.individualTexts = m_photosText;
+    params.individualTextDefined = m_addTextPhotoEnabled;
+
 
     emit sentParametersSignal(params);
 

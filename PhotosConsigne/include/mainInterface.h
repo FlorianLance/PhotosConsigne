@@ -33,6 +33,7 @@
 
 // Qt
 #include <QMainWindow>
+#include <QMutex>
 
 // ui
 #include "ui_mainUI.h"
@@ -273,8 +274,10 @@ private:
     QString m_photosDirectory;          /**< the photos directory */
     QString m_pdfFileName;              /**< path of the generated PDF file */
     QVector<bool> m_photoRemovedList;   /**< indicates if a photo is removed from the list */
-    QVector<bool> m_addTextPhotoEnabled;/**< indicats if photo has a custom individual text */
+    QVector<bool> m_addTextPhotoEnabled;/**< indicates if photo has a custom individual text */
     QVector<QString> m_photosText;      /**< individual text for each photo */
+
+    bool lockLWPhotos = false;
 
     QThread  m_workerThread;                /**< worker thread */
     ImageLabel *m_imageLabel;               /**< display photos widget */

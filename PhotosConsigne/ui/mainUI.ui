@@ -37,7 +37,7 @@
               <widget class="QPushButton" name="pbSelectPhotos">
                <property name="minimumSize">
                 <size>
-                 <width>82</width>
+                 <width>100</width>
                  <height>35</height>
                 </size>
                </property>
@@ -127,8 +127,8 @@ QPushButton:default {
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>485</width>
-                   <height>154</height>
+                   <width>390</width>
+                   <height>139</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -170,7 +170,7 @@ QPushButton:default {
               </font>
              </property>
              <property name="title">
-              <string>EDITION DE LA CONSIGNE</string>
+              <string>CONSIGNE GLOBALE</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>
@@ -178,45 +178,25 @@ QPushButton:default {
                 <item>
                  <layout class="QVBoxLayout" name="vlTextEdit" stretch="0,0,0,0,0,0">
                   <item>
-                   <layout class="QHBoxLayout" name="hlTextAlignment">
-                    <item>
-                     <widget class="QLabel" name="laTextAlignment">
-                      <property name="font">
-                       <font>
-                        <weight>50</weight>
-                        <bold>false</bold>
-                       </font>
-                      </property>
+                   <layout class="QGridLayout" name="glConsign">
+                    <item row="1" column="2" alignment="Qt::AlignLeft">
+                     <widget class="QLabel" name="laVerticalText">
                       <property name="text">
-                       <string>   Position de la consigne</string>
+                       <string>vertical : </string>
                       </property>
                      </widget>
                     </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="hlHText" stretch="2,1,1,1,1">
-                    <item>
-                     <widget class="QLabel" name="laHorizontalText">
+                    <item row="0" column="5">
+                     <widget class="QRadioButton" name="rbRightText">
                       <property name="text">
-                       <string>      Alignement horizontal :</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QRadioButton" name="rbLeftText">
-                      <property name="styleSheet">
-                       <string notr="true"/>
-                      </property>
-                      <property name="text">
-                       <string>à gauche</string>
+                       <string>à droite</string>
                       </property>
                       <attribute name="buttonGroup">
                        <string notr="true">buttonGroup</string>
                       </attribute>
                      </widget>
                     </item>
-                    <item>
+                    <item row="0" column="4">
                      <widget class="QRadioButton" name="rbHCenterText">
                       <property name="text">
                        <string>centré</string>
@@ -229,17 +209,27 @@ QPushButton:default {
                       </attribute>
                      </widget>
                     </item>
-                    <item>
-                     <widget class="QRadioButton" name="rbRightText">
-                      <property name="text">
-                       <string>à droite</string>
+                    <item row="0" column="0" rowspan="2">
+                     <widget class="QLabel" name="laTextAlignment">
+                      <property name="font">
+                       <font>
+                        <weight>50</weight>
+                        <bold>false</bold>
+                       </font>
                       </property>
-                      <attribute name="buttonGroup">
-                       <string notr="true">buttonGroup</string>
-                      </attribute>
+                      <property name="text">
+                       <string>Alignement</string>
+                      </property>
                      </widget>
                     </item>
-                    <item>
+                    <item row="0" column="2" alignment="Qt::AlignLeft">
+                     <widget class="QLabel" name="laHorizontalText">
+                      <property name="text">
+                       <string>horizontal :</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="6" rowspan="2">
                      <spacer name="hsAlignHoriz">
                       <property name="orientation">
                        <enum>Qt::Horizontal</enum>
@@ -252,18 +242,30 @@ QPushButton:default {
                       </property>
                      </spacer>
                     </item>
-                   </layout>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="hlVText" stretch="2,1,1,1,1">
-                    <item>
-                     <widget class="QLabel" name="laVerticalText">
-                      <property name="text">
-                       <string>      Alignement vertical :</string>
+                    <item row="0" column="3">
+                     <widget class="QRadioButton" name="rbLeftText">
+                      <property name="styleSheet">
+                       <string notr="true"/>
                       </property>
+                      <property name="text">
+                       <string>à gauche</string>
+                      </property>
+                      <attribute name="buttonGroup">
+                       <string notr="true">buttonGroup</string>
+                      </attribute>
                      </widget>
                     </item>
-                    <item>
+                    <item row="1" column="5">
+                     <widget class="QRadioButton" name="rbTopText">
+                      <property name="text">
+                       <string>en haut</string>
+                      </property>
+                      <attribute name="buttonGroup">
+                       <string notr="true">buttonGroup_3</string>
+                      </attribute>
+                     </widget>
+                    </item>
+                    <item row="1" column="3">
                      <widget class="QRadioButton" name="rbBottomText">
                       <property name="text">
                        <string>en bas</string>
@@ -273,7 +275,7 @@ QPushButton:default {
                       </attribute>
                      </widget>
                     </item>
-                    <item>
+                    <item row="1" column="4">
                      <widget class="QRadioButton" name="rbVCenterText">
                       <property name="text">
                        <string>centré</string>
@@ -286,28 +288,12 @@ QPushButton:default {
                       </attribute>
                      </widget>
                     </item>
-                    <item>
-                     <widget class="QRadioButton" name="rbTopText">
-                      <property name="text">
-                       <string>en haut</string>
-                      </property>
-                      <attribute name="buttonGroup">
-                       <string notr="true">buttonGroup_3</string>
-                      </attribute>
-                     </widget>
-                    </item>
-                    <item>
-                     <spacer name="hsAlignVertic">
+                    <item row="0" column="1" rowspan="2">
+                     <widget class="Line" name="lConsignAlign">
                       <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
+                       <enum>Qt::Vertical</enum>
                       </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
+                     </widget>
                     </item>
                    </layout>
                   </item>
@@ -324,8 +310,14 @@ QPushButton:default {
                      <widget class="QFontComboBox" name="fcbConsignes">
                       <property name="minimumSize">
                        <size>
-                        <width>0</width>
+                        <width>75</width>
                         <height>20</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16777215</height>
                        </size>
                       </property>
                       <property name="editable">
@@ -444,6 +436,60 @@ QPushButton:default {
                     </property>
                    </widget>
                   </item>
+                  <item>
+                   <widget class="Line" name="line_6">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_3">
+                    <item>
+                     <widget class="QLabel" name="label_3">
+                      <property name="text">
+                       <string>Position par rapport à la photo:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QRadioButton" name="rbConsignPositionTop">
+                      <property name="text">
+                       <string>dessous</string>
+                      </property>
+                      <attribute name="buttonGroup">
+                       <string notr="true">consignPositionGroup</string>
+                      </attribute>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QRadioButton" name="rbConsignPositionBottom">
+                      <property name="text">
+                       <string>au-dessus</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                      <attribute name="buttonGroup">
+                       <string notr="true">consignPositionGroup</string>
+                      </attribute>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="horizontalSpacer_2">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </item>
                  </layout>
                 </item>
                </layout>
@@ -454,46 +500,12 @@ QPushButton:default {
            <item>
             <widget class="QGroupBox" name="gbPhotos">
              <property name="title">
-              <string>EDITION DES PHOTOS</string>
+              <string>PHOTOS</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_7">
               <item>
-               <layout class="QHBoxLayout" name="hlImageAlignment">
-                <item>
-                 <widget class="QLabel" name="laPhotoAlignment">
-                  <property name="font">
-                   <font>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>   Position des photos</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="hlPhotoHorizontal" stretch="2,1,1,1,1">
-                <item>
-                 <widget class="QLabel" name="laHorizontalImage">
-                  <property name="text">
-                   <string>      Alignement horizontal :</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="rbLeftImage">
-                  <property name="text">
-                   <string>à gauche</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup_2</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item>
+               <layout class="QGridLayout" name="glPhotoAlign">
+                <item row="0" column="4">
                  <widget class="QRadioButton" name="rbHCenterImage">
                   <property name="text">
                    <string>centré</string>
@@ -506,18 +518,15 @@ QPushButton:default {
                   </attribute>
                  </widget>
                 </item>
-                <item>
-                 <widget class="QRadioButton" name="rbRightImage">
+                <item row="0" column="2" alignment="Qt::AlignLeft">
+                 <widget class="QLabel" name="laHorizontalImage">
                   <property name="text">
-                   <string>à droite</string>
+                   <string>horizontal :</string>
                   </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup_2</string>
-                  </attribute>
                  </widget>
                 </item>
-                <item>
-                 <spacer name="hsPhotoHorizontal">
+                <item row="0" column="6" rowspan="2">
+                 <spacer name="hsPhoto">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -529,18 +538,27 @@ QPushButton:default {
                   </property>
                  </spacer>
                 </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="hlPhotoVertical" stretch="2,1,1,1,1">
-                <item>
-                 <widget class="QLabel" name="laVerticalImage">
+                <item row="0" column="3">
+                 <widget class="QRadioButton" name="rbLeftImage">
                   <property name="text">
-                   <string>      Alignement vertical :</string>
+                   <string>à gauche</string>
                   </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup_2</string>
+                  </attribute>
                  </widget>
                 </item>
-                <item alignment="Qt::AlignLeft">
+                <item row="0" column="5">
+                 <widget class="QRadioButton" name="rbRightImage">
+                  <property name="text">
+                   <string>à droite</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup_2</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="1" column="3">
                  <widget class="QRadioButton" name="rbBottomImage">
                   <property name="text">
                    <string>en bas</string>
@@ -550,7 +568,7 @@ QPushButton:default {
                   </attribute>
                  </widget>
                 </item>
-                <item alignment="Qt::AlignLeft">
+                <item row="1" column="4">
                  <widget class="QRadioButton" name="rbVCenterImage">
                   <property name="text">
                    <string>centré</string>
@@ -563,7 +581,20 @@ QPushButton:default {
                   </attribute>
                  </widget>
                 </item>
-                <item alignment="Qt::AlignLeft">
+                <item row="0" column="0" rowspan="2">
+                 <widget class="QLabel" name="laPhotoAlignment">
+                  <property name="font">
+                   <font>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Alignement</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="5">
                  <widget class="QRadioButton" name="rbTopImage">
                   <property name="text">
                    <string>en haut</string>
@@ -573,18 +604,19 @@ QPushButton:default {
                   </attribute>
                  </widget>
                 </item>
-                <item>
-                 <spacer name="hsAlignVertiPhotos">
+                <item row="1" column="2" alignment="Qt::AlignLeft">
+                 <widget class="QLabel" name="laVerticalImage">
+                  <property name="text">
+                   <string>vertical :</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1" rowspan="2">
+                 <widget class="Line" name="lPhotos">
                   <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
+                   <enum>Qt::Vertical</enum>
                   </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -596,55 +628,15 @@ QPushButton:default {
                </widget>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="hlNbImages">
-                <item>
-                 <widget class="QLabel" name="laNbImages">
-                  <property name="maximumSize">
-                   <size>
-                    <width>250</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>   Nombre d'images :</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="laNbImagesV">
-                  <property name="text">
-                   <string>Verticalement</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QSpinBox" name="sbNbImagesV">
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <number>10</number>
-                  </property>
-                  <property name="value">
-                   <number>2</number>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="Line" name="lNbImages1">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item>
+               <layout class="QGridLayout" name="glNbImages">
+                <item row="1" column="2">
                  <widget class="QLabel" name="laNbImagesH">
                   <property name="text">
-                   <string>Horizontalement</string>
+                   <string>Largeur</string>
                   </property>
                  </widget>
                 </item>
-                <item>
+                <item row="1" column="3">
                  <widget class="QSpinBox" name="sbNbImagesH">
                   <property name="minimum">
                    <number>1</number>
@@ -657,21 +649,54 @@ QPushButton:default {
                   </property>
                  </widget>
                 </item>
-                <item>
+                <item row="0" column="3">
+                 <widget class="QSpinBox" name="sbNbImagesV">
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>10</number>
+                  </property>
+                  <property name="value">
+                   <number>2</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QLabel" name="laNbImagesV">
+                  <property name="text">
+                   <string>Hauteur</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" rowspan="2">
+                 <widget class="QLabel" name="laNbImages">
+                  <property name="maximumSize">
+                   <size>
+                    <width>250</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Nombre d'images par page</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1" rowspan="2">
                  <widget class="Line" name="lNbImages2">
                   <property name="orientation">
                    <enum>Qt::Vertical</enum>
                   </property>
                  </widget>
                 </item>
-                <item>
+                <item row="0" column="4" rowspan="2" colspan="4">
                  <widget class="QLabel" name="laNbPages">
                   <property name="text">
                    <string>0 page</string>
                   </property>
                  </widget>
                 </item>
-                <item>
+                <item row="0" column="8" rowspan="2">
                  <spacer name="hsNbImages">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -696,11 +721,11 @@ QPushButton:default {
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
               <item>
-               <layout class="QHBoxLayout" name="hlOrientation" stretch="2,1,1,2">
+               <layout class="QHBoxLayout" name="hlOrientation" stretch="0,0,0,0">
                 <item>
                  <widget class="QLabel" name="laOrientationPage">
                   <property name="text">
-                   <string>   Orientation de la page :</string>
+                   <string>Orientation de la page :</string>
                   </property>
                  </widget>
                 </item>
@@ -750,178 +775,22 @@ QPushButton:default {
                </widget>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="hlMarges" stretch="4,2,2,1,2,2,1,2,2,1,2,2,2">
-                <item>
-                 <widget class="QLabel" name="laExternMargins">
-                  <property name="text">
-                   <string>   Marges extérieures :</string>
-                  </property>
-                 </widget>
-                </item>
-                <item alignment="Qt::AlignHCenter">
-                 <widget class="QLabel" name="laLeftMargins">
-                  <property name="text">
-                   <string>Gauche</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QDoubleSpinBox" name="dsLeftMargins">
-                  <property name="maximum">
-                   <double>0.300000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.010000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>0.020000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="Line" name="lMargins1">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item alignment="Qt::AlignHCenter">
-                 <widget class="QLabel" name="laRightMargins">
-                  <property name="text">
-                   <string>Droite</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QDoubleSpinBox" name="dsRightMargins">
-                  <property name="maximum">
-                   <double>0.300000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.010000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>0.020000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="Line" name="lMargins2">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item alignment="Qt::AlignHCenter">
-                 <widget class="QLabel" name="laTopMargins">
-                  <property name="text">
-                   <string>Haut</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QDoubleSpinBox" name="dsTopMargins">
-                  <property name="maximum">
-                   <double>0.300000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.010000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>0.020000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="Line" name="lMargins3">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item alignment="Qt::AlignHCenter">
-                 <widget class="QLabel" name="laBottomMargins">
-                  <property name="text">
-                   <string>Bas</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QDoubleSpinBox" name="dsBottomMargins">
-                  <property name="maximum">
-                   <double>0.300000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.010000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>0.020000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="hsMargins">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="hlInternMargins" stretch="4,2,2,1,2,2,9">
-                <item>
-                 <widget class="QLabel" name="laInterMargins">
-                  <property name="text">
-                   <string>   Marges intérieures :</string>
-                  </property>
-                 </widget>
-                </item>
-                <item alignment="Qt::AlignHCenter">
-                 <widget class="QLabel" name="laInternMarginsWidth">
-                  <property name="text">
-                   <string>Largeur :</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QDoubleSpinBox" name="dsInterMarginsWidth">
-                  <property name="decimals">
-                   <number>3</number>
-                  </property>
-                  <property name="maximum">
-                   <double>0.100000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.001000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>0.010000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="Line" name="line_2">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item alignment="Qt::AlignHCenter">
+               <layout class="QGridLayout" name="glExternMargins">
+                <item row="2" column="6">
                  <widget class="QLabel" name="label">
                   <property name="text">
                    <string>Hauteur </string>
                   </property>
                  </widget>
                 </item>
-                <item>
-                 <widget class="QDoubleSpinBox" name="dsInterMarginsHeight">
+                <item row="2" column="4">
+                 <widget class="QDoubleSpinBox" name="dsInterMarginsWidth">
+                  <property name="maximumSize">
+                   <size>
+                    <width>50</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
                   <property name="decimals">
                    <number>3</number>
                   </property>
@@ -936,8 +805,176 @@ QPushButton:default {
                   </property>
                  </widget>
                 </item>
-                <item>
-                 <spacer name="horizontalSpacer_2">
+                <item row="2" column="3">
+                 <widget class="QLabel" name="laInternMarginsWidth">
+                  <property name="text">
+                   <string>Largeur :</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1" alignment="Qt::AlignLeft">
+                 <widget class="QLabel" name="laInterMargins">
+                  <property name="text">
+                   <string> intérieures :</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" rowspan="3">
+                 <widget class="QLabel" name="label_2">
+                  <property name="text">
+                   <string>Marges</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1" rowspan="2" alignment="Qt::AlignLeft">
+                 <widget class="QLabel" name="laExternMargins">
+                  <property name="text">
+                   <string>extérieures :</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="3">
+                 <widget class="QLabel" name="laLeftMargins">
+                  <property name="text">
+                   <string>Gauche</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="4">
+                 <widget class="QDoubleSpinBox" name="dsLeftMargins">
+                  <property name="maximumSize">
+                   <size>
+                    <width>50</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="maximum">
+                   <double>0.300000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.010000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.020000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="7" colspan="2">
+                 <widget class="QDoubleSpinBox" name="dsRightMargins">
+                  <property name="maximumSize">
+                   <size>
+                    <width>50</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="maximum">
+                   <double>0.300000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.010000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.020000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="6">
+                 <widget class="QLabel" name="laRightMargins">
+                  <property name="text">
+                   <string>Droite</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="7" colspan="2">
+                 <widget class="QDoubleSpinBox" name="dsBottomMargins">
+                  <property name="maximumSize">
+                   <size>
+                    <width>50</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="maximum">
+                   <double>0.300000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.010000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.020000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="4">
+                 <widget class="QDoubleSpinBox" name="dsTopMargins">
+                  <property name="maximumSize">
+                   <size>
+                    <width>50</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="maximum">
+                   <double>0.300000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.010000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.020000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="3">
+                 <widget class="QLabel" name="laTopMargins">
+                  <property name="text">
+                   <string>Haut</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="6">
+                 <widget class="QLabel" name="laBottomMargins">
+                  <property name="text">
+                   <string>Bas</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="7">
+                 <widget class="QDoubleSpinBox" name="dsInterMarginsHeight">
+                  <property name="maximumSize">
+                   <size>
+                    <width>50</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="decimals">
+                   <number>3</number>
+                  </property>
+                  <property name="maximum">
+                   <double>0.100000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.001000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>0.010000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2" rowspan="2">
+                 <widget class="Line" name="line_2">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="Line" name="line_5">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="12" rowspan="3">
+                 <spacer name="hsMargins">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
@@ -969,7 +1006,7 @@ QPushButton:default {
                    </size>
                   </property>
                   <property name="text">
-                   <string>   Ratio taille consigne/image :</string>
+                   <string>Ratio taille consigne/image :</string>
                   </property>
                  </widget>
                 </item>
@@ -1427,25 +1464,6 @@ QPushButton:default {
                <item>
                 <layout class="QHBoxLayout" name="hlIndividualConsign">
                  <item>
-                  <widget class="QLabel" name="laPhotoIndividualConsign">
-                   <property name="enabled">
-                    <bool>true</bool>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>16777215</width>
-                     <height>40</height>
-                    </size>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">background-color: rgb(202, 202, 202);</string>
-                   </property>
-                   <property name="text">
-                    <string>Texte pour cette photo :</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
                   <widget class="QTextEdit" name="tePhotoIndividualConsign">
                    <property name="enabled">
                     <bool>true</bool>
@@ -1458,6 +1476,16 @@ QPushButton:default {
                    </property>
                    <property name="styleSheet">
                     <string notr="true">background-color: rgb(255, 255, 255);</string>
+                   </property>
+                   <property name="html">
+                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="placeholderText">
+                    <string>Tapez la consigne ici.</string>
                    </property>
                   </widget>
                  </item>
@@ -1844,10 +1872,11 @@ QPushButton:default {
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_5"/>
   <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_2"/>
-  <buttongroup name="buttonGroup_3"/>
   <buttongroup name="buttonGroup_4"/>
+  <buttongroup name="buttonGroup_3"/>
+  <buttongroup name="buttonGroup_5"/>
+  <buttongroup name="consignPositionGroup"/>
  </buttongroups>
 </ui>
