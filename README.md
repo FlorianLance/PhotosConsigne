@@ -2,7 +2,7 @@
 PhotosConsigne
 ==============
 
-**PhotosConsigne** est un logiciel léger et rapide servant à générer des PDF contenant des images associées à un texte commun.
+**PhotosConsigne** est un logiciel léger et rapide servant à générer des PDF contenant des images associées à un texte commun ou personnalisé.
 Tous les paramètres sont facilement modifiables (quantités d'images par page, orientation, alignements, police du texte...).
 
 Il se destine avant tout aux professeurs des écoles pour lesquels il est courant d'avoir à photographier les traveaux des élèves et à les imprimer plus tard avec la consigne associée aux diverses activitées, cela nécessite parfois plusieurs heures de manipulation avec un logiciel de bureautique conventionnel. 
