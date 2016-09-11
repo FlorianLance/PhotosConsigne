@@ -31,6 +31,12 @@ Si vous ne savez pas quelle version choisir, prenez la première.
 Ce logiciel est **gratuit**, mais si il vous a été utile et que vous souhaitez m'encourager, vous pouvez me faire un don :
 <a href='https://pledgie.com/campaigns/31286'><img alt='Click here to lend your support to: Développement logiciel éducation/recherche open-source and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/31286.png?skin_name=chrome' border='0' ></a>
 
+Questions et info
+-----------------
+
+Liens vers le forum [**Enseignants du primaire**](http://forums-enseignants-du-primaire.com/topic/321439-photosconsigne-logiciel-gratuit-de-g%C3%A9n%C3%A9ration-de-pdf-avec-photos-et-textes-cahier-de-vie/ "Forum"), la plupart des questions et réponses sont centralisées ici.
+
+
 Tutoriel vidéo:
 ---------------
 
@@ -50,6 +56,3 @@ Captures d'écran:
 
 ![PhotosConsigne_img3](http://i.imgur.com/LMcRTGl.png "Un PDF généré")
 
-
-Documentation:
- - soon
