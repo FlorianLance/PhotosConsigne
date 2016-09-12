@@ -37,7 +37,7 @@
               <widget class="QPushButton" name="pbSelectPhotos">
                <property name="minimumSize">
                 <size>
-                 <width>100</width>
+                 <width>90</width>
                  <height>35</height>
                 </size>
                </property>
@@ -1872,11 +1872,11 @@ QPushButton:default {
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
-  <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="consignPositionGroup"/>
   <buttongroup name="buttonGroup_4"/>
   <buttongroup name="buttonGroup_3"/>
+  <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_5"/>
-  <buttongroup name="consignPositionGroup"/>
  </buttongroups>
 </ui>
