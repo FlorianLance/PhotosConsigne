@@ -19,6 +19,9 @@ QT += core gui widgets printsupport
 ####################################### INCLUDES
 INCLUDEPATH += $$PHOTOSCONSIGNE_INCLUDES   # PHOTOSCONSIGNE
 
+INCLUDEPATH += "include/UI" \
+               "include/Workers" \
+
 ####################################### LIBRAIRIES
 # ...
 
@@ -28,17 +31,28 @@ SOURCES += \
     main.cpp \
     src/MainInterface.cpp \
     src/InterfaceWorker.cpp \
-    src/ImageLabel.cpp
+    src/ImageLabel.cpp \
+    src/MainUI.cpp
 
 
 HEADERS += \
     include/InterfaceWorker.h \
     include/MainInterface.h \
-    include/ImageLabel.h
+    include/ImageLabel.h \
+    include/Utility.h \
+    include/UI/LeftMenuUI.h \
+    include/UI/MainUI.h \
+    include/UI/PhotosExplorerUI.h \
+    include/UI/PreviewUI.h \
+    include/Workers/LeftMenuWorker.h \
+    include/Workers/PreviewWorker.h
 
 
 FORMS += \
-    ui/mainUI.ui
+    ui/LeftMenuUI.ui \
+    ui/PhotosExplorerUI.ui \
+    ui/PreviewUI.ui \
+    ui/MainUI.ui
 
 DISTFILES += \
     deploiement/PhotosConsigne_x64.iss \

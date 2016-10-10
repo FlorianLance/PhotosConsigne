@@ -1,3 +1,4 @@
+
 /*******************************************************************************
 **                                                                            **
 **  PhotosConsigne                                                            **
@@ -21,40 +22,79 @@
 ********************************************************************************/
 
 /**
- * \file main.cpp
- * \brief entry point
+ * \file MainUI.h
+ * \brief defines MainUI
  * \author Florian Lance
- * \date 01/11/15
+ * \date 19/09/2016
  */
 
 
+#pragma once
 
 // Qt
-#include <QApplication>
-#include <QTranslator>
-#include <QLibraryInfo>
+#include <QMainWindow>
+
+// ui
+#include "ui_mainUI.h"
 
 // Photos consigne
-//#include "MainInterface.h"
-#include "MainUI.h"
+#include "LeftMenuUI.h"
+#include "PreviewUI.h"
+#include "PhotosExplorerUI.h"
 
-int main(int argc,char** argv)
+
+namespace Ui {
+class MainInterface;
+}
+
+namespace pc {
+
+
+/**
+ * @brief ...
+ */
+class MainUI : public QMainWindow
 {
-    //1 : Get the language setting of the system
-    QTranslator qtTranslator;
-    qtTranslator.load("qt_" + QLocale::system().name(),
-            QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    Q_OBJECT
 
-    QApplication app(argc, argv);
+public:
 
-    //2 : Installation of language setting
-    app.installTranslator(&qtTranslator);
+    /**
+     * @brief MainUI constructor
+     * @param [in,out] parent
+     */
+    MainUI(QApplication *parent = 0);
 
-//    MainInterface w(&app);
-    pc::MainUI w(&app);
-    w.resize(1500, 900);
+    /**
+     * @brief MainUI destructor
+     */
+    ~MainUI();
 
-    w.show();
 
-    return app.exec();
+public slots:   
+
+
+private slots:
+
+    void openOnlineDocumentation();
+    void openDonatePage();
+    void openAboutWindow();
+
+
+signals :
+
+
+private:
+
+
+    Ui::MainUI *m_ui = nullptr;                     /**< main interface*/
+    PreviewUI *m_previewUI = nullptr;               /**< preview windows interface */
+    LeftMenuUI *m_leftMenuUI = nullptr;             /**< left menu interface */
+    PhotosExplorerUI *m_photosExplorerUI = nullptr; /**< photos explorer interface */
+
+    int m_currentImageDisplayed = 0;
+
+    SPDFSettings m_settings = SPDFSettings(new PDFSettings());
+    SImages m_images = SImages(new QList<SImage>);
+};
 }
