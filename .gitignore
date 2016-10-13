@@ -2,6 +2,7 @@
 # misc
 *.pdf
 
+*.res
 
 # C++
 *.obj
