@@ -14,6 +14,19 @@ Une prévisualisation du résultat est disponible à chaque changement de param�
 Téléchargements:
 ----------------
 
+**NOUVEAU: PhotosConsigne 2.0 beta !** 
+
+* [PhotosConsigne 2.0-beta x64](https://github.com/FlorianLance/PhotosConsigne/files/527454/PhotosConsigne.2.0-beta.x64.zip "beta v2.0")
+* nouvelle interface plus claire et complète
+* ajout des titres
+* ajout de la visualisation des pages
+* meilleur aperçu du résultat
+* plus rapide
+* meilleure gestion de la mémoire, vous pouvez maintenant charger autant de photos que vous le voulez !
+* Les versions x86 et linux suivront bientôt, ainsi que MacOS.
+
+**Anciennes versions**
+
 Version portable sans installeur pour Windows 7/8/10 :
 
 [PhotosConsigne 1.01 x86](https://github.com/FlorianLance/PhotosConsigne/files/464112/PhotosConsigne.1.01.x86.zip "release v1.01") 
