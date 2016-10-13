@@ -73,16 +73,46 @@ public:
 
 public slots:   
 
+    /**
+     * @brief closeEvent
+     * @param event
+     */
+    void closeEvent(QCloseEvent *event)
+    {
+        Q_UNUSED(event);
+        emit killSignal();
+    }
+
 
 private slots:
 
+    /**
+     * @brief openOnlineDocumentation
+     */
     void openOnlineDocumentation();
+
+    /**
+     * @brief openDonatePage
+     */
     void openDonatePage();
+
+    /**
+     * @brief openAboutWindow
+     */
     void openAboutWindow();
 
 
 signals :
 
+    /**
+     * @brief forcePreviewUpdateSignal
+     */
+    void forcePreviewUpdateSignal();
+
+    /**
+     * @brief killSignal
+     */
+    void killSignal();
 
 private:
 
@@ -93,6 +123,9 @@ private:
     PhotosExplorerUI *m_photosExplorerUI = nullptr; /**< photos explorer interface */
 
     int m_currentImageDisplayed = 0;
+
+    int m_currentPageId = 0;
+    QVector<Page> m_pages;
 
     SPDFSettings m_settings = SPDFSettings(new PDFSettings());
     SImages m_images = SImages(new QList<SImage>);

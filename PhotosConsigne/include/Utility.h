@@ -13,6 +13,7 @@
 #include <QImage>
 #include <QList>
 #include <QFont>
+#include <QReadWriteLock>
 
 
 namespace pc
@@ -21,6 +22,8 @@ namespace pc
     class Image
     {
     public :
+
+        Image() = delete;
 
         Image(const QString &path) : pathImage(path)
         {
@@ -44,6 +47,7 @@ namespace pc
 
         bool isRemoved = false;
         bool addedConsign = false;
+        int rotation = 0;
         QString consign = "";
     };
 
@@ -77,18 +81,25 @@ namespace pc
     {
         bool externMargins = false;
         bool InterMargins = false;
-        bool title = false;
+        bool titles = false;
         bool photos = false;
         bool consigns = false;
     };
 
     struct PDFSettings
     {
+        PDFSettings()
+        {
+            titleFont.setPixelSize(75);
+            globalConsignFont.setPixelSize(50);
+        }
+
         bool displayCutLines = false;
         bool titleAdded = false;
         bool titleOnAllPages = false;
-        int nbImagesPageV = 2, nbImagesPageH= 1;
+        int nbImagesPageV = 3, nbImagesPageH= 2;
         double ratioPhotosConsign = 0.15;
+        double ratioTitle = 0.08;
 
         int imagesAlignment = Qt::AlignHCenter | Qt::AlignVCenter;
         int consignAlignment = Qt::AlignHCenter | Qt::AlignVCenter;
@@ -97,12 +108,12 @@ namespace pc
 
         RatioMargins margins;
 
-        Position globalConsignPositionFromImages = Position::top;
+        Position globalConsignPositionFromPhotos = Position::top;
         QFont globalConsignFont;
         QColor globalConsignColor = Qt::black;
         QString globalConsignText = "Tapez la consigne ici.";
 
-        Position titlePositionFromPage = Position::top;
+        Position titlePositionFromPC = Position::top;
         QFont titleFont;
         QColor titleColor = Qt::black;
         QString titleText = "TITRE";

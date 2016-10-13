@@ -57,6 +57,7 @@ public:
         // connections                
         //  ui -> worker
         connect(this, &LeftMenuUI::sendImagesDirSignal, m_worker, &LeftMenuWorker::loadImages);
+        connect(this, &LeftMenuUI::killSignal, m_worker, &LeftMenuWorker::kill);
         //  worker -> UI
         connect(m_worker, &LeftMenuWorker::endLoadingImagesSignal, this, &LeftMenuUI::endLoadImages);
         connect(m_worker, &LeftMenuWorker::photoLoadedSignal, this, [&](QString image){
@@ -95,6 +96,9 @@ public:
         connect(ui->rbPortrait, &QRadioButton::clicked, this, &LeftMenuUI::updateSettings);
         connect(ui->rbConsignPositionTop, &QRadioButton::clicked, this, &LeftMenuUI::updateSettings);
         connect(ui->rbConsignPositionBottom, &QRadioButton::clicked, this, &LeftMenuUI::updateSettings);
+
+        connect(ui->rbTitlePositionTop, &QRadioButton::clicked, this, &LeftMenuUI::updateSettings);
+        connect(ui->rbTitlePositionBottom, &QRadioButton::clicked, this, &LeftMenuUI::updateSettings);
         // spinbox
         connect(ui->sbNbImagesV, static_cast<void(QSpinBox::*)(const QString &)>(&QSpinBox::valueChanged), [=]{ updateSettings();});
         connect(ui->sbNbImagesH, static_cast<void(QSpinBox::*)(const QString &)>(&QSpinBox::valueChanged), [=]{ updateSettings();});
@@ -107,6 +111,7 @@ public:
         connect(ui->dsTopMargins, static_cast<void(QDoubleSpinBox::*)(const QString &)>(&QDoubleSpinBox::valueChanged), [=]{ updateSettings();});
         connect(ui->dsInterMarginsWidth, static_cast<void(QDoubleSpinBox::*)(const QString &)>(&QDoubleSpinBox::valueChanged), [=]{ updateSettings();});
         connect(ui->dsInterMarginsHeight, static_cast<void(QDoubleSpinBox::*)(const QString &)>(&QDoubleSpinBox::valueChanged), [=]{ updateSettings();});
+        connect(ui->dsbRatioTitle, static_cast<void(QDoubleSpinBox::*)(const QString &)>(&QDoubleSpinBox::valueChanged), [=]{ updateSettings();});
         // font
         connect(ui->fcbConsignes, &QFontComboBox::currentFontChanged, this, &LeftMenuUI::updateSettings);
         connect(ui->fcbTitle, &QFontComboBox::currentFontChanged, this, &LeftMenuUI::updateSettings);
@@ -119,15 +124,21 @@ public:
         connect(ui->cbBoldTitle, &QCheckBox::toggled, this, &LeftMenuUI::updateSettings);
         connect(ui->cbItalicTitle, &QCheckBox::toggled, this, &LeftMenuUI::updateSettings);
 
+
         connect(ui->cbCutLines, &QCheckBox::toggled, this, &LeftMenuUI::updateSettings);
-        connect(ui->cbAddTitle, &QCheckBox::toggled, this, &LeftMenuUI::updateSettings);
+        connect(ui->cbAddTitle, &QCheckBox::toggled, [=]{ ui->wTitle->setEnabled(ui->cbAddTitle->isChecked()); ui->cbAllPagesTitle->setEnabled(ui->cbAddTitle->isChecked()); updateSettings();});
         connect(ui->cbAllPagesTitle, &QCheckBox::toggled, this,  &LeftMenuUI::updateSettings);
 
         // list widget
         connect(ui->lwPages, &QListWidget::currentRowChanged, this, [&]
         {
            if(ui->lwPages->currentRow() != -1)
-               emit currentPageChangedSignal(m_settings, m_pages[ui->lwPages->currentRow()]);
+               emit currentPageChangedSignal(m_settings, ui->lwPages->currentRow(), m_pages);
+        });
+        connect(ui->lwPages, &QListWidget::clicked, this, [&]
+        {
+           if(ui->lwPages->currentRow() != -1)
+               emit currentPageChangedSignal(m_settings, ui->lwPages->currentRow(), m_pages);
         });
 
         // init thread
@@ -184,42 +195,40 @@ public:
 
 public slots:
 
+    void kill()
+    {
+        emit killSignal();
+    }
+
 
     void updateUI(SPDFSettings newSettings)
     {
         m_settings = newSettings;
 
-        // image alignment
-        if((newSettings->imagesAlignment & Qt::AlignHCenter) == Qt::AlignHCenter)
-            ui->rbHCenterImage->setChecked(true);
-        else if((newSettings->imagesAlignment & Qt::AlignRight) == Qt::AlignRight)
-            ui->rbRightImage->setChecked(true);
-        else
-            ui->rbLeftImage->setChecked(true);
 
-        if((newSettings->imagesAlignment & Qt::AlignVCenter) == Qt::AlignVCenter)
-            ui->rbVCenterImage->setChecked(true);
-        else if((newSettings->imagesAlignment & Qt::AlignTop) == Qt::AlignTop)
-            ui->rbTopImage->setChecked(true);
-        else
-            ui->rbBottomImage->setChecked(true);
+        // general
+        ui->rbPortrait->setChecked(newSettings->pageOrientation == PageOrientation::portrait);
+        ui->cbCutLines->setChecked(newSettings->displayCutLines);
 
-        // consign alignment
-        if((newSettings->consignAlignment & Qt::AlignHCenter) == Qt::AlignHCenter)
-            ui->rbHCenterText->setChecked(true);
-        else if((newSettings->consignAlignment & Qt::AlignRight) == Qt::AlignRight)
-            ui->rbRightText->setChecked(true);
-        else
-            ui->rbLeftText->setChecked(true);
-
-        if((newSettings->consignAlignment & Qt::AlignVCenter) == Qt::AlignVCenter)
-            ui->rbVCenterText->setChecked(true);
-        else if((newSettings->consignAlignment & Qt::AlignTop) == Qt::AlignTop)
-            ui->rbTopText->setChecked(true);
-        else
-            ui->rbBottomText->setChecked(true);
-
-        // title alignment
+        // titles
+        //      font
+        QFont fontTitle = ui->fcbTitle->font();
+        fontTitle.setFamily(newSettings->titleFont.family());
+        ui->fcbTitle->setCurrentFont(fontTitle);
+        ui->cbBoldTitle->setChecked(fontTitle.bold());
+        ui->cbItalicTitle->setChecked(fontTitle.italic());
+        m_colorTextTitle = newSettings->titleColor;
+        fontTitle = newSettings->titleFont;
+        fontTitle.setPixelSize(13);
+        ui->pteTitle->setFont(fontTitle);
+        ui->pteTitle->setStyleSheet("QPlainTextEdit{color: rgb("+ QString::number(m_colorTextTitle.red()) +", " + QString::number(m_colorTextTitle.green()) + ", " + QString::number(m_colorTextTitle.blue()) +")};");
+        ui->pbChooseColor->setStyleSheet("background-color: rgb("+ QString::number(m_colorTextTitle.red()) + ", " + QString::number(m_colorTextTitle.green()) + ", " + QString::number(m_colorTextTitle.blue()) +");");
+        ui->sbSizeTexteTitle->setValue(newSettings->titleFont.pixelSize());
+        ui->cbAddTitle->setChecked(newSettings->titleAdded);
+        ui->cbAllPagesTitle->setChecked(newSettings->titleOnAllPages);
+        ui->rbTitlePositionTop->setChecked(newSettings->titlePositionFromPC == Position::top);
+        ui->dsbRatioTitle->setValue(newSettings->ratioTitle);
+        //      alignment
         if((newSettings->titleAlignment & Qt::AlignHCenter) == Qt::AlignHCenter)
             ui->rbHCenterTextTitle->setChecked(true);
         else if((newSettings->titleAlignment & Qt::AlignRight) == Qt::AlignRight)
@@ -234,14 +243,10 @@ public slots:
         else
             ui->rbBottomTextTitle->setChecked(true);
 
-        // nb pages
+        // PC
         ui->sbNbImagesH->setValue(newSettings->nbImagesPageH);
         ui->sbNbImagesV->setValue(newSettings->nbImagesPageV);
-
-        // ratio
         ui->dsbRatio->setValue(newSettings->ratioPhotosConsign);
-
-        // margins
         ui->dsBottomMargins->setValue(newSettings->margins.bottom);
         ui->dsTopMargins->setValue(newSettings->margins.top);
         ui->dsRightMargins->setValue(newSettings->margins.right);
@@ -249,47 +254,62 @@ public slots:
         ui->dsInterMarginsWidth->setValue(newSettings->margins.interWidth);
         ui->dsInterMarginsHeight->setValue(newSettings->margins.interHeight);
 
-        // orientation
-        ui->rbPortrait->setChecked(newSettings->pageOrientation == PageOrientation::portrait);
-
-        // cut lines
-        ui->cbCutLines->setChecked(newSettings->displayCutLines);
-
-        // consign position
-        ui->rbConsignPositionTop->setChecked(newSettings->globalConsignPositionFromImages == Position::top);
-
-        // update font
+        // consign
+        //      font
         QFont font = ui->fcbConsignes->font();
         font.setFamily(newSettings->globalConsignFont.family());
         ui->fcbConsignes->setCurrentFont(font);
         ui->cbBold->setChecked(font.bold());
         ui->cbItalic->setChecked(font.italic());
-
         m_colorText = newSettings->globalConsignColor;
         font = newSettings->globalConsignFont;
         font.setPixelSize(13);
         ui->pteConsigne->setFont(font);
-        ui->pteConsigne->setStyleSheet("QPlainTextEdit{color: rgb("+ QString::number(m_colorText.red()) +
-                                       ", " + QString::number(m_colorText.green()) + ", " + QString::number(m_colorText.blue()) +")};");
-
-        ui->pbChooseColor->setStyleSheet("background-color: rgb("+ QString::number(m_colorText.red()) +
-                                        ", " + QString::number(m_colorText.green()) + ", " + QString::number(m_colorText.blue()) +");");
+        ui->pteConsigne->setStyleSheet("QPlainTextEdit{color: rgb("+ QString::number(m_colorText.red()) +", " + QString::number(m_colorText.green()) + ", " + QString::number(m_colorText.blue()) +")};");
+        ui->pbChooseColor->setStyleSheet("background-color: rgb("+ QString::number(m_colorText.red()) + ", " + QString::number(m_colorText.green()) + ", " + QString::number(m_colorText.blue()) +");");
         ui->sbSizeTexte->setValue(newSettings->globalConsignFont.pixelSize());
+        //      alignment
+        if((newSettings->consignAlignment & Qt::AlignHCenter) == Qt::AlignHCenter)
+            ui->rbHCenterText->setChecked(true);
+        else if((newSettings->consignAlignment & Qt::AlignRight) == Qt::AlignRight)
+            ui->rbRightText->setChecked(true);
+        else
+            ui->rbLeftText->setChecked(true);
+        if((newSettings->consignAlignment & Qt::AlignVCenter) == Qt::AlignVCenter)
+            ui->rbVCenterText->setChecked(true);
+        else if((newSettings->consignAlignment & Qt::AlignTop) == Qt::AlignTop)
+            ui->rbTopText->setChecked(true);
+        else
+            ui->rbBottomText->setChecked(true);
+        //      position
+        ui->rbConsignPositionTop->setChecked(newSettings->globalConsignPositionFromPhotos == Position::top);
 
+        // photos
+        //      alignment
+        if((newSettings->imagesAlignment & Qt::AlignHCenter) == Qt::AlignHCenter)
+            ui->rbHCenterImage->setChecked(true);
+        else if((newSettings->imagesAlignment & Qt::AlignRight) == Qt::AlignRight)
+            ui->rbRightImage->setChecked(true);
+        else
+            ui->rbLeftImage->setChecked(true);
+
+        if((newSettings->imagesAlignment & Qt::AlignVCenter) == Qt::AlignVCenter)
+            ui->rbVCenterImage->setChecked(true);
+        else if((newSettings->imagesAlignment & Qt::AlignTop) == Qt::AlignTop)
+            ui->rbTopImage->setChecked(true);
+        else
+            ui->rbBottomImage->setChecked(true);
 
         updateNumberPhotos();
         updateNumberPages();
     }
 
     void updateSettings()
-    {
-        // title
-        m_addTitle = ui->cbAddTitle->isChecked();
-        ui->wTitle->setEnabled(m_addTitle);
-
+    {        
         int nbImagesVPage = ui->sbNbImagesV->value();
         int nbImagesHPage = ui->sbNbImagesH->value();
-        double ratio = ui->dsbRatio->value();
+        double ratioPC = ui->dsbRatio->value();
+        double ratioTitle = ui->dsbRatioTitle->value();
 
         // consign
         int sizeText = ui->sbSizeTexte->value();
@@ -368,34 +388,56 @@ public slots:
 
 
         m_settings = SPDFSettings(new PDFSettings());
-        m_settings->globalConsignFont = font;
+
+        // general
+        m_settings->pageOrientation= ui->rbPortrait->isChecked() ? PageOrientation::portrait : PageOrientation::landScape;
+        m_settings->displayCutLines = ui->cbCutLines->isChecked();
+
+        // titles
+        m_settings->titleAdded = ui->cbAddTitle->isChecked();
+        m_settings->titleOnAllPages = ui->cbAllPagesTitle->isChecked();
+        m_settings->ratioTitle = ratioTitle;
+        m_settings->titlePositionFromPC = ui->rbTitlePositionTop->isChecked() ? Position::top : Position::bottom;
+        m_settings->titleText = textTitle;
         m_settings->titleFont = fontTitle;
+        m_settings->titleColor = m_colorTextTitle;
+        m_settings->titleAlignment = textTitleAlignment;
+
+        // PC
         m_settings->nbImagesPageH = nbImagesHPage;
         m_settings->nbImagesPageV = nbImagesVPage;
-        m_settings->ratioPhotosConsign = ratio;
-        m_settings->globalConsignText = text;
-        m_settings->titleText = textTitle;
-        m_settings->globalConsignColor = m_colorText;
-        m_settings->titleColor = m_colorTextTitle;
-        m_settings->imagesAlignment= imageAlignment;
-        m_settings->consignAlignment = textAlignment;
-        m_settings->titleAlignment = textTitleAlignment;
-        m_settings->pageOrientation= ui->rbPortrait->isChecked() ? PageOrientation::portrait : PageOrientation::landScape;
+        m_settings->ratioPhotosConsign = ratioPC;
         m_settings->margins.left = ui->dsLeftMargins->value();
         m_settings->margins.right = ui->dsRightMargins->value();
         m_settings->margins.top = ui->dsTopMargins->value();
         m_settings->margins.bottom = ui->dsBottomMargins->value();
         m_settings->margins.interWidth = ui->dsInterMarginsWidth->value();
         m_settings->margins.interHeight = ui->dsInterMarginsHeight->value();
-        m_settings->displayCutLines = ui->cbCutLines->isChecked();
-        m_settings->globalConsignPositionFromImages = ui->rbConsignPositionTop->isChecked() ? Position::top : Position::bottom;
+
+        // consign
+        m_settings->globalConsignText = text;
+        m_settings->globalConsignFont = font;
+        m_settings->globalConsignColor = m_colorText;
+        m_settings->consignAlignment = textAlignment;
+        m_settings->globalConsignPositionFromPhotos = ui->rbConsignPositionTop->isChecked() ? Position::top : Position::bottom;
+
+        // photos
+        m_settings->imagesAlignment= imageAlignment;
 
         updateNumberPhotos();
         updateNumberPages();
-        emit sendSettingsSignal(m_settings, currentPage());
+        emit sendSettingsSignal(m_settings, ui->lwPages->currentRow(), m_pages, 1);
     }
 
-
+    /**
+     * @brief forceUpdatePreview
+     */
+    void forceUpdatePreview()
+    {
+        updateNumberPhotos();
+        updateNumberPages();
+        emit sendSettingsSignal(m_settings, ui->lwPages->currentRow(), m_pages, 0);
+    }
 
 private slots :
 
@@ -454,7 +496,6 @@ private slots :
     {
         ui->lwPhotos->setEnabled(true);
         ui->pbSelectPhotos->setEnabled(true);
-        ui->pbPreview->setEnabled(true);
         ui->lwPages->setEnabled(true);
         m_images = images;
 
@@ -521,7 +562,6 @@ private slots :
         ui->lwPhotos->clear();
         ui->lwPhotos->setEnabled(false);
 
-        ui->pbPreview->setEnabled(false);
         ui->pbSelectPhotos->setEnabled(false);
         emit sendImagesDirSignal(m_photosDirectory, fileList);
     }
@@ -573,18 +613,27 @@ signals :
     /**
      * @brief sendSettingsSignal
      * @param settings
+     * @param currentPageId
+     * @param pages
+     * @param index
      */
-    void sendSettingsSignal(SPDFSettings settings, Page page);
+    void sendSettingsSignal(SPDFSettings settings, int currentPageId, QVector<Page> pages, int index);
 
     /**
      * @brief currentPageChangedSignal
-     * @param currentPage
+     * @param settings
+     * @param currentPageId
+     * @param pages
      */
-    void currentPageChangedSignal(SPDFSettings settings, Page currentPage);
+    void currentPageChangedSignal(SPDFSettings settings, int currentPageId, QVector<Page> pages);
+
+    /**
+     * @brief killSignal
+     */
+    void killSignal();
 
 private :
 
-    bool m_addTitle = false;
     int m_nbPages = 0;
     int m_lastPagePhotosNb = 0;
     int m_nbPhotosPerPage = 0;

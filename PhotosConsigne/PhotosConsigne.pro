@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-TARGET = launch
+TARGET = PhotosConsign
 TEMPLATE = app
 
 #include(./config/config.pri)
@@ -61,7 +61,8 @@ DISTFILES += \
     config/home.pri \
     config/laptopHome.pri \
     config/laptopWork.pri \
-    config/work.pri
+    config/work.pri \
+    myapp.rc
 
 RESOURCES += \
     src/resources.qrc
@@ -73,5 +74,5 @@ equals(ARCH, "x86"){
     QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS,5.02
 }
 
-
+RC_FILE = myapp.rc
 

@@ -28,6 +28,7 @@ public :
         qRegisterMetaType<SImages>("SImages");
         qRegisterMetaType<SPDFSettings>("SPDFSettings");
         qRegisterMetaType<Page>("Page");
+        qRegisterMetaType<QVector<Page>>("QVector<Page>");
     }
 
 
@@ -40,8 +41,6 @@ public slots :
      */
     void loadImages(QString path, QStringList imagesList)
     {
-        qDebug() << "loadImages";
-
         emit setProgressBarStateSignal(0);
         emit setProgressBarTextSignal("Chargement des photos...");
 
@@ -55,6 +54,14 @@ public slots :
         m_images->reserve(nbImages);
         for(auto &&imageName : imagesList)
         {
+            bool continueLoop;
+            m_locker.lockForRead();
+            continueLoop = m_continueLoop;
+            m_locker.unlock();
+
+            if(!continueLoop)
+                break;
+
             emit setProgressBarTextSignal("Chargement de " + imageName);
 
             SImage image(new Image(path + "/" + imageName));
@@ -77,6 +84,15 @@ public slots :
         emit endLoadingImagesSignal(m_images);
     }
 
+    /**
+     * @brief Kill worker loop
+     */
+    void kill()
+    {
+        m_locker.lockForWrite();
+        m_continueLoop = false;
+        m_locker.unlock();
+    }
 
 signals :
 
@@ -107,5 +123,8 @@ private :
 
 
     SImages m_images = nullptr;
+
+    QReadWriteLock m_locker;
+    bool m_continueLoop = true;
 };
 }

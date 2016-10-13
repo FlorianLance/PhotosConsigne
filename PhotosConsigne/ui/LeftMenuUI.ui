@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>722</height>
+    <height>842</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -149,7 +149,7 @@ background: color rgb(200,200,200)
          <property name="spacing">
           <number>3</number>
          </property>
-         <item row="0" column="1">
+         <item row="1" column="1">
           <widget class="QGroupBox" name="gbPages">
            <property name="styleSheet">
             <string notr="true">
@@ -168,39 +168,6 @@ QGroupBox
            </property>
            <layout class="QGridLayout" name="gridLayout_6">
             <item row="0" column="0">
-             <widget class="QPushButton" name="pbPreview">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>200</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>250</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">QPushButton
-{
-	color : black;
-
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
-}
-</string>
-              </property>
-              <property name="text">
-               <string>Aperçu</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
              <widget class="QListWidget" name="lwPages">
               <property name="minimumSize">
                <size>
@@ -216,17 +183,10 @@ QGroupBox
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="laWhite1">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
            </layout>
           </widget>
          </item>
-         <item row="0" column="0">
+         <item row="1" column="0">
           <widget class="QGroupBox" name="gbListPhotos">
            <property name="styleSheet">
             <string notr="true">
@@ -260,22 +220,25 @@ QGroupBox
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
-             <widget class="QPushButton" name="pbSelectPhotos">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>250</width>
-                <height>40</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">/*
+           </layout>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QPushButton" name="pbSelectPhotos">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>250</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">/*
 QPushButton {
     border: 1px solid #8f8f91;
     border-radius: 6px;
@@ -311,26 +274,23 @@ QPushButton
 }
 
 </string>
-              </property>
-              <property name="text">
-               <string>Sélection du dossier de photos</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="laPhotosDir">
-              <property name="maximumSize">
-               <size>
-                <width>500</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           </property>
+           <property name="text">
+            <string>Sélection du dossier de photos</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="laPhotosDir">
+           <property name="maximumSize">
+            <size>
+             <width>500</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
           </widget>
          </item>
         </layout>
@@ -497,9 +457,9 @@ QTabWidget::pane { /* The tab widget frame */
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
+              <y>-31</y>
               <width>481</width>
-              <height>337</height>
+              <height>343</height>
              </rect>
             </property>
             <property name="styleSheet">
@@ -554,7 +514,7 @@ QTabBar::tab:!selected {
 }</string>
                </property>
                <property name="currentIndex">
-                <number>1</number>
+                <number>0</number>
                </property>
                <widget class="QWidget" name="tabGlobalConsign">
                 <attribute name="title">
@@ -928,7 +888,10 @@ QLabel
                      <item>
                       <widget class="QRadioButton" name="rbConsignPositionTop">
                        <property name="text">
-                        <string>dessous</string>
+                        <string>au-dessus</string>
+                       </property>
+                       <property name="checked">
+                        <bool>true</bool>
                        </property>
                        <attribute name="buttonGroup">
                         <string notr="true">buttonGroup_3</string>
@@ -938,10 +901,10 @@ QLabel
                      <item>
                       <widget class="QRadioButton" name="rbConsignPositionBottom">
                        <property name="text">
-                        <string>au-dessus</string>
+                        <string>au-dessous</string>
                        </property>
                        <property name="checked">
-                        <bool>true</bool>
+                        <bool>false</bool>
                        </property>
                        <attribute name="buttonGroup">
                         <string notr="true">buttonGroup_3</string>
@@ -992,7 +955,7 @@ QLabel
                      <item>
                       <widget class="QCheckBox" name="cbAllPagesTitle">
                        <property name="enabled">
-                        <bool>true</bool>
+                        <bool>false</bool>
                        </property>
                        <property name="text">
                         <string>afficher à toutes les pages</string>
@@ -1023,7 +986,7 @@ QLabel
                        <number>0</number>
                       </property>
                       <item>
-                       <layout class="QVBoxLayout" name="vlTextEditTitle" stretch="0,0,0,0,0,0">
+                       <layout class="QVBoxLayout" name="vlTextEditTitle" stretch="0,0,0,0,0,0,0">
                         <property name="bottomMargin">
                          <number>6</number>
                         </property>
@@ -1415,27 +1378,30 @@ QLabel
                         </item>
                         <item>
                          <layout class="QHBoxLayout" name="horizontalLayout_4">
-                          <item>
+                          <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
                            <widget class="QLabel" name="label_6">
                             <property name="text">
                              <string>Position par rapport à la page:</string>
                             </property>
                            </widget>
                           </item>
-                          <item>
+                          <item alignment="Qt::AlignVCenter">
                            <widget class="QRadioButton" name="rbTitlePositionTop">
                             <property name="text">
-                             <string>dessous</string>
+                             <string>au-dessus</string>
+                            </property>
+                            <property name="checked">
+                             <bool>true</bool>
                             </property>
                            </widget>
                           </item>
                           <item>
                            <widget class="QRadioButton" name="rbTitlePositionBottom">
                             <property name="text">
-                             <string>au-dessus</string>
+                             <string>au-dessous</string>
                             </property>
                             <property name="checked">
-                             <bool>true</bool>
+                             <bool>false</bool>
                             </property>
                            </widget>
                           </item>
@@ -1453,6 +1419,19 @@ QLabel
                            </spacer>
                           </item>
                          </layout>
+                        </item>
+                        <item>
+                         <spacer name="verticalSpacer_3">
+                          <property name="orientation">
+                           <enum>Qt::Vertical</enum>
+                          </property>
+                          <property name="sizeHint" stdset="0">
+                           <size>
+                            <width>20</width>
+                            <height>40</height>
+                           </size>
+                          </property>
+                         </spacer>
                         </item>
                        </layout>
                       </item>
@@ -1472,8 +1451,8 @@ QLabel
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>411</width>
-              <height>216</height>
+              <width>498</width>
+              <height>293</height>
              </rect>
             </property>
             <property name="maximumSize">
@@ -1533,7 +1512,7 @@ QLabel
 </string>
                   </property>
                   <property name="text">
-                   <string>-&gt; horizontalelement</string>
+                   <string>-&gt; horizontalement</string>
                   </property>
                  </widget>
                 </item>
@@ -1570,13 +1549,6 @@ QLabel
                   </property>
                  </widget>
                 </item>
-                <item row="10" column="2">
-                 <widget class="Line" name="line_17">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                 </widget>
-                </item>
                 <item row="8" column="2">
                  <widget class="Line" name="line_8">
                   <property name="orientation">
@@ -1610,7 +1582,7 @@ QLabel
                   </property>
                  </widget>
                 </item>
-                <item row="8" column="4" rowspan="3" colspan="2" alignment="Qt::AlignHCenter">
+                <item row="8" column="4" rowspan="4" colspan="2" alignment="Qt::AlignHCenter">
                  <widget class="QLabel" name="laNbPages">
                   <property name="styleSheet">
                    <string notr="true">
@@ -1662,196 +1634,6 @@ QLabel
                   </attribute>
                  </widget>
                 </item>
-                <item row="10" column="3">
-                 <widget class="QSpinBox" name="sbNbImagesH">
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <number>10</number>
-                  </property>
-                  <property name="value">
-                   <number>1</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="4">
-                 <widget class="QRadioButton" name="rbVCenterImage">
-                  <property name="text">
-                   <string>centré</string>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup_5</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="8" column="0" rowspan="3" alignment="Qt::AlignHCenter">
-                 <widget class="QLabel" name="laWhite2">
-                  <property name="minimumSize">
-                   <size>
-                    <width>50</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>50</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item row="11" column="3">
-                 <spacer name="verticalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="10" column="1">
-                 <widget class="QLabel" name="laNbImagesH">
-                  <property name="styleSheet">
-                   <string notr="true">
-
-QLabel
-{
-	color : black;
-
-	font-style: normal;
-	font-size: 8pt;
-	font-weight: bold;
-}
-
-</string>
-                  </property>
-                  <property name="text">
-                   <string>-&gt; largeur</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="5">
-                 <widget class="QRadioButton" name="rbTopImage">
-                  <property name="text">
-                   <string>en haut</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup_5</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="8" column="3">
-                 <widget class="QSpinBox" name="sbNbImagesV">
-                  <property name="minimum">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <number>10</number>
-                  </property>
-                  <property name="value">
-                   <number>2</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="4">
-                 <widget class="QRadioButton" name="rbHCenterImage">
-                  <property name="text">
-                   <string>centré</string>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup_4</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="8" column="1">
-                 <widget class="QLabel" name="laNbImagesV">
-                  <property name="styleSheet">
-                   <string notr="true">
-
-QLabel
-{
-	color : black;
-
-	font-style: normal;
-	font-size: 8pt;
-	font-weight: bold;
-}
-
-</string>
-                  </property>
-                  <property name="text">
-                   <string>-&gt; hauteur</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="3">
-                 <widget class="QRadioButton" name="rbLeftImage">
-                  <property name="text">
-                   <string>à gauche</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup_4</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="3" column="6">
-                 <spacer name="horizontalSpacer_3">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="6" column="0" colspan="7">
-                 <widget class="Line" name="line_7">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="3">
-                 <widget class="QRadioButton" name="rbBottomImage">
-                  <property name="text">
-                   <string>en bas</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">buttonGroup_5</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="1" column="2">
-                 <widget class="Line" name="line_15">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="2">
-                 <widget class="Line" name="line_16">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                 </widget>
-                </item>
                 <item row="0" column="0" colspan="5">
                  <widget class="QLabel" name="laPhotoAlignment">
                   <property name="minimumSize">
@@ -1892,9 +1674,204 @@ QLabel
                   </property>
                  </widget>
                 </item>
+                <item row="3" column="3">
+                 <widget class="QRadioButton" name="rbBottomImage">
+                  <property name="text">
+                   <string>en bas</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup_5</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="Line" name="line_15">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="2">
+                 <widget class="Line" name="line_16">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="3">
+                 <widget class="QRadioButton" name="rbLeftImage">
+                  <property name="text">
+                   <string>à gauche</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup_4</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="3" column="6">
+                 <spacer name="horizontalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="6" column="0" colspan="7">
+                 <widget class="Line" name="line_7">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="4">
+                 <widget class="QRadioButton" name="rbVCenterImage">
+                  <property name="text">
+                   <string>centré</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup_5</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="8" column="0" rowspan="4" alignment="Qt::AlignHCenter">
+                 <widget class="QLabel" name="laWhite2">
+                  <property name="minimumSize">
+                   <size>
+                    <width>50</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>50</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="12" column="3">
+                 <spacer name="verticalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="3" column="5">
+                 <widget class="QRadioButton" name="rbTopImage">
+                  <property name="text">
+                   <string>en haut</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup_5</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="1" column="4">
+                 <widget class="QRadioButton" name="rbHCenterImage">
+                  <property name="text">
+                   <string>centré</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">buttonGroup_4</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="10" column="1">
+                 <widget class="QLabel" name="laNbImagesV">
+                  <property name="styleSheet">
+                   <string notr="true">
+
+QLabel
+{
+	color : black;
+
+	font-style: normal;
+	font-size: 8pt;
+	font-weight: bold;
+}
+
+</string>
+                  </property>
+                  <property name="text">
+                   <string>-&gt; verticalement</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="1">
+                 <widget class="QLabel" name="laNbImagesH">
+                  <property name="styleSheet">
+                   <string notr="true">
+
+QLabel
+{
+	color : black;
+
+	font-style: normal;
+	font-size: 8pt;
+	font-weight: bold;
+}
+
+</string>
+                  </property>
+                  <property name="text">
+                   <string>-&gt; horizontalement</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="10" column="3">
+                 <widget class="QSpinBox" name="sbNbImagesV">
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>10</number>
+                  </property>
+                  <property name="value">
+                   <number>2</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="3">
+                 <widget class="QSpinBox" name="sbNbImagesH">
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>10</number>
+                  </property>
+                  <property name="value">
+                   <number>1</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="10" column="2">
+                 <widget class="Line" name="line_4">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                 </widget>
+                </item>
                </layout>
-               <zorder>sbNbImagesV</zorder>
-               <zorder>laNbImagesV</zorder>
                <zorder>rbLeftImage</zorder>
                <zorder>laHorizontalImage</zorder>
                <zorder>line_7</zorder>
@@ -1907,8 +1884,6 @@ QLabel
                <zorder>rbTopImage</zorder>
                <zorder>horizontalSpacer_3</zorder>
                <zorder>laWhite</zorder>
-               <zorder>laNbImagesH</zorder>
-               <zorder>sbNbImagesH</zorder>
                <zorder>laWhite2</zorder>
                <zorder>verticalSpacer</zorder>
                <zorder>laPhotoAlignment</zorder>
@@ -1917,8 +1892,12 @@ QLabel
                <zorder>line_16</zorder>
                <zorder>laNbImages</zorder>
                <zorder>line_8</zorder>
-               <zorder>line_17</zorder>
                <zorder>line_18</zorder>
+               <zorder>laNbImagesV</zorder>
+               <zorder>laNbImagesH</zorder>
+               <zorder>sbNbImagesV</zorder>
+               <zorder>sbNbImagesH</zorder>
+               <zorder>line_4</zorder>
               </widget>
              </item>
             </layout>
@@ -1928,8 +1907,8 @@ QLabel
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>401</width>
-              <height>100</height>
+              <width>498</width>
+              <height>299</height>
              </rect>
             </property>
             <attribute name="label">
@@ -2261,7 +2240,7 @@ QLabel
                 <item>
                  <layout class="QHBoxLayout" name="hlRatioCI">
                   <item>
-                   <widget class="QLabel" name="laRatio">
+                   <widget class="QLabel" name="laRatioPC">
                     <property name="minimumSize">
                      <size>
                       <width>250</width>
@@ -2314,6 +2293,63 @@ QLabel
                   </item>
                   <item>
                    <spacer name="hsRatio">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout">
+                  <item>
+                   <widget class="QLabel" name="laRatioTitle">
+                    <property name="minimumSize">
+                     <size>
+                      <width>250</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">
+
+QLabel
+{
+	color : black;
+
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+</string>
+                    </property>
+                    <property name="text">
+                     <string>Ratio taille titre/page (de 0 à 1):</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="dsbRatioTitle">
+                    <property name="maximum">
+                     <double>0.900000000000000</double>
+                    </property>
+                    <property name="singleStep">
+                     <double>0.010000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.100000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer">
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
                     </property>
@@ -2443,13 +2479,13 @@ QLabel
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_3"/>
   <buttongroup name="buttonGroup_2"/>
-  <buttongroup name="buttonGroup_5"/>
-  <buttongroup name="buttonGroup_6"/>
-  <buttongroup name="buttonGroup_4"/>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_7"/>
+  <buttongroup name="buttonGroup_5"/>
+  <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_6"/>
   <buttongroup name="buttonGroup_8"/>
+  <buttongroup name="buttonGroup_4"/>
+  <buttongroup name="buttonGroup_3"/>
  </buttongroups>
 </ui>

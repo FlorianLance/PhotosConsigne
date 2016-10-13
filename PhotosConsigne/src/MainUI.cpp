@@ -46,7 +46,7 @@ using namespace pc;
 
 MainUI::MainUI(QApplication *parent) : m_ui(new Ui::MainUI)
 {
-    QString version = "1.10";
+    QString version = "2.0 beta";
 
     m_ui->setupUi(this);
 
@@ -72,11 +72,13 @@ MainUI::MainUI(QApplication *parent) : m_ui(new Ui::MainUI)
 
 
     // connections
+    connect(this, &MainUI::killSignal, m_leftMenuUI, &LeftMenuUI::kill);
+    connect(this, &MainUI::killSignal, m_previewUI, &PreviewUI::kill);
     //  menu
-    QObject::connect(m_ui->actionExit, &QAction::triggered, parent, &QApplication::quit);
-    QObject::connect(m_ui->actionOnlineDocumentation,  &QAction::triggered, this, &MainUI::openOnlineDocumentation);
-    QObject::connect(m_ui->actionAbout, &QAction::triggered, this, &MainUI::openAboutWindow);
-    QObject::connect(m_ui->actionDonate, &QAction::triggered, this, &MainUI::openDonatePage);
+    connect(m_ui->actionExit, &QAction::triggered, parent, &QApplication::quit);
+    connect(m_ui->actionOnlineDocumentation,  &QAction::triggered, this, &MainUI::openOnlineDocumentation);
+    connect(m_ui->actionAbout, &QAction::triggered, this, &MainUI::openAboutWindow);
+    connect(m_ui->actionDonate, &QAction::triggered, this, &MainUI::openDonatePage);
     //    QObject::connect(ui->actionSaveProfileTo, SIGNAL(triggered()), this, SLOT(saveProfileTo()));
     //    QObject::connect(ui->actionSaveProfile, SIGNAL(triggered()), m_interfaceWorker, SLOT(saveProfile()));
     //    QObject::connect(ui->actionLoadProfile, SIGNAL(triggered()), this, SLOT(loadProfile()));
@@ -98,17 +100,23 @@ MainUI::MainUI(QApplication *parent) : m_ui(new Ui::MainUI)
            m_currentImageDisplayed++;
 
        m_photosExplorerUI->updatePhotoToDisplay(m_images->at(m_currentImageDisplayed));
-       m_leftMenuUI->ListPhotos()->setCurrentRow(m_currentImageDisplayed);
+       m_leftMenuUI->ListPhotos()->setCurrentRow(m_currentImageDisplayed);              
     });
     connect(m_photosExplorerUI->RotateLeftImageButton(), &QPushButton::clicked, this, [&] // rotate left photo
     {
+        m_images->at(m_currentImageDisplayed)->rotation = (m_images->at(m_currentImageDisplayed)->rotation - 90)%360;
         m_images->at(m_currentImageDisplayed)->scaledImage = m_images->at(m_currentImageDisplayed)->scaledImage.transformed(QTransform().rotate(-90));
         m_photosExplorerUI->updatePhotoToDisplay(m_images->at(m_currentImageDisplayed));
+
+        emit forcePreviewUpdateSignal();
     });
     connect(m_photosExplorerUI->RotateRightImageButton(), &QPushButton::clicked, this, [&] // rotate right photo
     {
+        m_images->at(m_currentImageDisplayed)->rotation = (m_images->at(m_currentImageDisplayed)->rotation + 90)%360;
         m_images->at(m_currentImageDisplayed)->scaledImage = m_images->at(m_currentImageDisplayed)->scaledImage.transformed(QTransform().rotate(90));
         m_photosExplorerUI->updatePhotoToDisplay(m_images->at(m_currentImageDisplayed));
+
+        emit forcePreviewUpdateSignal();
     });
     connect(m_photosExplorerUI->AddTextPhotoButton(), &QPushButton::clicked, this, [&] // add/remove consign
     {
@@ -122,11 +130,16 @@ MainUI::MainUI(QApplication *parent) : m_ui(new Ui::MainUI)
         else
             brush.setColor(image->isRemoved ? Qt::red : Qt::black);
         m_leftMenuUI->ListPhotos()->currentItem()->setForeground(brush);
+
+        emit forcePreviewUpdateSignal();
     });
     connect(m_photosExplorerUI->IndividualTextPhotoEdit(), &QTextEdit::textChanged, this, [&]
     {
         if(m_images != nullptr)
+        {
             m_images->at(m_currentImageDisplayed)->consign = m_photosExplorerUI->IndividualTextPhotoEdit()->toPlainText();
+            emit forcePreviewUpdateSignal();
+        }
     });
     connect(m_photosExplorerUI->RemovePhotoButton(), &QPushButton::clicked, this, [&] // add/remove photo from list
     {
@@ -140,13 +153,18 @@ MainUI::MainUI(QApplication *parent) : m_ui(new Ui::MainUI)
         else
             brush.setColor(image->isRemoved ? Qt::red : Qt::black);
         m_leftMenuUI->ListPhotos()->currentItem()->setForeground(brush);
-    });
 
+        emit forcePreviewUpdateSignal();
+    });
 
     //  left menu
     //      worker
+    connect(this, &MainUI::forcePreviewUpdateSignal, m_leftMenuUI, &LeftMenuUI::forceUpdatePreview);
     connect(m_leftMenuUI->Worker(), &LeftMenuWorker::setProgressBarStateSignal, m_ui->pbLoading, &QProgressBar::setValue);
     connect(m_leftMenuUI->Worker(), &LeftMenuWorker::setProgressBarTextSignal, m_ui->laLoading, &QLabel::setText);
+    connect(m_previewUI->Worker(), &PreviewWorker::setProgressBarStateSignal, m_ui->pbLoading, &QProgressBar::setValue);
+    connect(m_previewUI->Worker(), &PreviewWorker::setProgressBarTextSignal, m_ui->laLoading, &QLabel::setText);
+
     connect(m_leftMenuUI->Worker(), &LeftMenuWorker::endLoadingImagesSignal, [&](SImages images)
     {
         m_images = images;
@@ -166,11 +184,11 @@ MainUI::MainUI(QApplication *parent) : m_ui(new Ui::MainUI)
     });
     //      UI
     //          list photos
-    connect(m_leftMenuUI, &LeftMenuUI::currentPageChangedSignal, this, [&](SPDFSettings settings, Page currentPage)
+    connect(m_leftMenuUI, &LeftMenuUI::currentPageChangedSignal, this, [&](SPDFSettings settings, int currentPageId, QVector<Page> pages)
     {
         m_settings = settings;
 
-        m_previewUI->updatePreview(m_images, m_settings, currentPage);
+        m_previewUI->updatePreview(m_images, m_settings, currentPageId, pages);
         m_previewUI->updateUI(true);
         m_ui->tabDisplay->setCurrentIndex(1);
 
@@ -184,23 +202,30 @@ MainUI::MainUI(QApplication *parent) : m_ui(new Ui::MainUI)
         m_photosExplorerUI->updatePhotoToDisplay(m_images->at(m_currentImageDisplayed));
         m_ui->tabDisplay->setCurrentIndex(0);
     });
-    connect(m_leftMenuUI, &LeftMenuUI::sendSettingsSignal, this, [=](SPDFSettings settings, Page page)
+    connect(m_leftMenuUI->ListPhotos(), &QListWidget::clicked, this, [&](QModelIndex index)
+    {
+        if(index.row() == -1 || m_images->size() == 0)
+            return;
+
+        m_currentImageDisplayed = index.row();
+        m_photosExplorerUI->updatePhotoToDisplay(m_images->at(m_currentImageDisplayed));
+        m_ui->tabDisplay->setCurrentIndex(0);
+    });
+
+
+    connect(m_leftMenuUI, &LeftMenuUI::sendSettingsSignal, this, [=](SPDFSettings settings, int currentPageId, QVector<Page> pages, int index)
     {
         m_settings = settings;
+        m_pages = pages;
+        m_currentPageId = currentPageId;
 
         if(m_images->size() == 0)
             return;
 
-        m_previewUI->updatePreview(m_images, m_settings, page);
+        m_previewUI->updatePreview(m_images, m_settings, m_currentPageId, m_pages);
         m_previewUI->updateUI(true);
-        m_ui->tabDisplay->setCurrentIndex(1);
+        m_ui->tabDisplay->setCurrentIndex(index);
     });
-
-    //    QObject::connect(ui->lwPhotos,SIGNAL(currentRowChanged(int)), this, SLOT(updatePhotoIndex(int)));
-    //    QObject::connect(ui->lwPhotos, SIGNAL(clicked(QModelIndex)), this, SLOT(updatePhotoIndex(QModelIndex)));)
-
-
-
 
 }
 
