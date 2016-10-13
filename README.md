@@ -46,12 +46,12 @@ Tutoriel vidéo:
 Captures d'écran:
 -----------------
 
-![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc0.png "Exemple avec consigne orientée vers le bas et textes individuels")
+![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc0.png "Exemple 1")
 
-![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc1.png "Création d'une consigne individuelle")
+![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc1.png "Ajout d'un titre et affichage des zones")
 
-![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc2.png "Exemple de mise en page")
+![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc2.png "Création de consignes individuelles")
 
-![PhotosConsigne_img2]https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc3.png "Edition de la consigne")
+![PhotosConsigne_img2](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc3.png "Résultat de la génération du PDF")
 
 
