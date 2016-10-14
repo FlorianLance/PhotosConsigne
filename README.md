@@ -16,6 +16,7 @@ Téléchargements:
 
 **NOUVEAU: PhotosConsigne 2.0 beta !** 
 
+Version portable sans installeur pour Windows 7/8/10 :
 * [PhotosConsigne 2.0-beta x64](https://github.com/FlorianLance/PhotosConsigne/files/527454/PhotosConsigne.2.0-beta.x64.zip "beta v2.0")
 * [PhotosConsigne 2.0-beta x86](https://github.com/FlorianLance/PhotosConsigne/files/529086/PhotosConsigne.2.0-beta.x86.zip "beta v2.0")
 
@@ -29,17 +30,16 @@ Téléchargements:
 * meilleure gestion de la mémoire, vous pouvez maintenant charger autant de photos que vous le voulez !
 * Les versions linux suivront bientôt, ainsi que MacOS.
 
-**Anciennes versions**
+**Anciennes versions:**
 
 Version portable sans installeur pour Windows 7/8/10 :
 
-[PhotosConsigne 1.01 x86](https://github.com/FlorianLance/PhotosConsigne/files/464112/PhotosConsigne.1.01.x86.zip "release v1.01") 
-
-[PhotosConsigne 1.01 x64](https://github.com/FlorianLance/PhotosConsigne/files/206508/PhotosConsigne.1.01.x64.zip "release v1.01")
+* [PhotosConsigne 1.01 x86](https://github.com/FlorianLance/PhotosConsigne/files/464112/PhotosConsigne.1.01.x86.zip "release v1.01") 
+* [PhotosConsigne 1.01 x64](https://github.com/FlorianLance/PhotosConsigne/files/206508/PhotosConsigne.1.01.x64.zip "release v1.01")
 
 Version portable sans installeur pour Linux (testé sous Ubuntu) :
 
-[PhotosConsigne 1.01 x64](https://github.com/FlorianLance/PhotosConsigne/files/466159/PhotosConsigne.1.01-x64.tar.gz "release v1.01")
+* [PhotosConsigne 1.01 x64](https://github.com/FlorianLance/PhotosConsigne/files/466159/PhotosConsigne.1.01-x64.tar.gz "release v1.01")
 
 
 Si vous ne savez pas quelle version choisir, prenez la première.
