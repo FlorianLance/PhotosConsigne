@@ -19,7 +19,7 @@ Téléchargements:
 * [PhotosConsigne 2.0-beta x64](https://github.com/FlorianLance/PhotosConsigne/files/527454/PhotosConsigne.2.0-beta.x64.zip "beta v2.0")
 * [PhotosConsigne 2.0-beta x86](https://github.com/FlorianLance/PhotosConsigne/files/529086/PhotosConsigne.2.0-beta.x86.zip "beta v2.0")
 
-**List des nouveautées:**
+**Liste des nouveautées:**
 
 * nouvelle interface plus claire et complète
 * ajout des titres
