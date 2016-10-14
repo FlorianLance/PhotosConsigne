@@ -27,7 +27,7 @@ Téléchargements:
 * meilleur aperçu du résultat
 * plus rapide
 * meilleure gestion de la mémoire, vous pouvez maintenant charger autant de photos que vous le voulez !
-* Les versions x86 et linux suivront bientôt, ainsi que MacOS.
+* Les versions linux suivront bientôt, ainsi que MacOS.
 
 **Anciennes versions**
 
