@@ -42,6 +42,8 @@ public:
         ui->setupUi(this);
         m_worker = new PreviewWorker();
 
+
+
         // pdf generation
         ui->pbGeneration->setIcon(QIcon(":/images/save"));
         ui->pbGeneration->setIconSize(QSize(35,35));

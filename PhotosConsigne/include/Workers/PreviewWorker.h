@@ -14,20 +14,6 @@
 namespace pc{
 
 
-struct PageFormat
-{
-    PageFormat() = delete;
-
-    PageFormat(bool preview)
-    {
-
-    }
-
-
-
-};
-
-
 /**
  * @brief ...
  */
@@ -52,7 +38,7 @@ private :
     void drawPage(QPainter &painter, const Page &page, const SImages &images, const SPDFSettings &settings, const PreviewZonesDisplay &zones, const bool preview, const int width, const int height)
     {
         // misc
-        bool drawTitle          = settings->titleAdded && (page.startPhotoId == 0 || settings->titleOnAllPages);
+        bool drawTitle          = settings->titleAdded && (page.startImageId == 0 || settings->titleOnAllPages);
         bool titleOnTop         = settings->titlePositionFromPC == Position::top;
         bool consignBeforePhoto = settings->globalConsignPositionFromPhotos == Position::top;
         int nbInterVMargins     = settings->nbImagesPageV - 1;
@@ -218,7 +204,7 @@ private :
             painter.drawText(hPositionTitle, vPositionTitle, widthTitle, heightTitle, settings->titleAlignment, settings->titleText);
         }
 
-        // define consign font/pen
+        // define text font/pen
         painter.setPen(settings->globalConsignColor);
         painter.setFont(settings->globalConsignFont);
 
@@ -249,7 +235,7 @@ private :
                 int idPhoto;
                 for(int kk = 0; kk < images->size(); ++kk)
                 {
-                    idPhoto = page.startPhotoId + (currPhoto++);
+                    idPhoto = page.startImageId + (currPhoto++);
 
                     if(idPhoto < images->size())
                         if(!images->at(idPhoto)->isRemoved)
@@ -261,8 +247,10 @@ private :
 
                 // draw consigne
                 QString consignText;
-                if( images->at(idPhoto)->addedConsign)
-                    consignText =images->at(idPhoto)->consign;
+                if( images->at(idPhoto)->addedText)
+                    consignText =images->at(idPhoto)->text;
+                else if (settings->useImageNameAsText)
+                    consignText = images->at(idPhoto)->pathImage.split("/").last();
                 else
                     consignText = settings->globalConsignText;
 
@@ -324,8 +312,8 @@ public slots :
     void generatePreview(SImages images, SPDFSettings settings, Page page, PreviewZonesDisplay zones)
     {
         bool landScape          = settings->pageOrientation == PageOrientation::landScape;
-        int width               = landScape ? 3507 : 2480;
-        int height              = landScape ? 2480 : 3507;
+        int width               = landScape ? settings->paperFormat.heighRatio*300 : settings->paperFormat.widthRatio*300;
+        int height              = landScape ? settings->paperFormat.widthRatio*300 : settings->paperFormat.heighRatio*300;
 
         // create preview image
         QImage image(width, height, QImage::Format_RGB32);
@@ -353,16 +341,16 @@ public slots :
     void generatePDF(QString pdfFileName, SImages images, SPDFSettings settings, QVector<Page> pages, PreviewZonesDisplay zones)
     {
         emit setProgressBarStateSignal(0);
-        bool landScape          = settings->pageOrientation == PageOrientation::landScape;
+        bool landScape = settings->pageOrientation == PageOrientation::landScape;
 
         // init writer
         QPdfWriter pdfWriter(pdfFileName);
 
         // define format
-        pdfWriter.setPageSize(QPagedPaintDevice::A4); // 210 x 297 mm, 8.26 x 11.69 inches
+        pdfWriter.setPageSize(settings->paperFormat.format);
 
         // define dpi resolution
-        pdfWriter.setResolution(300);
+        pdfWriter.setResolution(settings->paperFormat.definition);
 
         // disable zones
         zones.consigns = zones.externMargins = zones.InterMargins = zones.photos = zones.titles = false;
@@ -381,8 +369,8 @@ public slots :
 
         // init painter
         QPainter painter(&pdfWriter);
-        int width = pdfWriter.logicalDpiX() * (landScape ? 11.69 : 8.26);
-        int height = pdfWriter.logicalDpiY() * (landScape ? 8.26 : 11.69);
+        int width = pdfWriter.logicalDpiX() * (landScape ? settings->paperFormat.heighRatio : settings->paperFormat.widthRatio);
+        int height = pdfWriter.logicalDpiY() * (landScape ? settings->paperFormat.widthRatio : settings->paperFormat.heighRatio);
 
         float offsetProgress = 1000 / pages.size();
         float currentProgress = 0;

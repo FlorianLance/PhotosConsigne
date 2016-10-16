@@ -124,7 +124,7 @@ background: color rgb(200,200,200)
 </string>
            </property>
            <property name="text">
-            <string>PHOTOS</string>
+            <string>IMAGES</string>
            </property>
           </widget>
          </item>
@@ -201,7 +201,7 @@ QGroupBox
 </string>
            </property>
            <property name="title">
-            <string>Liste des photos</string>
+            <string>Liste des images</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_5">
             <item row="4" column="0">
@@ -276,7 +276,7 @@ QPushButton
 </string>
            </property>
            <property name="text">
-            <string>Sélection du dossier de photos</string>
+            <string>Sélection du dossier d'images</string>
            </property>
           </widget>
          </item>
@@ -466,7 +466,7 @@ QTabWidget::pane { /* The tab widget frame */
              <string notr="true"/>
             </property>
             <attribute name="label">
-             <string>TEXTE (alignement,police...)</string>
+             <string>TEXTE ET TITRE (alignement,police...)</string>
             </attribute>
             <layout class="QGridLayout" name="gridLayout">
              <property name="leftMargin">
@@ -518,11 +518,11 @@ QTabBar::tab:!selected {
                </property>
                <widget class="QWidget" name="tabGlobalConsign">
                 <attribute name="title">
-                 <string>Consigne globale</string>
+                 <string>Texte commun</string>
                 </attribute>
                 <layout class="QHBoxLayout" name="horizontalLayout_2">
                  <item>
-                  <layout class="QVBoxLayout" name="vlTextEdit" stretch="0,0,0,0,0,0">
+                  <layout class="QVBoxLayout" name="vlTextEdit" stretch="0,0,0,0,0,0,0">
                    <item>
                     <layout class="QGridLayout" name="glConsign">
                      <item row="2" column="1" colspan="5">
@@ -710,7 +710,7 @@ QLabel
 </string>
                        </property>
                        <property name="text">
-                        <string>Alignement de la consigne dans sa zone</string>
+                        <string>Alignement du texte dans sa zone</string>
                        </property>
                       </widget>
                      </item>
@@ -789,7 +789,7 @@ QLabel
                         <number>10</number>
                        </property>
                        <property name="maximum">
-                        <number>300</number>
+                        <number>2000</number>
                        </property>
                        <property name="value">
                         <number>50</number>
@@ -865,7 +865,14 @@ QLabel
                       </size>
                      </property>
                      <property name="plainText">
-                      <string>Tapez la consigne ici.</string>
+                      <string>Tapez votre texte ici.</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QCheckBox" name="cbUseImageNameAsText">
+                     <property name="text">
+                      <string>Utiliser le nom le l'image comme texte</string>
                      </property>
                     </widget>
                    </item>
@@ -881,7 +888,7 @@ QLabel
                      <item>
                       <widget class="QLabel" name="label_3">
                        <property name="text">
-                        <string>Position par rapport à la photo:</string>
+                        <string>Position par rapport à l'image:</string>
                        </property>
                       </widget>
                      </item>
@@ -1195,7 +1202,7 @@ QLabel
 </string>
                             </property>
                             <property name="text">
-                             <string>Alignement de la consigne dans sa zone</string>
+                             <string>Alignement du titre dans sa zone</string>
                             </property>
                            </widget>
                           </item>
@@ -1283,7 +1290,7 @@ QLabel
                              <number>10</number>
                             </property>
                             <property name="maximum">
-                             <number>300</number>
+                             <number>2000</number>
                             </property>
                             <property name="value">
                              <number>50</number>
@@ -1465,7 +1472,7 @@ QLabel
              <string notr="true"/>
             </property>
             <attribute name="label">
-             <string>PHOTOS (alignement, répartition)</string>
+             <string>IMAGES (alignement, répartition)</string>
             </attribute>
             <layout class="QGridLayout" name="gridLayout_2">
              <property name="leftMargin">
@@ -1663,7 +1670,7 @@ QLabel
 </string>
                   </property>
                   <property name="text">
-                   <string>Alignement des photos dans leur zone</string>
+                   <string>Alignement des images dans leur zone</string>
                   </property>
                  </widget>
                 </item>
@@ -1908,7 +1915,7 @@ QLabel
               <x>0</x>
               <y>0</y>
               <width>498</width>
-              <height>299</height>
+              <height>312</height>
              </rect>
             </property>
             <attribute name="label">
@@ -2268,7 +2275,7 @@ QLabel
 </string>
                     </property>
                     <property name="text">
-                     <string>Ratio taille consigne/image (de 0 à 1):</string>
+                     <string>Ratio taille textre/image (de 0 à 1):</string>
                     </property>
                    </widget>
                   </item>
@@ -2281,7 +2288,7 @@ QLabel
                      <double>0.000000000000000</double>
                     </property>
                     <property name="maximum">
-                     <double>0.900000000000000</double>
+                     <double>1.000000000000000</double>
                     </property>
                     <property name="singleStep">
                      <double>0.010000000000000</double>
@@ -2338,7 +2345,7 @@ QLabel
                   <item>
                    <widget class="QDoubleSpinBox" name="dsbRatioTitle">
                     <property name="maximum">
-                     <double>0.900000000000000</double>
+                     <double>1.000000000000000</double>
                     </property>
                     <property name="singleStep">
                      <double>0.010000000000000</double>
@@ -2439,9 +2446,236 @@ QLabel
                  </widget>
                 </item>
                 <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_5">
+                  <item>
+                   <widget class="QLabel" name="label_7">
+                    <property name="styleSheet">
+                     <string notr="true">QLabel
+{
+	color : black;
+
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+</string>
+                    </property>
+                    <property name="text">
+                     <string>Format:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="cbFormat">
+                    <property name="currentIndex">
+                     <number>4</number>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>A0</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>A1</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>A2</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>A3</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>A4</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>A5</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>A6</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>A7</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>A8</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>A9</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>A10</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>B0</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>B1</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>B2</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>B3</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>B4</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>B5</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>B6</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>B7</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>B8</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>B9</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>B10</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_8">
+                    <property name="styleSheet">
+                     <string notr="true">QLabel
+{
+	color : black;
+
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+</string>
+                    </property>
+                    <property name="text">
+                     <string>Définition (dpi):</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="cbDefinition">
+                    <property name="maximumSize">
+                     <size>
+                      <width>50</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="currentIndex">
+                     <number>3</number>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>72</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>96</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>150</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>300</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>600</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>1200</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>2400</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_5">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <widget class="Line" name="line_11">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QCheckBox" name="cbCutLines">
                   <property name="text">
-                   <string>Dessiner lignes de découpe entre chaque ensemble photo + consigne</string>
+                   <string>Dessiner lignes de découpe entre chaque ensemble text + image</string>
                   </property>
                   <property name="checked">
                    <bool>false</bool>
@@ -2479,13 +2713,13 @@ QLabel
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_2"/>
-  <buttongroup name="buttonGroup_7"/>
   <buttongroup name="buttonGroup_5"/>
-  <buttongroup name="buttonGroup"/>
-  <buttongroup name="buttonGroup_6"/>
-  <buttongroup name="buttonGroup_8"/>
-  <buttongroup name="buttonGroup_4"/>
   <buttongroup name="buttonGroup_3"/>
+  <buttongroup name="buttonGroup_8"/>
+  <buttongroup name="buttonGroup_7"/>
+  <buttongroup name="buttonGroup_6"/>
+  <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup_4"/>
+  <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>

@@ -123,7 +123,10 @@ public:
         connect(ui->cbItalic, &QCheckBox::toggled, this, &LeftMenuUI::updateSettings);
         connect(ui->cbBoldTitle, &QCheckBox::toggled, this, &LeftMenuUI::updateSettings);
         connect(ui->cbItalicTitle, &QCheckBox::toggled, this, &LeftMenuUI::updateSettings);
-
+        connect(ui->cbUseImageNameAsText, &QCheckBox::toggled, this, &LeftMenuUI::updateSettings);
+        // combobox
+        connect(ui->cbFormat, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), [=]{ updateSettings();});
+        connect(ui->cbDefinition, static_cast<void(QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged), [=]{ updateSettings();});
 
         connect(ui->cbCutLines, &QCheckBox::toggled, this, &LeftMenuUI::updateSettings);
         connect(ui->cbAddTitle, &QCheckBox::toggled, [=]{ ui->wTitle->setEnabled(ui->cbAddTitle->isChecked()); ui->cbAllPagesTitle->setEnabled(ui->cbAddTitle->isChecked()); updateSettings();});
@@ -210,6 +213,10 @@ public slots:
         ui->rbPortrait->setChecked(newSettings->pageOrientation == PageOrientation::portrait);
         ui->cbCutLines->setChecked(newSettings->displayCutLines);
 
+        // format
+        ui->cbFormat->setCurrentIndex(newSettings->paperFormat.formatId);
+        ui->cbDefinition->setCurrentIndex(newSettings->paperFormat.definitionId);
+
         // titles
         //      font
         QFont fontTitle = ui->fcbTitle->font();
@@ -254,7 +261,7 @@ public slots:
         ui->dsInterMarginsWidth->setValue(newSettings->margins.interWidth);
         ui->dsInterMarginsHeight->setValue(newSettings->margins.interHeight);
 
-        // consign
+        // text
         //      font
         QFont font = ui->fcbConsignes->font();
         font.setFamily(newSettings->globalConsignFont.family());
@@ -283,6 +290,7 @@ public slots:
             ui->rbBottomText->setChecked(true);
         //      position
         ui->rbConsignPositionTop->setChecked(newSettings->globalConsignPositionFromPhotos == Position::top);
+        ui->cbUseImageNameAsText->setChecked(newSettings->useImageNameAsText);
 
         // photos
         //      alignment
@@ -309,9 +317,9 @@ public slots:
         int nbImagesVPage = ui->sbNbImagesV->value();
         int nbImagesHPage = ui->sbNbImagesH->value();
         double ratioPC = ui->dsbRatio->value();
-        double ratioTitle = ui->dsbRatioTitle->value();
+        double ratioTitle = ui->dsbRatioTitle->value();                                
 
-        // consign
+        // text
         int sizeText = ui->sbSizeTexte->value();
         QFont font = ui->fcbConsignes->currentFont();
         font.setPixelSize(13);
@@ -391,7 +399,9 @@ public slots:
 
         // general
         m_settings->pageOrientation= ui->rbPortrait->isChecked() ? PageOrientation::portrait : PageOrientation::landScape;
-        m_settings->displayCutLines = ui->cbCutLines->isChecked();
+        m_settings->displayCutLines = ui->cbCutLines->isChecked();       
+        m_settings->paperFormat.updateDefinition(ui->cbDefinition->currentText());
+        m_settings->paperFormat.updateFormat(ui->cbFormat->currentText());
 
         // titles
         m_settings->titleAdded = ui->cbAddTitle->isChecked();
@@ -414,12 +424,13 @@ public slots:
         m_settings->margins.interWidth = ui->dsInterMarginsWidth->value();
         m_settings->margins.interHeight = ui->dsInterMarginsHeight->value();
 
-        // consign
+        // text
         m_settings->globalConsignText = text;
         m_settings->globalConsignFont = font;
         m_settings->globalConsignColor = m_colorText;
         m_settings->consignAlignment = textAlignment;
         m_settings->globalConsignPositionFromPhotos = ui->rbConsignPositionTop->isChecked() ? Position::top : Position::bottom;
+        m_settings->useImageNameAsText = ui->cbUseImageNameAsText->isChecked();
 
         // photos
         m_settings->imagesAlignment= imageAlignment;
@@ -474,13 +485,13 @@ private slots :
         for(int ii = 0; ii < m_nbPages; ++ii)
         {
             Page page;
-            page.nbPhotos = (ii < m_nbPages-1) ? m_nbPhotosPerPage : m_lastPagePhotosNb;
-            page.startPhotoId = currentPageStartPhotoId;
+            page.nbImages = (ii < m_nbPages-1) ? m_nbPhotosPerPage : m_lastPagePhotosNb;
+            page.startImageId = currentPageStartPhotoId;
             m_pages.push_back(page);
 
-            currentPageStartPhotoId += page.nbPhotos;
+            currentPageStartPhotoId += page.nbImages;
 
-            ui->lwPages->addItem("Page " + QString::number(ii+1) + " -> " + QString::number(page.nbPhotos) + ((page.nbPhotos > 1 ) ? " photos." : " photo."));
+            ui->lwPages->addItem("Page " + QString::number(ii+1) + " -> " + QString::number(page.nbImages) + ((page.nbImages > 1 ) ? " images." : " image."));
         }
 
         if(currentPageId != -1)
@@ -509,7 +520,7 @@ private slots :
     void setPhotosDirectory()
     {
         QString previousDirectory = m_photosDirectory;
-        m_photosDirectory = QFileDialog::getExistingDirectory(this, "Sélection du répertoire de photos", QDir::homePath());
+        m_photosDirectory = QFileDialog::getExistingDirectory(this, "Sélection du répertoire d'images", QDir::homePath());
 
         // no directory selected
         if(m_photosDirectory.size() == 0 )
@@ -547,7 +558,7 @@ private slots :
             if(previousDirectory.size() != 0)
                 m_photosDirectory = previousDirectory;
 
-            QMessageBox::warning(this, tr("Avertissement"), tr("Aucune photo n'a pu être trouvée dans ce répertoire, veuillez en selectionner un autre.\n"),QMessageBox::Ok);
+            QMessageBox::warning(this, tr("Avertissement"), tr("Aucune image (jpg,png) n'a pu être trouvée dans ce répertoire, veuillez en selectionner un autre.\n"),QMessageBox::Ok);
             return;
         }
         ui->laPhotosDir->setText(m_photosDirectory);

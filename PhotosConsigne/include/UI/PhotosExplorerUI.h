@@ -36,6 +36,13 @@ public:
         Q_UNUSED(parent);
 
         ui->setupUi(this);
+        ui->tePhotoIndividualConsign->hide();
+        ui->pbRemovePhoto->hide();
+        ui->pbLeftImage->hide();
+        ui->pbRightImage->hide();
+        ui->pbRotationLeft->hide();
+        ui->pbRotationRight->hide();
+        ui->pbAddTextPhoto->hide();
 
         // load images
         // left image
@@ -104,8 +111,19 @@ public slots:
 
     void updatePhotoToDisplay(SImage image)
     {
+//        ui->tePhotoIndividualConsign->show();
+        ui->pbRemovePhoto->show();
+        ui->pbLeftImage->show();
+        ui->pbRightImage->show();
+        ui->pbRotationLeft->show();
+        ui->pbRotationRight->show();
+        ui->pbAddTextPhoto->show();
+
         m_currentImageDisplayed = image;
-        m_imageLabel->setPixmap(QPixmap::fromImage(m_currentImageDisplayed->scaledImage));
+        m_imageLabel->setPixmap(QPixmap::fromImage(QImage(image->pathImage).transformed(QTransform().rotate(image->rotation))));
+
+
+//        m_imageLabel->setPixmap(QPixmap::fromImage(m_currentImageDisplayed->scaledImage));
         m_imageLabel->update();
 
         updateUI(image);
@@ -113,11 +131,11 @@ public slots:
 
     void updateUI(SImage image) noexcept
     {
-        if(image->addedConsign)
+        if(image->addedText)
         {
             ui->tePhotoIndividualConsign->show();
             ui->tePhotoIndividualConsign->setEnabled(true);
-            ui->tePhotoIndividualConsign->setText(image->consign);
+            ui->tePhotoIndividualConsign->setText(image->text);
             ui->pbAddTextPhoto->setIcon(QIcon(":/images/removeConsign"));
             ui->pbAddTextPhoto->setIconSize(QSize(100,50));
             ui->pbAddTextPhoto->setToolTip(tr("Retirer le texte unique pour cette photo"));

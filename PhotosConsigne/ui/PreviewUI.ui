@@ -59,51 +59,7 @@
 </string>
         </property>
         <property name="text">
-         <string>titles</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="cbZonePhotos">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">
-QCheckBox
-{
-	color : rgb(112,124,190);
-	font-style: normal;
-	font-size: 8pt;
-	font-weight: bold;
-}
-
-</string>
-        </property>
-        <property name="text">
-         <string>photos</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="cbZoneConsignes">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">
-QCheckBox
-{
-	color : rgb(63,72,204);
-	font-style: normal;
-	font-size: 8pt;
-	font-weight: bold;
-}
-
-</string>
-        </property>
-        <property name="text">
-         <string>consignes</string>
+         <string>titres</string>
         </property>
        </widget>
       </item>
@@ -136,6 +92,28 @@ QCheckBox
        </widget>
       </item>
       <item>
+       <widget class="QCheckBox" name="cbZoneConsignes">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+QCheckBox
+{
+	color : rgb(63,72,204);
+	font-style: normal;
+	font-size: 8pt;
+	font-weight: bold;
+}
+
+</string>
+        </property>
+        <property name="text">
+         <string>textes</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QCheckBox" name="cbZoneInternMargins">
         <property name="enabled">
          <bool>false</bool>
@@ -157,6 +135,28 @@ QCheckBox
         </property>
         <property name="checked">
          <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="cbZonePhotos">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+QCheckBox
+{
+	color : rgb(112,124,190);
+	font-style: normal;
+	font-size: 8pt;
+	font-weight: bold;
+}
+
+</string>
+        </property>
+        <property name="text">
+         <string>images</string>
         </property>
        </widget>
       </item>

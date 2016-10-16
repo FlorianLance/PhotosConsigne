@@ -83,7 +83,7 @@ QTabBar::tab:!selected {
             <string notr="true">background-color: rgb(122, 122, 122);</string>
            </property>
            <attribute name="title">
-            <string>EXPLORATEUR DES PHOTOS</string>
+            <string>EXPLORATEUR DES IMAGES</string>
            </attribute>
            <layout class="QVBoxLayout" name="vlImage"/>
           </widget>
@@ -92,7 +92,7 @@ QTabBar::tab:!selected {
             <string notr="true">background-color: rgb(122,122,122);</string>
            </property>
            <attribute name="title">
-            <string>APERCU DU PDF</string>
+            <string>EXPLORATEUR DES PAGES</string>
            </attribute>
            <layout class="QVBoxLayout" name="vlPreview"/>
           </widget>

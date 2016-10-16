@@ -121,11 +121,11 @@ MainUI::MainUI(QApplication *parent) : m_ui(new Ui::MainUI)
     connect(m_photosExplorerUI->AddTextPhotoButton(), &QPushButton::clicked, this, [&] // add/remove consign
     {
         SImage image = m_images->at(m_currentImageDisplayed);
-        image->addedConsign = !image->addedConsign;
+        image->addedText = !image->addedText;
         m_photosExplorerUI->updateUI(image);
 
         QBrush brush = m_leftMenuUI->ListPhotos()->currentItem()->foreground();
-        if(image->addedConsign)
+        if(image->addedText)
             brush.setColor(image->isRemoved ? Qt::red : Qt::blue);
         else
             brush.setColor(image->isRemoved ? Qt::red : Qt::black);
@@ -137,7 +137,7 @@ MainUI::MainUI(QApplication *parent) : m_ui(new Ui::MainUI)
     {
         if(m_images != nullptr)
         {
-            m_images->at(m_currentImageDisplayed)->consign = m_photosExplorerUI->IndividualTextPhotoEdit()->toPlainText();
+            m_images->at(m_currentImageDisplayed)->text = m_photosExplorerUI->IndividualTextPhotoEdit()->toPlainText();
             emit forcePreviewUpdateSignal();
         }
     });
@@ -148,7 +148,7 @@ MainUI::MainUI(QApplication *parent) : m_ui(new Ui::MainUI)
         m_photosExplorerUI->updateUI(image);
 
         QBrush brush = m_leftMenuUI->ListPhotos()->currentItem()->foreground();
-        if(image->addedConsign)
+        if(image->addedText)
             brush.setColor(image->isRemoved ? Qt::red : Qt::blue);
         else
             brush.setColor(image->isRemoved ? Qt::red : Qt::black);
