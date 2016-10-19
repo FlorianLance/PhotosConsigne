@@ -19,39 +19,13 @@ Une prévisualisation du résultat est disponible à chaque changement de param�
 * ajout du choix de la définition (DPI: 150,300...)
 * ajout du choix du format (A3,A4...)
 * les images sont maintenant affichées en qualité maximale dans l'explorateur des images
+* [Liste des nouveautés des versions précédentes](https://github.com/FlorianLance/PhotosConsigne/wiki/Description-des-versions "Liste versions")
 
 [**CLIQUEZ ICI POUR ACCEDER AUX TELECHARGEMENTS**](https://github.com/FlorianLance/PhotosConsigne/wiki/T%C3%A9l%C3%A9chargements "Téléchargements")
 
 
-**NOUVEAU: PhotosConsigne 2.0 beta !** 
-
-Version portable sans installeur pour Windows 7/8/10 :
-* [PhotosConsigne 2.0-beta x64](https://github.com/FlorianLance/PhotosConsigne/files/527454/PhotosConsigne.2.0-beta.x64.zip "beta v2.0")
-* [PhotosConsigne 2.0-beta x86](https://github.com/FlorianLance/PhotosConsigne/files/529086/PhotosConsigne.2.0-beta.x86.zip "beta v2.0")
-
-**Liste des nouveautées:**
-
-* nouvelle interface plus claire et complète
-* ajout des titres
-* ajout de la visualisation des pages
-* meilleur aperçu du résultat
-* plus rapide
-* meilleure gestion de la mémoire, vous pouvez maintenant charger autant de photos que vous le voulez !
-* Les versions linux suivront bientôt, ainsi que MacOS.
-
-**Anciennes versions:**
-
-Version portable sans installeur pour Windows 7/8/10 :
-
-* [PhotosConsigne 1.01 x86](https://github.com/FlorianLance/PhotosConsigne/files/464112/PhotosConsigne.1.01.x86.zip "release v1.01") 
-* [PhotosConsigne 1.01 x64](https://github.com/FlorianLance/PhotosConsigne/files/206508/PhotosConsigne.1.01.x64.zip "release v1.01")
-
-Version portable sans installeur pour Linux (testé sous Ubuntu) :
-
-* [PhotosConsigne 1.01 x64](https://github.com/FlorianLance/PhotosConsigne/files/466159/PhotosConsigne.1.01-x64.tar.gz "release v1.01")
 
 
-Si vous ne savez pas quelle version choisir, prenez la première.
 
 
 Ce logiciel est **gratuit**, mais si il vous a été utile et que vous souhaitez m'encourager, vous pouvez me faire un don :
