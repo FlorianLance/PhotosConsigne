@@ -11,8 +11,22 @@ L'avantage de **PhotosConsigne** est d'accélérer grandement ce processus en ay
 
 Une prévisualisation du résultat est disponible à chaque changement de paramètre afin de cerner très rapidement leur impact. Le rendu en PDF sera identique à celui-ci.
 
+**NOUVELLE VERSION: PhotosConsigne 2.1** 
+
+**Liste des nouveautées:**
+
+* correction erreurs typo
+* ajout du choix de la définition (DPI: 150,300...)
+* ajout du choix du format (A3,A4...)
+* les images sont maintenant affichées en qualité maximale dans l'explorateur des images
+
+
+**TELECHARGEMENTS**
+
 Téléchargements:
 ----------------
+
+
 
 **NOUVEAU: PhotosConsigne 2.0 beta !** 
 
