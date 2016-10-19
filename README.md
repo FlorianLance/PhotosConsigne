@@ -20,12 +20,7 @@ Une prévisualisation du résultat est disponible à chaque changement de param�
 * ajout du choix du format (A3,A4...)
 * les images sont maintenant affichées en qualité maximale dans l'explorateur des images
 
-
-**TELECHARGEMENTS**
-
-Téléchargements:
-----------------
-
+[**CLIQUEZ ICI POUR ACCEDER AUX TELECHARGEMENTS**](https://github.com/FlorianLance/PhotosConsigne/wiki/T%C3%A9l%C3%A9chargements "Téléchargements")
 
 
 **NOUVEAU: PhotosConsigne 2.0 beta !** 
