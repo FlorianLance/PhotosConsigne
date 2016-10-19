@@ -11,6 +11,9 @@ L'avantage de **PhotosConsigne** est d'accélérer grandement ce processus en ay
 
 Une prévisualisation du résultat est disponible à chaque changement de paramètre afin de cerner très rapidement leur impact. Le rendu en PDF sera identique à celui-ci.
 
+[**CLIQUEZ ICI POUR ACCEDER AUX TELECHARGEMENTS**](https://github.com/FlorianLance/PhotosConsigne/wiki/T%C3%A9l%C3%A9chargements "Téléchargements")
+
+
 **NOUVELLE VERSION: PhotosConsigne 2.1** 
 
 **Liste des nouveautées:**
@@ -21,7 +24,6 @@ Une prévisualisation du résultat est disponible à chaque changement de param�
 * les images sont maintenant affichées en qualité maximale dans l'explorateur des images
 * [Liste des nouveautés des versions précédentes](https://github.com/FlorianLance/PhotosConsigne/wiki/Description-des-versions "Liste versions")
 
-[**CLIQUEZ ICI POUR ACCEDER AUX TELECHARGEMENTS**](https://github.com/FlorianLance/PhotosConsigne/wiki/T%C3%A9l%C3%A9chargements "Téléchargements")
 
 
 
@@ -31,8 +33,8 @@ Une prévisualisation du résultat est disponible à chaque changement de param�
 Ce logiciel est **gratuit**, mais si il vous a été utile et que vous souhaitez m'encourager, vous pouvez me faire un don :
 <a href='https://pledgie.com/campaigns/31286'><img alt='Click here to lend your support to: Développement logiciel éducation/recherche open-source and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/31286.png?skin_name=chrome' border='0' ></a>
 
-Questions et info
------------------
+FAQ (FOIRE AUX QUESTIONS )
+--------------------------
 
 Liens vers le forum [**Enseignants du primaire**](http://forums-enseignants-du-primaire.com/topic/321439-photosconsigne-logiciel-gratuit-de-g%C3%A9n%C3%A9ration-de-pdf-avec-photos-et-textes-cahier-de-vie/ "Forum"), la plupart des questions et réponses sont centralisées ici.
 
