@@ -27,14 +27,16 @@ Une prévisualisation du résultat est disponible à chaque changement de param�
 
 --------------------------
 
-[**FAQ (FOIRE AUX QUESTIONS **)](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
+[**FAQ (FOIRE AUX QUESTIONS)**](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
+
+Liens vers le forum [**Enseignants du primaire**](http://forums-enseignants-du-primaire.com/topic/321439-photosconsigne-logiciel-gratuit-de-g%C3%A9n%C3%A9ration-de-pdf-avec-photos-et-textes-cahier-de-vie/ "Forum"), la plupart des questions et réponses sont centralisées ici.
 
 --------------------------
 
 
 A venir...
 
-Liens vers le forum [**Enseignants du primaire**](http://forums-enseignants-du-primaire.com/topic/321439-photosconsigne-logiciel-gratuit-de-g%C3%A9n%C3%A9ration-de-pdf-avec-photos-et-textes-cahier-de-vie/ "Forum"), la plupart des questions et réponses sont centralisées ici.
+
 
 --------------------------
 
