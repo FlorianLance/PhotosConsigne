@@ -32,11 +32,18 @@ Ce logiciel est **gratuit**, mais si il vous a été utile et que vous souhaitez
 
 --------------------------
 
-[**FAQ (FOIRE AUX QUESTIONS)**](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
+[**CLIQUEZ ICI POUR ACCEDER à la FAQ (FOIRE AUX QUESTIONS)**](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
 
 Lien vers le forum [**Enseignants du primaire**](http://forums-enseignants-du-primaire.com/topic/321439-photosconsigne-logiciel-gratuit-de-g%C3%A9n%C3%A9ration-de-pdf-avec-photos-et-textes-cahier-de-vie/ "Forum"), la plupart des questions et réponses sont centralisées ici.
 
 --------------------------
+
+[**CLIQUEZ ICI POUR ACCEDER AUX SUGGESTIONS**](https://github.com/FlorianLance/PhotosConsigne/wiki/Suggestions-des-utilisateurs "Suggestions") 
+
+Si vous en avez c'est par ici.
+
+
+
 
 Tutoriel vidéo:
 ---------------
