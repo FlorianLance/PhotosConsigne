@@ -2,6 +2,8 @@
 PhotosConsigne
 ==============
 
+![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc2.png "Création de consignes individuelles")
+
 **PhotosConsigne** est un logiciel léger et rapide servant à générer des PDF contenant des images associées à un texte commun ou personnalisé.
 Tous les paramètres sont facilement modifiables (quantités d'images par page, orientation, alignements, police du texte...).
 
@@ -56,15 +58,6 @@ Tutoriel vidéo:
 [![Demo](http://imgur.com/kfdeUSx.png)](https://www.youtube.com/watch?v=jazpY9XrCuc "Demo")
 
 
-Captures d'écran:
------------------
 
-![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc0.png "Exemple 1")
-
-![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc1.png "Ajout d'un titre et affichage des zones")
-
-![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc2.png "Création de consignes individuelles")
-
-![PhotosConsigne_img2](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc3.png "Résultat de la génération du PDF")
 
 
