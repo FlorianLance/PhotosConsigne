@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-TARGET = PhotosConsign
+TARGET = PhotosConsigne
 TEMPLATE = app
 
 #include(./config/config.pri)
