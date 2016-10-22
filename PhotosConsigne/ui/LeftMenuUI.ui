@@ -451,13 +451,13 @@ QTabWidget::pane { /* The tab widget frame */
 }</string>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <widget class="QWidget" name="pageText">
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-31</y>
+              <y>0</y>
               <width>481</width>
               <height>343</height>
              </rect>
@@ -1851,7 +1851,7 @@ QLabel
                    <number>1</number>
                   </property>
                   <property name="maximum">
-                   <number>10</number>
+                   <number>50</number>
                   </property>
                   <property name="value">
                    <number>2</number>
@@ -1864,7 +1864,7 @@ QLabel
                    <number>1</number>
                   </property>
                   <property name="maximum">
-                   <number>10</number>
+                   <number>50</number>
                   </property>
                   <property name="value">
                    <number>1</number>
@@ -2714,12 +2714,12 @@ QLabel
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroup_5"/>
-  <buttongroup name="buttonGroup_3"/>
-  <buttongroup name="buttonGroup_8"/>
-  <buttongroup name="buttonGroup_7"/>
   <buttongroup name="buttonGroup_6"/>
+  <buttongroup name="buttonGroup_3"/>
   <buttongroup name="buttonGroup_2"/>
-  <buttongroup name="buttonGroup_4"/>
+  <buttongroup name="buttonGroup_8"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_7"/>
+  <buttongroup name="buttonGroup_4"/>
  </buttongroups>
 </ui>

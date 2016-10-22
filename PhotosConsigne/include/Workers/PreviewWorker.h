@@ -250,7 +250,11 @@ private :
                 if( images->at(idPhoto)->addedText)
                     consignText =images->at(idPhoto)->text;
                 else if (settings->useImageNameAsText)
+                {
                     consignText = images->at(idPhoto)->pathImage.split("/").last();
+                    consignText.resize(consignText.size() - consignText.split(".").last().size() -1);
+
+                }
                 else
                     consignText = settings->globalConsignText;
 
