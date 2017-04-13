@@ -44,11 +44,25 @@
 
 using namespace pc;
 
-MainUI::MainUI(QApplication *parent) : m_ui(new Ui::MainUI)
+MainUI::MainUI(QApplication *parent) : m_ui(new Ui::MainUI), m_photosConsigneMainWidget(new Ui::PhotosConsigneMainW)
 {
-    QString version = "2.0 beta";
+    QString version = "2.1";
 
     m_ui->setupUi(this);
+    m_photosConsigneMainWidget->setupUi(this);
+    m_photosConsigneMainWidget->twGeneralSettings->setTabEnabled(0,false);
+
+    RichTextEdit *tEdit = new RichTextEdit();
+    m_photosConsigneMainWidget->hlTitleBottom->addWidget(tEdit);
+
+    RichTextEdit *tEdit2 = new RichTextEdit();
+    m_photosConsigneMainWidget->vlGlobalConsign->addWidget(tEdit2);
+
+    RichTextEdit *tEdit3 = new RichTextEdit();
+    QHBoxLayout *lay = new QHBoxLayout();
+    lay->addWidget(tEdit3);
+    m_photosConsigneMainWidget->pageDefault->setLayout(lay);
+
 
     // set icon/title
     this->setWindowTitle(QString("PhotosConsigne ") + version);

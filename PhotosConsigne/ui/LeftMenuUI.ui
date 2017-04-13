@@ -451,7 +451,7 @@ QTabWidget::pane { /* The tab widget frame */
 }</string>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="pageText">
             <property name="geometry">
@@ -514,7 +514,7 @@ QTabBar::tab:!selected {
 }</string>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>1</number>
                </property>
                <widget class="QWidget" name="tabGlobalConsign">
                 <attribute name="title">
@@ -522,7 +522,7 @@ QTabBar::tab:!selected {
                 </attribute>
                 <layout class="QHBoxLayout" name="horizontalLayout_2">
                  <item>
-                  <layout class="QVBoxLayout" name="vlTextEdit" stretch="0,0,0,0,0,0,0">
+                  <layout class="QVBoxLayout" name="vlTextEdit" stretch="0,0,0,0,0,0,0,0">
                    <item>
                     <layout class="QGridLayout" name="glConsign">
                      <item row="2" column="1" colspan="5">
@@ -868,6 +868,9 @@ QLabel
                       <string>Tapez votre texte ici.</string>
                      </property>
                     </widget>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="hlRichTextCommon"/>
                    </item>
                    <item>
                     <widget class="QCheckBox" name="cbUseImageNameAsText">
@@ -1458,8 +1461,8 @@ QLabel
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>498</width>
-              <height>293</height>
+              <width>401</width>
+              <height>222</height>
              </rect>
             </property>
             <property name="maximumSize">
@@ -1914,8 +1917,8 @@ QLabel
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>498</width>
-              <height>312</height>
+              <width>401</width>
+              <height>100</height>
              </rect>
             </property>
             <attribute name="label">
@@ -2713,13 +2716,13 @@ QLabel
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_5"/>
   <buttongroup name="buttonGroup_6"/>
-  <buttongroup name="buttonGroup_3"/>
-  <buttongroup name="buttonGroup_2"/>
-  <buttongroup name="buttonGroup_8"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_8"/>
   <buttongroup name="buttonGroup_7"/>
+  <buttongroup name="buttonGroup_3"/>
   <buttongroup name="buttonGroup_4"/>
+  <buttongroup name="buttonGroup_5"/>
+  <buttongroup name="buttonGroup_2"/>
  </buttongroups>
 </ui>

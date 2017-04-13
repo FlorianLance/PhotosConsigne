@@ -13,6 +13,7 @@ include(../PhotosConsigne/config/config.pri)
 ####################################### CONFIG
 CONFIG -= console
 CONFIG -= app_bundle
+#CONFIG -= opengl
 CONFIG += qt
 QT += core gui widgets printsupport
 
@@ -29,30 +30,27 @@ INCLUDEPATH += "include/UI" \
 
 SOURCES += \
     main.cpp \
-    src/MainInterface.cpp \
-    src/InterfaceWorker.cpp \
-    src/ImageLabel.cpp \
-    src/MainUI.cpp
-
+    src/UI/PCMainUI.cpp \
+    src/UI/RichTextUI.cpp \
+    src/UI/ImageLabel.cpp
+#src/MainUI.cpp \
 
 HEADERS += \
-    include/InterfaceWorker.h \
-    include/MainInterface.h \
-    include/ImageLabel.h \
     include/Utility.h \
-    include/UI/LeftMenuUI.h \
-    include/UI/MainUI.h \
-    include/UI/PhotosExplorerUI.h \
-    include/UI/PreviewUI.h \
-    include/Workers/LeftMenuWorker.h \
-    include/Workers/PreviewWorker.h
+    include/UI/PCMainUI.hpp \
+    include/UI/ImageLabel.hpp \
+    include/UI/RichTextUI.hpp \
+    include/Workers/PCMainWorker.hpp
+#    include/UI/MainUI.h \
 
 
 FORMS += \
     ui/LeftMenuUI.ui \
     ui/PhotosExplorerUI.ui \
     ui/PreviewUI.ui \
-    ui/MainUI.ui
+    ui/MainUI.ui \
+    ui/PhotosConsigneMainW.ui \
+    ui/IndividualConsign.ui
 
 DISTFILES += \
     deploiement/PhotosConsigne_x64.iss \
@@ -65,7 +63,7 @@ DISTFILES += \
     myapp.rc
 
 RESOURCES += \
-    src/resources.qrc
+    resources.qrc \
 
 
 equals(ARCH, "x86"){
