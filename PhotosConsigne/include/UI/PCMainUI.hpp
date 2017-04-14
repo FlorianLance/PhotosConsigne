@@ -69,7 +69,6 @@ public:
         for(auto &&slider : sliders){
             connect(slider, &QSlider::valueChanged, this, [=]{
                 if(displayZones){
-                    qDebug() << "update_settings_sliders ## start timer!";
                     m_zonesTimer.start(1000);
                 }
                 update_settings();
@@ -80,7 +79,6 @@ public:
         for(auto &&spinBox : spinBoxes){
             connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
                 if(displayZones){
-                    qDebug() << "update_settings_spinboxes ## start timer!";
                     m_zonesTimer.start(1000);
                 }
                 update_settings();
@@ -91,7 +89,6 @@ public:
         for(auto &&dSpinBox : dSpinBoxes){
             connect(dSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, [=]{
                 if(displayZones){
-                    qDebug() << "update_settings_double_spinboxes ## start timer!";
                     m_zonesTimer.start(1000);
                 }
                 update_settings();
@@ -102,7 +99,6 @@ public:
         for(auto &&cb : checkBoxes){
             connect(cb, &QCheckBox::clicked, this, [=]{
                 if(displayZones){
-                    qDebug() << "update_settings_checkboxes ## start timer!";
                     m_zonesTimer.start(1000);
                 }
                 update_settings();
@@ -117,7 +113,6 @@ public:
                 m_ui->laDefWxH->setText(QString::number(pf.widthPixels(currentDPI)) + "x" + QString::number(pf.heightPixels(currentDPI)));
                 m_ui->laDefTotal->setText("(" + QString::number(pf.widthPixels(currentDPI)*pf.heightPixels(currentDPI)) + " pixels)");
                 if(displayZones){
-                    qDebug() << "update_settings_format_combo_boxes ## start timer!";
                     m_zonesTimer.start(1000);
                 }
                 update_settings();
@@ -128,7 +123,6 @@ public:
         for(auto &&rb : radioButtons){
             connect(rb, &QRadioButton::clicked, this, [=]{
                 if(displayZones){
-                    qDebug() << "update_settings_radio_buttons ## start timer!";
                     m_zonesTimer.start(1000);
                 }
                 update_settings();
@@ -256,9 +250,9 @@ signals :
 
     void send_photos_dir_signal(QString photosDir, QStringList photosNames);
 
-    void start_preview_generation_signal(GlobalParameters settings, PCPages pcPages);
+    void start_preview_generation_signal(QReadWriteLock *docLocker, GlobalParameters settings, PCPages pcPages);
 
-    void start_PDF_generation_signal(GlobalParameters settings, PCPages pcPages);
+    void start_PDF_generation_signal(QReadWriteLock *docLocker, GlobalParameters settings, PCPages pcPages);
 
 private:
 
@@ -266,6 +260,7 @@ private:
     bool m_isPreviewComputing = false;
     bool m_generatePreviewAgain = false;
     QReadWriteLock m_previewLocker;
+    QReadWriteLock m_docLocker;
 
     QTimer m_zonesTimer;
 

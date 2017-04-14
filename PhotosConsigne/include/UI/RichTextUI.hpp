@@ -73,6 +73,9 @@ class QPrinter;
 #include <QFileDialog>
 #include <QToolButton>
 
+#include <QDebug>
+#include <QReadWriteLock>
+
 class TextEdit : public QTextEdit
 {
 public:
@@ -110,14 +113,31 @@ public:
 
     void insertImage()
     {
+//        QString file = QFileDialog::getOpenFileName(this, tr("Select an image"),
+//                                      ".", tr("Bitmap Files (*.bmp)\n"
+//                                        "JPEG (*.jpg *jpeg)\n"
+//                                        "GIF (*.gif)\n"
+//                                        "PNG (*.png)\n"));
+//        QTextDocumentFragment fragment;
+//        fragment = QTextDocumentFragment::fromHtml("<img src='" + file + "'>");
+
+//        textCursor().insertFragment(fragment);
+
         QString file = QFileDialog::getOpenFileName(this, tr("Select an image"),
                                       ".", tr("Bitmap Files (*.bmp)\n"
                                         "JPEG (*.jpg *jpeg)\n"
                                         "GIF (*.gif)\n"
                                         "PNG (*.png)\n"));
-        QTextDocumentFragment fragment;
-        fragment = QTextDocumentFragment::fromHtml("<img src='" + file + "'>");
-        textCursor().insertFragment(fragment);
+
+        QUrl Uri ( QString ( "file://%1" ).arg ( file ) );
+        QImage image = QImageReader ( file ).read();
+
+        QTextImageFormat imageFormat;
+        imageFormat.setWidth( image.width() );
+        imageFormat.setHeight( image.height() );
+        imageFormat.setName( Uri.toString() );
+        textCursor().insertImage(imageFormat);
+
      }
 
 private:
@@ -126,7 +146,12 @@ private:
         if (!image.isNull())
         {
             document()->addResource(QTextDocument::ImageResource, url, image);
-            textCursor().insertImage(url.toString());
+
+            QTextImageFormat format;
+            format.setWidth(image.width());
+            format.setHeight(image.height());
+            format.setName(url.toString());
+            textCursor().insertImage(format);
         }
     }
 
@@ -138,7 +163,6 @@ private:
     }
 };
 
-#include <QDebug>
 
 class RichTextEdit : public QWidget
 {
@@ -149,7 +173,13 @@ public:
 
     TextEdit* textEdit() {return m_textEdit;}
 
+    void set_doc_locker(QReadWriteLock *docLocker){m_docLocker = docLocker;}
+
     void init_as_title();
+
+    void init_as_consign();
+
+    void init_as_individual_consign();
 
 public slots:
 
@@ -212,6 +242,8 @@ private:
     QHBoxLayout *m_menuLayoutBottom = nullptr;
 
     QToolButton *centerAButton;
+
+    QReadWriteLock *m_docLocker;
 
 };
 

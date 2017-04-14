@@ -2947,6 +2947,49 @@ QPushButton:hover:!pressed
           </item>
          </layout>
         </widget>
+        <widget class="QWidget" name="tabSettings">
+         <attribute name="title">
+          <string>Options</string>
+         </attribute>
+         <layout class="QHBoxLayout" name="horizontalLayout_13">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_11">
+            <item>
+             <widget class="QCheckBox" name="cbSaveOnlyCurrentPage">
+              <property name="styleSheet">
+               <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+              </property>
+              <property name="text">
+               <string>sauvegarder uniquement la page courante</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </item>
       <item>
@@ -3893,7 +3936,7 @@ QToolBox::tab:hover:!pressed
 }</string>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>1</number>
                </property>
                <widget class="QWidget" name="tbTitre">
                 <property name="geometry">
@@ -4156,8 +4199,8 @@ les ensembles</string>
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>100</width>
-                  <height>30</height>
+                  <width>430</width>
+                  <height>601</height>
                  </rect>
                 </property>
                 <attribute name="label">

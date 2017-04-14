@@ -15,14 +15,21 @@
 #include <QtGlobal>
 #include <QDesktopServices>
 
+// std
+#include <chrono>
+
 using namespace pc;
 
 PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
 {
     Q_UNUSED(parent)
+    std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now(), end;
 
     // current version
     QString version = "3.0";
+
+    qDebug()<< "constructor UI: " << std::chrono::duration_cast<std::chrono::milliseconds>
+                             (std::chrono::system_clock::now()-start).count() << " ms";
 
     // use designer ui
     m_ui->setupUi(this);
@@ -30,6 +37,10 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
     // set icon/title
     this->setWindowTitle("PhotosConsigne " + version);
     this->setWindowIcon(QIcon(":/images/icon"));
+
+
+    qDebug()<< "constructor widgets: " << std::chrono::duration_cast<std::chrono::milliseconds>
+                             (std::chrono::system_clock::now()-start).count() << " ms";
 
     // disable textes info tab
     m_ui->twGeneralSettings->setTabEnabled(0,false);
@@ -39,16 +50,18 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
 
     // init text edit widgets
     m_titleTEdit = new RichTextEdit();
+    m_titleTEdit->set_doc_locker(&m_docLocker);
     m_ui->hlTitleBottom->addWidget(m_titleTEdit);
     m_titleTEdit->setEnabled(false);
     m_titleTEdit->init_as_title();
 
-    m_settings.titleDoc = m_titleTEdit->textEdit()->document();
+    m_settings.titleDoc = m_titleTEdit->textEdit();
 
     m_globalConsignTEdit = new RichTextEdit();
-    m_globalConsignTEdit->textEdit()->setPlainText("Entrez votre consigne ici...");
+    m_globalConsignTEdit->set_doc_locker(&m_docLocker);
+    m_globalConsignTEdit->init_as_consign();
     m_ui->vlGlobalConsign->addWidget(m_globalConsignTEdit);
-    m_settings.globalConsignDoc =  m_globalConsignTEdit->textEdit()->document();
+    m_settings.globalConsignDoc =  m_globalConsignTEdit->textEdit();
 
     // init definition
     PaperFormat pf(m_ui->cbDPI->currentText(),m_ui->cbFormat->currentText());
@@ -68,6 +81,9 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
     m_previewW = new PreviewLabel();
     m_ui->vlImagePreview->addWidget(m_previewW);
 
+    qDebug()<< "constructor workers: " << std::chrono::duration_cast<std::chrono::milliseconds>
+                             (std::chrono::system_clock::now()-start).count() << " ms";
+
     // init workers
     m_displayPhotoWorker = std::make_unique<PhotoDisplayWorker>();
     m_pdfGeneratorWorker = std::make_unique<PDFGeneratorWorker>();
@@ -79,6 +95,10 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
                 widget->setEnabled(inverted ? (!checked) : checked);
         });
     };
+
+    qDebug()<< "constructor connections: " << std::chrono::duration_cast<std::chrono::milliseconds>
+                             (std::chrono::system_clock::now()-start).count() << " ms";
+
 
     // connections    
     // # ui -> photo display worker
@@ -105,7 +125,6 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
             update_settings();
         }
 
-        m_ui->laLoadingText->setText("Aperçu généré");
     });
     connect(m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::end_generation_signal, this, [=](bool success){
         m_ui->pbSavePDF->setEnabled(true);
@@ -116,7 +135,7 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
             m_ui->laLoadingText->setText("Echec génération du PDF");
         }
     });
-    connect(m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::send_PC_rects_signal, m_previewW, &PreviewLabel::update_PC_rects);
+//    connect(m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::send_PC_rects_signal, m_previewW, &PreviewLabel::update_PC_rects);
     connect(m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::set_progress_bar_state_signal, m_ui->progressBarLoading, &QProgressBar::setValue);
     connect(m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::set_progress_bar_text_signal, m_ui->laLoadingText, &QLabel::setText);
     connect(m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::abort_pdf_signal, this, [=](QString pathFile){
@@ -131,16 +150,22 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
         update_settings();
     });
 
-    // # preview label -> ui
-    connect(m_previewW, &PreviewLabel::send_current_PC_selected_signal, this, [=](int idPage, int idPC){
-        if(idPC != -1){
-            m_settings.currentPCDisplayed = idPage * m_settings.nbPhotosPerPage + idPC;
-            m_ui->tbRight->removeItem(2);
-            m_ui->tbRight->addItem(m_individualConsignsW[m_settings.currentPCDisplayed].get(), "Sélection ensemble consigne-photo n°" + QString::number(m_settings.currentPCDisplayed));
-            m_ui->tbRight->setCurrentIndex(2);
+    // # preview label -> pdf worker
+    connect(m_previewW, &PreviewLabel::click_on_page_signal, m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::update_PC_selection);
+    // # pdf worker -> preview worker
+    connect(m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::current_pc_selected_signal, this, [=](QRectF pcRectRelative, int totalIdPC){
+
+        if(totalIdPC == -1){
+            m_ui->tbRight->setCurrentIndex(0);
         }else{
-            m_ui->tbRight->setCurrentIndex(1);
+            m_ui->tbRight->removeItem(2);
+            m_ui->tbRight->addItem(m_individualConsignsW[totalIdPC].get(), "Sélection ensemble consigne-photo n°" + QString::number(totalIdPC));
+            m_settings.currentPCDisplayed = totalIdPC;
+            m_ui->tbRight->setCurrentIndex(2);
         }
+
+        m_previewW->draw_current_pc_rect(pcRectRelative);
+        m_previewW->update();
     });
 
     // # push_button
@@ -156,7 +181,7 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
             m_pcPages.pdfFileName = filePath;
             m_ui->pbSavePDF->setEnabled(false);
             m_ui->pbOpenPDF->setEnabled(false);
-            emit start_PDF_generation_signal(m_settings, m_pcPages);
+            emit start_PDF_generation_signal(&m_docLocker, m_settings, m_pcPages);
         }
     });
     connect(m_ui->pbLeft, &QPushButton::clicked, this, [&]{ // previous image
@@ -203,7 +228,7 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
         m_ui->pbAdd->show();
 
         QBrush brush = m_ui->lwPhotosList->currentItem()->foreground();
-        brush.setColor(Qt::red);
+        brush.setColor(QRgb(qRgb(127,180,255)));
         m_ui->lwPhotosList->currentItem()->setForeground(brush);
 
         update_photos_number();
@@ -216,7 +241,7 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
         m_ui->pbAdd->hide();
 
         QBrush brush = m_ui->lwPhotosList->currentItem()->foreground();
-        brush.setColor(Qt::black);
+        brush.setColor(QRgb(qRgb(0,106,255)));
         m_ui->lwPhotosList->currentItem()->setForeground(brush);
 
         update_photos_number();
@@ -247,6 +272,8 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
     });
     connect(m_ui->lwPagesList, &QListWidget::currentRowChanged, this, [&]
     {
+        m_previewW->draw_current_pc_rect(QRectF()); // remove current rect
+
         if(m_ui->lwPagesList->currentRow() != -1){
             m_settings.currentPageId = m_ui->lwPagesList->currentRow();
             update_settings();
@@ -294,7 +321,7 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
                                      m_ui->dsbTopMargins,m_ui->dsbBottomMargins,m_ui->dsbHorizontalMargins,m_ui->dsbVerticalMargins},true);
     update_settings_checkboxes({m_ui->cbAddExteriorMargins,m_ui->cbAddInteriorMargins,
                                m_ui->cbAddTitle, m_ui->cbAllPagesTitle},true);
-    update_settings_checkboxes({m_ui->cbCutLines});
+    update_settings_checkboxes({m_ui->cbCutLines, m_ui->cbSaveOnlyCurrentPage});
 
     connect(m_ui->cbWriteOnPhoto, &QCheckBox::clicked, this, [=](bool checked){
 
@@ -330,6 +357,19 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
 
     update_settings_format_combo_boxes({m_ui->cbDPI, m_ui->cbFormat});
     update_settings_radio_buttons({m_ui->rbWriteOnPCTitle});
+    connect(m_ui->rbTopTitle, &QRadioButton::clicked, this, [=]{
+       m_ui->hsRatioTitle->setEnabled(true);
+       m_ui->dsbRatioTitle->setEnabled(true);
+    });
+    connect(m_ui->rbBottomTitle, &QRadioButton::clicked, this, [=]{
+       m_ui->hsRatioTitle->setEnabled(true);
+       m_ui->dsbRatioTitle->setEnabled(true);
+    });
+    connect(m_ui->rbWriteOnPCTitle, &QRadioButton::clicked, this, [=]{
+       m_ui->hsRatioTitle->setEnabled(false);
+       m_ui->dsbRatioTitle->setEnabled(false);
+    });
+
     update_settings_radio_buttons({m_ui->rbBottomTitle, m_ui->rbTopTitle},true);
 
     connect(m_ui->sbNbPhotosH, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
@@ -353,6 +393,11 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
     connect(m_displayPhotoWorker.get(), &PhotoDisplayWorker::photo_loaded_signal, this, [&](QString image){
         m_ui->lwPhotosList->addItem(QString::number(m_ui->lwPhotosList->count()+1) + ". " + image);
         m_ui->twPhotosList->setTabText(1, QString::number(m_ui->lwPhotosList->count()+1));
+
+        QBrush brush = m_ui->lwPhotosList->item(m_ui->lwPhotosList->count()-1)->foreground();
+        brush.setColor(QRgb(qRgb(0,106,255)));
+        m_ui->lwPhotosList->item(m_ui->lwPhotosList->count()-1)->setForeground(brush);
+
         if(m_ui->lwPhotosList->count() == 1)
             m_ui->lwPhotosList->setCurrentRow(0);
     });
@@ -367,6 +412,9 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
         }
     });
 
+    qDebug()<< "constructor threads: " << std::chrono::duration_cast<std::chrono::milliseconds>
+                             (std::chrono::system_clock::now()-start).count() << " ms";
+
     // init threads
     m_displayPhotoWorker->moveToThread(&m_displayPhotoWorkerThread);
     m_displayPhotoWorkerThread.start();
@@ -374,7 +422,14 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
     m_pdfGeneratorWorkerThread.start();
 
     m_ui->tbRight->setCurrentIndex(1);
-    update_settings();
+
+    qDebug()<< "constructor update_settings: " << std::chrono::duration_cast<std::chrono::milliseconds>
+                             (std::chrono::system_clock::now()-start).count() << " ms";
+
+    update_settings();    
+
+    qDebug()<< "end constructor: " << std::chrono::duration_cast<std::chrono::milliseconds>
+                             (std::chrono::system_clock::now()-start).count() << " ms";
 }
 
 PCMainUI::~PCMainUI()
@@ -396,6 +451,7 @@ PCMainUI::~PCMainUI()
 
 void PCMainUI::set_photos_directory()
 {
+    qDebug() << "set_photos_directory 1";
     QString previousDirectory = m_settings.photosDirectoryPath;
     m_settings.photosDirectoryPath = QFileDialog::getExistingDirectory(this, "Sélection du répertoire d'images", QDir::homePath());
 
@@ -410,7 +466,7 @@ void PCMainUI::set_photos_directory()
     QDir dir(m_settings.photosDirectoryPath);
     dir.setSorting(QDir::NoSort);  // will sort manually with std::sort
     dir.setFilter(QDir::Files);
-    dir.setNameFilters(QStringList() << "*.png" << "*.jpg");
+    dir.setNameFilters(QStringList() << "*.png" << "*.jpg" << "*.jpeg" << "*.jfif" << "*.jpe" << "*.tif" << "*.gif" << "*.bmp" << "*.pdm" << "*.ppm" << "*.xdm" << "*.xpm");
 
     // retrieve photos name list
     QStringList fileList = dir.entryList();
@@ -461,10 +517,14 @@ void PCMainUI::end_loading_photos(SPhotos photos)
 
     update_photos_number(true);
     update_settings();
+
+    m_ui->laLoadingText->setText("Photos chargées.");
 }
 
 void PCMainUI::update_photos_number(bool reset)
 {
+    std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
+
     // build valid photos array
     m_settings.nbPhotosPageH = m_ui->sbNbPhotosH->value();
     m_settings.nbPhotosPageV = m_ui->sbNbPhotosV->value();
@@ -488,9 +548,14 @@ void PCMainUI::update_photos_number(bool reset)
 
     auto init_individual_consign_ui = [&](int idConsign){
 
+        qDebug()<< "update_photos_number before w 1: " << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now()-start).count() << " ms";
+
         std::shared_ptr<QWidget> SQWidget = std::make_shared<QWidget>();
         std::shared_ptr<RichTextEdit> SRichTextEdit = std::make_shared<RichTextEdit>();
+        SRichTextEdit->set_doc_locker(&m_docLocker);
+        SRichTextEdit->init_as_individual_consign();
 
+        qDebug()<< "update_photos_number before w 2: " << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now()-start).count() << " ms";
         m_individualConsignsW.push_back(SQWidget);
         m_individualConsignsTEdit.push_back(SRichTextEdit);
 
@@ -505,8 +570,11 @@ void PCMainUI::update_photos_number(bool reset)
                                  ui.pbImageAligmentBottom, ui.pbImageAligmentVMiddle, ui.pbImageAligmentTop}, true);
         update_settings_sliders({ui.hsRatioPC}, true);
         update_settings_double_spinboxes({ui.dsbRatioPC}, true);
+        update_settings_checkboxes({ui.cbEnableIndividualConsign});
         connect(SRichTextEdit.get()->textEdit(), &TextEdit::textChanged, this, &PCMainUI::update_settings);
 
+
+        qDebug()<< "update_photos_number before w 3: " << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now()-start).count() << " ms";
         connect(ui.cbWriteOnPhoto, &QCheckBox::clicked, this, [=](bool checked){
 
             if(checked){
@@ -539,10 +607,13 @@ void PCMainUI::update_photos_number(bool reset)
                 }
             }
 
+            qDebug()<< "update_photos_number before w 4: " << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now()-start).count() << " ms";
         });
         associate_double_spinbox_with_slider(ui.dsbRatioPC, ui.hsRatioPC);
     };
 
+
+    qreal currentState = 750.;
     if(reset){
         m_individualConsignsTEdit.clear();
         m_individualConsignsW.clear();
@@ -552,13 +623,18 @@ void PCMainUI::update_photos_number(bool reset)
         m_individualConsignsW.reserve(nbTotalPhotos);
         m_settings.previousIndividualConsignPositionFromPhotos.reserve(nbTotalPhotos);
 
+        qreal offset = 250. / nbTotalPhotos;
         for(int ii = 0; ii < nbTotalPhotos; ++ii){
             m_settings.previousIndividualConsignPositionFromPhotos.push_back(Position::top);
+
+            m_ui->laLoadingText->setText("Consigne individuelle n°" + QString::number( m_settings.previousIndividualConsignPositionFromPhotos.size()));
             init_individual_consign_ui(ii);
+            currentState += offset;
+            m_ui->progressBarLoading->setValue(currentState);
         }
     }
     else{
-        if(nbTotalPhotos > m_individualConsignsW.size()){
+        if(nbTotalPhotos > m_individualConsignsW.size()){            
             for(int ii = 0; ii < m_individualConsignsW.size()-nbTotalPhotos; ++ii){
                 m_individualConsignsTEdit.removeLast();
                 m_individualConsignsW.removeLast();
@@ -570,22 +646,33 @@ void PCMainUI::update_photos_number(bool reset)
             m_individualConsignsW.reserve(nbTotalPhotos);
             m_settings.previousIndividualConsignPositionFromPhotos.reserve(nbTotalPhotos);
 
+            qreal offset = 250. / (nbTotalPhotos-m_individualConsignsW.size());
             for(int ii = 0; ii < nbTotalPhotos-m_individualConsignsW.size(); ++ii){
                 m_settings.previousIndividualConsignPositionFromPhotos.push_back(Position::top);
+
+                m_ui->laLoadingText->setText("Consigne individuelle n°" + QString::number( m_settings.previousIndividualConsignPositionFromPhotos.size()));
                 init_individual_consign_ui(ii);
+                currentState += offset;
+                m_ui->progressBarLoading->setValue(currentState);
             }
         }
     }
 
     if(m_settings.currentPCDisplayed > nbTotalPhotos)
-        m_settings.currentPCDisplayed = nbTotalPhotos;
+        m_settings.currentPCDisplayed = nbTotalPhotos-1;
 
     m_ui->tbRight->addItem(m_individualConsignsW[m_settings.currentPCDisplayed].get(), "Sélection ensemble consigne-photo n°" + QString::number(m_settings.currentPCDisplayed));
     m_ui->tbRight->setCurrentIndex(currentIndex);
+    m_ui->progressBarLoading->setValue(1000);
+
+    qDebug()<< "update_photos_number end: " << std::chrono::duration_cast<std::chrono::milliseconds>
+                             (std::chrono::system_clock::now()-start).count() << " ms";
 }
 
 void PCMainUI::reset_pc_pages()
 {
+    std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
+
     if(m_settings.nbPhotosPerPage == 0){
         return;
     }
@@ -624,8 +711,8 @@ void PCMainUI::reset_pc_pages()
         SPCPage pcPage = std::make_shared<PCPage>(PCPage());
         // misc
         pcPage->id = ii;
-        pcPage->nbPhotosH           = m_settings.nbPhotosPageH;
-        pcPage->nbPhotosV           = m_settings.nbPhotosPageV;
+        pcPage->nbPhotosH = m_settings.nbPhotosPageH;
+        pcPage->nbPhotosV = m_settings.nbPhotosPageV;
 
         // sets
         pcPage->sets.reserve(nbPhotosPage);
@@ -641,6 +728,10 @@ void PCMainUI::reset_pc_pages()
 
         m_pcPages.pages.push_back(pcPage);        
         m_ui->lwPagesList->addItem(QString::number(ii+1) + ". " + QString::number(nbPhotosPage) + ((nbPhotosPage > 1 ) ? " images." : " image."));
+
+        QBrush brush = m_ui->lwPagesList->item(m_ui->lwPagesList->count()-1)->foreground();
+        brush.setColor(QRgb(qRgb(0,106,255)));
+        m_ui->lwPagesList->item(m_ui->lwPagesList->count()-1)->setForeground(brush);
     }
 
     // update current row
@@ -658,10 +749,16 @@ void PCMainUI::reset_pc_pages()
     m_ui->twPagesList->setTabText(1, QString::number(m_pcPages.pages.size()));
     m_ui->lwPagesList->blockSignals(false);
     m_ui->twMiddle->blockSignals(false);
+
+
+    qDebug()<< "reset_pc_pages end: " << std::chrono::duration_cast<std::chrono::milliseconds>
+                             (std::chrono::system_clock::now()-start).count() << " ms";
 }
 
 void PCMainUI::update_photo_to_display(SPhoto photo)
 {
+    std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
+
     m_selectedPhotoW->set_image(QImage(photo->pathPhoto).transformed(QTransform().rotate(photo->rotation)));
     m_selectedPhotoW->update();
 
@@ -673,11 +770,22 @@ void PCMainUI::update_photo_to_display(SPhoto photo)
         m_ui->pbAdd->hide();
         m_ui->pbRemove->show();
     }
-}
 
+    qDebug()<< "update_photo_to_display end: " << std::chrono::duration_cast<std::chrono::milliseconds>
+                             (std::chrono::system_clock::now()-start).count() << " ms";
+}
 
 void PCMainUI::update_settings()
 {
+//    m_previewLocker.lockForRead();
+//    bool isPreviewComputing = m_isPreviewComputing;
+//    m_previewLocker.unlock();
+//    if(isPreviewComputing){
+//        qDebug() << "cancel!!!!!!!!!!!!!!!!!!";
+//        return;
+//    }
+
+    std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
     auto nbPhotosValid = m_settings.photosValided->size();
     int currentTabId = m_ui->twMiddle->currentIndex();
 
@@ -702,6 +810,7 @@ void PCMainUI::update_settings()
         globalPhotosAlignment = globalPhotosAlignment | Qt::AlignBottom;
     }
 
+    m_settings.saveOnlyCurrentPage   = m_ui->cbSaveOnlyCurrentPage->isChecked();
     m_settings.globalPCRatio         = m_ui->dsbGlobalRatioPC->value();
     m_settings.globalPhotosAlignment = globalPhotosAlignment;
     m_settings.globalOrientation     = m_ui->pbPortrait->isEnabled() ? PageOrientation::landScape : PageOrientation::portrait;
@@ -713,7 +822,7 @@ void PCMainUI::update_settings()
     m_settings.titleOnAllPages = m_ui->cbAllPagesTitle->isChecked();
     m_settings.globalRatioTitle = m_ui->dsbRatioTitle->value();
     m_settings.globalTitlePositionFromPC = (m_ui->rbTopTitle->isChecked()) ? Position::top : (m_ui->rbBottomTitle->isChecked() ? Position::bottom : Position::on);
-    m_settings.titleDoc = m_titleTEdit->textEdit()->document();
+    m_settings.titleDoc = m_titleTEdit->textEdit();
 
     // margins
     pc::RatioMargins &margins =  m_settings.globalMargins;
@@ -732,13 +841,13 @@ void PCMainUI::update_settings()
 
     // consigns
     m_settings.globalConsignOnPhoto = m_ui->cbWriteOnPhoto->isChecked();
-    m_settings.globalConsignDoc     = m_globalConsignTEdit->textEdit()->document();
+    m_settings.globalConsignDoc     = m_globalConsignTEdit->textEdit();
 
     m_settings.consignsDoc.clear();
     m_settings.consignsDoc.reserve(nbPhotosValid);
 
     for(const auto &richText : m_individualConsignsTEdit){
-        m_settings.consignsDoc.push_back(richText->textEdit()->document());
+        m_settings.consignsDoc.push_back(richText->textEdit());
     }
 
     int currPCId = 0;
@@ -753,7 +862,7 @@ void PCMainUI::update_settings()
             if(pcPage->title == nullptr){
                 pcPage->title = std::make_shared<Title>(Title());
             }
-            pcPage->title->doc = m_settings.titleDoc;
+            pcPage->title->doc     = m_settings.titleDoc->document();
             pcPage->titlePositionFromPC = m_settings.globalTitlePositionFromPC;
             pcPage->ratioWithTitle      = m_settings.globalRatioTitle;
         }else{
@@ -765,16 +874,17 @@ void PCMainUI::update_settings()
 
             auto wC = m_individualConsignsW[currPCId];
 
-            bool individual = m_individualConsignsTEdit[currPCId]->textEdit()->document()->toPlainText().size() > 0;
+            bool individual = wC->findChild<QCheckBox*>("cbEnableIndividualConsign")->isChecked();// m_individualConsignsTEdit[currPCId]->textEdit()->document()->toPlainText().size() > 0;
             if(!individual){
                 pc->consignPositionFromPhoto = m_settings.globalConsignPositionFromPhotos;
                 pc->ratio = m_settings.globalPCRatio;
                 pc->consignOnPhoto = m_settings.globalConsignOnPhoto;
-                pc->consign->doc = m_settings.globalConsignDoc;
+                pc->consign->doc = m_settings.globalConsignDoc->document();
                 pc->photo->alignment = m_settings.globalPhotosAlignment;
+                ++currPCId;
                 continue;
             }
-            pc->consignPositionFromPhoto = ( ( !wC->findChild<QPushButton *>("pbConsignTop")->isEnabled())   ? Position::top    :
+            pc->consignPositionFromPhoto = ( (!wC->findChild<QPushButton *>("pbConsignTop")->isEnabled())   ? Position::top    :
                                             ((!wC->findChild<QPushButton *>("pbConsignBottom")->isEnabled())? Position::bottom :
                                             ((!wC->findChild<QPushButton *>("pbConsignLeft")->isEnabled())  ? Position::left   : Position::right)));
             pc->ratio = wC->findChild<QDoubleSpinBox*>("dsbRatioPC")->value();
@@ -824,8 +934,11 @@ void PCMainUI::update_settings()
         m_previewLocker.lockForWrite();
         m_isPreviewComputing = true;
         m_previewLocker.unlock();
-        emit start_preview_generation_signal(m_settings, m_pcPages);
+        emit start_preview_generation_signal(&m_docLocker, m_settings, m_pcPages);
     }
+
+    qDebug()<< "end update settings: " << std::chrono::duration_cast<std::chrono::milliseconds>
+                             (std::chrono::system_clock::now()-start).count() << " ms";
 }
 
 

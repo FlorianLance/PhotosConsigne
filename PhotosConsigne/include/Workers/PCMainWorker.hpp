@@ -36,21 +36,23 @@ public :
         qRegisterMetaType<PCPages>("PCPages");
         qRegisterMetaType<PCPage>("PCPage");
         qRegisterMetaType<QVector<QRectF>>("QVector<QRectF>");
+        qRegisterMetaType<QReadWriteLock *>("QReadWriteLock *");
     }
 
     ~PhotoDisplayWorker(){}
 
 public slots :
 
-    void load_photos(QString path, QStringList photosList)
-    {
+    void load_photos(QString path, QStringList photosList){
+
+        qDebug() << "load_photos";
         emit set_progress_bar_state_signal(0);
         emit set_progress_bar_text_signal("Chargement des photos...");
 
         auto nbPhotos = photosList.size();
 
         int idPhoto = 0;
-        qreal offset = 1000 / nbPhotos;
+        qreal offset = 750 / nbPhotos;
         qreal currentState = 0;
 
         m_photosLoaded = std::make_shared<QList<SPhoto>>();
@@ -79,19 +81,21 @@ public slots :
             currentState += offset;
             emit set_progress_bar_state_signal(static_cast<int>(currentState));
             idPhoto++;
+            qDebug() << "idPhoto: " << idPhoto << " loaded";
         }
 
-        emit set_progress_bar_state_signal(1000);
-        emit set_progress_bar_text_signal("Photos chargées.");
+        emit set_progress_bar_state_signal(750);
         emit end_loading_photos_signal(m_photosLoaded);
     }
 
-    void kill()
-    {
+    void kill(){
+
         m_locker.lockForWrite();
         m_continueLoop = false;
         m_locker.unlock();
     }
+
+
 
 signals :
 
@@ -177,8 +181,10 @@ public :
             infos.photoPCNum = pcSet->id;
             infos.namePCAssociatedPhoto = pcSet->photo->namePhoto;
 
-            emit set_progress_bar_text_signal("Dessin photo-consigne n°" + QString::number(pcSet->totalId));
-            QCoreApplication::processEvents(QEventLoop::AllEvents, 50);
+            if(!preview){
+                emit set_progress_bar_text_signal("Dessin photo-consigne n°" + QString::number(pcSet->totalId));
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+            }
 
             // draw photo            
             if(pcSet->photo->rectOnPage.width()){
@@ -187,21 +193,25 @@ public :
 
             // draw consign
             if(pcSet->consign->rectOnPage.width()){
-                draw_doc_html_with_size_factor(painter, *pcSet->consign->doc, QRectF(pcSet->rectOnPage.x(),pcSet->rectOnPage.y(),pcSet->consign->rectOnPage.width() , pcPage->rectOnPage.height()), pcSet->consign->rectOnPage, factorUpscale, infos);
+                draw_doc_html_with_size_factor(painter, m_docLocker, pcSet->consign->doc, QRectF(pcSet->rectOnPage.x(),pcSet->rectOnPage.y(),
+                                                                                     pcSet->consign->rectOnPage.width(), pcPage->rectOnPage.height()), pcSet->consign->rectOnPage, factorUpscale, infos);
             }
 
             if(!preview){
                 emit set_progress_bar_state_signal(1000. * pcSet->totalId/m_totalPC);
-                QCoreApplication::processEvents(QEventLoop::AllEvents, 50);
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
             }
         }
 
         // title
         if(pcPage->title != nullptr){
             painter.setOpacity(1.);
-            emit set_progress_bar_text_signal("Dessin titre");
-            QCoreApplication::processEvents(QEventLoop::AllEvents, 50);
-            draw_doc_html_with_size_factor(painter, *pcPage->title->doc, pcPage->rectOnPage, pcPage->title->rectOnPage, factorUpscale, infos);
+
+            if(!preview){
+                emit set_progress_bar_text_signal("Dessin titre");
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+            }
+            draw_doc_html_with_size_factor(painter, m_docLocker, pcPage->title->doc, pcPage->rectOnPage, pcPage->title->rectOnPage, factorUpscale, infos);
         }
 
 
@@ -210,8 +220,10 @@ public :
             // zone title
             infos.photoNum = -1;
             if(pcPage->title != nullptr){
-                painter.setOpacity(0.3);
-                painter.fillRect(pcPage->title->rectOnPage, QRgb(qRgb(255,127,39)));
+                if(pcPage->titlePositionFromPC != Position::on){
+                    painter.setOpacity(0.3);
+                    painter.fillRect(pcPage->title->rectOnPage, QRgb(qRgb(255,127,39)));
+                }
             }
 
             // zones PC
@@ -246,9 +258,6 @@ public :
         }
 
         return;
-
-//        if(preview)
-//            emit send_PC_rects_signal(pcRects, page.id);
     }
 
     ~PDFGeneratorWorker()
@@ -263,9 +272,10 @@ public slots :
         m_locker.unlock();
     }
 
-    void generate_preview(GlobalParameters settings, PCPages pcPages)
+    void generate_preview(QReadWriteLock *docLocker, GlobalParameters settings, PCPages pcPages)
     {
-        SPCPage pageToDraw = pcPages.pages[settings.currentPageId];
+        m_docLocker = docLocker;
+        m_pageToDraw = pcPages.pages[settings.currentPageId];
         bool landScape     = settings.globalOrientation == PageOrientation::landScape;
         qreal widthPreview   = landScape ? pcPages.paperFormat.heightRatio*m_previewDPI : pcPages.paperFormat.widthRatio  * m_previewDPI;
         qreal heightPreview  = landScape ? pcPages.paperFormat.widthRatio *m_previewDPI : pcPages.paperFormat.heightRatio * m_previewDPI;
@@ -276,7 +286,7 @@ public slots :
         image.fill(Qt::GlobalColor::white);
 
         QPainter painter(&image);
-        pageToDraw->compute_sizes(QRectF(0 ,0, widthPreview, heightPreview));
+        m_pageToDraw->compute_sizes(QRectF(0 ,0, widthPreview, heightPreview));
         draw_page(painter, pcPages, settings.currentPageId, 1., true, settings.displayZones);
 
         painter.end();
@@ -284,8 +294,9 @@ public slots :
         emit end_preview_signal(image);
     }
 
-    void generate_PDF(GlobalParameters settings, PCPages pcPages)
+    void generate_PDF(QReadWriteLock *docLocker, GlobalParameters settings, PCPages pcPages)
     {
+        m_docLocker = docLocker;
         m_totalPC = settings.photosValided->size();
         emit set_progress_bar_state_signal(0);        
 
@@ -314,6 +325,12 @@ public slots :
         pcPages.compute_all_pages_sizes(pdfWriter.width(), pdfWriter.height());
         for(int ii = 0; ii < pcPages.pages.size(); ++ii){
 
+            if(settings.saveOnlyCurrentPage){
+                if(settings.currentPageId != ii){
+                    continue;
+                }
+            }
+
             bool continueLoop;
             m_locker.lockForRead();
             continueLoop = m_continueLoop;
@@ -324,7 +341,8 @@ public slots :
 
             emit set_progress_bar_text_signal("Création page " + QString::number(ii));
 
-            draw_page(pdfPainter, pcPages, ii, pcPages.paperFormat.dpi/m_previewDPI, false, false);
+            qDebug() << "coef:: " << 1.*pcPages.paperFormat.dpi/m_previewDPI;
+            draw_page(pdfPainter, pcPages, ii, 1.*pcPages.paperFormat.dpi/m_previewDPI, false, false);
 
             if(ii < pcPages.pages.size()-1)
                 pdfWriter.newPage();                
@@ -339,6 +357,27 @@ public slots :
         emit end_generation_signal(true);
     }
 
+
+    void update_PC_selection(QPointF pos){
+
+        QRectF rectPage = m_pageToDraw.get()->rectOnPage;
+        QPointF realPos(rectPage.x() + pos.x()*rectPage.width(), rectPage.y() + pos.y()*rectPage.height());
+        for(auto &&set : m_pageToDraw->sets){
+            if(set->rectOnPage.contains(realPos)){
+                QRectF pcRectRelavive(set->rectOnPage.x()/rectPage.width(), set->rectOnPage.y()/rectPage.height(),
+                                      set->rectOnPage.width()/rectPage.width(), set->rectOnPage.height()/rectPage.height());
+                emit current_pc_selected_signal(pcRectRelavive, set->totalId);
+                return;
+            }
+        }
+
+        if(m_pageToDraw->title->rectOnPage.contains(realPos)){
+
+            QRectF pcRectRelavive(m_pageToDraw->title->rectOnPage.x()/rectPage.width(), m_pageToDraw->title->rectOnPage.y()/rectPage.height(),
+                                  m_pageToDraw->title->rectOnPage.width()/rectPage.width(), m_pageToDraw->title->rectOnPage.height()/rectPage.height());
+            emit current_pc_selected_signal(pcRectRelavive, -1);
+        }
+    }
 
 signals :
 
@@ -356,10 +395,15 @@ signals :
 
     void generate_again_signal();
 
+    void current_pc_selected_signal(QRectF pcRectRelative, int totalIdPC);
+
 
 private :
 
+    SPCPage m_pageToDraw = nullptr;
+
     QReadWriteLock m_locker;
+    QReadWriteLock *m_docLocker = nullptr;
     bool m_continueLoop = true;
 
     const int m_previewDPI  = 100;

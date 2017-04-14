@@ -19,6 +19,8 @@
 #include <QPainter>
 #include <QDate>
 
+#include "RichTextUI.hpp"
+
 namespace pc
 {
     enum class PageOrientation { landScape = 0, portrait = 1};
@@ -775,7 +777,7 @@ namespace pc
     };
 
     struct Consign : public RectPageItem {
-        QTextDocument *doc= nullptr;
+        QTextDocument *doc = nullptr;
 
         void compute_sizes(QRectF upperRect){
             rectOnPage = std::move(upperRect);
@@ -783,7 +785,7 @@ namespace pc
     };
 
     struct Title : public RectPageItem {
-        QTextDocument *doc= nullptr;
+        QTextDocument *doc = nullptr;
 
         void compute_sizes(QRectF upperRect){
             rectOnPage = std::move(upperRect);
@@ -982,6 +984,7 @@ namespace pc
 
     struct GlobalParameters{
 
+        bool saveOnlyCurrentPage = false;
         bool noPreviewGeneration = false;
         bool displayZones = false;
 
@@ -1008,15 +1011,15 @@ namespace pc
         RatioMargins globalMargins;
         // # misc consign
         bool globalConsignOnPhoto;
-        QTextDocument *globalConsignDoc = nullptr;
-        QVector<QTextDocument *> consignsDoc;
+        TextEdit *globalConsignDoc = nullptr;
+        QVector<TextEdit *> consignsDoc;
 
         // title
         bool titleAdded;
         bool titleOnAllPages;
         qreal globalRatioTitle;
         Position globalTitlePositionFromPC;
-        QTextDocument *titleDoc = nullptr;
+        TextEdit *titleDoc = nullptr;
 
         QString photosDirectoryPath= "";
 
@@ -1037,8 +1040,9 @@ namespace pc
         int photoTotalNum = -1;
     };
 
-    static void draw_doc_html_with_size_factor(QPainter &painter, QTextDocument &doc, QRectF upperRect, QRectF docRect, qreal sizeFactor, ExtraPCInfo infos = ExtraPCInfo()){
+    static void draw_doc_html_with_size_factor(QPainter &painter, QReadWriteLock *docLocker, QTextDocument *doc, QRectF upperRect, QRectF docRect, qreal sizeFactor, ExtraPCInfo infos = ExtraPCInfo()){
 
+        qDebug() << "start draw_doc_html_with_size_factor";
         QImage pix(QSize(docRect.width(),docRect.height()), QImage::Format_ARGB32);
         pix.fill(QColor(255,255,255,0));
         painter.drawImage(docRect, pix);
@@ -1049,14 +1053,20 @@ namespace pc
         QPainter painterDoc(&pixDoc);
         painterDoc.setPen(QPen());
 
-        QTextDocument dest;
-        dest.setPageSize(QSizeF(upperRect.width(), upperRect.height()));
 
-        QString html = doc.toHtml();
+//        QTextDocument *testDoc = textEdit.document()->clone(nullptr);
+//        std::unique_ptr<QTextDocument> testDoc = std::unique_ptr<QTextDocument>(textEdit.document()->clone(nullptr));
+        docLocker->lockForRead();
+        doc = doc->clone(nullptr);
+        docLocker->unlock();
+
+        doc->setPageSize(QSizeF(upperRect.width(), upperRect.height()));
+        QString html = doc->toHtml();
         int index = 0;
+        html = html.replace("family:'Helvetica'; font-size:", "#B_#B_#B_#B_");
         QVector<qreal> sizes;
         while (index != -1){
-            index = html.indexOf(QRegExp("font-size:"));
+            index = html.indexOf(QString("font-size:"));
             if(index == -1)
                 break;
 
@@ -1073,7 +1083,7 @@ namespace pc
         index = 0;
         int currentIdSize = 0;
         while(index != -1){
-            index = html.indexOf(QRegExp("#F_#F_#F_#F_"));
+            index = html.indexOf(QString("#F_#F_#F_#F_"));
             if(index == -1)
                 break;
             int indexEndImg = html.indexOf("_#F_#F_#F_#F", index)+12;
@@ -1081,6 +1091,7 @@ namespace pc
             html = html.insert(index, "font-size:" + QString::number(sizes[currentIdSize++])  + "pt;");
         }
 
+        html = html.replace("#B_#B_#B_#B_", "family:'Helvetica'; font-size:");
         index = 0;
         while(index != -1){
             index = html.indexOf(QString("$name$"));
@@ -1119,30 +1130,33 @@ namespace pc
 
         index = 0;
         int currentImage = 0;
-        QVector<QString> images;
         QVector<QString> newImages;
         while(index != -1){
-            index = html.indexOf(QRegExp("<img src="));
+            index = html.indexOf(QString("<img src="));
             if(index == -1)
                 break;
 
             int indexEndImg = html.indexOf("/>", index)+2;
             QString subString = html.mid(index, indexEndImg - index);
-            images.push_back(subString.mid(18, subString.size()-22));
 
-            QImage img(images.last());
-            img = img.scaled(img.width()*sizeFactor,img.height()*sizeFactor, Qt::KeepAspectRatio);
+            int indexWidth = subString.indexOf("width=");
+            int indexheight = subString.indexOf("height=");
+            int indexEndHeight = subString.size()-3;
+            int indexEndWidth = indexheight- 1;
 
-            if(img.width() > 0){
-                QString url = "mydata://picture_" + QString::number(currentImage) + ".png";
-                dest.addResource(QTextDocument::ImageResource, QUrl(url), QVariant(img));
-                newImages.push_back(url);
+            QString heightAll = subString.mid(indexheight, indexEndHeight - indexheight);
+            QString onlyHeight = heightAll.mid(8);
+            onlyHeight.resize(onlyHeight.size()-1);
+            QString widthAll = subString.mid(indexWidth, indexEndWidth - indexWidth);
+            QString onlyWidth= widthAll.mid(7);
+            onlyWidth.resize(onlyWidth.size()-1);
 
-                html = html.remove(index, indexEndImg - index);
-                html = html.insert(index, "#I_#I_#I_#I_" + QString::number(currentImage++)  + "_#I_#I_#I_#I");
-            }else{
-                html = html.remove(index, indexEndImg - index);
-            }
+            html = html.remove(index, indexEndImg - index);
+            html = html.insert(index, "#I_#I_#I_#I_" + QString::number(currentImage++)  + "_#I_#I_#I_#I");
+
+            newImages.push_back("<img src=" + subString.mid(9, indexWidth-10)
+                                + " width=\""+ QString::number(sizeFactor* onlyWidth.toFloat())
+                                + "\" height=\"" + QString::number(sizeFactor* onlyHeight.toFloat())+ "\" />");
         }
 
         index = 0;
@@ -1155,18 +1169,17 @@ namespace pc
 
             int indexEndImg = html.indexOf("_#I_#I_#I_#I", index)+12;
             html = html.remove(index, indexEndImg - index);
-            html = html.insert(index, "<img src=\"" + newImages[currentImage++]  + "\" />");
+            html = html.insert(index, newImages[currentImage++]);
         }
 
-        // define final html
-        dest.setHtml(html);
-
-        dest.drawContents(&painterDoc);
+        doc->setHtml(html);
+        doc->drawContents(&painterDoc);
         if(pixDoc.width() > 0){
             QImage cropped = pixDoc.copy(0,0, docRect.width(), docRect.height());
             painter.drawImage(QRectF(docRect.x(),docRect.y(),docRect.width(),docRect.height()), cropped);
         }
+
+        delete doc;
+        qDebug() << "end draw_doc_html_with_size_factor";
     }
-
-
 }
