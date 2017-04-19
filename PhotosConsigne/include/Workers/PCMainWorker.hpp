@@ -178,6 +178,7 @@ public :
             infos.photoNum   = pcSet->totalId;
             infos.photoPCNum = pcSet->id;
             infos.namePCAssociatedPhoto = pcSet->photo->namePhoto;
+            infos.fileInfo = pcSet->photo->info;
 
             if(!preview){
                 emit set_progress_bar_text_signal("Dessin photo-consigne n°" + QString::number(pcSet->totalId));

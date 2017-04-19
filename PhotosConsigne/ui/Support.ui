@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SupportW</class>
+ <widget class="QWidget" name="SupportW">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>805</width>
+    <height>325</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="laDonate">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;;
+
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Merci d'utiliser PhotosConsigne, j'ai réalisé ce logiciel sur mon temps libre, sa conception m'a demandé des centaines d'heures de travail.
+J'ai choisi d'en faire profiter la communauté en le proposant gratuitement à tous.
+
+Si vous souhaitez me remercier et contribuer à sa pérennité vous pouvez:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="hlPaypal">
+     <item>
+      <widget class="QPushButton" name="pbPaypal">
+       <property name="minimumSize">
+        <size>
+         <width>130</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>130</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">
+
+QPushButton {
+  
+	color : rgb(0,106,255);
+	border-style: outset;
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+    background-color:  rgb(220,220,220);
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources.qrc">
+         <normaloff>:/images/paypal</normaloff>:/images/paypal</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>130</width>
+         <height>50</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="laPaypal">
+       <property name="styleSheet">
+        <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+       </property>
+       <property name="text">
+        <string>réaliser un don</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="hlPatreon">
+     <item>
+      <widget class="QPushButton" name="pbPatreon">
+       <property name="minimumSize">
+        <size>
+         <width>130</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>130</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">
+
+QPushButton {
+  
+	color : rgb(0,106,255);
+	border-style: outset;
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+    background-color:  rgb(220,220,220);
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: rgb(255,255,255);
+}</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources.qrc">
+         <normaloff>:/images/patreon</normaloff>:/images/patreon</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>130</width>
+         <height>50</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item alignment="Qt::AlignLeft">
+      <widget class="QLabel" name="laPatreon">
+       <property name="styleSheet">
+        <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+       </property>
+       <property name="text">
+        <string>participer au patreon</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="hlMail">
+     <item>
+      <widget class="QPushButton" name="pbMail">
+       <property name="minimumSize">
+        <size>
+         <width>130</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>130</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../resources.qrc">
+         <normaloff>:/images/mail</normaloff>:/images/mail</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="styleSheet">
+        <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+       </property>
+       <property name="text">
+        <string>m'envoyer vos avis et idées par mail -&gt; lance.florian@protonmail.com</string>
+       </property>
+       <property name="textInteractionFlags">
+        <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item alignment="Qt::AlignHCenter">
+    <widget class="QLabel" name="laThanks">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 12pt;;
+
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Merci à tous pour votre soutien!</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbReturn">
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">
+
+QPushButton {
+  
+	color : rgb(0,106,255);
+	border-style: outset;
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+    background-color:  rgb(220,220,220);
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+       </property>
+       <property name="text">
+        <string>Retourner au logiciel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

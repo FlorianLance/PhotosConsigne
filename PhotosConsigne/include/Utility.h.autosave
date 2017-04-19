@@ -1102,7 +1102,7 @@ namespace pc
             if(index == -1)
                 break;
             html = html.remove(index, 11);
-            html = html.insert(index, QString::number(infos.photoNum+1) + "/" + QString::number(infos.photoTotalNum));
+            html = html.insert(index, QString::number(infos.photoNum+1) + "/" + QString::number(infos.photoTotalNum+1));
         }
 
         index = 0;
