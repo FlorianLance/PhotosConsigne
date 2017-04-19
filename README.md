@@ -1,61 +1,49 @@
 
-PhotosConsigne
-==============
+# PhotosConsigne
 
-![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc2.png "Création de consignes individuelles")
+![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc3_0.png "Navigation parmi les photos")
 
-**PhotosConsigne** est un logiciel léger et rapide servant à générer des PDF contenant des images associées à un texte commun ou personnalisé.
-Tous les paramètres sont facilement modifiables (quantités d'images par page, orientation, alignements, police du texte...).
+**PhotosConsigne** est un logiciel léger et rapide servant à générer des documenets PDF à partir d'un dossier d'images.
+Chaque image peut-être associé à un "texte riche" global ou pas et également contenir d'autres images. Il a été conçu de façon à pouvoir changer très facilement les paramètres (quantités d'images par page, orientation, alignements, police du texte...) et de visualiser les résultats rapidement en temps réel.
 
-Il se destine avant tout aux professeurs des écoles pour lesquels il est courant d'avoir à photographier les travaux des élèves et à les imprimer plus tard avec la consigne associée aux diverses activités, cela nécessite parfois plusieurs heures de manipulation avec un logiciel de bureautique conventionnel. 
+Il permet ansi de réaliser facilement et sans manipulation bureatique rébarbative des documents tels que: trombinoscopes, cahiers de vie, albums, vignettes à découper, récapitulatifs photos, posters...
 
-L'avantage de **PhotosConsigne** est d'accélérer grandement ce processus en ayant uniquement à sélectionner un dossier contenant les photos à intégrer, à éditer le texte voulu et quelques paramètres de présentation. Il est ensuite possible de générer à loisir des PDF à partir de ceci.
+J'ai réalisé ce logiciel sur mon temps libre, sa conception m'a demandé des centaines d'heures de travail. J'ai choisi d'en faire profiter la communauté en le proposant gratuitement à tous.
+Si vous souhaitez me remercier et contribuer à sa pérennité vous pouvez me faire [un don en cliquant ici.](https://www.paypal.me/PhotosConsigne "Faire un don PayPal")
 
-Une prévisualisation du résultat est disponible à chaque changement de paramètre afin de cerner très rapidement leur impact. Le rendu en PDF sera identique à celui-ci.
-
-Ce logiciel est **gratuit**, mais si il vous a été utile et que vous souhaitez m'encourager, vous pouvez me faire un don:
-<a href='https://pledgie.com/campaigns/31286'><img alt='Click here to lend your support to: Développement logiciel éducation/recherche open-source and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/31286.png?skin_name=chrome' border='0' ></a>
+![PhotosConsigne_img2](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc3_1.png "Création de consignes individuelles")
 
 --------------------------
 
 [**CLIQUEZ ICI POUR ACCEDER AUX TELECHARGEMENTS**](https://github.com/FlorianLance/PhotosConsigne/wiki/T%C3%A9l%C3%A9chargements "Téléchargements")
 
-**NOUVELLE VERSION: PhotosConsigne 2.1** 
+**NOUVELLE VERSION: PhotosConsigne 3.0** 
 
 **Liste des nouveautées:**
 
-* correction erreurs typo
-* ajout du choix de la définition (DPI: 150,300...)
-* ajout du choix du format (A3,A4...)
-* les images sont maintenant affichées en qualité maximale dans l'explorateur des images
+* refonte complète de l'interface pour plus d'intuitivité
+* plus de cent formats de papier parmi les plus courants
+* définition allant de 72 à 2400 dpi pour chaque page
+* affichage dynamique des zones
+* texte riche pour toutes les consignes et titres
+* gestion des copiers collers et des insertions d'images dans les consignes
+* pas de limite maximale des tailles de photos et du nombre de pages
+* générations plus rapides et précises
+* ajout de codes remplacés à la génération: $nom$ / $date$ / $date_photo$ / $num_photo$ / $num_page$
+* possibilité de cliquer sur les consignes et titres pour les modifier rapidement et afficher la photo dans l'explorateur
+* possibilité de placer la consigne en dessous, à gauche, à droite ou au dessus de la photo (individuellement ou globalement)
+* option pour écrire les consigne et titres par dessus les photos
+* alignement individuel des photos
+* corrections de bugs
+* et plein d'autres!
 * [Liste des nouveautés des versions précédentes](https://github.com/FlorianLance/PhotosConsigne/wiki/Description-des-versions "Liste versions")
 
 --------------------------
 
 [**CLIQUEZ ICI POUR ACCEDER à la FAQ (FOIRE AUX QUESTIONS)**](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
-
-Lien vers le forum [**Enseignants du primaire**](http://forums-enseignants-du-primaire.com/topic/321439-photosconsigne-logiciel-gratuit-de-g%C3%A9n%C3%A9ration-de-pdf-avec-photos-et-textes-cahier-de-vie/ "Forum"), la plupart des questions et réponses sont centralisées ici.
-
 --------------------------
 
 [**CLIQUEZ ICI POUR ACCEDER AUX SUGGESTIONS**](https://github.com/FlorianLance/PhotosConsigne/wiki/Suggestions-des-utilisateurs "Suggestions") 
-
-Si vous en avez c'est par ici.
-
-
-
-
-Tutoriel vidéo:
----------------
-
-[![Demo](http://imgur.com/kfdeUSx.png)](https://www.youtube.com/watch?v=jazpY9XrCuc "Demo")
-
-
-AVIS SUR LE LOGICIEL
---------------------
-
-A venir...
-
 
 
 
