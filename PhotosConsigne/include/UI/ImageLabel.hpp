@@ -92,7 +92,7 @@ public :
 
 public slots:
 
-    void draw_current_pc_rect(QRectF pcRectRelative);
+    void draw_current_pc_rect(int idRect, QRectF pcRectRelative);
 
 protected:
 
@@ -105,6 +105,12 @@ protected:
             posRelative.setY(posRelative.y()/m_imageRect.height());
 
             emit click_on_page_signal(posRelative);
+
+            if(m_doubleClickTimer.isActive() && m_currentPCRect.contains(ev->pos())){
+                emit double_click_on_photo_signal(m_currentPCRectId);
+            }else{
+                m_doubleClickTimer.start(300);
+            }
         }
     }
 
@@ -116,13 +122,13 @@ protected:
 
 
         if(m_pcRectRelative.width() > 0 && m_rectTimer.isActive()){
-            QRect currentPCRect(m_imageRect.x() + m_pcRectRelative.x()*m_imageRect.width(),
+             m_currentPCRect = QRect(m_imageRect.x() + m_pcRectRelative.x()*m_imageRect.width(),
                                     m_imageRect.y() + m_pcRectRelative.y()*m_imageRect.height(),
                                     m_pcRectRelative.width()*m_imageRect.width(),
                                     m_pcRectRelative.height()*m_imageRect.height());
 
-            int alpha = (m_rectTimer.remainingTime() > 2500) ? 90 : (90*m_rectTimer.remainingTime()/2500.);
-            painter.fillRect(currentPCRect, QColor(255,0,0,alpha));
+            int alpha = (m_rectTimer.remainingTime() > 1500) ? 90 : (90*m_rectTimer.remainingTime()/1500.);
+            painter.fillRect(m_currentPCRect, QColor(0,0,255,alpha));
         }
     }
 
@@ -134,10 +140,18 @@ signals:
 
     void stop_update_loop_signal();
 
+    void double_click_on_photo_signal(int idTotalPhoto);
+
 private:
 
     QRectF m_pcRectRelative;
+
+    int m_currentPCRectId;
+    QRect m_currentPCRect;
+
+
     QTimer m_rectTimer;
+    QTimer m_doubleClickTimer;
 
     QThread m_workerThread;
     std::unique_ptr<PreviewWorker> m_worker = nullptr;

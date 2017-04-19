@@ -113,24 +113,14 @@ public:
 
     void insertImage()
     {
-//        QString file = QFileDialog::getOpenFileName(this, tr("Select an image"),
-//                                      ".", tr("Bitmap Files (*.bmp)\n"
-//                                        "JPEG (*.jpg *jpeg)\n"
-//                                        "GIF (*.gif)\n"
-//                                        "PNG (*.png)\n"));
-//        QTextDocumentFragment fragment;
-//        fragment = QTextDocumentFragment::fromHtml("<img src='" + file + "'>");
-
-//        textCursor().insertFragment(fragment);
-
         QString file = QFileDialog::getOpenFileName(this, tr("Select an image"),
-                                      ".", tr("Bitmap Files (*.bmp)\n"
-                                        "JPEG (*.jpg *jpeg)\n"
-                                        "GIF (*.gif)\n"
-                                        "PNG (*.png)\n"));
+                                      ".", tr("Images files (*.bmp *.jpg *jpeg *.gif *.png)"));
 
         QUrl Uri ( QString ( "file://%1" ).arg ( file ) );
         QImage image = QImageReader ( file ).read();
+
+
+        document()->addResource(QTextDocument::ImageResource, Uri, image);
 
         QTextImageFormat imageFormat;
         imageFormat.setWidth( image.width() );
@@ -223,6 +213,7 @@ private:
     QAction *actionAlignJustify;
     QAction *actionUndo;
     QAction *actionRedo;
+    QAction *actionInsertImage;
 #ifndef QT_NO_CLIPBOARD
     QAction *actionCut;
     QAction *actionCopy;

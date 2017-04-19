@@ -120,6 +120,10 @@ PreviewLabel::PreviewLabel(){
     connect(m_worker.get(), &PreviewWorker::update_preview_signal, this, [=]{
         update();
     });
+    connect(&m_doubleClickTimer, &QTimer::timeout, this, [&]{
+        m_doubleClickTimer.stop();
+    });
+
     connect(this, &PreviewLabel::start_update_loop_signal, m_worker.get(), &PreviewWorker::loop_update);
     connect(this, &PreviewLabel::stop_update_loop_signal, m_worker.get(), &PreviewWorker::stop_loop);
 
@@ -132,9 +136,10 @@ PreviewLabel::~PreviewLabel(){
     m_workerThread.wait();
 }
 
-void PreviewLabel::draw_current_pc_rect(QRectF pcRectRelative){
+void PreviewLabel::draw_current_pc_rect(int idRect, QRectF pcRectRelative){
 
+    m_currentPCRectId = idRect;
     m_pcRectRelative = pcRectRelative;
-    m_rectTimer.start(3000);
+    m_rectTimer.start(2000);
     emit start_update_loop_signal();
 }

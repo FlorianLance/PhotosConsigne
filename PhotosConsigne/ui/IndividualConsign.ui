@@ -344,54 +344,6 @@ QPushButton:hover:!pressed
        </property>
       </spacer>
      </item>
-     <item>
-      <widget class="QPushButton" name="pbApplyToAllPC">
-       <property name="minimumSize">
-        <size>
-         <width>150</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>200</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">
-
-QPushButton {
-  
-	color : rgb(0,106,255);
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
- background-color: white;
-
- }
- 
- QPushButton:pressed {
- background-color: white;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
- }
- 
-
-
-QPushButton:hover:!pressed
-{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}</string>
-       </property>
-       <property name="text">
-        <string>Appliquer pour tous
- les ensembles</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item>
@@ -796,7 +748,7 @@ QToolBox::tab:hover:!pressed
         <x>0</x>
         <y>0</y>
         <width>460</width>
-        <height>350</height>
+        <height>360</height>
        </rect>
       </property>
       <attribute name="label">

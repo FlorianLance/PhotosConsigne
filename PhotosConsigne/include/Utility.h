@@ -676,7 +676,6 @@ namespace pc
                 upscaledSize = QSizeF(size.width()/ratioH, upscaledSize.height());
             }
 
-
             // alignment
             qreal newX = rectPhoto.x(), newY = rectPhoto.y();
             if(upscaledSize.width() < rectPhoto.width()){
@@ -696,35 +695,6 @@ namespace pc
                 }
             }
             rectPhoto = QRectF(newX,newY,rectPhoto.width(),rectPhoto.height());
-
-//            qreal newX     = rectPhoto.x(), newY = rectPhoto.y();
-//            qreal newWidth = rotatedPhoto.width(), newHeight = rotatedPhoto.height();
-//            if(rotatedPhoto.width() < rectPhoto.width()){
-//                if(alignment & Qt::AlignRight){
-//                    newX     += rectPhoto.width()-rotatedPhoto.width();
-//                }
-//                else if(alignment & Qt::AlignHCenter){
-//                    newX     += rectPhoto.width()*0.5  - rotatedPhoto.width()*0.5;
-//                }
-//            }
-//            if(rotatedPhoto.height() < rectPhoto.height()){
-//                if(alignment & Qt::AlignBottom){
-//                    newY      += rectPhoto.height()-rotatedPhoto.height();
-//                }
-//                else if(alignment & Qt::AlignVCenter){
-//                    newY      += rectPhoto.height()*0.5-rotatedPhoto.height()*0.5;
-//                }
-//            }
-
-//            if((rectPhoto.width()-rotatedPhoto.width()) > (rectPhoto.height()-rotatedPhoto.height())){
-//                newHeight = rectPhoto.height();
-//                newY      = rectPhoto.y();
-//            }else{
-//                newWidth = rectPhoto.width();
-//                newX     = rectPhoto.x();
-//            }
-//            QRectF target(newX, newY, newWidth, newHeight);
-
 
             // draw tiles
             int widthUpPerTile  = (upscaledSize.width() /10);
@@ -757,8 +727,6 @@ namespace pc
                     QRectF itUpRect(ii* widthUpPerTile, jj * heightUpPerTile, lastTileUpH ? widthUpTileRemainder : widthUpPerTile, lastTileUpV ? heightUpTileRemainder : heightUpPerTile);
                     size_t offset = itRect.x() * rotatedPhoto.depth() / 8 + itRect.y() * rotatedPhoto.bytesPerLine();
 
-//                    painter.drawImage(target, QImage(rotatedPhoto.bits() + offset, itRect.width(),itRect.height(),
-//                                                    rotatedPhoto.bytesPerLine(), rotatedPhoto.format()).scaled(itUpRect.width(),itUpRect.height()));
                     painter.drawImage(rectPhoto.x()+itUpRect.x(),rectPhoto.y()+itUpRect.y(), QImage(rotatedPhoto.bits() + offset, itRect.width(),itRect.height(),
                                       rotatedPhoto.bytesPerLine(), rotatedPhoto.format()).scaled(itUpRect.width(),itUpRect.height()));
                 }
@@ -956,7 +924,7 @@ namespace pc
             // vertical cut lines
             verticalCutLines.clear();
             verticalCutLines.push_back(QLineF(QPointF(widthLeftMargin ,setsRect.y()), QPointF(widthLeftMargin, setsRect.y() + setsRect.height())));
-            verticalCutLines.push_back(QLineF(QPointF(rectOnPage.width()-widthLeftMargin,setsRect.y()), QPointF(rectOnPage.width()-widthRightMargin, setsRect.y() + setsRect.height())));
+            verticalCutLines.push_back(QLineF(QPointF(rectOnPage.width()-widthRightMargin,setsRect.y()), QPointF(rectOnPage.width()-widthRightMargin, setsRect.y() + setsRect.height())));
             for(int ii = 1; ii < nbPhotosH; ++ii){
                 qreal startH = setsRect.x() + ii*(widthPhotoAndConsign + widthInterMargin) - 0.5*widthInterMargin;
                 verticalCutLines.push_back(QLineF(QPointF(startH,setsRect.y()), QPointF(startH, setsRect.y() + setsRect.height())));
@@ -1042,7 +1010,6 @@ namespace pc
 
     static void draw_doc_html_with_size_factor(QPainter &painter, QReadWriteLock *docLocker, QTextDocument *doc, QRectF upperRect, QRectF docRect, qreal sizeFactor, ExtraPCInfo infos = ExtraPCInfo()){
 
-        qDebug() << "start draw_doc_html_with_size_factor";
         QImage pix(QSize(docRect.width(),docRect.height()), QImage::Format_ARGB32);
         pix.fill(QColor(255,255,255,0));
         painter.drawImage(docRect, pix);
@@ -1053,9 +1020,6 @@ namespace pc
         QPainter painterDoc(&pixDoc);
         painterDoc.setPen(QPen());
 
-
-//        QTextDocument *testDoc = textEdit.document()->clone(nullptr);
-//        std::unique_ptr<QTextDocument> testDoc = std::unique_ptr<QTextDocument>(textEdit.document()->clone(nullptr));
         docLocker->lockForRead();
         doc = doc->clone(nullptr);
         docLocker->unlock();
@@ -1180,6 +1144,5 @@ namespace pc
         }
 
         delete doc;
-        qDebug() << "end draw_doc_html_with_size_factor";
     }
 }

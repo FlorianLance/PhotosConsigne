@@ -28,19 +28,19 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
     // current version
     QString version = "3.0";
 
-    qDebug()<< "constructor UI: " << std::chrono::duration_cast<std::chrono::milliseconds>
-                             (std::chrono::system_clock::now()-start).count() << " ms";
+//    qDebug()<< "constructor UI: " << std::chrono::duration_cast<std::chrono::milliseconds>
+//                             (std::chrono::system_clock::now()-start).count() << " ms";
 
     // use designer ui
     m_ui->setupUi(this);
 
     // set icon/title
-    this->setWindowTitle("PhotosConsigne " + version);
+    this->setWindowTitle("PhotosConsigne " + version + " (générateur de PDF à partir de photos)");
     this->setWindowIcon(QIcon(":/images/icon"));
 
 
-    qDebug()<< "constructor widgets: " << std::chrono::duration_cast<std::chrono::milliseconds>
-                             (std::chrono::system_clock::now()-start).count() << " ms";
+//    qDebug()<< "constructor widgets: " << std::chrono::duration_cast<std::chrono::milliseconds>
+//                             (std::chrono::system_clock::now()-start).count() << " ms";
 
     // disable textes info tab
     m_ui->twGeneralSettings->setTabEnabled(0,false);
@@ -81,8 +81,8 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
     m_previewW = new PreviewLabel();
     m_ui->vlImagePreview->addWidget(m_previewW);
 
-    qDebug()<< "constructor workers: " << std::chrono::duration_cast<std::chrono::milliseconds>
-                             (std::chrono::system_clock::now()-start).count() << " ms";
+//    qDebug()<< "constructor workers: " << std::chrono::duration_cast<std::chrono::milliseconds>
+//                             (std::chrono::system_clock::now()-start).count() << " ms";
 
     // init workers
     m_displayPhotoWorker = std::make_unique<PhotoDisplayWorker>();
@@ -96,8 +96,8 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
         });
     };
 
-    qDebug()<< "constructor connections: " << std::chrono::duration_cast<std::chrono::milliseconds>
-                             (std::chrono::system_clock::now()-start).count() << " ms";
+//    qDebug()<< "constructor connections: " << std::chrono::duration_cast<std::chrono::milliseconds>
+//                             (std::chrono::system_clock::now()-start).count() << " ms";
 
 
     // connections    
@@ -150,6 +150,21 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
         update_settings();
     });
 
+    // # preview label -> ui
+    connect(m_previewW, &PreviewLabel::double_click_on_photo_signal, this, [&](int idTotalPhoto){
+
+        int offset = 0;
+        QVector<int> idPhotos;
+        for(int ii = 0; ii < m_settings.photosLoaded->size(); ++ii){
+            if(m_settings.photosLoaded.get()->at(ii)->isRemoved){
+                ++offset;
+            }else{
+                idPhotos.push_back(offset++);
+            }
+        }
+        m_ui->lwPhotosList->setCurrentRow(idPhotos[idTotalPhoto]);
+        m_ui->twMiddle->setCurrentIndex(0);
+    });
     // # preview label -> pdf worker
     connect(m_previewW, &PreviewLabel::click_on_page_signal, m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::update_PC_selection);
     // # pdf worker -> preview worker
@@ -164,15 +179,41 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
             m_ui->tbRight->setCurrentIndex(2);
         }
 
-        m_previewW->draw_current_pc_rect(pcRectRelative);
+        m_previewW->draw_current_pc_rect(totalIdPC, pcRectRelative);
         m_previewW->update();
     });
 
     // # push_button
+    connect(m_ui->pbDonate, &QPushButton::clicked, this, [=]{
+        QWidget *wSupport = new QWidget();
+        wSupport->setWindowTitle("PhotosConsigne " + version + " (générateur de PDF à partir de photos)");
+        wSupport->setWindowIcon(QIcon(":/images/icon"));
+
+        Ui::SupportW support;                
+        support.setupUi(wSupport);
+
+        delete support.laPatreon;
+        delete support.pbPatreon;
+        delete support.hlPatreon;
+        connect(support.pbPaypal, &QPushButton::clicked, this, [=]{
+            if(!QDesktopServices::openUrl(QUrl("https://www.paypal.me/PhotosConsigne", QUrl::TolerantMode))){
+                QMessageBox::warning(this, tr("Avertissement"), tr("Le site internet du tutoriel n'a pu être lancé, aucun logiciel de navigation web n'a été trouvé.' .\n"),QMessageBox::Ok);
+            }
+        });
+        connect(support.pbMail, &QPushButton::clicked, this, [=]{
+            if(!QDesktopServices::openUrl(QUrl("mailto:?to=lance.florian@protonmail.com&subject=PhotosConsigne&body=", QUrl::TolerantMode))){
+            }
+        });
+        connect(support.pbReturn, &QPushButton::clicked, this, [=]{
+            delete wSupport;
+        });
+
+        wSupport->show();
+    });
     connect(m_ui->pbOpenPDF, &QPushButton::clicked, this, [=]{
         bool success = QDesktopServices::openUrl(QUrl::fromLocalFile(m_pcPages.pdfFileName));
         if(!success)
-            QMessageBox::warning(this, tr("Avertissement"), tr("Le PDF n'a pu être lancé.\nVeuillez vous assurez que vous disposez d'un logiciel de lecture de PDF (ex : SumatraPDF, AdobeReader...) .\n"),QMessageBox::Ok);
+            QMessageBox::warning(this, tr("Avertissement"), tr("Le PDF n'a pu être lancé.\nVeuillez vous assurez que vous disposez d'un logiciel de lecture de PDF (ex : AdobeReader, SumatraPDF, FoxitReader...) .\n"),QMessageBox::Ok);
     });
     connect(m_ui->pbChooseDirectory, &QPushButton::clicked, this, &PCMainUI::set_photos_directory);
     connect(m_ui->pbSavePDF, &QPushButton::clicked, this, [&]{
@@ -247,16 +288,54 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
         update_photos_number();
         update_settings_with_no_preview();
     });
+    connect(m_ui->pbOrderMinus, &QPushButton::clicked, this, [&]{
+
+        int row = m_ui->lwPhotosList->currentRow();
+        if(row < 0){
+            return;
+        }
+
+        m_settings.photosLoaded.get()->swap(row,row-1);
+        m_ui->lwPagesList->blockSignals(true);
+        m_ui->lwPhotosList->insertItem(row-1,m_ui->lwPhotosList->takeItem(row));
+        m_ui->lwPhotosList->setCurrentRow(row-1);
+        m_ui->lwPagesList->blockSignals(false);
+
+        update_photos_number();
+        reset_pc_pages();
+        update_settings_with_no_preview();
+    });
+    connect(m_ui->pbOrderPlus, &QPushButton::clicked, this, [&]{
+
+        int row = m_ui->lwPhotosList->currentRow();
+        if(row < 0){
+            return;
+        }
+
+        m_settings.photosLoaded.get()->swap(row,row+1);
+        m_ui->lwPagesList->blockSignals(true);
+        m_ui->lwPhotosList->insertItem(row+1,m_ui->lwPhotosList->takeItem(row));
+        m_ui->lwPhotosList->setCurrentRow(row+1);
+        m_ui->lwPagesList->blockSignals(false);
+
+        update_photos_number();
+        reset_pc_pages();
+        update_settings_with_no_preview();
+    });
+
     // # tab widgets
      connect(m_ui->twMiddle, &QTabWidget::currentChanged, this, [&](int index){
         if(index == 1){
             update_settings();
         }
      });
-    // # list widgets        
+    // # list widget
     connect(m_ui->lwPhotosList, &QListWidget::currentRowChanged, this, [&](int row){
         if(row == -1 || m_settings.photosLoaded->size() == 0)
             return;
+
+        m_ui->pbOrderMinus->setEnabled(row != 0);
+        m_ui->pbOrderPlus->setEnabled(row != m_settings.photosLoaded->size()-1);
 
         m_settings.currentIdImageDisplayed = row;
         update_photo_to_display(m_settings.photosLoaded.get()->at(row));
@@ -266,13 +345,16 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
         if(index.row() == -1 || m_settings.photosLoaded->size() == 0)
             return;
 
+        m_ui->pbOrderMinus->setEnabled(index.row() != 0);
+        m_ui->pbOrderPlus->setEnabled(index.row() != m_settings.photosLoaded->size()-1);
+
         m_settings.currentIdImageDisplayed = index.row();
         update_photo_to_display(m_settings.photosLoaded.get()->at(index.row()));
         m_ui->twMiddle->setCurrentIndex(0);
     });
     connect(m_ui->lwPagesList, &QListWidget::currentRowChanged, this, [&]
     {
-        m_previewW->draw_current_pc_rect(QRectF()); // remove current rect
+        m_previewW->draw_current_pc_rect(-1, QRectF()); // remove current rect
 
         if(m_ui->lwPagesList->currentRow() != -1){
             m_settings.currentPageId = m_ui->lwPagesList->currentRow();
@@ -412,8 +494,8 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
         }
     });
 
-    qDebug()<< "constructor threads: " << std::chrono::duration_cast<std::chrono::milliseconds>
-                             (std::chrono::system_clock::now()-start).count() << " ms";
+//    qDebug()<< "constructor threads: " << std::chrono::duration_cast<std::chrono::milliseconds>
+//                             (std::chrono::system_clock::now()-start).count() << " ms";
 
     // init threads
     m_displayPhotoWorker->moveToThread(&m_displayPhotoWorkerThread);
@@ -423,13 +505,13 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
 
     m_ui->tbRight->setCurrentIndex(1);
 
-    qDebug()<< "constructor update_settings: " << std::chrono::duration_cast<std::chrono::milliseconds>
-                             (std::chrono::system_clock::now()-start).count() << " ms";
+//    qDebug()<< "constructor update_settings: " << std::chrono::duration_cast<std::chrono::milliseconds>
+//                             (std::chrono::system_clock::now()-start).count() << " ms";
 
     update_settings();    
 
-    qDebug()<< "end constructor: " << std::chrono::duration_cast<std::chrono::milliseconds>
-                             (std::chrono::system_clock::now()-start).count() << " ms";
+//    qDebug()<< "end constructor: " << std::chrono::duration_cast<std::chrono::milliseconds>
+//                             (std::chrono::system_clock::now()-start).count() << " ms";
 }
 
 PCMainUI::~PCMainUI()
@@ -451,7 +533,6 @@ PCMainUI::~PCMainUI()
 
 void PCMainUI::set_photos_directory()
 {
-    qDebug() << "set_photos_directory 1";
     QString previousDirectory = m_settings.photosDirectoryPath;
     m_settings.photosDirectoryPath = QFileDialog::getExistingDirectory(this, "Sélection du répertoire d'images", QDir::homePath());
 
@@ -489,7 +570,21 @@ void PCMainUI::set_photos_directory()
         QMessageBox::warning(this, tr("Avertissement"), tr("Aucune image (jpg,png) n'a pu être trouvée dans ce répertoire, veuillez en selectionner un autre.\n"),QMessageBox::Ok);
         return;
     }
-    m_ui->pbChooseDirectory->setText(m_settings.photosDirectoryPath);
+
+    QString buttonText = m_settings.photosDirectoryPath;
+    if(buttonText.size() > 30){
+
+        int indexMid = buttonText.indexOf('/', buttonText.size()/2);
+        if(indexMid > 0){
+            buttonText = buttonText.insert(indexMid,'\n');
+        }
+    }
+    QString styleSheet ="QPushButton{color :rgb(0,106,255); border-style: outset;font-style: normal;font-size: 8pt;background-color:  rgb(220,220,220);} \
+            QPushButton:pressed {background-color: white;background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #f6f7fa, stop: 1 #dadbde);} \
+           QPushButton:hover:!pressed {background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,stop: 0 #dadbde, stop: 1 #f6f7fa);}";
+    m_ui->pbChooseDirectory->setMinimumWidth(0);
+    m_ui->pbChooseDirectory->setStyleSheet(styleSheet);
+    m_ui->pbChooseDirectory->setText(buttonText);
 
     if(fileList.size() > 0)
         m_ui->lwPhotosList->setCurrentRow(0);
@@ -548,14 +643,14 @@ void PCMainUI::update_photos_number(bool reset)
 
     auto init_individual_consign_ui = [&](int idConsign){
 
-        qDebug()<< "update_photos_number before w 1: " << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now()-start).count() << " ms";
+//        qDebug()<< "update_photos_number before w 1: " << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now()-start).count() << " ms";
 
         std::shared_ptr<QWidget> SQWidget = std::make_shared<QWidget>();
         std::shared_ptr<RichTextEdit> SRichTextEdit = std::make_shared<RichTextEdit>();
         SRichTextEdit->set_doc_locker(&m_docLocker);
         SRichTextEdit->init_as_individual_consign();
 
-        qDebug()<< "update_photos_number before w 2: " << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now()-start).count() << " ms";
+//        qDebug()<< "update_photos_number before w 2: " << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now()-start).count() << " ms";
         m_individualConsignsW.push_back(SQWidget);
         m_individualConsignsTEdit.push_back(SRichTextEdit);
 
@@ -574,7 +669,7 @@ void PCMainUI::update_photos_number(bool reset)
         connect(SRichTextEdit.get()->textEdit(), &TextEdit::textChanged, this, &PCMainUI::update_settings);
 
 
-        qDebug()<< "update_photos_number before w 3: " << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now()-start).count() << " ms";
+//        qDebug()<< "update_photos_number before w 3: " << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now()-start).count() << " ms";
         connect(ui.cbWriteOnPhoto, &QCheckBox::clicked, this, [=](bool checked){
 
             if(checked){
@@ -607,7 +702,7 @@ void PCMainUI::update_photos_number(bool reset)
                 }
             }
 
-            qDebug()<< "update_photos_number before w 4: " << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now()-start).count() << " ms";
+//            qDebug()<< "update_photos_number before w 4: " << std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now()-start).count() << " ms";
         });
         associate_double_spinbox_with_slider(ui.dsbRatioPC, ui.hsRatioPC);
     };
@@ -665,8 +760,8 @@ void PCMainUI::update_photos_number(bool reset)
     m_ui->tbRight->setCurrentIndex(currentIndex);
     m_ui->progressBarLoading->setValue(1000);
 
-    qDebug()<< "update_photos_number end: " << std::chrono::duration_cast<std::chrono::milliseconds>
-                             (std::chrono::system_clock::now()-start).count() << " ms";
+//    qDebug()<< "update_photos_number end: " << std::chrono::duration_cast<std::chrono::milliseconds>
+//                             (std::chrono::system_clock::now()-start).count() << " ms";
 }
 
 void PCMainUI::reset_pc_pages()
@@ -751,8 +846,8 @@ void PCMainUI::reset_pc_pages()
     m_ui->twMiddle->blockSignals(false);
 
 
-    qDebug()<< "reset_pc_pages end: " << std::chrono::duration_cast<std::chrono::milliseconds>
-                             (std::chrono::system_clock::now()-start).count() << " ms";
+//    qDebug()<< "reset_pc_pages end: " << std::chrono::duration_cast<std::chrono::milliseconds>
+//                             (std::chrono::system_clock::now()-start).count() << " ms";
 }
 
 void PCMainUI::update_photo_to_display(SPhoto photo)
@@ -771,8 +866,8 @@ void PCMainUI::update_photo_to_display(SPhoto photo)
         m_ui->pbRemove->show();
     }
 
-    qDebug()<< "update_photo_to_display end: " << std::chrono::duration_cast<std::chrono::milliseconds>
-                             (std::chrono::system_clock::now()-start).count() << " ms";
+//    qDebug()<< "update_photo_to_display end: " << std::chrono::duration_cast<std::chrono::milliseconds>
+//                             (std::chrono::system_clock::now()-start).count() << " ms";
 }
 
 void PCMainUI::update_settings()
@@ -937,9 +1032,10 @@ void PCMainUI::update_settings()
         emit start_preview_generation_signal(&m_docLocker, m_settings, m_pcPages);
     }
 
-    qDebug()<< "end update settings: " << std::chrono::duration_cast<std::chrono::milliseconds>
-                             (std::chrono::system_clock::now()-start).count() << " ms";
+//    qDebug()<< "end update settings: " << std::chrono::duration_cast<std::chrono::milliseconds>
+//                             (std::chrono::system_clock::now()-start).count() << " ms";
 }
+
 
 
 //void MainUI::openOnlineDocumentation()

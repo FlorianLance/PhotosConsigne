@@ -55,6 +55,14 @@
         <file alias="photoAlignTop">resources/images/photoAlignTop.png</file>
         <file alias="photoAlignHMiddle">resources/images/photoAlignHMiddle.png</file>
         <file alias="photoAlignVMiddle">resources/images/photoAlignVMiddle.png</file>
+        <file alias="insertimage">resources/icons/insertimage.png</file>
+        <file alias="patreon">resources/images/patreon.png</file>
+        <file alias="paypal">resources/images/PayPal.png</file>
+        <file alias="help">resources/images/help.png</file>
+        <file alias="cherish">resources/images/cherish.png</file>
+        <file alias="orderMinus">resources/images/orderMinus.png</file>
+        <file alias="orderPlus">resources/images/orderPlus.png</file>
+        <file alias="mail">resources/images/mail.png</file>
     </qresource>
     <qresource prefix="/style">
         <file alias="buttons">resources/style/buttons.qss</file>

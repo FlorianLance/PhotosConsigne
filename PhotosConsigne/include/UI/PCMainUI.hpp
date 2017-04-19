@@ -19,6 +19,7 @@
 // # generated ui
 #include "ui_PhotosConsigneMainW.h"
 #include "ui_IndividualConsign.h"
+#include "ui_Support.h"
 
 // # ui
 #include "RichTextUI.hpp"
@@ -30,6 +31,7 @@
 namespace Ui {
 class PhotosConsigneMainW;
 class IndividualConsign;
+class SupportW;
 }
 
 namespace pc {

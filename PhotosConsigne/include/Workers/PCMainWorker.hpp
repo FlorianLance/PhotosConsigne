@@ -45,7 +45,6 @@ public slots :
 
     void load_photos(QString path, QStringList photosList){
 
-        qDebug() << "load_photos";
         emit set_progress_bar_state_signal(0);
         emit set_progress_bar_text_signal("Chargement des photos...");
 
@@ -81,7 +80,6 @@ public slots :
             currentState += offset;
             emit set_progress_bar_state_signal(static_cast<int>(currentState));
             idPhoto++;
-            qDebug() << "idPhoto: " << idPhoto << " loaded";
         }
 
         emit set_progress_bar_state_signal(750);
@@ -303,6 +301,8 @@ public slots :
         QPrinter pdfWriter(QPrinter::PrinterResolution);
         pdfWriter.setOutputFormat(QPrinter::PdfFormat);
         pdfWriter.setOutputFileName(pcPages.pdfFileName);
+//        pdfWriter.setDocName("test");
+        pdfWriter.setCreator("created with PhotosConsigne (https://github.com/FlorianLance/PhotosConsigne)");
 //        pdfWriter.setColorMode(QPrinter::ColorMode::GrayScale);
 
         bool landScape = settings.globalOrientation == PageOrientation::landScape;
@@ -341,10 +341,9 @@ public slots :
 
             emit set_progress_bar_text_signal("Création page " + QString::number(ii));
 
-            qDebug() << "coef:: " << 1.*pcPages.paperFormat.dpi/m_previewDPI;
             draw_page(pdfPainter, pcPages, ii, 1.*pcPages.paperFormat.dpi/m_previewDPI, false, false);
 
-            if(ii < pcPages.pages.size()-1)
+            if(ii < pcPages.pages.size()-1 && !settings.saveOnlyCurrentPage)
                 pdfWriter.newPage();                
 
             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
@@ -371,11 +370,13 @@ public slots :
             }
         }
 
-        if(m_pageToDraw->title->rectOnPage.contains(realPos)){
+        if(m_pageToDraw->title != nullptr){
+            if(m_pageToDraw->title->rectOnPage.contains(realPos)){
 
-            QRectF pcRectRelavive(m_pageToDraw->title->rectOnPage.x()/rectPage.width(), m_pageToDraw->title->rectOnPage.y()/rectPage.height(),
-                                  m_pageToDraw->title->rectOnPage.width()/rectPage.width(), m_pageToDraw->title->rectOnPage.height()/rectPage.height());
-            emit current_pc_selected_signal(pcRectRelavive, -1);
+                QRectF pcRectRelavive(m_pageToDraw->title->rectOnPage.x()/rectPage.width(), m_pageToDraw->title->rectOnPage.y()/rectPage.height(),
+                                      m_pageToDraw->title->rectOnPage.width()/rectPage.width(), m_pageToDraw->title->rectOnPage.height()/rectPage.height());
+                emit current_pc_selected_signal(pcRectRelavive, -1);
+            }
         }
     }
 
@@ -389,11 +390,7 @@ signals :
 
     void end_generation_signal(bool finished);
 
-    void send_PC_rects_signal(QVector<QRectF> pcRects, int currentPageId);
-
     void abort_pdf_signal(QString pathPDF);
-
-    void generate_again_signal();
 
     void current_pc_selected_signal(QRectF pcRectRelative, int totalIdPC);
 

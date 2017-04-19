@@ -227,7 +227,7 @@ void RichTextEdit::setupEditActions()
     redoButton->setDefaultAction(actionRedo);
     m_menuLayoutTop->addWidget(redoButton);
 
-    m_menuLayoutTop->addSpacing(15);
+    m_menuLayoutTop->addSpacing(8);
 
     // cut
     const QIcon cutIcon = QIcon(":/images/editcut");
@@ -266,7 +266,7 @@ void RichTextEdit::setupEditActions()
         actionPaste->setEnabled(md->hasText());
     }
 
-    m_menuLayoutTop->addSpacing(15);
+    m_menuLayoutTop->addSpacing(8);
 }
 
 void RichTextEdit::setupTextActions()
@@ -313,7 +313,7 @@ void RichTextEdit::setupTextActions()
 
     // underline
     const QIcon underlineIcon = QIcon(":/images/textunder");
-    actionTextUnderline = new QAction(underlineIcon, tr("&U"), this);
+    actionTextUnderline = new QAction(underlineIcon, tr("Souligner"), this);
     connect(actionTextUnderline, &QAction::triggered, this, &RichTextEdit::textUnderline);
     actionTextUnderline->setShortcut(Qt::CTRL + Qt::Key_U);
     actionTextUnderline->setPriority(QAction::LowPriority);
@@ -330,11 +330,10 @@ void RichTextEdit::setupTextActions()
         textEdit()->setFocus();
     });
 
-    m_menuLayoutTop->addSpacing(15);
+    m_menuLayoutTop->addSpacing(8);
     // left
     const QIcon leftIcon = QIcon(":/images/textleft");
-    actionAlignLeft = new QAction(leftIcon, tr("&Left"), this);
-//    connect(actionAlignLeft, &QAction::triggered, this, &RichTextEdit::);
+    actionAlignLeft = new QAction(leftIcon, tr("Aligner à gauche"), this);
     actionAlignLeft->setShortcut(Qt::CTRL + Qt::Key_L);
     actionAlignLeft->setCheckable(true);
     actionAlignLeft->setPriority(QAction::LowPriority);
@@ -348,8 +347,7 @@ void RichTextEdit::setupTextActions()
 
     // center
     const QIcon centerIcon = QIcon(":/images/textcenter");
-    actionAlignCenter = new QAction(centerIcon, tr("&Center"), this);
-//    connect(actionAlignCenter, &QAction::triggered, this, &RichTextEdit::);
+    actionAlignCenter = new QAction(centerIcon, tr("Centrer"), this);
     actionAlignCenter->setShortcut(Qt::CTRL + Qt::Key_E);
     actionAlignCenter->setCheckable(true);
     actionAlignCenter->setPriority(QAction::LowPriority);
@@ -359,12 +357,11 @@ void RichTextEdit::setupTextActions()
     m_menuLayoutTop->addWidget(centerAButton);
     connect(centerAButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
-        qDebug() << "FOCUS";
     });
 
     // right
     const QIcon rightIcon = QIcon(":/images/textright");
-    actionAlignRight = new QAction(rightIcon, tr("&Right"), this);
+    actionAlignRight = new QAction(rightIcon, tr("Aligner à droite"), this);
     actionAlignRight->setShortcut(Qt::CTRL + Qt::Key_R);
     actionAlignRight->setCheckable(true);
     actionAlignRight->setPriority(QAction::LowPriority);
@@ -376,22 +373,37 @@ void RichTextEdit::setupTextActions()
         textEdit()->setFocus();
     });
 
-    // fill
-    const QIcon fillIcon = QIcon(":/images/textjustify");
-    actionAlignJustify = new QAction(fillIcon, tr("&Justify"), this);
+    // justify
+    const QIcon justifyIcon = QIcon(":/images/textjustify");
+    actionAlignJustify = new QAction(justifyIcon, tr("Justifier"), this);
     actionAlignJustify->setShortcut(Qt::CTRL + Qt::Key_J);
     actionAlignJustify->setCheckable(true);
     actionAlignJustify->setPriority(QAction::LowPriority);
 
-
-    QToolButton *fillButton = new QToolButton();
-    fillButton->setDefaultAction(actionAlignJustify);
-    m_menuLayoutTop->addWidget(fillButton);
-    m_menuLayoutTop->addStretch();    
-    connect(fillButton,&QToolButton::clicked, this, [=]{
+    QToolButton *justifyButton = new QToolButton();
+    justifyButton->setDefaultAction(actionAlignJustify);
+    m_menuLayoutTop->addWidget(justifyButton);
+    connect(justifyButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
 
+    m_menuLayoutTop->addSpacing(8);
+    // image insert
+    const QIcon imageIcon = QIcon(":/images/insertimage");
+    actionInsertImage = new QAction(imageIcon, tr("Insérer image"), this);
+    actionInsertImage->setShortcut(Qt::CTRL + Qt::Key_I);
+    actionInsertImage->setCheckable(true);
+    actionInsertImage->setPriority(QAction::LowPriority);
+
+    QToolButton *insertImageButton = new QToolButton();
+    insertImageButton->setDefaultAction(actionInsertImage);
+    m_menuLayoutTop->addWidget(insertImageButton);
+    connect(insertImageButton,&QToolButton::clicked, this, [=]{
+        textEdit()->setFocus();
+        textEdit()->insertImage();
+    });
+
+    m_menuLayoutTop->addStretch();
 
     // Make sure the alignLeft  is always left of the alignRight
     QActionGroup *alignGroup = new QActionGroup(this);

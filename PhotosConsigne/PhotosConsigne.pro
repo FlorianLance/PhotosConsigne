@@ -50,7 +50,8 @@ FORMS += \
     ui/PreviewUI.ui \
     ui/MainUI.ui \
     ui/PhotosConsigneMainW.ui \
-    ui/IndividualConsign.ui
+    ui/IndividualConsign.ui \
+    ui/Support.ui
 
 DISTFILES += \
     deploiement/PhotosConsigne_x64.iss \
