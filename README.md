@@ -4,7 +4,7 @@
 ![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc3_0.png "Navigation parmi les photos")
 
 **PhotosConsigne** est un logiciel léger et rapide servant à générer des documenets PDF à partir d'un dossier d'images.
-Chaque image peut-être associé à un "texte riche" global ou pas et également contenir d'autres images. Il a été conçu de façon à pouvoir changer très facilement les paramètres (quantités d'images par page, orientation, alignements, police du texte...) et de visualiser les résultats rapidement en temps réel.
+Chaque image peut-être associé à un "texte riche" global ou pas et également contenir d'autres images. Il a été conçu de façon à pouvoir changer très facilement les paramètres (quantités d'images par page, orientation, alignements, police du texte...) et de visualiser les modifications en temps réel.
 
 Il permet ansi de réaliser facilement et sans manipulation bureatique rébarbative des documents tels que: trombinoscopes, cahiers de vie, albums, vignettes à découper, récapitulatifs photos, posters...
 
