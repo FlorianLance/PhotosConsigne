@@ -38,14 +38,7 @@ Si vous souhaitez me remercier et contribuer à sa pérennité vous pouvez me fa
 * et plein d'autres!
 * [Liste des nouveautés des versions précédentes](https://github.com/FlorianLance/PhotosConsigne/wiki/Description-des-versions "Liste versions")
 
---------------------------
-
-[**CLIQUEZ ICI POUR ACCEDER à la FAQ (FOIRE AUX QUESTIONS)**](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
---------------------------
-
-[**CLIQUEZ ICI POUR ACCEDER AUX SUGGESTIONS**](https://github.com/FlorianLance/PhotosConsigne/wiki/Suggestions-des-utilisateurs "Suggestions") 
-
-
+[## CLIQUEZ ICI POUR ACCEDER à la FAQ (FOIRE AUX QUESTIONS)](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
 
 
 
