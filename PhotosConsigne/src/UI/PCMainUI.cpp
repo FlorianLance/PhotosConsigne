@@ -185,12 +185,14 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
 
     // # push_button
     connect(m_ui->pbDonate, &QPushButton::clicked, this, [=]{
-        QWidget *wSupport = new QWidget();
-        wSupport->setWindowTitle("PhotosConsigne " + version + " (générateur de PDF à partir de photos)");
-        wSupport->setWindowIcon(QIcon(":/images/icon"));
+        if(m_wSupport != nullptr){
+            delete m_wSupport;
+        }
+        m_wSupport = new QWidget();
+        m_wSupport->setWindowIcon(QIcon(":/images/icon"));
 
         Ui::SupportW support;                
-        support.setupUi(wSupport);
+        support.setupUi(m_wSupport);
 
         delete support.laPatreon;
         delete support.pbPatreon;
@@ -205,10 +207,10 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
             }
         });
         connect(support.pbReturn, &QPushButton::clicked, this, [=]{
-            delete wSupport;
+            m_wSupport->hide();
         });
 
-        wSupport->show();
+        m_wSupport->show();
     });
     connect(m_ui->pbOpenPDF, &QPushButton::clicked, this, [=]{
         bool success = QDesktopServices::openUrl(QUrl::fromLocalFile(m_pcPages.pdfFileName));

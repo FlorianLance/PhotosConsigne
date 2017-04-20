@@ -1013,12 +1013,8 @@ namespace pc
 
     static void draw_doc_html_with_size_factor(QPainter &painter, QReadWriteLock *docLocker, QTextDocument *doc, QRectF upperRect, QRectF docRect, qreal sizeFactor, ExtraPCInfo infos = ExtraPCInfo()){
 
-        QImage pix(QSize(docRect.width(),docRect.height()), QImage::Format_ARGB32);
-        pix.fill(QColor(255,255,255,0));
-        painter.drawImage(docRect, pix);
-
         QImage pixDoc(QSize(upperRect.width(),upperRect.height()), QImage::Format_ARGB32);
-        pixDoc.fill(QColor(255,255,255,0));
+        pixDoc.fill(QColor(255,255,255,255)); // ## to be parametreized
 
         QPainter painterDoc(&pixDoc);
         painterDoc.setPen(QPen());

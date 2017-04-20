@@ -74,6 +74,7 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QLabel>
 #ifndef QT_NO_PRINTER
 #include <QPrintDialog>
 #include <QPrinter>
@@ -93,37 +94,50 @@ RichTextEdit::RichTextEdit(QWidget *parent)
     :  QWidget(parent)
 {
 
-
 #ifdef Q_OS_OSX
     setUnifiedTitleAndToolBarOnMac(true);
 #endif
     setWindowTitle(QCoreApplication::applicationName());
 
     m_textEdit = new TextEdit();
-    m_textEdit->setStyleSheet(""
-//                            +"color: blue;"
-//                            "background-color: yellow;"
-//                            "selection-color: yellow;"
-//                            "selection-background-color: blue;"
-                );
 
+    QFont textFont("Calibri");
+    textFont.setStyleHint(QFont::SansSerif);
+
+    QTextCharFormat format;
+    format.setFont(textFont);
+    format.setBackground(Qt::white);
+    format.setFont(textFont);
+    format.setForeground(Qt::black);
+    m_textEdit->setCurrentCharFormat(format);
+
+    m_textEdit->setStyleSheet("");
     m_textEdit->setFontWeight(50);
-    connect(m_textEdit, &TextEdit::currentCharFormatChanged,
-            this, &RichTextEdit::currentCharFormatChanged);
-    connect(m_textEdit, &TextEdit::cursorPositionChanged,
-            this, &RichTextEdit::cursorPositionChanged);
+    connect(m_textEdit, &TextEdit::currentCharFormatChanged,this, &RichTextEdit::current_char_format_changed);
+    connect(m_textEdit, &TextEdit::cursorPositionChanged,this, &RichTextEdit::cursor_position_changed);
     connect(m_textEdit, &TextEdit::textChanged, this, []{});
 
     // set ui
     m_mainLayout = new QVBoxLayout();
     QWidget *menuWTop = new QWidget();
+    QWidget *menuWCenter = new QWidget();
     QWidget *menuWBottom = new QWidget();
     m_menuLayoutTop = new QHBoxLayout();
+    m_menuLayoutCenter = new QHBoxLayout();
     m_menuLayoutBottom = new QHBoxLayout();
     menuWTop->setLayout(m_menuLayoutTop);
+    menuWCenter->setLayout(m_menuLayoutCenter);
     menuWBottom->setLayout(m_menuLayoutBottom);
+
     this->setLayout(m_mainLayout);
     m_mainLayout->addWidget(menuWTop);
+    m_mainLayout->addWidget(menuWCenter);
+
+    QFrame* line = new QFrame();
+    line->setGeometry(QRect(/* ... */));
+    line->setFrameShape(QFrame::HLine); // Replace by VLine for vertical line
+    line->setFrameShadow(QFrame::Sunken);
+    m_mainLayout->addWidget(line);
     m_mainLayout->addWidget(menuWBottom);
     m_mainLayout->addWidget(m_textEdit);
 
@@ -131,40 +145,29 @@ RichTextEdit::RichTextEdit(QWidget *parent)
     m_mainLayout->setContentsMargins(1,1,1,1);
     m_menuLayoutTop->setContentsMargins(1,1,1,1);
     m_menuLayoutTop->setSpacing(1);
+    m_menuLayoutCenter->setContentsMargins(1,1,1,1);
+    m_menuLayoutCenter->setSpacing(1);
     m_menuLayoutBottom->setContentsMargins(1,1,1,1);
     m_menuLayoutBottom->setSpacing(1);
 
-//    setToolButtonStyle(Qt::ToolButtonFollowStyle);
-    setupEditActions();
-    setupTextActions();
+    setup_edit_actions();
+    setup_text_actions();
 
-    QFont textFont("Helvetica");
-    textFont.setStyleHint(QFont::SansSerif);
-    m_textEdit->setFont(textFont);
+    font_changed(m_textEdit->font());
+    color_text_changed(m_textEdit->textColor());
+    background_color_text_changed(m_textEdit->textBackgroundColor());
+    alignment_changed(m_textEdit->alignment());
 
-    fontChanged(m_textEdit->font());
-    colorChanged(m_textEdit->textColor());
-    alignmentChanged(m_textEdit->alignment());
-
-    connect(m_textEdit->document(), &QTextDocument::modificationChanged,
-            this, &QWidget::setWindowModified);
-    connect(m_textEdit->document(), &QTextDocument::undoAvailable,
-            actionUndo, &QAction::setEnabled);
-    connect(m_textEdit->document(), &QTextDocument::redoAvailable,
-            actionRedo, &QAction::setEnabled);
+    connect(m_textEdit->document(), &QTextDocument::modificationChanged, this, &QWidget::setWindowModified);
+    connect(m_textEdit->document(), &QTextDocument::undoAvailable, actionUndo, &QAction::setEnabled);
+    connect(m_textEdit->document(), &QTextDocument::redoAvailable,actionRedo, &QAction::setEnabled);
 
     setWindowModified(m_textEdit->document()->isModified());
-
     actionUndo->setEnabled(m_textEdit->document()->isUndoAvailable());
     actionRedo->setEnabled(m_textEdit->document()->isRedoAvailable());
-
-//    actionCopy->setEnabled(true);
-#ifndef QT_NO_CLIPBOARD
     actionCut->setEnabled(true);
     actionCopy->setEnabled(true);
-
-    connect(QApplication::clipboard(), &QClipboard::dataChanged, this, &RichTextEdit::clipboardDataChanged);
-#endif
+    connect(QApplication::clipboard(), &QClipboard::dataChanged, this, &RichTextEdit::clipboard_data_changed);
 
     m_textEdit->setFocus();
 }
@@ -173,108 +176,108 @@ void RichTextEdit::init_as_title(){
 
     textEdit()->setHtml(
     "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html>"
-    "<head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Helvetica';"
-    " font-size:8.25pt; font-weight:400; font-style:normal;\">\n<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px;"
-    " margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px;"
-    " margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px;"
-    " margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt;\">Entrez votre titre ici...</span></p></body></html>");
-    comboSize->setCurrentIndex(8);
+    "<head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\""
+    " font-family:'Calibri'; background-color:#ffffff;font-size:20pt; font-weight:400; font-style:normal;\">\n<p align=\"center\" style=\"-qt-paragraph-type:empty;"
+    " margin-top:0px; margin-bottom:0px; background-color:#ffffff;margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n<p align=\"center\""
+    " style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\""
+    " font-family:'Calibri'; font-size:20pt; background-color:#ffffff;\">Entrez votre titre ici...</span></p></body></html>" );
+    comboSize->setCurrentIndex(9);
 }
 
-void RichTextEdit::init_as_consign()
-{
+void RichTextEdit::init_as_consign(){
+
     textEdit()->setHtml(
-    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html>"
-    "<head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Helvetica';"
-    " font-size:8.25pt; font-weight:400; font-style:normal;\">\n<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;"
-    " -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">Consigne commune à toutes les photos.</span></p></body></html>");
-    comboSize->setCurrentIndex(6);
+    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\""
+    " content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Calibri';"
+    " font-size:14pt; font-weight:400; font-style:normal;\">\n<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px;"
+    " margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;background-color:#ffffff;\">Consigne commune à toutes les photos.</span></p></body></html>");
+    comboSize->setCurrentIndex(7);
 }
 
-void RichTextEdit::init_as_individual_consign()
-{
+void RichTextEdit::init_as_individual_consign(){
+
     textEdit()->setHtml(
-    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html>"
-    "<head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Helvetica';"
-    " font-size:8.25pt; font-weight:400; font-style:normal;\">\n<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;"
-    " -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">Consigne individuelle.</span></p></body></html>");
-    comboSize->setCurrentIndex(6);
+    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\""
+    " content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Calibri';"
+    " font-size:14pt; font-weight:400; font-style:normal;\">\n<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px;"
+    " margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;background-color:#ffffff;\">Consigne individuelle.</span></p></body></html>");
+    comboSize->setCurrentIndex(7);
 }
 
-void RichTextEdit::setupEditActions()
+void RichTextEdit::setup_edit_actions()
 {
-    m_menuLayoutTop->setContentsMargins(0,0,0,0);
+    m_menuLayoutCenter->setContentsMargins(0,0,0,0);
 
     // undo
     const QIcon undoIcon = QIcon(":/images/editundo");
-    actionUndo = new QAction(undoIcon,tr("&Undo"), this );
+    actionUndo = new QAction(undoIcon,tr("Annuler"), this );
     actionUndo->setShortcut(QKeySequence::Undo);
     connect(actionUndo, &QAction::triggered, m_textEdit, &QTextEdit::undo);
 
     QToolButton *undoButton = new QToolButton();
     undoButton->setDefaultAction(actionUndo);
     undoButton->setIcon(undoIcon);
-    m_menuLayoutTop->addWidget(undoButton);
+    m_menuLayoutCenter->addWidget(undoButton);
 
     // redo
     const QIcon redoIcon = QIcon(":/images/editredo");
-    actionRedo = new QAction(redoIcon,tr("&Redo"), this );
+    actionRedo = new QAction(redoIcon,tr("Rétablir"), this );
     connect(actionRedo, &QAction::triggered, m_textEdit, &QTextEdit::redo);
     actionRedo->setShortcut(QKeySequence::Redo);
     actionRedo->setPriority(QAction::LowPriority);
 
     QToolButton *redoButton = new QToolButton();
     redoButton->setDefaultAction(actionRedo);
-    m_menuLayoutTop->addWidget(redoButton);
+    m_menuLayoutCenter->addWidget(redoButton);
 
-    m_menuLayoutTop->addSpacing(8);
+    m_menuLayoutCenter->addSpacing(8);
 
     // cut
     const QIcon cutIcon = QIcon(":/images/editcut");
-    actionCut = new QAction(cutIcon,tr("&Cut"), this );
+    actionCut = new QAction(cutIcon,tr("Couper"), this );
     connect(actionCut, &QAction::triggered, m_textEdit, &QTextEdit::cut);
     actionCut->setPriority(QAction::LowPriority);
     actionCut->setShortcut(QKeySequence::Cut);
 
     QToolButton *cutButton = new QToolButton();
     cutButton->setDefaultAction(actionCut);
-    m_menuLayoutTop->addWidget(cutButton);
+    m_menuLayoutCenter->addWidget(cutButton);
 
     // copy
     const QIcon copyIcon = QIcon(":/images/editcopy");
-    actionCopy = new QAction(copyIcon,tr("&Copy"), this );
+    actionCopy = new QAction(copyIcon,tr("Copier"), this );
     connect(actionCopy, &QAction::triggered, m_textEdit, &QTextEdit::copy);
     actionCopy->setShortcut(QKeySequence::Copy);
     actionCopy->setPriority(QAction::LowPriority);
 
     QToolButton *copyButton = new QToolButton();
     copyButton->setDefaultAction(actionCopy);
-    m_menuLayoutTop->addWidget(copyButton);
+    m_menuLayoutCenter->addWidget(copyButton);
 
     // paste
     const QIcon pasteIcon = QIcon(":/images/editpaste");
-    actionPaste = new QAction(pasteIcon,tr("&Paste"), this );
+    actionPaste = new QAction(pasteIcon,tr("Coller"), this );
     connect(actionPaste, &QAction::triggered, m_textEdit, &QTextEdit::paste);
     actionPaste->setShortcut(QKeySequence::Paste);
     actionPaste->setPriority(QAction::LowPriority);
 
     QToolButton *pasteButton = new QToolButton();
     pasteButton->setDefaultAction(actionPaste);
-    m_menuLayoutTop->addWidget(pasteButton);
+    m_menuLayoutCenter->addWidget(pasteButton);
 
     if (const QMimeData *md = QApplication::clipboard()->mimeData()){
         actionPaste->setEnabled(md->hasText());
     }
 
-    m_menuLayoutTop->addSpacing(8);
+    m_menuLayoutCenter->addSpacing(8);
 }
 
-void RichTextEdit::setupTextActions()
-{
+void RichTextEdit::setup_text_actions(){
+
     // bold
     const QIcon boldIcon = QIcon(":/images/textbold");
-    actionTextBold = new QAction(boldIcon, tr("&B"), this);
-    connect(actionTextBold, &QAction::triggered, this, &RichTextEdit::textBold);
+    actionTextBold = new QAction(boldIcon, tr("Gras"), this);
+    connect(actionTextBold, &QAction::triggered, this, &RichTextEdit::text_bold);
     actionTextBold->setShortcut(Qt::CTRL + Qt::Key_B);
     actionTextBold->setPriority(QAction::LowPriority);
 
@@ -286,7 +289,7 @@ void RichTextEdit::setupTextActions()
     QToolButton *boldButton = new QToolButton();
     boldButton->setDefaultAction(actionTextBold);
     boldButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonFollowStyle);
-    m_menuLayoutTop->addWidget(boldButton);
+    m_menuLayoutCenter->addWidget(boldButton);
     connect(boldButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
@@ -294,8 +297,8 @@ void RichTextEdit::setupTextActions()
 
     // italic
     const QIcon italicIcon = QIcon(":/images/textitalic");
-    actionTextItalic = new QAction(italicIcon, tr("&I"), this);
-    connect(actionTextItalic, &QAction::triggered, this, &RichTextEdit::textItalic);
+    actionTextItalic = new QAction(italicIcon, tr("Italic"), this);
+    connect(actionTextItalic, &QAction::triggered, this, &RichTextEdit::text_italic);
     actionTextItalic->setPriority(QAction::LowPriority);
     actionTextItalic->setShortcut(Qt::CTRL + Qt::Key_I);
 
@@ -306,7 +309,7 @@ void RichTextEdit::setupTextActions()
 
     QToolButton *italicButton = new QToolButton();
     italicButton->setDefaultAction(actionTextItalic);
-    m_menuLayoutTop->addWidget(italicButton);
+    m_menuLayoutCenter->addWidget(italicButton);
     connect(italicButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
@@ -314,7 +317,7 @@ void RichTextEdit::setupTextActions()
     // underline
     const QIcon underlineIcon = QIcon(":/images/textunder");
     actionTextUnderline = new QAction(underlineIcon, tr("Souligner"), this);
-    connect(actionTextUnderline, &QAction::triggered, this, &RichTextEdit::textUnderline);
+    connect(actionTextUnderline, &QAction::triggered, this, &RichTextEdit::text_underline);
     actionTextUnderline->setShortcut(Qt::CTRL + Qt::Key_U);
     actionTextUnderline->setPriority(QAction::LowPriority);
 
@@ -325,12 +328,12 @@ void RichTextEdit::setupTextActions()
 
     QToolButton *underlineButton = new QToolButton();
     underlineButton->setDefaultAction(actionTextUnderline);
-    m_menuLayoutTop->addWidget(underlineButton);
+    m_menuLayoutCenter->addWidget(underlineButton);
     connect(underlineButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
 
-    m_menuLayoutTop->addSpacing(8);
+    m_menuLayoutCenter->addSpacing(8);
     // left
     const QIcon leftIcon = QIcon(":/images/textleft");
     actionAlignLeft = new QAction(leftIcon, tr("Aligner à gauche"), this);
@@ -340,7 +343,7 @@ void RichTextEdit::setupTextActions()
 
     QToolButton *leftAButton = new QToolButton();
     leftAButton->setDefaultAction(actionAlignLeft);
-    m_menuLayoutTop->addWidget(leftAButton);
+    m_menuLayoutCenter->addWidget(leftAButton);
     connect(leftAButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
@@ -354,7 +357,7 @@ void RichTextEdit::setupTextActions()
 
     centerAButton = new QToolButton();
     centerAButton->setDefaultAction(actionAlignCenter);
-    m_menuLayoutTop->addWidget(centerAButton);
+    m_menuLayoutCenter->addWidget(centerAButton);
     connect(centerAButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
@@ -368,7 +371,7 @@ void RichTextEdit::setupTextActions()
 
     QToolButton *centerRButton = new QToolButton();
     centerRButton->setDefaultAction(actionAlignRight);
-    m_menuLayoutTop->addWidget(centerRButton);
+    m_menuLayoutCenter->addWidget(centerRButton);
     connect(centerRButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
@@ -382,12 +385,19 @@ void RichTextEdit::setupTextActions()
 
     QToolButton *justifyButton = new QToolButton();
     justifyButton->setDefaultAction(actionAlignJustify);
-    m_menuLayoutTop->addWidget(justifyButton);
+    m_menuLayoutCenter->addWidget(justifyButton);
     connect(justifyButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
 
-    m_menuLayoutTop->addSpacing(8);
+//    m_menuLayoutCenter->addSpacing(8);
+    m_menuLayoutCenter->addStretch();
+
+    QLabel *insertLabel = new QLabel("Insérer: ");
+    insertLabel->setStyleSheet("QWidget::enabled {color : rgb(0,106,255);}");
+    m_menuLayoutBottom->addWidget(insertLabel);
+    m_menuLayoutBottom->addSpacing(8);
+
     // image insert
     const QIcon imageIcon = QIcon(":/images/insertimage");
     actionInsertImage = new QAction(imageIcon, tr("Insérer image"), this);
@@ -397,17 +407,76 @@ void RichTextEdit::setupTextActions()
 
     QToolButton *insertImageButton = new QToolButton();
     insertImageButton->setDefaultAction(actionInsertImage);
-    m_menuLayoutTop->addWidget(insertImageButton);
+    m_menuLayoutBottom->addWidget(insertImageButton);
     connect(insertImageButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
-        textEdit()->insertImage();
+        textEdit()->insert_image();
     });
 
-    m_menuLayoutTop->addStretch();
+    m_menuLayoutBottom->addSpacing(4);
+
+    // textes codes inserts
+    comboCodes = new QComboBox();
+    m_menuLayoutBottom->addWidget(comboCodes);
+    comboCodes->setToolTip("Insérer un code, il sera remplacé dans l'aperçu.");
+    comboCodes->addItem("Nom photo");
+    comboCodes->addItem("Date");
+    comboCodes->addItem("Date de la photo");
+    comboCodes->addItem("Numéro de la photo");
+    comboCodes->addItem("Numéro de page");
+    connect(comboCodes, QOverload<int>::of(&QComboBox::activated), this, [=](int index){
+        comboCodes->clearFocus();
+        textEdit()->setFocus();
+        QString code;
+        switch(index){
+        case 0:
+            code = "$nom$";
+            break;
+        case 1:
+            code = "$date$";
+            break;
+        case 2:
+            code = "$date_photo$";
+            break;
+        case 3:
+            code = "$num_photo$";
+            break;
+        case 4:
+            code = "$num_page$";
+            break;
+        }
+
+        textEdit()->textCursor().insertText(code);
+    });
+
+     m_menuLayoutBottom->addSpacing(4);
+
+    comboStyle = new QComboBox();
+    m_menuLayoutBottom->addWidget(comboStyle);
+    comboStyle->setToolTip("Insérer une liste");
+    comboStyle->addItem("Standard (pas de liste)"); // Standard
+    comboStyle->addItem("Liste en balle (Disque)"); // Bullet List (Disc)
+    comboStyle->addItem("Liste en balle (Cercle)"); // Bullet List (Circle)
+    comboStyle->addItem("Liste en balle (Carré)"); // Bullet List (Square)
+    comboStyle->addItem("Liste ordonnée (Décimale)"); // Ordered List (Decimal)
+    comboStyle->addItem("Liste ordonnée (Alpha min.)"); // Ordered List (Alpha lower)
+    comboStyle->addItem("Liste ordonnée (Alpha maj.)"); // Ordered List (Alpha upper)
+    comboStyle->addItem("Liste ordonnée (Roman min.)"); // Ordered List (Roman lower)
+    comboStyle->addItem("Liste ordonnée (Roman maj.)"); // Ordered List (Roman upper)
+
+    connect(comboStyle, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
+        comboStyle->clearFocus();
+        textEdit()->setFocus();
+    });
+
+    typedef void (QComboBox::*QComboIntSignal)(int);
+    connect(comboStyle, static_cast<QComboIntSignal>(&QComboBox::activated), this, &RichTextEdit::text_style);
+
+    m_menuLayoutBottom->addStretch();
 
     // Make sure the alignLeft  is always left of the alignRight
     QActionGroup *alignGroup = new QActionGroup(this);
-    connect(alignGroup, &QActionGroup::triggered, this, &RichTextEdit::textAlign);
+    connect(alignGroup, &QActionGroup::triggered, this, &RichTextEdit::text_align);
 
     if (QApplication::isLeftToRight()) {
         alignGroup->addAction(actionAlignLeft);
@@ -420,59 +489,48 @@ void RichTextEdit::setupTextActions()
     }
     alignGroup->addAction(actionAlignJustify);
 
-//    QToolButton *alignButton = new QToolButton();
-//    alignButton->addActions(alignGroup->actions());
-//    m_menuLayout->addWidget(alignButton);
 
-//    m_menuLayoutBottom->addSpacing(15);
-
-    QPixmap pix(16, 16);
-    pix.fill(Qt::black);
-    actionTextColor = new QAction(pix, tr("&Color..."), this);
-
+    // text color
+    QPixmap pixColor(16, 16);
+    pixColor.fill(Qt::black);
+    actionTextColor = new QAction(pixColor, tr("Couleur du texte"), this);
     connect(actionTextColor, &QAction::triggered, this, [=]{
-        textColor();
+        text_color();
         textEdit()->setFocus();
     });
 
     QToolButton *colorTextButton = new QToolButton();
     colorTextButton->setDefaultAction(actionTextColor);
-    m_menuLayoutBottom->addWidget(colorTextButton);
+    m_menuLayoutTop->addWidget(colorTextButton);
+    m_menuLayoutTop->addSpacing(4);
 
-    //    tb = addToolBar(tr("Format Actions"));
-    //    tb->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
-    //    addToolBarBreak(Qt::TopToolBarArea);
-    //    addToolBar(tb);
-
-    comboStyle = new QComboBox();
-    m_menuLayoutBottom->addWidget(comboStyle);
-    comboStyle->addItem("Standard");
-    comboStyle->addItem("Bullet List (Disc)");
-    comboStyle->addItem("Bullet List (Circle)");
-    comboStyle->addItem("Bullet List (Square)");
-    comboStyle->addItem("Ordered List (Decimal)");
-    comboStyle->addItem("Ordered List (Alpha lower)");
-    comboStyle->addItem("Ordered List (Alpha upper)");
-    comboStyle->addItem("Ordered List (Roman lower)");
-    comboStyle->addItem("Ordered List (Roman upper)");
-
-    connect(comboStyle, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
-        comboStyle->clearFocus();
+    // background text color
+    QPixmap pixBgColor(16, 16);
+    pixBgColor.fill(Qt::white);
+    actionBackgroundTextColor = new QAction(pixBgColor, tr("Couleur de l'arrière plan du texte"), this);
+    connect(actionBackgroundTextColor, &QAction::triggered, this, [=]{
+        background_text_color();
         textEdit()->setFocus();
     });
+    QToolButton *backgroundColorTextButton = new QToolButton();
+    backgroundColorTextButton->setDefaultAction(actionBackgroundTextColor);
+    m_menuLayoutTop->addWidget(backgroundColorTextButton);
+    m_menuLayoutTop->addSpacing(8);
 
-    typedef void (QComboBox::*QComboIntSignal)(int);
-    connect(comboStyle, static_cast<QComboIntSignal>(&QComboBox::activated), this, &RichTextEdit::textStyle);
-
+    // font
     typedef void (QComboBox::*QComboStringSignal)(const QString &);
     comboFont = new QFontComboBox();
+    comboFont->setToolTip("Choix de la police");
     connect(comboFont, static_cast<QComboStringSignal>(&QComboBox::activated), this, [=](QString police){
-        textFamily(police);
+        text_family(police);
         textEdit()->setFocus();
     });
-    m_menuLayoutBottom->addWidget(comboFont);
+    m_menuLayoutTop->addWidget(comboFont);
+    m_menuLayoutTop->addSpacing(4);
 
+    // font size
     comboSize = new QComboBox();
+    comboSize->setToolTip("Définir la taille de la police");
     comboSize->setObjectName("comboSize");
     comboSize->setEditable(true);
     comboSize->setInsertPolicy(QComboBox::InsertAtBottom);
@@ -485,70 +543,69 @@ void RichTextEdit::setupTextActions()
         textEdit()->setFocus();
     });
 
-    m_menuLayoutBottom->addWidget(comboSize);
+    m_menuLayoutTop->addWidget(comboSize);
 
     const QList<int> standardSizes = QFontDatabase::standardSizes();
-//    const QList<int> standardSizes = QFontDatabase::s
     foreach (int size, standardSizes)
         comboSize->addItem(QString::number(size));
     comboSize->setCurrentIndex(standardSizes.indexOf(QApplication::font().pointSize()));
 
-    connect(comboSize, static_cast<QComboStringSignal>(&QComboBox::activated), this, &RichTextEdit::textSize);
-    m_menuLayoutBottom->addStretch();
+    connect(comboSize, static_cast<QComboStringSignal>(&QComboBox::activated), this, &RichTextEdit::text_size);
+    m_menuLayoutTop->addStretch();
 
     return;
 }
 
-void RichTextEdit::textBold()
+void RichTextEdit::text_bold()
 {
     m_docLocker->lockForWrite();
     QTextCharFormat fmt;
     fmt.setFontWeight(actionTextBold->isChecked() ? QFont::Bold : QFont::Normal);
-    mergeFormatOnWordOrSelection(fmt);
+    merge_format_on_word_or_selection(fmt);
     m_docLocker->unlock();
 }
 
-void RichTextEdit::textUnderline()
-{
+void RichTextEdit::text_underline(){
+
     m_docLocker->lockForWrite();
     QTextCharFormat fmt;
     fmt.setFontUnderline(actionTextUnderline->isChecked());
-    mergeFormatOnWordOrSelection(fmt);
+    merge_format_on_word_or_selection(fmt);
     m_docLocker->unlock();
 }
 
-void RichTextEdit::textItalic()
-{
+void RichTextEdit::text_italic(){
+
     m_docLocker->lockForWrite();
     QTextCharFormat fmt;
     fmt.setFontItalic(actionTextItalic->isChecked());
-    mergeFormatOnWordOrSelection(fmt);
+    merge_format_on_word_or_selection(fmt);
     m_docLocker->unlock();
 }
 
-void RichTextEdit::textFamily(const QString &f)
-{
+void RichTextEdit::text_family(const QString &f){
+
     m_docLocker->lockForWrite();
     QTextCharFormat fmt;
     fmt.setFontFamily(f);
-    mergeFormatOnWordOrSelection(fmt);
+    merge_format_on_word_or_selection(fmt);
     m_docLocker->unlock();
 }
 
-void RichTextEdit::textSize(const QString &p)
-{
+void RichTextEdit::text_size(const QString &p){
+
     m_docLocker->lockForWrite();
     qreal pointSize = p.toFloat();
     if (p.toFloat() > 0) {
         QTextCharFormat fmt;
         fmt.setFontPointSize(pointSize);
-        mergeFormatOnWordOrSelection(fmt);
+        merge_format_on_word_or_selection(fmt);
     }
     m_docLocker->unlock();
 }
 
-void RichTextEdit::textStyle(int styleIndex)
-{
+void RichTextEdit::text_style(int styleIndex){
+
     m_docLocker->lockForWrite();
     QTextCursor cursor = m_textEdit->textCursor();
 
@@ -611,21 +668,36 @@ void RichTextEdit::textStyle(int styleIndex)
     m_docLocker->unlock();
 }
 
-void RichTextEdit::textColor()
-{
+void RichTextEdit::text_color(){
+
     m_docLocker->lockForWrite();
     QColor col = QColorDialog::getColor(m_textEdit->textColor(), this);
     if (!col.isValid())
         return;
+
     QTextCharFormat fmt;
     fmt.setForeground(col);
-    mergeFormatOnWordOrSelection(fmt);
-    colorChanged(col);
+    merge_format_on_word_or_selection(fmt);
+    color_text_changed(col);
     m_docLocker->unlock();
 }
 
-void RichTextEdit::textAlign(QAction *a)
-{
+void RichTextEdit::background_text_color(){
+
+    m_docLocker->lockForWrite();
+    QColor col = QColorDialog::getColor(m_textEdit->textBackgroundColor(), this);
+    if (!col.isValid())
+        return;
+
+    QTextCharFormat fmt;
+    fmt.setBackground(col);
+    merge_format_on_word_or_selection(fmt);
+    background_color_text_changed(col);
+    m_docLocker->unlock();
+}
+
+void RichTextEdit::text_align(QAction *a){
+
     m_docLocker->lockForWrite();
     if (a == actionAlignLeft)
         m_textEdit->setAlignment(Qt::AlignLeft | Qt::AlignAbsolute);
@@ -638,31 +710,29 @@ void RichTextEdit::textAlign(QAction *a)
     m_docLocker->unlock();
 }
 
-void RichTextEdit::currentCharFormatChanged(const QTextCharFormat &format)
-{
-    fontChanged(format.font());
-    colorChanged(format.foreground().color());
+void RichTextEdit::current_char_format_changed(const QTextCharFormat &format){
+
+    font_changed(format.font());
+    color_text_changed(format.foreground().color());
+    background_color_text_changed(format.background().color());
 }
 
-void RichTextEdit::cursorPositionChanged()
-{
+void RichTextEdit::cursor_position_changed(){
+
     m_docLocker->lockForWrite();
-    alignmentChanged(m_textEdit->alignment());
+    alignment_changed(m_textEdit->alignment());
     m_docLocker->unlock();
-
 }
 
-void RichTextEdit::clipboardDataChanged()
-{
-#ifndef QT_NO_CLIPBOARD
-    if (const QMimeData *md = QApplication::clipboard()->mimeData())
+void RichTextEdit::clipboard_data_changed(){
+
+    if (const QMimeData *md = QApplication::clipboard()->mimeData()){
         actionPaste->setEnabled(md->hasText());
-#endif
+    }
 }
 
+void RichTextEdit::merge_format_on_word_or_selection(const QTextCharFormat &format){
 
-void RichTextEdit::mergeFormatOnWordOrSelection(const QTextCharFormat &format)
-{
     QTextCursor cursor = m_textEdit->textCursor();
     if (!cursor.hasSelection())
         cursor.select(QTextCursor::WordUnderCursor);
@@ -670,8 +740,8 @@ void RichTextEdit::mergeFormatOnWordOrSelection(const QTextCharFormat &format)
     m_textEdit->mergeCurrentCharFormat(format);
 }
 
-void RichTextEdit::fontChanged(const QFont &f)
-{
+void RichTextEdit::font_changed(const QFont &f){
+
     comboFont->setCurrentIndex(comboFont->findText(QFontInfo(f).family()));
     comboSize->setCurrentIndex(comboSize->findText(QString::number(f.pointSize())));
     actionTextBold->setChecked(f.bold());
@@ -679,15 +749,22 @@ void RichTextEdit::fontChanged(const QFont &f)
     actionTextUnderline->setChecked(f.underline());
 }
 
-void RichTextEdit::colorChanged(const QColor &c)
-{
+void RichTextEdit::color_text_changed(const QColor &c){
+
     QPixmap pix(16, 16);
     pix.fill(c);
     actionTextColor->setIcon(pix);
 }
 
-void RichTextEdit::alignmentChanged(Qt::Alignment a)
-{
+void RichTextEdit::background_color_text_changed(const QColor &c){
+
+    QPixmap pix(16, 16);
+    pix.fill(c);
+    actionBackgroundTextColor->setIcon(pix);
+}
+
+void RichTextEdit::alignment_changed(Qt::Alignment a){
+
     if (a & Qt::AlignLeft)
         actionAlignLeft->setChecked(true);
     else if (a & Qt::AlignHCenter)
@@ -696,4 +773,71 @@ void RichTextEdit::alignmentChanged(Qt::Alignment a)
         actionAlignRight->setChecked(true);
     else if (a & Qt::AlignJustify)
         actionAlignJustify->setChecked(true);
+}
+
+bool TextEdit::canInsertFromMimeData(const QMimeData *source) const {
+    return source->hasImage() || source->hasUrls() || QTextEdit::canInsertFromMimeData(source);
+}
+
+void TextEdit::insertFromMimeData(const QMimeData *source){
+
+    if (source->hasImage()){
+
+        static int i = 1;
+        QUrl url(QString("dropped_image_%1").arg(i++));
+        drop_image(url, qvariant_cast<QImage>(source->imageData()));
+    }
+    else if (source->hasUrls()) {
+
+        foreach (QUrl url, source->urls()) {
+
+            QFileInfo info(url.toLocalFile());
+            if (QImageReader::supportedImageFormats().contains(info.suffix().toLower().toLatin1()))
+                drop_image(url, QImage(info.filePath()));
+            else
+                drop_text_file(url);
+        }
+    }
+    else{
+        QTextEdit::insertFromMimeData(source);
+    }
+}
+
+void TextEdit::insert_image(){
+
+    QString file = QFileDialog::getOpenFileName(this, tr("Select an image"), ".", tr("Images files (*.bmp *.jpg *jpeg *.gif *.png)"));
+    if(file.size() == 0){
+        return;
+    }
+
+    QUrl Uri ( QString ( "file://%1" ).arg ( file ) );
+    QImage image = QImageReader ( file ).read();
+    document()->addResource(QTextDocument::ImageResource, Uri, image);
+
+    QTextImageFormat imageFormat;
+    imageFormat.setWidth( image.width() );
+    imageFormat.setHeight( image.height() );
+    imageFormat.setName( Uri.toString() );
+    textCursor().insertImage(imageFormat);
+}
+
+void TextEdit::drop_image(const QUrl &url, const QImage &image){
+
+    if (!image.isNull()){
+
+        document()->addResource(QTextDocument::ImageResource, url, image);
+
+        QTextImageFormat format;
+        format.setWidth(image.width());
+        format.setHeight(image.height());
+        format.setName(url.toString());
+        textCursor().insertImage(format);
+    }
+}
+
+void TextEdit::drop_text_file(const QUrl &url){
+
+    QFile file(url.toLocalFile());
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+        textCursor().insertText(file.readAll());
 }

@@ -286,6 +286,7 @@ private:
     QThread m_pdfGeneratorWorkerThread;
 
     // ui
+    QWidget *m_wSupport = nullptr;
     Ui::PhotosConsigneMainW *m_ui = nullptr; /**< PC Main widget */
 };
 }

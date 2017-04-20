@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Merci d'utiliser PhotosConsigne!</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -29,10 +29,10 @@
 </string>
      </property>
      <property name="text">
-      <string>Merci d'utiliser PhotosConsigne, j'ai réalisé ce logiciel sur mon temps libre, sa conception m'a demandé des centaines d'heures de travail.
+      <string>J'ai réalisé ce logiciel sur mon temps libre, sa conception m'a demandé des centaines d'heures de travail.
 J'ai choisi d'en faire profiter la communauté en le proposant gratuitement à tous.
 
-Si vous souhaitez me remercier et contribuer à sa pérennité vous pouvez:</string>
+Si ce logiciel vous est utile, vous pouvez  me remercier et contribuer à sa pérennité en:</string>
      </property>
     </widget>
    </item>
@@ -111,7 +111,7 @@ QPushButton:hover:!pressed
 </string>
        </property>
        <property name="text">
-        <string>réaliser un don</string>
+        <string>réalisant un don</string>
        </property>
       </widget>
      </item>
@@ -191,7 +191,7 @@ QPushButton:hover:!pressed
 </string>
        </property>
        <property name="text">
-        <string>participer au patreon</string>
+        <string>participant au patreon</string>
        </property>
       </widget>
      </item>
@@ -243,7 +243,7 @@ QPushButton:hover:!pressed
 </string>
        </property>
        <property name="text">
-        <string>m'envoyer vos avis et idées par mail -&gt; lance.florian@protonmail.com</string>
+        <string>m'envoyant vos avis et idées par mail -&gt; lance.florian@protonmail.com</string>
        </property>
        <property name="textInteractionFlags">
         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -267,7 +267,7 @@ QPushButton:hover:!pressed
 </string>
      </property>
      <property name="text">
-      <string>Merci à tous pour votre soutien!</string>
+      <string>Merci à tous pour votre soutien! N'hésitez pas à le faire partager au plus grand nombre.</string>
      </property>
     </widget>
    </item>

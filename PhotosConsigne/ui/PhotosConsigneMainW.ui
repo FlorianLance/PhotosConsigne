@@ -237,6 +237,9 @@ QWidget {
              <height>40</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Ouvrir la fenêtre de soutien du logiciel</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">
 
@@ -298,6 +301,9 @@ QPushButton:hover:!pressed
              <height>40</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Générer et sauvegarder le PDF avec les paramètres courants</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">
 
@@ -358,6 +364,9 @@ QPushButton:hover:!pressed
              <width>170</width>
              <height>40</height>
             </size>
+           </property>
+           <property name="toolTip">
+            <string>Ouvrir le dernier PDF sauvegardé avec le logiciel par défaut du système</string>
            </property>
            <property name="styleSheet">
             <string notr="true">
@@ -2150,6 +2159,9 @@ QPushButton:hover:!pressed
               <height>51</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>Alignement horizontal par défaut de la photo sur la gauche</string>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
   
@@ -2205,6 +2217,9 @@ QPushButton:hover:!pressed
               <height>51</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>Alignement horizontal par défaut de la photo au centre</string>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
   
@@ -2256,6 +2271,9 @@ QPushButton:hover:!pressed
               <width>60</width>
               <height>51</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>Alignement horizontal par défaut de la photo sur la droite</string>
             </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
@@ -2322,6 +2340,9 @@ QPushButton:hover:!pressed
               <height>51</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>Alignement vertical par défaut de la photo vers le haut</string>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
   
@@ -2377,6 +2398,9 @@ QPushButton:hover:!pressed
               <height>51</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>Alignement vertical par défaut de la photo au centre</string>
+            </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
   
@@ -2428,6 +2452,9 @@ QPushButton:hover:!pressed
               <width>60</width>
               <height>51</height>
              </size>
+            </property>
+            <property name="toolTip">
+             <string>Alignement vertical par défaut de la photo vers le bas</string>
             </property>
             <property name="styleSheet">
              <string notr="true">QPushButton {
@@ -2504,6 +2531,9 @@ QPushButton:hover:!pressed
           </property>
           <item>
            <widget class="QCheckBox" name="cbAddExteriorMargins">
+            <property name="toolTip">
+             <string>Activation des marges extérieures</string>
+            </property>
             <property name="styleSheet">
              <string notr="true">QWidget {
   
@@ -2578,6 +2608,9 @@ QPushButton:hover:!pressed
                 <height>16777215</height>
                </size>
               </property>
+              <property name="toolTip">
+               <string>Ratio de la marge extérieure gauche</string>
+              </property>
               <property name="maximum">
                <number>1000</number>
               </property>
@@ -2591,6 +2624,9 @@ QPushButton:hover:!pressed
             </item>
             <item alignment="Qt::AlignHCenter">
              <widget class="QDoubleSpinBox" name="dsbLeftMargins">
+              <property name="toolTip">
+               <string> Ratio de la marge extérieure  gauche</string>
+              </property>
               <property name="maximum">
                <double>1.000000000000000</double>
               </property>
@@ -2652,6 +2688,9 @@ QPushButton:hover:!pressed
                 <height>16777215</height>
                </size>
               </property>
+              <property name="toolTip">
+               <string>Ratio de la marge extérieure du haut</string>
+              </property>
               <property name="maximum">
                <number>1000</number>
               </property>
@@ -2665,6 +2704,9 @@ QPushButton:hover:!pressed
             </item>
             <item alignment="Qt::AlignHCenter">
              <widget class="QDoubleSpinBox" name="dsbTopMargins">
+              <property name="toolTip">
+               <string>Ratio de la marge extérieure du haut</string>
+              </property>
               <property name="maximum">
                <double>1.000000000000000</double>
               </property>
@@ -2726,6 +2768,9 @@ QPushButton:hover:!pressed
                 <height>16777215</height>
                </size>
               </property>
+              <property name="toolTip">
+               <string>Ratio de la marge extérieure du bas</string>
+              </property>
               <property name="maximum">
                <number>1000</number>
               </property>
@@ -2739,6 +2784,9 @@ QPushButton:hover:!pressed
             </item>
             <item alignment="Qt::AlignHCenter">
              <widget class="QDoubleSpinBox" name="dsbBottomMargins">
+              <property name="toolTip">
+               <string>Ratio de la marge extérieure du bas</string>
+              </property>
               <property name="maximum">
                <double>1.000000000000000</double>
               </property>
@@ -2800,6 +2848,9 @@ QPushButton:hover:!pressed
                 <height>16777215</height>
                </size>
               </property>
+              <property name="toolTip">
+               <string>Ratio de la marge extérieure droite</string>
+              </property>
               <property name="maximum">
                <number>1000</number>
               </property>
@@ -2813,6 +2864,9 @@ QPushButton:hover:!pressed
             </item>
             <item alignment="Qt::AlignHCenter">
              <widget class="QDoubleSpinBox" name="dsbRightMargins">
+              <property name="toolTip">
+               <string>Ratio de la marge extérieure droite</string>
+              </property>
               <property name="maximum">
                <double>1.000000000000000</double>
               </property>
@@ -2841,6 +2895,9 @@ QPushButton:hover:!pressed
           </item>
           <item>
            <widget class="QCheckBox" name="cbAddInteriorMargins">
+            <property name="toolTip">
+             <string>Activation des marges intérieures</string>
+            </property>
             <property name="styleSheet">
              <string notr="true">QWidget {
   
@@ -2909,6 +2966,9 @@ QPushButton:hover:!pressed
                 <height>16777215</height>
                </size>
               </property>
+              <property name="toolTip">
+               <string>Ratio de la marge intérieure horizontale</string>
+              </property>
               <property name="maximum">
                <number>1000</number>
               </property>
@@ -2922,6 +2982,9 @@ QPushButton:hover:!pressed
             </item>
             <item alignment="Qt::AlignHCenter">
              <widget class="QDoubleSpinBox" name="dsbHorizontalMargins">
+              <property name="toolTip">
+               <string>Ratio de la marge intérieure horizontale</string>
+              </property>
               <property name="maximum">
                <double>1.000000000000000</double>
               </property>
@@ -2983,6 +3046,9 @@ QPushButton:hover:!pressed
                 <height>16777215</height>
                </size>
               </property>
+              <property name="toolTip">
+               <string>Ratio de la marge intérieure verticale</string>
+              </property>
               <property name="maximum">
                <number>1000</number>
               </property>
@@ -2996,6 +3062,9 @@ QPushButton:hover:!pressed
             </item>
             <item alignment="Qt::AlignHCenter">
              <widget class="QDoubleSpinBox" name="dsbVerticalMargins">
+              <property name="toolTip">
+               <string>Ratio de la marge intérieure verticale</string>
+              </property>
               <property name="maximum">
                <double>1.000000000000000</double>
               </property>
@@ -3341,6 +3410,9 @@ QTabBar::tab:!selected {
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="toolTip">
+                    <string>Photo précédente</string>
+                   </property>
                    <property name="styleSheet">
                     <string notr="true">QPushButton {
   
@@ -3394,6 +3466,9 @@ QPushButton:hover:!pressed
                      <width>50</width>
                      <height>50</height>
                     </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>Rotation à 90° gauche de la photo</string>
                    </property>
                    <property name="styleSheet">
                     <string notr="true">QPushButton {
@@ -3460,6 +3535,9 @@ QPushButton:hover:!pressed
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="toolTip">
+                    <string>Changer l'ordre de la photo en la remontant</string>
+                   </property>
                    <property name="styleSheet">
                     <string notr="true">QPushButton {
   
@@ -3511,6 +3589,9 @@ QPushButton:hover:!pressed
                      <width>50</width>
                      <height>50</height>
                     </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>Changer l'ordre de la photo en la descendant</string>
                    </property>
                    <property name="styleSheet">
                     <string notr="true">QPushButton {
@@ -3577,6 +3658,9 @@ QPushButton:hover:!pressed
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="toolTip">
+                    <string>Retirer la photo de la liste</string>
+                   </property>
                    <property name="styleSheet">
                     <string notr="true">QPushButton {
   
@@ -3628,6 +3712,9 @@ QPushButton:hover:!pressed
                      <width>50</width>
                      <height>50</height>
                     </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>Rajouter la photo dans la liste</string>
                    </property>
                    <property name="styleSheet">
                     <string notr="true">QPushButton {
@@ -3694,6 +3781,9 @@ QPushButton:hover:!pressed
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="toolTip">
+                    <string>Rotation à 90° droit de la photo</string>
+                   </property>
                    <property name="styleSheet">
                     <string notr="true">QPushButton {
   
@@ -3745,6 +3835,9 @@ QPushButton:hover:!pressed
                      <width>60</width>
                      <height>50</height>
                     </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>Photo suivante</string>
                    </property>
                    <property name="styleSheet">
                     <string notr="true">QPushButton {
@@ -4130,7 +4223,7 @@ QToolBox::tab:hover:!pressed
 }</string>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>2</number>
                </property>
                <widget class="QWidget" name="tbTitre">
                 <property name="geometry">
@@ -4175,6 +4268,9 @@ QToolBox::tab:hover:!pressed
                        <property name="enabled">
                         <bool>false</bool>
                        </property>
+                       <property name="toolTip">
+                        <string>positionner le titre sur le haut de la page</string>
+                       </property>
                        <property name="styleSheet">
                         <string notr="true">QWidget::enabled {
   
@@ -4198,6 +4294,9 @@ QToolBox::tab:hover:!pressed
                        <property name="enabled">
                         <bool>false</bool>
                        </property>
+                       <property name="toolTip">
+                        <string>positionner le titre sur le bas de la page</string>
+                       </property>
                        <property name="styleSheet">
                         <string notr="true">QWidget::enabled {
   
@@ -4217,6 +4316,9 @@ QToolBox::tab:hover:!pressed
                       <widget class="QRadioButton" name="rbWriteOnPCTitle">
                        <property name="enabled">
                         <bool>false</bool>
+                       </property>
+                       <property name="toolTip">
+                        <string>le titre sera écrit par dessur la page</string>
                        </property>
                        <property name="styleSheet">
                         <string notr="true">QWidget::enabled {
@@ -4253,6 +4355,9 @@ les ensembles</string>
                     <widget class="QCheckBox" name="cbAllPagesTitle">
                      <property name="enabled">
                       <bool>false</bool>
+                     </property>
+                     <property name="toolTip">
+                      <string>afficher le titre à toutes les pages</string>
                      </property>
                      <property name="styleSheet">
                       <string notr="true">QWidget::enabled {
@@ -4338,6 +4443,9 @@ les ensembles</string>
                          <height>16777215</height>
                         </size>
                        </property>
+                       <property name="toolTip">
+                        <string>Ratio entre le titre et le reste de la page</string>
+                       </property>
                        <property name="maximum">
                         <number>1000</number>
                        </property>
@@ -4353,6 +4461,9 @@ les ensembles</string>
                       <widget class="QDoubleSpinBox" name="dsbRatioTitle">
                        <property name="enabled">
                         <bool>false</bool>
+                       </property>
+                       <property name="toolTip">
+                        <string>Ratio entre le titre et le reste de la page</string>
                        </property>
                        <property name="maximum">
                         <double>1.000000000000000</double>
@@ -4393,8 +4504,8 @@ les ensembles</string>
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>100</width>
-                  <height>30</height>
+                  <width>430</width>
+                  <height>601</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -4423,8 +4534,8 @@ les ensembles</string>
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>100</width>
-                  <height>30</height>
+                  <width>430</width>
+                  <height>601</height>
                  </rect>
                 </property>
                 <attribute name="label">
