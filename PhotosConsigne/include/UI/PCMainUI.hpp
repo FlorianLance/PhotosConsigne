@@ -20,6 +20,7 @@
 #include "ui_PhotosConsigneMainW.h"
 #include "ui_IndividualConsign.h"
 #include "ui_Support.h"
+#include "ui_Help.h"
 
 // # ui
 #include "RichTextUI.hpp"
@@ -32,6 +33,7 @@ namespace Ui {
 class PhotosConsigneMainW;
 class IndividualConsign;
 class SupportW;
+class HelpW;
 }
 
 namespace pc {
@@ -287,6 +289,7 @@ private:
 
     // ui
     QWidget *m_wSupport = nullptr;
+    QWidget *m_wHelp = nullptr;
     Ui::PhotosConsigneMainW *m_ui = nullptr; /**< PC Main widget */
 };
 }

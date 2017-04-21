@@ -51,7 +51,8 @@ FORMS += \
     ui/MainUI.ui \
     ui/PhotosConsigneMainW.ui \
     ui/IndividualConsign.ui \
-    ui/Support.ui
+    ui/Support.ui \
+    ui/Help.ui
 
 DISTFILES += \
     deploiement/PhotosConsigne_x64.iss \
@@ -64,7 +65,7 @@ DISTFILES += \
     myapp.rc
 
 RESOURCES += \
-    resources.qrc \
+    resources.qrc
 
 
 equals(ARCH, "x86"){

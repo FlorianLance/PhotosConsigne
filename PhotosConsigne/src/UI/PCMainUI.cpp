@@ -7,6 +7,7 @@
  * \date 04/04/2017
  */
 
+// local
 #include "PCMainUI.hpp"
 
 // Qt
@@ -14,22 +15,22 @@
 #include <QMessageBox>
 #include <QtGlobal>
 #include <QDesktopServices>
+#include <QColorDialog>
 
 // std
 #include <chrono>
+
+
 
 using namespace pc;
 
 PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
 {
     Q_UNUSED(parent)
-    std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now(), end;
+//    std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now(), end;
 
     // current version
     QString version = "3.0";
-
-//    qDebug()<< "constructor UI: " << std::chrono::duration_cast<std::chrono::milliseconds>
-//                             (std::chrono::system_clock::now()-start).count() << " ms";
 
     // use designer ui
     m_ui->setupUi(this);
@@ -38,9 +39,29 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
     this->setWindowTitle("PhotosConsigne " + version + " (générateur de PDF à partir de photos)");
     this->setWindowIcon(QIcon(":/images/icon"));
 
+    // page color
+    QPixmap pixColor(16, 16);
+    pixColor.fill(Qt::white);
+    QAction *actionPageColor = new QAction(pixColor, tr("Couleur de la page"), this);
+    connect(actionPageColor, &QAction::triggered, this, [=]{
 
-//    qDebug()<< "constructor widgets: " << std::chrono::duration_cast<std::chrono::milliseconds>
-//                             (std::chrono::system_clock::now()-start).count() << " ms";
+        QColor col = QColorDialog::getColor(m_settings.pageColor, this);
+        if (!col.isValid())
+            return;
+
+        QPixmap pix(16, 16);
+        pix.fill(col);
+        actionPageColor->setIcon(pix);
+        m_settings.pageColor = col;
+        update_settings();
+    });
+    m_ui->tbColorPage->setDefaultAction(actionPageColor);
+
+    // grayscale
+    connect(m_ui->cbBAndW, &QCheckBox::clicked, this, [=](bool checked){
+        m_settings.grayScale = checked;
+        update_settings();
+    });
 
     // disable textes info tab
     m_ui->twGeneralSettings->setTabEnabled(0,false);
@@ -212,6 +233,34 @@ PCMainUI::PCMainUI(QApplication *parent) : m_ui(new Ui::PhotosConsigneMainW)
 
         m_wSupport->show();
     });
+    connect(m_ui->pbHelp, &QPushButton::clicked, this, [=]{
+        if(m_wHelp != nullptr){
+            delete m_wHelp;
+        }
+        m_wHelp = new QWidget();
+        m_wHelp->setWindowIcon(QIcon(":/images/icon"));
+
+        Ui::HelpW help;
+        help.setupUi(m_wHelp);
+
+        connect(help.pbFAQ, &QPushButton::clicked, this, [=]{
+            if(!QDesktopServices::openUrl(QUrl("https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions", QUrl::TolerantMode))){
+                QMessageBox::warning(this, tr("Avertissement"), tr("Le site internet du tutoriel n'a pu être lancé, aucun logiciel de navigation web n'a été trouvé.' .\n"),QMessageBox::Ok);
+            }
+        });
+        connect(help.pbVideosTutorials, &QPushButton::clicked, this, [=]{
+            if(!QDesktopServices::openUrl(QUrl("https://github.com/FlorianLance/PhotosConsigne/wiki/Tutoriels", QUrl::TolerantMode))){
+                QMessageBox::warning(this, tr("Avertissement"), tr("Le site internet du tutoriel n'a pu être lancé, aucun logiciel de navigation web n'a été trouvé.' .\n"),QMessageBox::Ok);
+            }
+        });
+
+        connect(help.pbReturn, &QPushButton::clicked, this, [=]{
+            m_wHelp->hide();
+        });
+
+        m_wHelp->show();
+    });
+
     connect(m_ui->pbOpenPDF, &QPushButton::clicked, this, [=]{
         bool success = QDesktopServices::openUrl(QUrl::fromLocalFile(m_pcPages.pdfFileName));
         if(!success)
@@ -528,6 +577,14 @@ PCMainUI::~PCMainUI()
 
     m_individualConsignsTEdit.clear();
     m_individualConsignsW.clear();
+
+    if(m_wHelp != nullptr){
+        delete m_wHelp;
+    }
+
+    if(m_wSupport != nullptr){
+        delete m_wSupport;
+    }
 
     delete m_ui;
 }

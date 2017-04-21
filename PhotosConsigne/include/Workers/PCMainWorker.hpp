@@ -122,7 +122,7 @@ public :
     PDFGeneratorWorker()
     {}
 
-    void draw_page(QPainter &painter, PCPages &pcPages, const int idPageToDraw, const qreal factorUpscale, const bool preview, const bool drawZones)
+    void draw_page(QPainter &painter, GlobalParameters settings, PCPages &pcPages, const int idPageToDraw, const qreal factorUpscale, const bool preview, const bool drawZones)
     {
         SPCPage pcPage = pcPages.pages[idPageToDraw];
         if(drawZones){
@@ -163,13 +163,12 @@ public :
         ExtraPCInfo infos;
         infos.pagesNb    = pcPages.pages.size();
         infos.pageNum    = idPageToDraw;
+        infos.pageColor  = settings.pageColor;
         infos.photoNum   = 0;
-        infos.photoPCNum = 0;
+        infos.photoPCNum = 0;        
         for(auto &&page : pcPages.pages){
             infos.photoTotalNum += page->sets.size();
         }
-
-
 
         // PC
         for(auto &&set : pcPage->sets){
@@ -281,16 +280,33 @@ public slots :
 
         // create preview image
         QImage image(widthPreview, heightPreview, QImage::Format_RGB32);
+
         // fill background
-        image.fill(Qt::GlobalColor::white);
+        image.fill(settings.pageColor);
 
         QPainter painter(&image);
         m_pageToDraw->compute_sizes(QRectF(0 ,0, widthPreview, heightPreview));
-        draw_page(painter, pcPages, settings.currentPageId, 1., true, settings.displayZones);
-
+        draw_page(painter, settings, pcPages, settings.currentPageId, 1., true, settings.displayZones);
         painter.end();
 
-        emit end_preview_signal(image);
+        if(settings.grayScale){
+            for (int ii = 0; ii < image.height(); ii++) {
+                QRgb *pixel = reinterpret_cast<QRgb*>(image.scanLine(ii));
+                QRgb *end = pixel + image.width();
+                for (; pixel != end; pixel++) {
+                    int gray = qGray(*pixel);
+                    *pixel = QColor(gray, gray, gray).rgb();
+                }
+            }
+        }
+
+        QImage pageImage(widthPreview+2, heightPreview+2, QImage::Format_RGB32);
+        pageImage.fill(Qt::black);
+        QPainter painterPage(&pageImage);
+        painterPage.drawImage(1,1,image);
+        painterPage.end();
+
+        emit end_preview_signal(pageImage);
     }
 
     void generate_PDF(QReadWriteLock *docLocker, GlobalParameters settings, PCPages pcPages)
@@ -302,9 +318,8 @@ public slots :
         QPrinter pdfWriter(QPrinter::PrinterResolution);
         pdfWriter.setOutputFormat(QPrinter::PdfFormat);
         pdfWriter.setOutputFileName(pcPages.pdfFileName);
-//        pdfWriter.setDocName("test");
-        pdfWriter.setCreator("created with PhotosConsigne (https://github.com/FlorianLance/PhotosConsigne)");
-//        pdfWriter.setColorMode(QPrinter::ColorMode::GrayScale);
+        pdfWriter.setCreator("created with PhotosConsigne (https://github.com/FlorianLance/PhotosConsigne)");        
+        pdfWriter.setColorMode(settings.grayScale ? QPrinter::ColorMode::GrayScale : QPrinter::ColorMode::Color);
 
         bool landScape = settings.globalOrientation == PageOrientation::landScape;
         QPageLayout pageLayout(QPageSize(static_cast<QPageSize::PageSizeId>(pcPages.paperFormat.format)),
@@ -342,12 +357,14 @@ public slots :
 
             emit set_progress_bar_text_signal("Création page " + QString::number(ii));
 
-            draw_page(pdfPainter, pcPages, ii, 1.*pcPages.paperFormat.dpi/m_previewDPI, false, false);
+            pdfPainter.fillRect(pcPages.pages[ii].get()->rectOnPage, settings.pageColor);
+            draw_page(pdfPainter, settings, pcPages, ii, 1.*pcPages.paperFormat.dpi/m_previewDPI, false, false);
 
-            if(ii < pcPages.pages.size()-1 && !settings.saveOnlyCurrentPage)
+            if(ii < pcPages.pages.size()-1 && !settings.saveOnlyCurrentPage){
                 pdfWriter.newPage();                
+            }
 
-            QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+            QCoreApplication::processEvents(QEventLoop::AllEvents, 50);
         }
 
         // end pdf writing

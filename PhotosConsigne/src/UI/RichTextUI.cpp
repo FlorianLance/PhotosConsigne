@@ -401,7 +401,7 @@ void RichTextEdit::setup_text_actions(){
     // image insert
     const QIcon imageIcon = QIcon(":/images/insertimage");
     actionInsertImage = new QAction(imageIcon, tr("Insérer image"), this);
-    actionInsertImage->setShortcut(Qt::CTRL + Qt::Key_I);
+    actionInsertImage->setShortcut(Qt::CTRL + Qt::Key_P);
     actionInsertImage->setCheckable(true);
     actionInsertImage->setPriority(QAction::LowPriority);
 
@@ -409,8 +409,8 @@ void RichTextEdit::setup_text_actions(){
     insertImageButton->setDefaultAction(actionInsertImage);
     m_menuLayoutBottom->addWidget(insertImageButton);
     connect(insertImageButton,&QToolButton::clicked, this, [=]{
-        textEdit()->setFocus();
         textEdit()->insert_image();
+        textEdit()->setFocus();        
     });
 
     m_menuLayoutBottom->addSpacing(4);
@@ -672,8 +672,10 @@ void RichTextEdit::text_color(){
 
     m_docLocker->lockForWrite();
     QColor col = QColorDialog::getColor(m_textEdit->textColor(), this);
-    if (!col.isValid())
+    if (!col.isValid()){
+        m_docLocker->unlock();
         return;
+    }
 
     QTextCharFormat fmt;
     fmt.setForeground(col);
@@ -686,8 +688,10 @@ void RichTextEdit::background_text_color(){
 
     m_docLocker->lockForWrite();
     QColor col = QColorDialog::getColor(m_textEdit->textBackgroundColor(), this);
-    if (!col.isValid())
+    if (!col.isValid()){
+        m_docLocker->unlock();
         return;
+    }
 
     QTextCharFormat fmt;
     fmt.setBackground(col);

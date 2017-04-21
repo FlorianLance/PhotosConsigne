@@ -107,7 +107,9 @@ protected:
             emit click_on_page_signal(posRelative);
 
             if(m_doubleClickTimer.isActive() && m_currentPCRect.contains(ev->pos())){
-                emit double_click_on_photo_signal(m_currentPCRectId);
+                if(m_currentPCRectId != -1){
+                    emit double_click_on_photo_signal(m_currentPCRectId);
+                }
             }else{
                 m_doubleClickTimer.start(300);
             }

@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HelpW</class>
+ <widget class="QWidget" name="HelpW">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>284</width>
+    <height>286</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Aide</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="6" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Texte àgauche:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Souligné:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QPushButton" name="pbVideosTutorials">
+     <property name="minimumSize">
+      <size>
+       <width>130</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>130</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+
+QPushButton {
+  
+	color : rgb(0,106,255);
+	border-style: outset;
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+    background-color:  rgb(220,220,220);
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+     </property>
+     <property name="text">
+      <string>Tutoriels vidéos</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Raccourcis claviers:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Gras:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QPushButton" name="pbFAQ">
+     <property name="minimumSize">
+      <size>
+       <width>130</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>130</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+
+QPushButton {
+  
+	color : rgb(0,106,255);
+	border-style: outset;
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+    background-color:  rgb(220,220,220);
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+     </property>
+     <property name="text">
+      <string>FAQ</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="1">
+    <widget class="QPushButton" name="pbReturn">
+     <property name="styleSheet">
+      <string notr="true">
+
+QPushButton {
+  
+	color : rgb(0,106,255);
+	border-style: outset;
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+    background-color:  rgb(220,220,220);
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+     </property>
+     <property name="text">
+      <string>Retour au logiciel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="label_14">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Texte justifié:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Italic: </string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QLabel" name="label_11">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+L</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QLabel" name="label_12">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+E</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QLabel" name="label_13">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+R</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLabel" name="label_8">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+B</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="label_7">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Texte à droite: </string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLabel" name="label_9">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+I</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLabel" name="label_10">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+U</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Texte centré:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QLabel" name="label_15">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+J</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0" colspan="2">
+    <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

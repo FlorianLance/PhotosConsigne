@@ -1,4 +1,11 @@
 
+/**
+ * \file Utility.hpp
+ * \brief ...
+ * \author Florian Lance
+ * \date 04/04/2017
+ */
+
 
 #pragma once
 
@@ -954,6 +961,7 @@ namespace pc
 
     struct GlobalParameters{
 
+        bool grayScale = false;
         bool saveOnlyCurrentPage = false;
         bool noPreviewGeneration = false;
         bool displayZones = false;
@@ -972,6 +980,7 @@ namespace pc
         bool globalDisplayCutLines;
         int globalPhotosAlignment;
         qreal globalPCRatio;
+        QColor pageColor = Qt::white;
 
         Position globalConsignPositionFromPhotos;
         Position previousGlobalConsignPositionFromPhotos;
@@ -1009,12 +1018,14 @@ namespace pc
         int photoNum      = -1;
         int photoPCNum    = -1;
         int photoTotalNum = -1;
+        QColor pageColor = Qt::white;
     };
 
     static void draw_doc_html_with_size_factor(QPainter &painter, QReadWriteLock *docLocker, QTextDocument *doc, QRectF upperRect, QRectF docRect, qreal sizeFactor, ExtraPCInfo infos = ExtraPCInfo()){
 
         QImage pixDoc(QSize(upperRect.width(),upperRect.height()), QImage::Format_ARGB32);
-        pixDoc.fill(QColor(255,255,255,255)); // ## to be parametreized
+//        pixDoc.fill(QColor(255,255,255,255)); // ## to be parametreized
+        pixDoc.fill(infos.pageColor);
 
         QPainter painterDoc(&pixDoc);
         painterDoc.setPen(QPen());

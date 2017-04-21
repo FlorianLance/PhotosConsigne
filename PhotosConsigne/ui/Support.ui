@@ -32,7 +32,7 @@
       <string>J'ai réalisé ce logiciel sur mon temps libre, sa conception m'a demandé des centaines d'heures de travail.
 J'ai choisi d'en faire profiter la communauté en le proposant gratuitement à tous.
 
-Si ce logiciel vous est utile, vous pouvez  me remercier et contribuer à sa pérennité en:</string>
+Si ce logiciel vous est utile, vous pouvez me remercier et contribuer à sa pérennité en:</string>
      </property>
     </widget>
    </item>
@@ -267,7 +267,7 @@ QPushButton:hover:!pressed
 </string>
      </property>
      <property name="text">
-      <string>Merci à tous pour votre soutien! N'hésitez pas à le faire partager au plus grand nombre.</string>
+      <string>Merci à tous pour votre soutien! N'hésitez pas à le partager au plus grand nombre.</string>
      </property>
     </widget>
    </item>
