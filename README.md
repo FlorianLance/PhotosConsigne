@@ -35,6 +35,8 @@ Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa
 * option pour écrire les consigne et titres par dessus les photos
 * alignement individuel des photos
 * corrections de bugs
+* couleur de page
+* "drop" des fichiers textes et images directement dans les consignes
 * et plein d'autres!
 * [Liste des nouveautés des versions précédentes](https://github.com/FlorianLance/PhotosConsigne/wiki/Description-des-versions "Liste versions")
 
