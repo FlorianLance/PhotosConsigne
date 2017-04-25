@@ -63,6 +63,10 @@ class PreviewWorker : public  QObject
 {
  Q_OBJECT
 
+public:
+
+    PreviewWorker(){}
+
 public slots:
 
     void loop_update();
@@ -124,7 +128,7 @@ protected:
 
 
         if(m_pcRectRelative.width() > 0 && m_rectTimer.isActive()){
-             m_currentPCRect = QRect(m_imageRect.x() + m_pcRectRelative.x()*m_imageRect.width(),
+             m_currentPCRect = QRectF(m_imageRect.x() + m_pcRectRelative.x()*m_imageRect.width(),
                                     m_imageRect.y() + m_pcRectRelative.y()*m_imageRect.height(),
                                     m_pcRectRelative.width()*m_imageRect.width(),
                                     m_pcRectRelative.height()*m_imageRect.height());
@@ -144,13 +148,11 @@ signals:
 
     void double_click_on_photo_signal(int idTotalPhoto);
 
-private:
-
-    QRectF m_pcRectRelative;
+private:    
 
     int m_currentPCRectId;
-    QRect m_currentPCRect;
-
+    QRectF m_currentPCRect;
+    QRectF m_pcRectRelative;
 
     QTimer m_rectTimer;
     QTimer m_doubleClickTimer;

@@ -58,6 +58,46 @@ public:
      */
     ~PCMainUI();
 
+
+public slots:
+
+    /**
+     * @brief closeEvent
+     * @param event
+     */
+    void closeEvent(QCloseEvent *event)
+    {
+        Q_UNUSED(event);
+        emit kill_signal();
+    }
+
+
+private slots:
+
+    void set_photos_directory();
+
+    void update_photos_number(bool reset = false);
+
+    void reset_pc_pages();
+
+    void end_loading_photos(SPhotos images);
+
+    void update_settings_with_no_preview(){
+        m_settings.noPreviewGeneration = true;
+        update_settings();
+        m_settings.noPreviewGeneration = false;
+    }
+    void update_settings();
+
+    // photo display
+    void update_photo_to_display(SPhoto photo);
+
+private :
+
+    void define_workers_connections();
+
+    void define_main_UI_connections();
+
     void update_settings_buttons(QVector<QPushButton*> buttons, bool displayZones = false){
         for(auto &&button : buttons){
             connect(button, &QPushButton::clicked, this, [=]{
@@ -199,54 +239,13 @@ public:
         });
     }
 
-
-public slots:
-
-    /**
-     * @brief closeEvent
-     * @param event
-     */
-    void closeEvent(QCloseEvent *event)
-    {
-        Q_UNUSED(event);
-        emit kill_signal();
+    // define useful lambdas
+    void checkbox_enable_UI(QCheckBox *cb, QVector<QWidget*> widgets, bool inverted = false){
+        connect(cb, &QCheckBox::clicked, this, [=](bool checked){
+            for(auto &&widget : widgets)
+                widget->setEnabled(inverted ? (!checked) : checked);
+        });
     }
-
-
-private slots:
-
-//    /**
-//     * @brief openOnlineDocumentation
-//     */
-//    void openOnlineDocumentation();
-
-//    /**
-//     * @brief openDonatePage
-//     */
-//    void openDonatePage();
-
-//    /**
-//     * @brief openAboutWindow
-//     */
-//    void openAboutWindow();
-
-    void set_photos_directory();
-
-    void update_photos_number(bool reset = false);
-
-    void reset_pc_pages();
-
-    void end_loading_photos(SPhotos images);
-
-    void update_settings_with_no_preview(){
-        m_settings.noPreviewGeneration = true;
-        update_settings();
-        m_settings.noPreviewGeneration = false;
-    }
-    void update_settings();
-
-    // photo display
-    void update_photo_to_display(SPhoto photo);
 
 signals :
 

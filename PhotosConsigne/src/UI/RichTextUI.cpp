@@ -671,7 +671,7 @@ void RichTextEdit::text_style(int styleIndex){
 void RichTextEdit::text_color(){
 
     m_docLocker->lockForWrite();
-    QColor col = QColorDialog::getColor(m_textEdit->textColor(), this);
+    QColor col = QColorDialog::getColor(m_textEdit->textColor(), this, "Choix de la couleur du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
     if (!col.isValid()){
         m_docLocker->unlock();
         return;
@@ -687,7 +687,7 @@ void RichTextEdit::text_color(){
 void RichTextEdit::background_text_color(){
 
     m_docLocker->lockForWrite();
-    QColor col = QColorDialog::getColor(m_textEdit->textBackgroundColor(), this);
+    QColor col = QColorDialog::getColor(m_textEdit->textBackgroundColor(), this, "CHoix de la couleur de l'arrière-plan du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
     if (!col.isValid()){
         m_docLocker->unlock();
         return;
@@ -809,7 +809,7 @@ void TextEdit::insertFromMimeData(const QMimeData *source){
 
 void TextEdit::insert_image(){
 
-    QString file = QFileDialog::getOpenFileName(this, tr("Select an image"), ".", tr("Images files (*.bmp *.jpg *jpeg *.gif *.png)"));
+    QString file = QFileDialog::getOpenFileName(this, tr("Sélectionner une image"), QDir::homePath(), tr("Images files (*.bmp *.jpg *jpeg *.gif *.png)"));
     if(file.size() == 0){
         return;
     }

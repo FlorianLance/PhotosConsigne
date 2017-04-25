@@ -124,7 +124,7 @@ public :
 
     void draw_page(QPainter &painter, GlobalParameters settings, PCPages &pcPages, const int idPageToDraw, const qreal factorUpscale, const bool preview, const bool drawZones)
     {
-        SPCPage pcPage = pcPages.pages[idPageToDraw];
+        SPCPage pcPage = pcPages.pages[idPageToDraw];        
         if(drawZones){
 
             // zones externs margins + sets
@@ -185,18 +185,18 @@ public :
             }
 
             // draw photo            
-            if(pcSet->photo->rectOnPage.width()){
-                pcSet->photo->draw(painter, pcSet->photo->rectOnPage, preview);
+            if(pcSet->photo->rectOnPage.width() > 0){
+                pcSet->photo->draw(painter, pcSet->photo->rectOnPage, preview, settings.displayZones, pcPages.paperFormat, pcPage->rectOnPage);
             }            
 
             // draw consign
-            if(pcSet->consign->rectOnPage.width()){
+            if(pcSet->consign->rectOnPage.width()> 0 ){
                 draw_doc_html_with_size_factor(painter, m_docLocker, pcSet->consign->doc, QRectF(pcSet->rectOnPage.x(),pcSet->rectOnPage.y(),
                                                                                      pcSet->consign->rectOnPage.width(), pcPage->rectOnPage.height()), pcSet->consign->rectOnPage, factorUpscale, infos);
             }
 
             if(!preview){
-                emit set_progress_bar_state_signal(1000. * pcSet->totalId/m_totalPC);
+                emit set_progress_bar_state_signal(static_cast<int>(1000. * pcSet->totalId/m_totalPC));
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
             }
         }

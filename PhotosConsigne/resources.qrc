@@ -63,6 +63,7 @@
         <file alias="orderMinus">resources/images/orderMinus.png</file>
         <file alias="orderPlus">resources/images/orderPlus.png</file>
         <file alias="mail">resources/images/mail.png</file>
+        <file alias="duplicate">resources/images/duplicate.png</file>
     </qresource>
     <qresource prefix="/style">
         <file alias="buttons">resources/style/buttons.qss</file>

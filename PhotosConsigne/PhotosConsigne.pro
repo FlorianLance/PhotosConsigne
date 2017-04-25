@@ -15,7 +15,7 @@ CONFIG -= console
 CONFIG -= app_bundle
 #CONFIG -= opengl
 CONFIG += qt
-QT += core gui widgets printsupport
+QT += core gui widgets printsupport concurrent
 
 ####################################### INCLUDES
 INCLUDEPATH += $$PHOTOSCONSIGNE_INCLUDES   # PHOTOSCONSIGNE
@@ -40,7 +40,9 @@ HEADERS += \
     include/UI/PCMainUI.hpp \
     include/UI/ImageLabel.hpp \
     include/UI/RichTextUI.hpp \
-    include/Workers/PCMainWorker.hpp
+    include/Workers/PCMainWorker.hpp \
+    include/thirdparty/asyncfuture/asyncfuture.h \
+    include/Workers/ImageReader.hpp
 #    include/UI/MainUI.h \
 
 

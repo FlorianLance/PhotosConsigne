@@ -2270,6 +2270,16 @@ QPushButton:hover:!pressed
                 </item>
                 <item>
                  <property name="text">
+                  <string>AnsiA</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>AnsiB</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
                   <string>AnsiC</string>
                  </property>
                 </item>
@@ -2490,6 +2500,11 @@ QPushButton:hover:!pressed
                 </item>
                 <item>
                  <property name="text">
+                  <string>EnvelopeC5</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
                   <string>EnvelopeC6</string>
                  </property>
                 </item>
@@ -2505,7 +2520,17 @@ QPushButton:hover:!pressed
                 </item>
                 <item>
                  <property name="text">
+                  <string>EnvelopeDL</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
                   <string>Envelope9</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Envelope10</string>
                  </property>
                 </item>
                 <item>
@@ -3995,6 +4020,61 @@ QPushButton:hover:!pressed
                    <property name="icon">
                     <iconset resource="../resources.qrc">
                      <normaloff>:/images/add</normaloff>:/images/add</iconset>
+                   </property>
+                   <property name="iconSize">
+                    <size>
+                     <width>60</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pbDuplicate">
+                   <property name="minimumSize">
+                    <size>
+                     <width>50</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>50</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="toolTip">
+                    <string>Dupliquer la photo</string>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QPushButton {
+  
+
+ background-color: white;
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="../resources.qrc">
+                     <normaloff>:/images/duplicate</normaloff>:/images/duplicate</iconset>
                    </property>
                    <property name="iconSize">
                     <size>
