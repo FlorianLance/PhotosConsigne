@@ -124,7 +124,25 @@ public :
 
     void draw_page(QPainter &painter, GlobalParameters settings, PCPages &pcPages, const int idPageToDraw, const qreal factorUpscale, const bool preview, const bool drawZones)
     {
-        SPCPage pcPage = pcPages.pages[idPageToDraw];        
+        SPCPage pcPage = pcPages.pages[idPageToDraw];
+
+        // draw cut lines
+        if(pcPage->displayCutLines){
+
+            painter.setOpacity(1);
+            QPen pen;
+            pen.setStyle(Qt::DashLine);
+            pen.setColor(Qt::darkGray);
+            pen.setWidthF((pcPage->rectOnPage.width()+pcPage->rectOnPage.height())*0.5/1000.);
+            painter.setPen(pen);
+            for(auto &&hLine : pcPage->horizontalCutLines){
+                painter.drawLine(hLine);
+            }
+            for(auto &&vLine : pcPage->verticalCutLines){
+                painter.drawLine(vLine);
+            }
+        }
+
         if(drawZones){
 
             // zones externs margins + sets
@@ -235,23 +253,6 @@ public :
                         painter.fillRect(pcSet->consign->rectOnPage, QRgb(qRgb(0,0,200)));
                     }
                 }
-            }
-        }
-
-        // draw cut lines
-        if(pcPage->displayCutLines){
-
-            painter.setOpacity(1);
-            QPen pen;
-            pen.setStyle(Qt::DashLine);
-            pen.setColor(Qt::darkGray);
-            pen.setWidthF((pcPage->rectOnPage.width()+pcPage->rectOnPage.height())*0.5/500.);
-            painter.setPen(pen);
-            for(auto &&hLine : pcPage->horizontalCutLines){
-                painter.drawLine(hLine);
-            }
-            for(auto &&vLine : pcPage->verticalCutLines){
-                painter.drawLine(vLine);
             }
         }
 
