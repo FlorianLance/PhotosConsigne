@@ -15,7 +15,7 @@ Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa
 
 [**CLIQUEZ ICI POUR ACCEDER AUX TELECHARGEMENTS**](https://github.com/FlorianLance/PhotosConsigne/wiki/T%C3%A9l%C3%A9chargements "Téléchargements")
 
-[**CLIQUEZ ICI POUR ACCEDER à la FAQ (FOIRE AUX QUESTIONS)**](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
+[**CLIQUEZ ICI POUR ACCEDER A LA FAQ (FOIRE AUX QUESTIONS)**](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
 
  ## Exemples d'utilisations
 
