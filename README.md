@@ -2,7 +2,8 @@
  # PhotosConsigne
 
 <p align="center">
-  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc3_3.png" alt="Exemple 1" width="900">
+<a href="https://raw.githubusercontent.com/FlorianLance/PhotosConsigne/master/screenshots/pc3_3.png">
+  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc3_3.png" alt="Exemple 1" width="900"></a>
 </p>
 
 **PhotosConsigne** est un logiciel léger et rapide servant à générer des documents PDF à partir d'un dossier d'images.
@@ -27,23 +28,25 @@ Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa
 
 <p align="center">
 Un trombinoscope d'une classe
-  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_trombinoscope.png" alt="Génération d'un trombinoscope" width="900">
+<a href="https://raw.githubusercontent.com/FlorianLance/PhotosConsigne/master/screenshots/pc_trombinoscope.png">
+  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_trombinoscope.png" alt="Génération d'un trombinoscope" width="900"></a>
 </p>
 
 <p align="center">
 Des étiquettes de bouteilles
 <a href="https://raw.githubusercontent.com/FlorianLance/PhotosConsigne/master/screenshots/pc_%C3%A9tiquettes.png"><img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_étiquettes.png" alt="Génération d'étiquettes" width="900"></a>
-
 </p>
 
 <p align="center">
 Un cahier de photos de vacances
-  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_photos_souvenir.jpg" alt="Génération d'un cahier de photos" width="900">
+<a href="https://raw.githubusercontent.com/FlorianLance/PhotosConsigne/master/screenshots/pc_photos_souvenir.jpg">
+  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_photos_souvenir.jpg" alt="Génération d'un cahier de photos" width="900"></a>
 </p>
 
 <p align="center">
 Ou encore un catalogue
-  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_catalogue.jpg" alt="Génération d'un catalogue de photos" width="900">
+<a href="https://raw.githubusercontent.com/FlorianLance/PhotosConsigne/master/screenshots/pc_catalogue.jpg">
+  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_catalogue.jpg" alt="Génération d'un catalogue de photos" width="900"></a>
 </p>
 
 --------------------------
