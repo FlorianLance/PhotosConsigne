@@ -83,25 +83,22 @@ GEOTOOLS_LIBS = ""
 
 ################### CHOOSE COMPUTER SETTINGS
 
-equals(COMPUTER, "work"){
-    include(work.pri)
-}
+#equals(COMPUTER, "work"){
+#    include(work.pri)
+#}
 equals(COMPUTER, "home"){
     include(home.pri)
 }
-equals(COMPUTER, "laptop_work"){
-    include(laptopWork.pri)
-}
-equals(COMPUTER, "laptop_home"){
-    include(laptopHome.pri)
-}
+#equals(COMPUTER, "laptop_work"){
+#    include(laptopWork.pri)
+#}
+#equals(COMPUTER, "laptop_home"){
+#    include(laptopHome.pri)
+#}
 
 ####################################### INCLUDEPATH LOCAL
 
-message($$PHOTOSCONSIGNE_BASE_DIR)
 PHOTOSCONSIGNE_SRC_DIR = $$PHOTOSCONSIGNE_BASE_DIR"/PhotosConsigne"
-message("after")
-message($$PHOTOSCONSIGNE_SRC_DIR)
 
 ####################################### HBP BASE INCLUDES
 

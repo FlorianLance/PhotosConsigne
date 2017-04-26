@@ -1,6 +1,0 @@
-equals(COMPILER, "vs"){
-    # ...
-}
-equals(COMPILER, "gcc"){
-    # ...
-}
