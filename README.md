@@ -1,7 +1,9 @@
 
 # PhotosConsigne
 
-![PhotosConsigne_img1](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc3_0.png "Navigation parmi les photos")
+<p align="center">
+  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc3_3.png" alt="Exemple 1" width="900">
+</p>
 
 **PhotosConsigne** est un logiciel léger et rapide servant à générer des documents PDF à partir d'un dossier d'images.
 Chaque image peut-être associé à un "texte riche" global ou pas et également contenir d'autres images. Il a été conçu de façon à pouvoir changer très facilement les paramètres (quantités d'images par page, orientation, alignements, police du texte...) et de visualiser les modifications en temps réel.
@@ -13,7 +15,6 @@ Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa
 
 [**CLIQUEZ ICI POUR ACCEDER AUX TELECHARGEMENTS**](https://github.com/FlorianLance/PhotosConsigne/wiki/T%C3%A9l%C3%A9chargements "Téléchargements")
 
-![PhotosConsigne_img2](https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc3_1.png "Création de consignes individuelles")
 
 --------------------------
 
@@ -25,7 +26,8 @@ Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa
 * plus de cent formats de papier parmi les plus courants
 * définition allant de 72 à 2400 dpi pour chaque page
 * affichage dynamique des zones
-* texte riche pour toutes les consignes et titres
+* duplication des photos
+* texte riche pour toutes les consignes et titres avec gestion de la transparence
 * gestion des copiers collers et des insertions d'images dans les consignes
 * pas de limite maximale des tailles de photos et du nombre de pages
 * générations plus rapides et précises
