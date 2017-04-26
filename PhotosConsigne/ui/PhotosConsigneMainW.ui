@@ -3685,6 +3685,9 @@ QTabBar::tab:!selected {
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
                    <property name="toolTip">
                     <string>Photo précédente</string>
                    </property>
@@ -3741,6 +3744,9 @@ QPushButton:hover:!pressed
                      <width>50</width>
                      <height>50</height>
                     </size>
+                   </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
                    </property>
                    <property name="toolTip">
                     <string>Rotation à 90° gauche de la photo</string>
@@ -3810,6 +3816,9 @@ QPushButton:hover:!pressed
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
                    <property name="toolTip">
                     <string>Changer l'ordre de la photo en la remontant</string>
                    </property>
@@ -3864,6 +3873,9 @@ QPushButton:hover:!pressed
                      <width>50</width>
                      <height>50</height>
                     </size>
+                   </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
                    </property>
                    <property name="toolTip">
                     <string>Changer l'ordre de la photo en la descendant</string>
@@ -3933,6 +3945,9 @@ QPushButton:hover:!pressed
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
                    <property name="toolTip">
                     <string>Retirer la photo de la liste</string>
                    </property>
@@ -3988,6 +4003,9 @@ QPushButton:hover:!pressed
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
                    <property name="toolTip">
                     <string>Rajouter la photo dans la liste</string>
                    </property>
@@ -4042,6 +4060,9 @@ QPushButton:hover:!pressed
                      <width>50</width>
                      <height>50</height>
                     </size>
+                   </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
                    </property>
                    <property name="toolTip">
                     <string>Dupliquer la photo</string>
@@ -4111,6 +4132,9 @@ QPushButton:hover:!pressed
                      <height>50</height>
                     </size>
                    </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
+                   </property>
                    <property name="toolTip">
                     <string>Rotation à 90° droit de la photo</string>
                    </property>
@@ -4165,6 +4189,9 @@ QPushButton:hover:!pressed
                      <width>60</width>
                      <height>50</height>
                     </size>
+                   </property>
+                   <property name="focusPolicy">
+                    <enum>Qt::NoFocus</enum>
                    </property>
                    <property name="toolTip">
                     <string>Photo suivante</string>

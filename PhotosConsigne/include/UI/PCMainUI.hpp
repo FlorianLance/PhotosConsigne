@@ -65,12 +65,24 @@ public slots:
      * @brief closeEvent
      * @param event
      */
-    void closeEvent(QCloseEvent *event)
-    {
+    void closeEvent(QCloseEvent *event){
+
         Q_UNUSED(event);
         emit kill_signal();
     }
 
+    void keyPressEvent( QKeyEvent * event ){
+
+        if(event->key() == Qt::Key_Left){
+            if(m_ui->twMiddle->currentIndex() == 0){
+                m_ui->pbLeft->click();
+            }
+        } else if(event->key() == Qt::Key_Right){
+            if(m_ui->twMiddle->currentIndex() == 0){
+                m_ui->pbRight->click();
+            }
+        }
+    }
 
 private slots:
 

@@ -775,11 +775,17 @@ void PCMainUI::define_main_UI_connections()
         brush.setColor(QRgb(qRgb(127,180,255)));
         m_ui->lwPhotosList->currentItem()->setForeground(brush);
 
-        qDebug() << "remove 1";
         update_photos_number();
-        qDebug() << "remove 2";
         update_settings_with_no_preview();
-        qDebug() << "remove 3";
+
+        int currRow = m_ui->lwPhotosList->currentRow();
+
+        if(currRow < m_ui->lwPhotosList->count()-1){
+            m_ui->lwPhotosList->setCurrentRow(currRow+1);
+        }else if(currRow > 0){
+            m_ui->lwPhotosList->setCurrentRow(currRow-1);
+        }
+
     });
     connect(m_ui->pbDuplicate, &QPushButton::clicked, this, [&]{
 
