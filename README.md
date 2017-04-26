@@ -15,6 +15,35 @@ Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa
 
 [**CLIQUEZ ICI POUR ACCEDER AUX TELECHARGEMENTS**](https://github.com/FlorianLance/PhotosConsigne/wiki/T%C3%A9l%C3%A9chargements "Téléchargements")
 
+[**CLIQUEZ ICI POUR ACCEDER à la FAQ (FOIRE AUX QUESTIONS)**](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
+
+ ## Exemples d'utilisations
+
+
+<p align="center">
+ Pour créer un cahier de vie
+  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_cahier_de_vie.png" alt="Génération de cahier de vie" width="900">
+</p>
+
+<p align="center">
+Un trombinoscope d'une classe
+  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_trombinoscope.png" alt="Génération d'un trombinoscope" width="900">
+</p>
+
+<p align="center">
+Des étiquettes de bouteilles
+  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_étiquettes.png" alt="Génération d'étiquettes" width="900">
+</p>
+
+<p align="center">
+Un cahier de photos de vacances
+  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_photos_souvenir.jpg" alt="Génération d'un cahier de photos" width="900">
+</p>
+
+<p align="center">
+Ou encore un catalogue
+  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_catalogue.jpg" alt="Génération d'un catalogue de photos" width="900">
+</p>
 
 --------------------------
 
@@ -42,7 +71,7 @@ Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa
 * et plein d'autres!
 * [Liste des nouveautés des versions précédentes](https://github.com/FlorianLance/PhotosConsigne/wiki/Description-des-versions "Liste versions")
 
-[CLIQUEZ ICI POUR ACCEDER à la FAQ (FOIRE AUX QUESTIONS)](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
+
 
 
 
