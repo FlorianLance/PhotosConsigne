@@ -32,7 +32,8 @@ Un trombinoscope d'une classe
 
 <p align="center">
 Des étiquettes de bouteilles
-  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_étiquettes.png" alt="Génération d'étiquettes" width="900">
+<a href="https://raw.githubusercontent.com/FlorianLance/PhotosConsigne/master/screenshots/pc_%C3%A9tiquettes.png"><img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_étiquettes.png" alt="Génération d'étiquettes" width="900"></a>
+
 </p>
 
 <p align="center">
