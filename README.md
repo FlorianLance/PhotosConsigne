@@ -8,7 +8,7 @@
 **PhotosConsigne** est un logiciel léger et rapide servant à générer des documents PDF à partir d'un dossier d'images.
 Chaque image peut-être associé à un "texte riche" global ou pas et également contenir d'autres images. Il a été conçu de façon à pouvoir changer très facilement les paramètres (quantités d'images par page, orientation, alignements, police du texte...) et de visualiser les modifications en temps réel.
 
-Il permet ansi de réaliser facilement et sans manipulation bureatique rébarbative des documents tels que: trombinoscopes, cahiers de vie, albums, vignettes à découper, récapitulatifs photos, posters...
+Il permet ansi de réaliser facilement et sans manipulation bureatique rébarbative des documents tels que: trombinoscopes, cahiers de vie, albums, étiquettes, vignettes à découper, récapitulatifs photos, posters...
 
 J'ai réalisé ce logiciel sur mon temps libre, sa conception m'a demandé des centaines d'heures de travail. J'ai choisi d'en faire profiter la communauté en le proposant gratuitement à tous.
 Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa pérennité en me faisant [**un don en cliquant ici.**](https://www.paypal.me/PhotosConsigne "Faire un don PayPal")
@@ -25,7 +25,7 @@ Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa
 * refonte complète de l'interface pour plus d'intuitivité
 * plus de cent formats de papier parmi les plus courants
 * définition allant de 72 à 2400 dpi pour chaque page
-* affichage dynamique des zones
+* affichage dynamique des zones avec taille réelle des photos
 * duplication des photos
 * texte riche pour toutes les consignes et titres avec gestion de la transparence
 * gestion des copiers collers et des insertions d'images dans les consignes
@@ -38,7 +38,7 @@ Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa
 * alignement individuel des photos
 * corrections de bugs
 * couleur de page
-* "drop" des fichiers textes et images directement dans les consignes
+* insertion des fichiers textes et images directement dans les consignes
 * et plein d'autres!
 * [Liste des nouveautés des versions précédentes](https://github.com/FlorianLance/PhotosConsigne/wiki/Description-des-versions "Liste versions")
 
