@@ -22,7 +22,7 @@ Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa
 
 <p align="center">
  Pour créer un cahier de vie
-  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_cahier_de_vie.png" alt="Génération de cahier de vie" width="900">
+  <a href="https://raw.githubusercontent.com/FlorianLance/PhotosConsigne/master/screenshots/pc_cahier_de_vie.png"><img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/pc_cahier_de_vie.png" alt="Génération de cahier de vie" width="900"></a>      
 </p>
 
 <p align="center">
