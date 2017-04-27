@@ -28,12 +28,13 @@
         <string>Utiliser les paramètres définis ci-dessous pour cet ensemble</string>
        </property>
        <property name="styleSheet">
-        <string notr="true">QWidget::enabled {
-  font-weight: bold;
+        <string notr="true">QWidget {
+  
 	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
 
  }
-
 </string>
        </property>
        <property name="text">
@@ -64,12 +65,13 @@
         <string/>
        </property>
        <property name="styleSheet">
-        <string notr="true">QWidget::enabled {
+        <string notr="true">QWidget {
   
 	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
 
  }
-
 </string>
        </property>
        <property name="text">
@@ -789,8 +791,8 @@ QToolBox::tab:hover:!pressed
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>460</width>
-        <height>360</height>
+        <width>456</width>
+        <height>343</height>
        </rect>
       </property>
       <attribute name="label">
@@ -815,13 +817,13 @@ QToolBox::tab:hover:!pressed
           <string>Ecrire la consigne par dessus la photo pour cet ensemble</string>
          </property>
          <property name="styleSheet">
-          <string notr="true">QWidget::enabled {
+          <string notr="true">QWidget {
   
 	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
 
  }
-
-
 </string>
          </property>
          <property name="text">

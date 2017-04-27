@@ -47,9 +47,6 @@ HEADERS += \
 
 
 FORMS += \
-    ui/LeftMenuUI.ui \
-    ui/PhotosExplorerUI.ui \
-    ui/PreviewUI.ui \
     ui/MainUI.ui \
     ui/PhotosConsigneMainW.ui \
     ui/IndividualConsign.ui \

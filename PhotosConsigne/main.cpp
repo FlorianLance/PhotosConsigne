@@ -39,9 +39,22 @@
 #include "MainUI.h"
 #include "PCMainUI.hpp"
 
-
 int main(int argc,char** argv)
 {
+//    QApplication::setAttribute(Qt::AA_Use96Dpi);
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+
+    QApplication app(argc, argv);
+    app.installTranslator(&qtTranslator);
+
+
+//    QFont font = app.font();
+//    font.setPixelSize(11);
+//    app.setFont(font);
+
+
 //    QPdfWriter pdfW("G:/test.pdf");
 //    pdfW.setPageSize(QPagedPaintDevice::A4);
 
@@ -342,11 +355,7 @@ int main(int argc,char** argv)
 
 
 
-    QTranslator qtTranslator;
-    qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 
-    QApplication app(argc, argv);
-    app.installTranslator(&qtTranslator);
 
     pc::PCMainUI w(&app);
 

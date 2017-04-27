@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>630</width>
-    <height>330</height>
+    <width>829</width>
+    <height>394</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>630</width>
-    <height>330</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>630</width>
-    <height>330</height>
+    <width>16777215</width>
+    <height>16777215</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -28,14 +28,17 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QLabel" name="laDonate">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="styleSheet">
       <string notr="true">QWidget {
   
 	color : rgb(0,106,255);
-	font-style: normal;
-	font-size: 10pt;;
-
-
+    font:  11pt Calibri;
 
  }
 </string>
@@ -114,10 +117,7 @@ QPushButton:hover:!pressed
         <string notr="true">QWidget {
   
 	color : rgb(0,106,255);
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
-
+    font: bold 11pt Calibri;
 
  }
 </string>
@@ -194,10 +194,7 @@ QPushButton:hover:!pressed
         <string notr="true">QWidget {
   
 	color : rgb(0,106,255);
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
-
+    font: bold 11pt Calibri;
 
  }
 </string>
@@ -246,10 +243,7 @@ QPushButton:hover:!pressed
         <string notr="true">QWidget {
   
 	color : rgb(0,106,255);
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
-
+    font: bold 11pt Calibri;
 
  }
 </string>
@@ -270,10 +264,7 @@ QPushButton:hover:!pressed
       <string notr="true">QWidget {
   
 	color : rgb(0,106,255);
-	font-style: normal;
-	font-size: 12pt;;
-
-
+    font:  12pt Calibri;
 
  }
 </string>
@@ -316,13 +307,13 @@ QPushButton:hover:!pressed
        <property name="minimumSize">
         <size>
          <width>150</width>
-         <height>30</height>
+         <height>35</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>150</width>
-         <height>30</height>
+         <width>16777215</width>
+         <height>35</height>
         </size>
        </property>
        <property name="styleSheet">

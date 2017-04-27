@@ -48,7 +48,7 @@ equals(COMPILER, "vs"){
     }
 
     # FLAGS
-    QMAKE_CXXFLAGS_RELEASE += /O2 /openmp
+    QMAKE_CXXFLAGS_RELEASE += /Ox /openmp
 }
 
 ####################################### CFG
