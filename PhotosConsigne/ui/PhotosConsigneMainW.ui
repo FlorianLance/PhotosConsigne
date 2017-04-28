@@ -4579,15 +4579,15 @@ QToolBox::tab:hover:!pressed
 }</string>
                </property>
                <property name="currentIndex">
-                <number>1</number>
+                <number>3</number>
                </property>
                <widget class="QWidget" name="tbTitre">
                 <property name="geometry">
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>520</width>
-                  <height>558</height>
+                  <width>448</width>
+                  <height>568</height>
                  </rect>
                 </property>
                 <property name="maximumSize">
@@ -4881,7 +4881,7 @@ QWidget {
                   <x>0</x>
                   <y>0</y>
                   <width>448</width>
-                  <height>563</height>
+                  <height>568</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -4905,17 +4905,30 @@ QWidget {
                  </property>
                 </layout>
                </widget>
-               <widget class="QWidget" name="tabSelection">
+               <widget class="QWidget" name="tPageSelection">
                 <property name="geometry">
                  <rect>
                   <x>0</x>
                   <y>0</y>
                   <width>448</width>
-                  <height>558</height>
+                  <height>568</height>
                  </rect>
                 </property>
                 <attribute name="label">
-                 <string>SELECTION</string>
+                 <string>PAGE SELECTIONNEE N°...</string>
+                </attribute>
+               </widget>
+               <widget class="QWidget" name="tPCSelection">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>448</width>
+                  <height>568</height>
+                 </rect>
+                </property>
+                <attribute name="label">
+                 <string>ENSEMBLE PHOTO-CONSIGNE SELECTIONNE N°...</string>
                 </attribute>
                </widget>
               </widget>
@@ -4937,7 +4950,7 @@ QWidget {
      <x>0</x>
      <y>0</y>
      <width>1370</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

@@ -55,6 +55,47 @@
        </property>
       </spacer>
      </item>
+     <item>
+      <widget class="QPushButton" name="pbInsertWhiteSpace">
+       <property name="minimumSize">
+        <size>
+         <width>120</width>
+         <height>45</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">
+
+QPushButton {
+    font: 10pt Calibri;  
+
+	color : rgb(0,106,255);
+	border-style: outset;
+    background-color:  rgb(220,220,220);
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+       </property>
+       <property name="text">
+        <string>Remplacer par un 
+espace transparent</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -755,11 +796,12 @@ QPushButton:hover:!pressed
      <property name="styleSheet">
       <string notr="true">
 QToolBox::tab:selected { /* italicize selected tabs */
-	font-weight: bold;
-	font-style: italic;
     color : rgb(0,106,255);
 	qproperty-alignment: AlignCenter;
+    font: italic bold 11pt Calibri;
+	
 }
+
 
 
 QToolBox::tab{
@@ -791,12 +833,12 @@ QToolBox::tab:hover:!pressed
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>456</width>
-        <height>343</height>
+        <width>460</width>
+        <height>335</height>
        </rect>
       </property>
       <attribute name="label">
-       <string>Consigne individuelle</string>
+       <string>CONSIGNE INDIVIDUELLE</string>
       </attribute>
       <layout class="QVBoxLayout" name="vlIndividualConsign">
        <property name="leftMargin">

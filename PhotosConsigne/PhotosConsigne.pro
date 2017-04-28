@@ -32,8 +32,8 @@ SOURCES += \
     main.cpp \
     src/UI/PCMainUI.cpp \
     src/UI/RichTextUI.cpp \
-    src/UI/ImageLabel.cpp
-#src/MainUI.cpp \
+    src/UI/ImageLabel.cpp \
+    src/Utility.cpp
 
 HEADERS += \
     include/Utility.h \
@@ -43,8 +43,6 @@ HEADERS += \
     include/Workers/PCMainWorker.hpp \
     include/thirdparty/asyncfuture/asyncfuture.h \
     include/Workers/ImageReader.hpp
-#    include/UI/MainUI.h \
-
 
 FORMS += \
     ui/MainUI.ui \

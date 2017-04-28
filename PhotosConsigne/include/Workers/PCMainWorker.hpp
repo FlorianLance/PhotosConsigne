@@ -32,7 +32,7 @@ public :
     PhotoDisplayWorker()
     {
         qRegisterMetaType<SPhotos>("SPhotos");
-        qRegisterMetaType<GlobalParameters>("GlobalParameters");
+        qRegisterMetaType<GlobalData>("GlobalData");
         qRegisterMetaType<PCPages>("PCPages");
         qRegisterMetaType<PCPage>("PCPage");
         qRegisterMetaType<QVector<QRectF>>("QVector<QRectF>");
@@ -122,7 +122,7 @@ public :
     PDFGeneratorWorker()
     {}
 
-    void draw_page(QPainter &painter, GlobalParameters settings, PCPages &pcPages, const int idPageToDraw, const qreal factorUpscale, const bool preview, const bool drawZones)
+    void draw_page(QPainter &painter, GlobalData settings, PCPages &pcPages, const int idPageToDraw, const qreal factorUpscale, const bool preview, const bool drawZones)
     {
         SPCPage pcPage = pcPages.pages[idPageToDraw];
 
@@ -271,7 +271,7 @@ public slots :
         m_locker.unlock();
     }
 
-    void generate_preview(QReadWriteLock *docLocker, GlobalParameters settings, PCPages pcPages)
+    void generate_preview(QReadWriteLock *docLocker, GlobalData settings, PCPages pcPages)
     {
         m_docLocker = docLocker;
         m_pageToDraw = pcPages.pages[settings.currentPageId];
@@ -310,7 +310,7 @@ public slots :
         emit end_preview_signal(pageImage);
     }
 
-    void generate_PDF(QReadWriteLock *docLocker, GlobalParameters settings, PCPages pcPages)
+    void generate_PDF(QReadWriteLock *docLocker, GlobalData settings, PCPages pcPages)
     {
         m_docLocker = docLocker;
         m_totalPC = settings.photosValided->size();
