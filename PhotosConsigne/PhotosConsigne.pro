@@ -49,7 +49,8 @@ FORMS += \
     ui/PhotosConsigneMainW.ui \
     ui/IndividualConsign.ui \
     ui/Support.ui \
-    ui/Help.ui
+    ui/Help.ui \
+    ui/IndividualPage.ui
 
 DISTFILES += \
     deploiement/PhotosConsigne_x64.iss \

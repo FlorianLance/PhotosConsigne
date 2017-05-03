@@ -79,7 +79,7 @@ public slots :
 
             currentState += offset;
             emit set_progress_bar_state_signal(static_cast<int>(currentState));
-            idPhoto++;
+            photo->globalId = idPhoto++;
         }
 
         emit set_progress_bar_state_signal(750);
@@ -202,10 +202,12 @@ public :
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
             }
 
-            // draw photo            
-            if(pcSet->photo->rectOnPage.width() > 0){
-                pcSet->photo->draw(painter, pcSet->photo->rectOnPage, preview, settings.displayZones, pcPages.paperFormat, pcPage->rectOnPage);
-            }            
+            // draw photo
+            if(pcSet->photo != nullptr){
+                if(pcSet->photo->rectOnPage.width() > 0){
+                    pcSet->photo->draw(painter, pcSet->photo->rectOnPage, preview, settings.displayZones, pcPages.paperFormat, pcPage->rectOnPage);
+                }
+            }
 
             // draw consign
             if(pcSet->consign->rectOnPage.width()> 0 ){
@@ -275,7 +277,7 @@ public slots :
     {
         m_docLocker = docLocker;
         m_pageToDraw = pcPages.pages[settings.currentPageId];
-        bool landScape     = settings.globalOrientation == PageOrientation::landScape;
+        bool landScape     = settings.orientation == PageOrientation::landScape;
         qreal widthPreview   = landScape ? pcPages.paperFormat.heightRatio*m_previewDPI : pcPages.paperFormat.widthRatio  * m_previewDPI;
         qreal heightPreview  = landScape ? pcPages.paperFormat.widthRatio *m_previewDPI : pcPages.paperFormat.heightRatio * m_previewDPI;
 
@@ -322,7 +324,7 @@ public slots :
         pdfWriter.setCreator("created with PhotosConsigne (https://github.com/FlorianLance/PhotosConsigne)");        
         pdfWriter.setColorMode(settings.grayScale ? QPrinter::ColorMode::GrayScale : QPrinter::ColorMode::Color);
 
-        bool landScape = settings.globalOrientation == PageOrientation::landScape;
+        bool landScape = settings.orientation == PageOrientation::landScape;
         QPageLayout pageLayout(QPageSize(static_cast<QPageSize::PageSizeId>(pcPages.paperFormat.format)),
                                landScape ? QPageLayout::Landscape : QPageLayout::Portrait, QMarginsF(0.,0.,0.,0.));
         pdfWriter.setPageLayout(pageLayout);

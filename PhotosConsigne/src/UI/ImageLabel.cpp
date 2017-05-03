@@ -36,9 +36,12 @@
 #include "ImageLabel.hpp"
 
 
-ImageLabel::ImageLabel(QWidget *parent) :
-    QWidget(parent)
-{}
+ImageLabel::ImageLabel(QWidget *parent) : QWidget(parent) {
+
+    connect(&m_doubleClickTimer, &QTimer::timeout, this, [&]{
+        m_doubleClickTimer.stop();
+    });
+}
 
 void ImageLabel::paintEvent(QPaintEvent *event) {
     QWidget::paintEvent(event);
@@ -119,9 +122,6 @@ PreviewLabel::PreviewLabel(){
     m_worker = std::make_unique<PreviewWorker>();
     connect(m_worker.get(), &PreviewWorker::update_preview_signal, this, [=]{
         update();
-    });
-    connect(&m_doubleClickTimer, &QTimer::timeout, this, [&]{
-        m_doubleClickTimer.stop();
     });
 
     connect(this, &PreviewLabel::start_update_loop_signal, m_worker.get(), &PreviewWorker::loop_update);

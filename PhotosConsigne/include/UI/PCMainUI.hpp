@@ -47,28 +47,30 @@ public slots:
     void closeEvent(QCloseEvent *event);
     void keyPressEvent( QKeyEvent * event );
 
-
-
-
-
-//    void insert_pc(int index);
-
-//    void remove_pc(int index);
-
-
-    void update_pages();
-
-
-
     void set_photos_directory();
-    void define_selected_photo(int index, bool showPhotoDisplayTab = true);
+    void define_selected_photo(int index);
     void update_valid_photos();
     void update_photo_to_display(SPhoto photo);
 
+    void update_pages();
+    void define_selected_page(int index);
+    void define_selected_page_from_current_photo();
+    void define_current_individual_page_ui();
+
     void swap_loaded_pc(int currentIndex, int newIndex);
+    void define_selected_pc(int index);
+    void define_selected_pc_from_current_photo();
 
     void update_settings_with_no_preview();
     void update_settings();
+
+    void display_photo_panel();
+    void display_preview_panel();
+
+    void display_title_panel();
+    void display_global_consign_panel();
+    void display_individual_consign_settings_panel();
+    void display_individual_page_settings_panel();
 
 
 private :
@@ -81,6 +83,8 @@ private :
 
     // ### state
     void enable_ui();
+    void update_photos_list_style();
+    void update_pages_list_style();
 
     // ### windows
     void display_donate_window();
@@ -111,7 +115,7 @@ private:
 
     // ui
     std::unique_ptr<UIElements> m_dynUI  = nullptr; /**< dynamic ui elements */
-    Ui::PhotosConsigneMainW    *m_mainUI = nullptr; /**< main widget */
+    QSharedPointer<Ui::PhotosConsigneMainW>  m_mainUI = nullptr; /**< main widget */
 
     // threads
     std::unique_ptr<PhotoDisplayWorker> m_displayPhotoWorker = nullptr;

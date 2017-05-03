@@ -140,29 +140,39 @@ void pc::PCSet::compute_sizes(QRectF upperRect){
     photo->compute_sizes(photoRect);
 }
 
-pc::Photo::Photo(const QString &path) : pathPhoto(path){
+pc::Photo::Photo(const QString &path, bool isWhiteSpace) : isWhiteSpace(isWhiteSpace), pathPhoto(path){
 
     constexpr int maxHeight = 800;
-    constexpr int maxWidth = 800;
+    constexpr int maxWidth = 800;;
 
-    info            = QFileInfo(path);
-    scaledPhoto     = QImage(path);
-    originalSize    = scaledPhoto.size();
-
-    if(!scaledPhoto.isNull()){
-
-        namePhoto = pathPhoto.split('/').last().split('.').first();
-        if(scaledPhoto.size().width() > maxWidth)
-            scaledPhoto = scaledPhoto.scaledToWidth(maxWidth);
-        if(scaledPhoto.size().height() > maxHeight)
-            scaledPhoto = scaledPhoto.scaledToHeight(maxHeight);
+    if(isWhiteSpace){
+        namePhoto = "Espace vide";
     }else{
-        namePhoto = "Erreur";
-        qWarning() << "-Error: photo not loaded: " << pathPhoto;
+
+        info            = QFileInfo(path);
+        scaledPhoto     = QImage(path);
+        originalSize    = scaledPhoto.size();
+
+        if(!scaledPhoto.isNull()){
+
+            namePhoto = pathPhoto.split('/').last().split('.').first();
+            if(scaledPhoto.size().width() > maxWidth)
+                scaledPhoto = scaledPhoto.scaledToWidth(maxWidth);
+            if(scaledPhoto.size().height() > maxHeight)
+                scaledPhoto = scaledPhoto.scaledToHeight(maxHeight);
+        }
+        else{
+            namePhoto = "Erreur";
+            qWarning() << "-Error: photo not loaded: " << pathPhoto;
+        }
     }
 }
 
 void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, bool preview, bool drawImageSize, pc::PaperFormat format, QRectF pageRect){
+
+    if(isWhiteSpace){
+        return;
+    }
 
     if(scaledPhoto.isNull()){
         qWarning() << "-Error: photo is null, can't be drawn";
@@ -178,7 +188,6 @@ void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, bool preview, b
             draw(painter, rectPhoto, QImage(pathPhoto), false, false, format, pageRect);
         }
     }
-
 }
 
 void pc::Photo::draw(QPainter &painter, QRectF rectPhoto, QImage photo, bool preview, bool drawImageSize, pc::PaperFormat format, QRectF pageRect){
@@ -936,9 +945,9 @@ void pc::UIElements::insert_individual_consign(int index, bool whiteSpace){
 
     individualConsignsWLoaded.insert(index,SQWidget);
     individualConsignsTEditLoaded.insert(index, SRichTextEdit);
-    previousIndividualConsignPositionFromPhotos.insert(index, Position::top);
+//    previousIndividualConsignPositionFromPhotos.insert(index, Position::top);
 
-    Ui::IndividualConsign ui;
+    Ui::IndividualConsignW ui;
     ui.setupUi(SQWidget.get());
     ui.vlIndividualConsign->addWidget(SRichTextEdit.get());
     associate_buttons({ui.pbConsignBottom, ui.pbConsignLeft, ui.pbConsignRight, ui.pbConsignTop});
@@ -950,16 +959,11 @@ void pc::UIElements::insert_individual_consign(int index, bool whiteSpace){
     update_settings_sliders({ui.hsRatioPC}, true);
     update_settings_double_spinboxes({ui.dsbRatioPC}, true);
     update_settings_checkboxes({ui.cbEnableIndividualConsign});
+
+    checkbox_enable_UI(ui.cbEnableIndividualConsign, {ui.wTop});
     connect(SRichTextEdit.get()->textEdit(), &TextEdit::textChanged, this, &UIElements::update_settings_signal);
     connect(ui.cbWriteOnPhoto, &QCheckBox::clicked, this, [=](bool checked){
 
-        if(checked){
-            previousIndividualConsignPositionFromPhotos[index] = (!ui.pbConsignBottom->isEnabled() ? Position::bottom :
-                                                                                                     (!ui.pbConsignLeft->isEnabled()   ? Position::left :
-                                                                                                                                         (!ui.pbConsignRight->isEnabled()  ? Position::right : Position::top)));
-        }
-
-        ui.pbInsertWhiteSpace->setEnabled(!whiteSpace);
         ui.hsRatioPC->setEnabled(!checked);
         ui.dsbRatioPC->setEnabled(!checked);
         ui.pbConsignBottom->setEnabled(!checked);
@@ -968,23 +972,15 @@ void pc::UIElements::insert_individual_consign(int index, bool whiteSpace){
         ui.pbConsignTop->setEnabled(!checked);
 
         if(!checked){
-            switch(previousIndividualConsignPositionFromPhotos[index]){
-            case Position::bottom:
-                ui.pbConsignBottom->setEnabled(false);
-                break;
-            case Position::left:
-                ui.pbConsignLeft->setEnabled(false);
-                break;
-            case Position::right:
-                ui.pbConsignRight->setEnabled(false);
-                break;
-            case Position::top:
-                ui.pbConsignTop->setEnabled(false);
-                break;
-            }
+            ui.pbConsignBottom->setEnabled(false);
         }
 
         emit update_settings_signal();
+    });
+
+    ui.pbInsertWhiteSpace->setEnabled(!whiteSpace);
+    connect(ui.pbInsertWhiteSpace, &QPushButton::clicked, [=]{
+        emit insert_white_space_signal();
     });
 
     associate_double_spinbox_with_slider(ui.dsbRatioPC, ui.hsRatioPC);
@@ -996,7 +992,7 @@ void pc::UIElements::remove_individual_consign(int index){
     // remove element
     individualConsignsWLoaded.removeAt(index);
     individualConsignsTEditLoaded.removeAt(index);
-    previousIndividualConsignPositionFromPhotos.removeAt(index);
+//    previousIndividualConsignPositionFromPhotos.removeAt(index);
 }
 
 void pc::UIElements::reset_individual_consigns(int nbPhotos){
@@ -1007,7 +1003,7 @@ void pc::UIElements::reset_individual_consigns(int nbPhotos){
     // clean
     individualConsignsTEditLoaded.clear();
     individualConsignsWLoaded.clear();
-    previousIndividualConsignPositionFromPhotos.clear();
+//    previousIndividualConsignPositionFromPhotos.clear();
 
     // insert new consigns
     for(int ii = 0; ii < nbPhotos; ++ii){
@@ -1016,6 +1012,52 @@ void pc::UIElements::reset_individual_consigns(int nbPhotos){
         insert_individual_consign(ii);
         currentState += offset;
         emit set_progress_bar_state_signal(static_cast<int>(currentState));
+    }
+}
+
+void pc::UIElements::update_individual_pages(const GlobalData &settings)
+{
+    int diff = individualPageW.size() - settings.nbPages;
+    if(diff < 0){ // add -diff pages
+
+        for(int ii = 0; ii < -diff;++ ii){
+            std::shared_ptr<QWidget> SQWidget = std::make_shared<QWidget>();
+            individualPageW.push_back(SQWidget);
+
+            Ui::IndividualPageW ui;
+            ui.setupUi(SQWidget.get());
+
+            // init uit
+            ui.sbVSizeGrid->setValue(settings.nbPhotosPageV);
+            ui.sbHSizeGrid->setValue(settings.nbPhotosPageH);
+            ui.sbNbPhotos->setEnabled(false);
+
+            // define connections...
+            // # associate sliders with spin boxes
+            associate_double_spinbox_with_slider(ui.dsbLeftMargins, ui.hsLeftMargins, ui.dsbRightMargins, ui.hsRightMargins);
+            associate_double_spinbox_with_slider(ui.dsbTopMargins, ui.hsTopMargins, ui.dsbBottomMargins, ui.hsBottomMargins);
+            associate_double_spinbox_with_slider(ui.dsbHorizontalMargins, ui.hsHorizontalMargins);
+            associate_double_spinbox_with_slider(ui.dsbVerticalMargins, ui.hsVerticalMargins);
+
+
+            update_settings_checkboxes({ui.cbEnableInvididualPageSettings, ui.cbAddExteriorMargins,ui.cbAddInteriorMargins}, true);
+            update_settings_sliders({ui.hsLeftMargins, ui.hsRightMargins, ui.hsTopMargins,ui.hsBottomMargins, ui.hsHorizontalMargins, ui.hsVerticalMargins},true);
+            update_settings_spinboxes({ui.sbVSizeGrid,ui.sbHSizeGrid,ui.sbNbPhotos}, true);
+            update_settings_double_spinboxes({ui.dsbLeftMargins, ui.dsbRightMargins, ui.dsbTopMargins,ui.dsbBottomMargins,ui.dsbHorizontalMargins,ui.dsbVerticalMargins},true);
+            checkbox_enable_UI(ui.cbAddExteriorMargins, {ui.hsLeftMargins, ui.hsRightMargins, ui.hsTopMargins, ui.hsBottomMargins,
+                               ui.dsbLeftMargins, ui.dsbRightMargins, ui.dsbTopMargins, ui.dsbBottomMargins});
+            checkbox_enable_UI(ui.cbAddInteriorMargins, {ui.hsHorizontalMargins,ui.hsVerticalMargins,ui.dsbHorizontalMargins,ui.dsbVerticalMargins});
+
+            checkbox_enable_UI(ui.cbEnableInvididualPageSettings, {ui.laHSize, ui.laNbPhotos, ui.laVSize, ui.dsbLeftMargins, ui.hsLeftMargins, ui.dsbRightMargins, ui.hsRightMargins,
+                               ui.dsbTopMargins, ui.hsTopMargins, ui.dsbBottomMargins, ui.hsBottomMargins,ui.dsbHorizontalMargins, ui.hsHorizontalMargins,
+                               ui.dsbVerticalMargins, ui.hsVerticalMargins,ui.cbAddExteriorMargins,ui.cbAddInteriorMargins,ui.sbVSizeGrid,ui.sbHSizeGrid});
+        }
+
+    }else if(diff > 0){ // remove diff pages
+
+        for(int ii = 0; ii < -diff;++ ii){
+            individualPageW.pop_back();
+        }
     }
 }
 
@@ -1074,19 +1116,21 @@ void pc::UIElements::update_settings_checkboxes(QVector<QCheckBox *> checkBoxes,
     }
 }
 
-void pc::UIElements::update_settings_format_combo_boxes(QVector<QComboBox *> comboBoxes, bool displayZones){
-    for(auto &&cb : comboBoxes){
-        connect(cb, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
-            PaperFormat pf(m_mainUI->cbDPI->currentText(),m_mainUI->cbFormat->currentText());
-            int currentDPI = m_mainUI->cbDPI->currentText().toInt();
-            m_mainUI->laDefWxH->setText(QString::number(pf.widthPixels(currentDPI)) + "x" + QString::number(pf.heightPixels(currentDPI)));
-            m_mainUI->laDefTotal->setText("(" + QString::number(pf.widthPixels(currentDPI)*pf.heightPixels(currentDPI)) + " pixels)");
-            if(displayZones){
-                zonesTimer.start(1000);
-            }
-            emit update_settings_signal();
-        });
-    }
+void pc::UIElements::update_settings_format_combo_boxes(QComboBox *comboDpi, QComboBox *comboFormat, bool displayZones){
+
+    connect(comboDpi, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
+        if(displayZones){
+            zonesTimer.start(1000);
+        }
+        emit update_settings_signal();
+    });
+    connect(comboFormat, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
+
+        if(displayZones){
+            zonesTimer.start(1000);
+        }
+        emit update_settings_signal();
+    });
 }
 
 void pc::UIElements::update_settings_radio_buttons(QVector<QRadioButton *> radioButtons, bool displayZones){

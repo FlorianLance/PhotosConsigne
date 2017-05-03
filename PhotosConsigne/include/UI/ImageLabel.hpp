@@ -47,7 +47,24 @@ public slots:
      */
     void set_image(const QImage&);
 
+signals:
+
+    void double_click_signal();
+
 protected:
+
+
+    virtual void mousePressEvent(QMouseEvent *ev){
+
+        bool inside = m_imageRect.contains(ev->pos());
+        if(inside){
+            if(m_doubleClickTimer.isActive()){
+                emit double_click_signal();
+            }else{
+                m_doubleClickTimer.start(300);
+            }
+        }
+    }
 
     /**
      * @brief paintEvent for drawing in the widget
@@ -56,6 +73,7 @@ protected:
 
     QImage m_image;
     QRectF m_imageRect;
+    QTimer m_doubleClickTimer;
 };
 
 
@@ -73,10 +91,12 @@ public slots:
 
     void stop_loop();
 
+
 private :
 
     bool m_isLooping = false;
     QReadWriteLock m_locker;
+
 
 signals:
 
@@ -100,10 +120,14 @@ public slots:
 
 protected:
 
-    void mousePressEvent(QMouseEvent * ev )
-    {
+    virtual void mousePressEvent(QMouseEvent * ev ) override{
+
+        qDebug() << "mousePressEvent PreviewLabel";
         bool inside = m_imageRect.contains(ev->pos());
         if(inside){
+
+            qDebug() << "inside!";
+
             QPointF posRelative =(ev->pos() - m_imageRect.topLeft());
             posRelative.setX(posRelative.x()/m_imageRect.width());
             posRelative.setY(posRelative.y()/m_imageRect.height());
@@ -112,9 +136,11 @@ protected:
 
             if(m_doubleClickTimer.isActive() && m_currentPCRect.contains(ev->pos())){
                 if(m_currentPCRectId != -1){
+                    qDebug() << "PreviewLabel double click!!";
                     emit double_click_on_photo_signal(m_currentPCRectId);
                 }
             }else{
+                qDebug() << "PreviewLabel start";
                 m_doubleClickTimer.start(300);
             }
         }
@@ -155,7 +181,6 @@ private:
     QRectF m_pcRectRelative;
 
     QTimer m_rectTimer;
-    QTimer m_doubleClickTimer;
 
     QThread m_workerThread;
     std::unique_ptr<PreviewWorker> m_worker = nullptr;

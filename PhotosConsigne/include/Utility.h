@@ -22,6 +22,7 @@
 #include "ui_IndividualConsign.h"
 #include "ui_Support.h"
 #include "ui_Help.h"
+#include "ui_IndividualPage.h"
 // # ui
 #include "RichTextUI.hpp"
 #include "ImageLabel.hpp"
@@ -38,7 +39,8 @@
 
 namespace Ui {
     class PhotosConsigneMainW;
-    class IndividualConsign;
+    class IndividualConsignW;
+    class IndividualPageW;
     class SupportW;
     class HelpW;
 }
@@ -119,11 +121,11 @@ namespace pc
 
     struct Photo : public RectPageItem {
 
-        Photo() = delete;
+        Photo() = delete;   
 
         Photo(const Photo &photo) = default;
 
-        Photo(const QString &path);
+        Photo(const QString &path, bool isWhiteSpace = false);
 
         void compute_sizes(QRectF upperRect){
             rectOnPage = std::move(upperRect);
@@ -146,8 +148,10 @@ namespace pc
         bool isWhiteSpace = false;
         bool isADuplicate = false;
         bool isRemoved    = false;
+        bool isOnDocument = false;
         int alignment;
         int rotation = 0;
+        int globalId = 0;
 
         QSize originalSize;
         QImage scaledPhoto;
@@ -208,6 +212,7 @@ namespace pc
         int id; /**< id of the page */
 
         bool displayCutLines;
+//        int nbPhotos;
         int nbPhotosV;
         int nbPhotosH;
         qreal ratioWithTitle;
@@ -227,6 +232,7 @@ namespace pc
 
         void compute_sizes(QRectF upperRect);
     };
+
 
     struct PCPages{
 
@@ -265,61 +271,52 @@ namespace pc
 
     struct GlobalData{
 
+        bool resetPages          = false;   /**< if true, the number of pages will be reseted and initialized in function of the number of valid photos and H/V parameters */
+
         bool grayScale           = false;
         bool saveOnlyCurrentPage = false;
         bool noPreviewGeneration = false;
         bool displayZones        = false;
 
-        int nbPhotosPageH;
-        int nbPhotosPageV;
-        int lastPagePhotosNb;
-        int nbPhotosPerPage;
+        int nbPages;                        /**< number of pages for the document */
+        int nbPhotosPageH;                  /**< size of the grid horizontally */
+        int nbPhotosPageV;                  /**< size of the grid vertically */
+        int nbPhotosPerPage;                /**< number of photos per page (< H*V) */
+        int lastPagePhotosNb;               /**< ######################################## TO BE REMOVED*/
 
-        int currentPageId       = 0;
-        int currentPhotoId      = 0;
-        int currentPCDisplayed  = 0;
+        int previousPhotoId     = -1;
+        int previousPageId      = -2;
+        int currentPageId       = -1;       /**< id of the current selected page (page list widget) */
+        int currentPhotoId      = 0;        /**< id of the current selcted photo (photo list widget) */
+        int currentPCDisplayed  = 0;        /**< id of the current PC */
 
         // global
         // # misc
-        bool globalDisplayCutLines;
-        int globalPhotosAlignment;
-        qreal globalPCRatio;
+        bool displayCutLines;
+        int photoAlignment;
+        qreal PCRation;
         QColor pageColor = Qt::white;
 
-        Position globalConsignPositionFromPhotos;        
+        Position consignPositionFromPhotos;
 
-        PageOrientation globalOrientation;
-        RatioMargins globalMargins;
+        PageOrientation orientation;
+        RatioMargins margins;
         // # misc consign
-        bool globalConsignOnPhoto;
-        TextEdit *globalConsignDoc = nullptr;
+        bool consignOnPhoto;
+        TextEdit *consignDoc = nullptr;
         QVector<TextEdit *> consignsDoc;
 
         // title
         bool titleAdded;
         bool titleOnAllPages;
-        qreal globalRatioTitle;
-        Position globalTitlePositionFromPC;
+        qreal ratioTitle;
+        Position titlePositionFromPC;
         TextEdit *titleDoc = nullptr;
 
         QString photosDirectoryPath= "";
 
         SPhotos photosLoaded  = std::make_shared<QList<SPhoto>>(QList<SPhoto>());
         SPhotos photosValided = std::make_shared<QList<SPhoto>>(QList<SPhoto>());
-
-
-        void reset_photos(){
-
-        }
-
-        void insert_photo(int index){
-
-        }
-
-//        void remove_photo(int index){
-
-//        }
-
     };
 
 
@@ -329,7 +326,7 @@ namespace pc
 
     public :
 
-        UIElements(Ui::PhotosConsigneMainW *mainUI) : m_mainUI(mainUI) {}
+        UIElements(QSharedPointer<Ui::PhotosConsigneMainW> mainUI) : m_mainUI(mainUI) {}
 
         ~UIElements(){
 
@@ -345,13 +342,16 @@ namespace pc
         void remove_individual_consign(int index);
         void reset_individual_consigns(int nbPhotos);
 
+        // pages related
+        void update_individual_pages(const GlobalData &settings);
+
         // utility
         void update_settings_buttons(QVector<QPushButton*> buttons, bool displayZones = false);
         void update_settings_sliders(QVector<QSlider*> sliders, bool displayZones = false);
         void update_settings_spinboxes(QVector<QSpinBox*> spinBoxes, bool displayZones = false);
         void update_settings_double_spinboxes(QVector<QDoubleSpinBox*> dSpinBoxes, bool displayZones = false);
         void update_settings_checkboxes(QVector<QCheckBox*> checkBoxes, bool displayZones = false);
-        void update_settings_format_combo_boxes(QVector<QComboBox*> comboBoxes, bool displayZones = false);
+        void update_settings_format_combo_boxes(QComboBox *comboDpi, QComboBox *comboFormat, bool displayZones = false);
         void update_settings_radio_buttons(QVector<QRadioButton*> radioButtons, bool displayZones = false);
         void associate_buttons (QVector<QPushButton*> buttons);
         void associate_double_spinbox_with_slider(QDoubleSpinBox *sb, QSlider *slider);
@@ -362,7 +362,7 @@ namespace pc
         QReadWriteLock  docLocker;
         QTimer          zonesTimer;
         Position        previousGlobalConsignPositionFromPhotos;
-        QList<Position> previousIndividualConsignPositionFromPhotos;
+//        QList<Position> previousIndividualConsignPositionFromPhotos;
 
         std::unique_ptr<QWidget> wSupport  = nullptr;
         std::unique_ptr<QWidget> wHelp     = nullptr;
@@ -378,10 +378,11 @@ namespace pc
         QList<std::shared_ptr<RichTextEdit>> individualConsignsTEditValided;
         QList<std::shared_ptr<QWidget>>      individualConsignsWValided;
 
+        QList<std::shared_ptr<QWidget>>      individualPageW;
 
     private:
 
-        Ui::PhotosConsigneMainW *m_mainUI = nullptr;
+        QSharedPointer<Ui::PhotosConsigneMainW> m_mainUI = nullptr;
 
     signals:
 
@@ -391,20 +392,20 @@ namespace pc
 
         void set_progress_bar_text_signal(QString text);
 
+        void insert_white_space_signal();
     };
 
     // define static functions
-    static void draw_doc_html_with_size_factor(QPainter &painter, QReadWriteLock *docLocker, QTextDocument *doc, QRectF upperRect, QRectF docRect, qreal sizeFactor, ExtraPCInfo infos = ExtraPCInfo()){
+    static void draw_doc_html_with_size_factor(QPainter &painter, QReadWriteLock *docLocker, QTextDocument *document, QRectF upperRect, QRectF docRect, qreal sizeFactor, ExtraPCInfo infos = ExtraPCInfo()){
 
         QImage pixDoc(QSize(upperRect.width(),upperRect.height()), QImage::Format_ARGB32);
         pixDoc.fill(QColor(255,255,255,0)); // ## to be parametreized
-        //        pixDoc.fill(infos.pageColor);
 
         QPainter painterDoc(&pixDoc);
         painterDoc.setPen(QPen());
 
         docLocker->lockForRead();
-        doc = doc->clone(nullptr);
+        QSharedPointer<QTextDocument> doc = QSharedPointer<QTextDocument>(document->clone(nullptr));
         docLocker->unlock();
 
         doc->setPageSize(QSizeF(upperRect.width(), upperRect.height()));
@@ -536,6 +537,5 @@ namespace pc
             painter.drawImage(QRectF(docRect.x(),docRect.y(),docRect.width(),docRect.height()), cropped);
         }
 
-        delete doc;
     }
 }
