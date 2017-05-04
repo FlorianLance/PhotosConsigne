@@ -101,6 +101,30 @@
       </property>
       <item row="0" column="0">
        <layout class="QGridLayout" name="glTop">
+        <property name="horizontalSpacing">
+         <number>3</number>
+        </property>
+        <item row="4" column="1" colspan="9">
+         <widget class="QCheckBox" name="cbWriteOnPhoto">
+          <property name="toolTip">
+           <string>Ecrire la consigne par dessus la photo pour cet ensemble</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QWidget{  
+
+    font:  10pt Calibri;
+ }
+
+QWidget::enabled {
+
+	color : rgb(0,106,255);
+}</string>
+          </property>
+          <property name="text">
+           <string>consigne au dessus de la photo</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="9">
          <widget class="QPushButton" name="pbImageAligmentRight">
           <property name="minimumSize">
@@ -173,6 +197,19 @@ QPushButton:hover:!pressed
           </property>
          </widget>
         </item>
+        <item row="0" column="2" rowspan="3">
+         <widget class="Line" name="line_3">
+          <property name="minimumSize">
+           <size>
+            <width>10</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="8">
          <widget class="QPushButton" name="pbImageAligmentHMiddle">
           <property name="enabled">
@@ -234,24 +271,36 @@ QPushButton:hover:!pressed
         <item row="2" column="3" colspan="2" alignment="Qt::AlignHCenter">
          <widget class="QLabel" name="laPosConsign">
           <property name="styleSheet">
-           <string notr="true">QWidget::enabled {
-  
-	color : rgb(0,106,255);
+           <string notr="true">QWidget{  
 
+    font:  9pt Calibri;
  }
 
+QWidget::enabled {
 
-</string>
+	color : rgb(0,106,255);
+}</string>
           </property>
           <property name="text">
            <string>Position photo</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="2" rowspan="3">
-         <widget class="Line" name="line_3">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
+        <item row="2" column="6" colspan="4" alignment="Qt::AlignHCenter">
+         <widget class="QLabel" name="label">
+          <property name="styleSheet">
+           <string notr="true">QWidget{  
+
+    font:  9pt Calibri;
+ }
+
+QWidget::enabled {
+
+	color : rgb(0,106,255);
+}</string>
+          </property>
+          <property name="text">
+           <string>Alignement photo</string>
           </property>
          </widget>
         </item>
@@ -307,47 +356,37 @@ QPushButton:hover:!pressed
           </property>
          </widget>
         </item>
-        <item row="2" column="6" colspan="4" alignment="Qt::AlignHCenter">
-         <widget class="QLabel" name="label">
-          <property name="styleSheet">
-           <string notr="true">QWidget::enabled {
-  
-	color : rgb(0,106,255);
-
- }
-
-
-</string>
-          </property>
-          <property name="text">
-           <string>Alignement photo</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="5" rowspan="3">
-         <widget class="Line" name="line_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="1">
          <widget class="QLabel" name="laRatioPC">
           <property name="toolTip">
            <string/>
           </property>
           <property name="styleSheet">
-           <string notr="true">QWidget::enabled {
-  
-	color : rgb(0,106,255);
+           <string notr="true">QWidget{  
 
+    font:  9pt Calibri;
  }
 
+QWidget::enabled {
 
-</string>
+	color : rgb(0,106,255);
+}</string>
           </property>
           <property name="text">
            <string>Ratio photo-consigne</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5" rowspan="3">
+         <widget class="Line" name="line_2">
+          <property name="minimumSize">
+           <size>
+            <width>10</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
          </widget>
         </item>
@@ -358,35 +397,24 @@ QPushButton:hover:!pressed
           </property>
           <item alignment="Qt::AlignHCenter">
            <widget class="QPushButton" name="pbRatioPhotoTexte">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="minimumSize">
              <size>
               <width>100</width>
-              <height>24</height>
+              <height>26</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
               <width>100</width>
-              <height>24</height>
+              <height>25</height>
              </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QPushButton {
-  
-     background-color: white;
-
- }</string>
             </property>
             <property name="text">
              <string/>
             </property>
             <property name="icon">
              <iconset resource="../resources.qrc">
-              <normaloff>:/images/ratio</normaloff>
-              <disabledoff>:/images/ratio</disabledoff>:/images/ratio</iconset>
+              <normaloff>:/images/ratio</normaloff>:/images/ratio</iconset>
             </property>
             <property name="iconSize">
              <size>
@@ -448,33 +476,6 @@ QPushButton:hover:!pressed
           </item>
          </layout>
         </item>
-        <item row="4" column="1" colspan="9">
-         <widget class="QCheckBox" name="cbWriteOnPhoto">
-          <property name="toolTip">
-           <string>Ecrire la consigne par dessus la photo pour cet ensemble</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-    font:  9pt Calibri;
-
-
- }
-</string>
-          </property>
-          <property name="text">
-           <string>consigne au dessus de la photo</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="7">
          <widget class="QPushButton" name="pbImageAligmentLeft">
           <property name="enabled">
@@ -530,6 +531,19 @@ QPushButton:hover:!pressed
             <width>30</width>
             <height>30</height>
            </size>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLabel" name="label_2">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>5</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
           </property>
          </widget>
         </item>
@@ -698,6 +712,61 @@ QPushButton:hover:!pressed
           </property>
          </widget>
         </item>
+        <item row="1" column="7">
+         <widget class="QPushButton" name="pbImageAligmentBottom">
+          <property name="minimumSize">
+           <size>
+            <width>30</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>30</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>Alignement vertical de la photo vers le bas pour cet ensemble</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+  
+
+ background-color: white;
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="../resources.qrc">
+            <normaloff>:/images/photoAlignBottom</normaloff>:/images/photoAlignBottom</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>30</width>
+            <height>30</height>
+           </size>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="3">
          <widget class="QPushButton" name="pbConsignBottom">
           <property name="minimumSize">
@@ -811,83 +880,11 @@ QPushButton:hover:!pressed
           </property>
          </widget>
         </item>
-        <item row="1" column="7">
-         <widget class="QPushButton" name="pbImageAligmentBottom">
-          <property name="minimumSize">
-           <size>
-            <width>30</width>
-            <height>30</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>30</width>
-            <height>30</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Alignement vertical de la photo vers le bas pour cet ensemble</string>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QPushButton {
-  
-
- background-color: white;
-
- }
- 
- QPushButton:pressed {
- background-color: white;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
- }
- 
-
-
-QPushButton:hover:!pressed
-{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}</string>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset resource="../resources.qrc">
-            <normaloff>:/images/photoAlignBottom</normaloff>:/images/photoAlignBottom</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>30</width>
-            <height>30</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="6">
-         <widget class="QLabel" name="label_7">
-          <property name="styleSheet">
-           <string notr="true">QWidget::enabled {
-  
-	color : rgb(0,106,255);
-
- }
-
-
-</string>
-          </property>
-          <property name="text">
-           <string>H </string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1" colspan="9" alignment="Qt::AlignHCenter">
+        <item row="7" column="1" colspan="9" alignment="Qt::AlignHCenter">
          <widget class="QPushButton" name="pbInsertWhiteSpace">
           <property name="minimumSize">
            <size>
-            <width>120</width>
+            <width>220</width>
             <height>30</height>
            </size>
           </property>
@@ -898,16 +895,19 @@ QPushButton:hover:!pressed
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">
+           <string notr="true">QPushButton {
+      font:  12pt Calibri;  
 
-QPushButton {
-    font: 10pt Calibri;  
-
-	color : rgb(0,106,255);
 	border-style: outset;
+
     background-color:  rgb(220,220,220);
 
  }
+
+QPushButton::enabled {
+	color : rgb(0,106,255);
+ }
+ 
  
  QPushButton:pressed {
  background-color: white;
@@ -929,6 +929,23 @@ QPushButton:hover:!pressed
           </property>
          </widget>
         </item>
+        <item row="0" column="6">
+         <widget class="QLabel" name="label_7">
+          <property name="styleSheet">
+           <string notr="true">QWidget::enabled {
+  
+	color : rgb(0,106,255);
+
+ }
+
+
+</string>
+          </property>
+          <property name="text">
+           <string>H </string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="10">
          <spacer name="horizontalSpacer">
           <property name="orientation">
@@ -941,6 +958,19 @@ QPushButton:hover:!pressed
            </size>
           </property>
          </spacer>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="label_3">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>5</height>
+           </size>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -1012,7 +1042,7 @@ QToolBox::tab:hover:!pressed
         <x>0</x>
         <y>0</y>
         <width>472</width>
-        <height>295</height>
+        <height>288</height>
        </rect>
       </property>
       <attribute name="label">

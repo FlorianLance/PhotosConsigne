@@ -174,43 +174,41 @@ RichTextEdit::RichTextEdit(QWidget *parent)
 
 void RichTextEdit::init_as_title(){
 
-    textEdit()->setHtml(
-    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html>"
-    "<head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head>"
-    "<body style=\""
-    " font-family:'Calibri'; background-color:#ffffff;font-size:20pt; font-weight:400; font-style:normal;\">\n<p align=\"center\" style=\"-qt-paragraph-type:empty;"
-    " margin-top:0px; margin-bottom:0px; background-color:#ffffff;margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n<p align=\"center\""
-    " style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\""
-    " font-family:'Calibri'; font-size:20pt; background-color:#ffffff;\">Entrez votre titre ici...</span>"
-    "</p></body></html>" );
-
-//    QString html = "<a href='http://www.google.com'>google</a>";
-//    textEdit()->setHtml(html);
-//    <iframe width="420" height="315"
-//   src="https://www.youtube.com/embed/XGSy3_Czz8k">
-//   </iframe>
-
+    QString html = "<p align=\"center\" align=\"center style= margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
+    "<span style=\"font-family:'Calibri'; font-size:20pt; background-color:#ffffff;\">"
+    "<br />Entrez votre titre ici..."
+    "</span>";
+    textEdit()->setHtml(html);
+//    <a href='http://www.google.com'>google</a>
     comboSize->setCurrentIndex(9);
 }
 
 void RichTextEdit::init_as_consign(){
 
-    textEdit()->setHtml(
-    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\""
-    " content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Calibri';"
-    " font-size:14pt; font-weight:400; font-style:normal;\">\n<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px;"
-    " margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;background-color:#ffffff;\">Consigne commune à toutes les photos.</span></p></body></html>");
+    QString html = "<p align=\"center\" align=\"center style= margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
+    "<span style=\"font-family:'Calibri'; font-size:14pt; background-color:#ffffff;\">"
+    "<br />Texte commun à toutes les photos..."
+    "</span>";
+    textEdit()->setHtml(html);
     comboSize->setCurrentIndex(7);
 }
 
 void RichTextEdit::init_as_individual_consign(){
 
-    textEdit()->setHtml(
-    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\""
-    " content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Calibri';"
-    " font-size:14pt; font-weight:400; font-style:normal;\">\n<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px;"
-    " margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;background-color:#ffffff;\">Consigne individuelle.</span></p></body></html>");
+    QString html = "<p align=\"center\" align=\"center style= margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
+    "<span style=\"font-family:'Calibri'; font-size:14pt; background-color:#ffffff;\">"
+    "<br />Texte individuel..."
+    "</span>";
+    textEdit()->setHtml(html);
     comboSize->setCurrentIndex(7);
+}
+
+void RichTextEdit::init_colors(QColor foreGround, QColor backGround){
+    this->foreGround = foreGround;
+    this->backGround = backGround;
+
+    color_text_changed(foreGround);
+    background_color_text_changed(backGround);
 }
 
 void RichTextEdit::setup_edit_actions()
@@ -670,28 +668,28 @@ void RichTextEdit::text_style(int styleIndex){
 
 void RichTextEdit::text_color(){
 
-    QColor col = QColorDialog::getColor(m_textEdit->textColor(), this, "Choix de la couleur du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
-    if (!col.isValid()){
+    foreGround = QColorDialog::getColor(foreGround, this, "Choix de la couleur du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
+    if (!foreGround.isValid()){
         return;
     }
 
     QTextCharFormat fmt;
-    fmt.setForeground(col);
+    fmt.setForeground(foreGround);
     merge_format_on_word_or_selection(fmt);
-    color_text_changed(col);
+    color_text_changed(foreGround);
 }
 
 void RichTextEdit::background_text_color(){
 
-    QColor col = QColorDialog::getColor(m_textEdit->textBackgroundColor(), this, "CHoix de la couleur de l'arrière-plan du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
-    if (!col.isValid()){
+    backGround = QColorDialog::getColor(backGround, this, "CHoix de la couleur de l'arrière-plan du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
+    if (!backGround.isValid()){
         return;
     }
 
     QTextCharFormat fmt;
-    fmt.setBackground(col);
+    fmt.setBackground(backGround);
     merge_format_on_word_or_selection(fmt);
-    background_color_text_changed(col);
+    background_color_text_changed(backGround);
 }
 
 void RichTextEdit::text_align(QAction *a){
@@ -765,6 +763,8 @@ void RichTextEdit::background_color_text_changed(const QColor &c){
 
 void RichTextEdit::alignment_changed(Qt::Alignment a){
 
+//    qDebug() << "PLAIN "  << textEdit()->toPlainText();
+//    qDebug() << "HTML " << textEdit()->toHtml();
     if (a & Qt::AlignLeft)
         actionAlignLeft->setChecked(true);
     else if (a & Qt::AlignHCenter)

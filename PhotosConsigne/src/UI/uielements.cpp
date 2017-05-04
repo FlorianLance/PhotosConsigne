@@ -16,22 +16,99 @@
 
 using namespace pc;
 
+pc::UIElements::UIElements(QSharedPointer<Ui::PhotosConsigneMainW> mainUI) : m_mainUI(mainUI) {
 
-void pc::UIElements::insert_individual_consign(int index, bool whiteSpace){
+    // init widgets
+    // # photo display widgets
+    QHBoxLayout *selectedPhotoLayout = new QHBoxLayout();
+    m_mainUI->wSelectedPhotoW->setLayout(selectedPhotoLayout);
+    selectedPhotoW = new ImageLabel();
+    selectedPhotoLayout->addWidget(selectedPhotoW);
+    m_mainUI->twMiddle->setTabEnabled(0, false);
+    m_mainUI->pbAdd->hide();
 
-    std::shared_ptr<QWidget>      SQWidget      = std::make_shared<QWidget>();
-    std::shared_ptr<RichTextEdit> SRichTextEdit = std::make_shared<RichTextEdit>();
+    // # preview image widget
+    previewW = new PreviewLabel();
+    m_mainUI->vlImagePreview->addWidget(previewW);
 
-    SRichTextEdit->set_doc_locker(&docLocker);
-    SRichTextEdit->init_as_individual_consign();
+    // # text edit widgets
+    // ## title
+    titleTEdit = new RichTextEdit();
+    titleTEdit->set_doc_locker(&docLocker);
+    m_mainUI->hlTitleBottom->addWidget(titleTEdit);
+    titleTEdit->setEnabled(false);
+    titleTEdit->init_as_title();
+    titleTEdit->init_colors(qRgba(0,0,0,255), qRgba(255,255,255,0));
 
-    individualConsignsWLoaded.insert(index,SQWidget);
-    individualConsignsTEditLoaded.insert(index, SRichTextEdit);
-//    previousIndividualConsignPositionFromPhotos.insert(index, Position::top);
+    // ## global consign
+    globalConsignUI.richTextEdit->set_doc_locker(&docLocker);
+    m_mainUI->vlGlobalConsign->addWidget(globalConsignUI.richTextEdit.get());
 
-    Ui::IndividualConsignW ui;
-    ui.setupUi(SQWidget.get());
-    ui.vlIndividualConsign->addWidget(SRichTextEdit.get());
+    // disable ui
+    // # tab texte infos
+    m_mainUI->twPhotosList->setTabEnabled(1,false); // list photos info tab
+    m_mainUI->twPagesList->setTabEnabled(1,false);  // list pages info tab
+    // # tabs right
+    m_mainUI->tbRight->setItemEnabled(2, false);    // page tab
+    m_mainUI->tbRight->setItemEnabled(3, false);    // pc tab
+
+    // init definition
+    PaperFormat pf(m_mainUI->cbDPI->currentText(),m_mainUI->cbFormat->currentText());
+    int currentDPI = m_mainUI->cbDPI->currentText().toInt();
+    m_mainUI->laDefWxH->setText(QString::number(pf.widthPixels(currentDPI)) + "x" + QString::number(pf.heightPixels(currentDPI)));
+    m_mainUI->laDefTotal->setText("(" + QString::number(pf.widthPixels(currentDPI)*pf.heightPixels(currentDPI)) + " pixels)");
+
+    // static connections
+    // # associate sliders with spin boxes
+    associate_double_spinbox_with_slider(m_mainUI->dsbGlobalRatioPC, m_mainUI->hsGlobalRatioPC);
+    associate_double_spinbox_with_slider(m_mainUI->dsbRatioTitle, m_mainUI->hsRatioTitle);
+    associate_double_spinbox_with_slider(m_mainUI->dsbLeftMargins, m_mainUI->hsLeftMargins, m_mainUI->dsbRightMargins, m_mainUI->hsRightMargins);
+    associate_double_spinbox_with_slider(m_mainUI->dsbTopMargins, m_mainUI->hsTopMargins, m_mainUI->dsbBottomMargins, m_mainUI->hsBottomMargins);
+    associate_double_spinbox_with_slider(m_mainUI->dsbHorizontalMargins, m_mainUI->hsHorizontalMargins);
+    associate_double_spinbox_with_slider(m_mainUI->dsbVerticalMargins, m_mainUI->hsVerticalMargins);
+
+    // # associate buttons
+    associate_buttons({m_mainUI->pbGlobalConsignBottom,m_mainUI->pbGlobalConsignLeft,m_mainUI->pbGlobalConsignRight,m_mainUI->pbGlobalConsignTop});
+    associate_buttons({m_mainUI->pbGlobalImageAligmentLeft,m_mainUI->pbGlobalImageAligmentRight, m_mainUI->pbGlobalImageAligmentHMiddle});
+    associate_buttons({m_mainUI->pbGlobalImageAligmentVMiddle,m_mainUI->pbGlobalImageAligmentTop,m_mainUI->pbGlobalImageAligmentBottom});
+    associate_buttons({m_mainUI->pbLandscape,m_mainUI->pbPortrait});
+
+    // # associate checkboxes with UI
+    checkbox_enable_UI(m_mainUI->cbAddExteriorMargins, {m_mainUI->hsLeftMargins, m_mainUI->hsRightMargins, m_mainUI->hsTopMargins, m_mainUI->hsBottomMargins,
+                       m_mainUI->dsbLeftMargins, m_mainUI->dsbRightMargins, m_mainUI->dsbTopMargins, m_mainUI->dsbBottomMargins});
+    checkbox_enable_UI(m_mainUI->cbAddInteriorMargins, {m_mainUI->hsHorizontalMargins,m_mainUI->hsVerticalMargins,m_mainUI->dsbHorizontalMargins,m_mainUI->dsbVerticalMargins});
+    checkbox_enable_UI(m_mainUI->cbAddTitle, {m_mainUI->cbAllPagesTitle, m_mainUI->rbBottomTitle, m_mainUI->rbTopTitle,
+                                              m_mainUI->rbWriteOnPCTitle, m_mainUI->hsRatioTitle, m_mainUI->dsbRatioTitle, titleTEdit, m_mainUI->pbRatioTitlePage});
+
+    /// # udpate settings
+    update_settings_buttons({m_mainUI->pbGlobalConsignBottom,m_mainUI->pbGlobalConsignLeft,m_mainUI->pbGlobalConsignRight,m_mainUI->pbGlobalConsignTop,
+                            m_mainUI->pbGlobalImageAligmentLeft,m_mainUI->pbGlobalImageAligmentRight, m_mainUI->pbGlobalImageAligmentHMiddle,
+                            m_mainUI->pbGlobalImageAligmentVMiddle,m_mainUI->pbGlobalImageAligmentTop,m_mainUI->pbGlobalImageAligmentBottom,
+                            m_mainUI->pbLandscape,m_mainUI->pbPortrait},true);
+    update_settings_sliders({m_mainUI->hsGlobalRatioPC, m_mainUI->hsRatioTitle, m_mainUI->hsLeftMargins, m_mainUI->hsRightMargins, m_mainUI->hsTopMargins,
+                            m_mainUI->hsBottomMargins, m_mainUI->hsHorizontalMargins, m_mainUI->hsVerticalMargins},true);
+    update_settings_double_spinboxes({m_mainUI->dsbGlobalRatioPC, m_mainUI->dsbRatioTitle, m_mainUI->dsbLeftMargins, m_mainUI->dsbRightMargins,
+                                     m_mainUI->dsbTopMargins,m_mainUI->dsbBottomMargins,m_mainUI->dsbHorizontalMargins,m_mainUI->dsbVerticalMargins},true);
+    update_settings_checkboxes({m_mainUI->cbAddExteriorMargins,m_mainUI->cbAddInteriorMargins,
+                               m_mainUI->cbAddTitle, m_mainUI->cbAllPagesTitle},true);
+    update_settings_checkboxes({m_mainUI->cbCutLines, m_mainUI->cbSaveOnlyCurrentPage});
+}
+
+pc::UIElements::~UIElements(){
+
+    individualConsignsLoadedUI.clear();
+    individualConsignsValidedUI.clear();
+}
+
+
+void pc::UIElements::insert_individual_consign(bool whiteSpace){
+
+    individualConsignsLoadedUI.push_back(IndividualConsignUI());
+
+    IndividualConsignUI &consignUI = individualConsignsLoadedUI.last();
+    Ui::IndividualConsignW &ui = consignUI.ui;
+    consignUI.richTextEdit->set_doc_locker(&docLocker);
+
     associate_buttons({ui.pbConsignBottom, ui.pbConsignLeft, ui.pbConsignRight, ui.pbConsignTop});
     associate_buttons({ui.pbImageAligmentRight, ui.pbImageAligmentLeft, ui.pbImageAligmentHMiddle});
     associate_buttons({ui.pbImageAligmentBottom, ui.pbImageAligmentVMiddle, ui.pbImageAligmentTop});
@@ -42,8 +119,8 @@ void pc::UIElements::insert_individual_consign(int index, bool whiteSpace){
     update_settings_double_spinboxes({ui.dsbRatioPC}, true);
     update_settings_checkboxes({ui.cbEnableIndividualConsign});
 
-    checkbox_enable_UI(ui.cbEnableIndividualConsign, {ui.wTop});
-    connect(SRichTextEdit.get()->textEdit(), &TextEdit::textChanged, this, &UIElements::update_settings_signal);
+    checkbox_enable_UI(ui.cbEnableIndividualConsign, {ui.wTop, ui.tbConsigns});
+    connect(consignUI.richTextEdit->textEdit(), &TextEdit::textChanged, this, &UIElements::update_settings_signal);
     connect(ui.cbWriteOnPhoto, &QCheckBox::clicked, this, [=](bool checked){
 
         ui.hsRatioPC->setEnabled(!checked);
@@ -71,10 +148,7 @@ void pc::UIElements::insert_individual_consign(int index, bool whiteSpace){
 
 void pc::UIElements::remove_individual_consign(int index){
 
-    // remove element
-    individualConsignsWLoaded.removeAt(index);
-    individualConsignsTEditLoaded.removeAt(index);
-//    previousIndividualConsignPositionFromPhotos.removeAt(index);
+    individualConsignsLoadedUI.removeAt(index);
 }
 
 void pc::UIElements::reset_individual_consigns(int nbPhotos){
@@ -83,9 +157,7 @@ void pc::UIElements::reset_individual_consigns(int nbPhotos){
     qreal offset = 250. / nbPhotos;
 
     // clean
-    individualConsignsTEditLoaded.clear();
-    individualConsignsWLoaded.clear();
-//    previousIndividualConsignPositionFromPhotos.clear();
+    individualConsignsLoadedUI.clear();
 
     // insert new consigns
     for(int ii = 0; ii < nbPhotos; ++ii){
@@ -99,17 +171,15 @@ void pc::UIElements::reset_individual_consigns(int nbPhotos){
 
 void pc::UIElements::update_individual_pages(const GlobalData &settings)
 {
-    int diff = individualPageW.size() - settings.nbPages;
+    int diff = individualPageUI.size() - settings.nbPages;
     if(diff < 0){ // add -diff pages
 
         for(int ii = 0; ii < -diff;++ ii){
 
-            individualPageW.push_back(PageUI());
-            PageUI &pageUI = individualPageW.last();
-            pageUI.widget = std::make_shared<QWidget>();;
+            individualPageUI.push_back(PageUI());
 
-            Ui::IndividualPageW ui;
-            ui.setupUi(pageUI.widget.get());
+            PageUI &pageUI = individualPageUI.last();
+            Ui::IndividualPageW &ui = pageUI.ui;
 
             // init uit
             ui.sbVSizeGrid->setValue(settings.nbPhotosPageV);
@@ -157,7 +227,7 @@ void pc::UIElements::update_individual_pages(const GlobalData &settings)
     }else if(diff > 0){ // remove diff pages
 
         for(int ii = 0; ii < -diff;++ ii){
-            individualPageW.pop_back();
+            individualPageUI.pop_back();
         }
     }
 }
@@ -317,11 +387,4 @@ void pc::UIElements::checkbox_enable_UI(QCheckBox *cb, QVector<QWidget *> widget
     });
 }
 
-pc::UIElements::~UIElements(){
 
-    individualConsignsTEditLoaded.clear();
-    individualConsignsWLoaded.clear();
-
-    individualConsignsTEditValided.clear();
-    individualConsignsWValided.clear();
-}

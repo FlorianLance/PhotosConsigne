@@ -76,12 +76,6 @@ public slots:
 
 private :
 
-    // UI
-    // ### initialization
-    void init_misc_elements();
-    void init_images_labels_widgets();    
-    void init_rich_text_edit_widgets();
-
     // ### state
     void enable_ui();
     void update_photos_list_style();
@@ -115,8 +109,8 @@ private:
     GlobalData m_settings;  /**< global parameters of the document */
 
     // ui
-    std::unique_ptr<UIElements> m_dynUI  = nullptr; /**< dynamic ui elements */
     QSharedPointer<Ui::PhotosConsigneMainW>  m_mainUI = nullptr; /**< main widget */
+    std::unique_ptr<UIElements> m_dynUI  = nullptr; /**< dynamic ui elements */    
 
     // threads
     std::unique_ptr<PhotoDisplayWorker> m_displayPhotoWorker = nullptr;

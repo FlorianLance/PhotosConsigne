@@ -110,6 +110,8 @@ public:
 
     void init_as_individual_consign();
 
+    void init_colors(QColor foreGround, QColor backGround);
+
 public slots:
 
 
@@ -133,6 +135,9 @@ private slots:
     void clipboard_data_changed();
 
 private:
+
+    QColor foreGround = qRgba(0,0,0,255);
+    QColor backGround = qRgba(255,255,255,0);
 
     void setup_edit_actions();
     void setup_text_actions();
@@ -175,5 +180,4 @@ private:
     QHBoxLayout *m_menuLayoutCenter = nullptr;
     QHBoxLayout *m_menuLayoutBottom = nullptr;
     QToolButton *centerAButton = nullptr;
-
 };

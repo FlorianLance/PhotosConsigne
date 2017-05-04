@@ -28,11 +28,44 @@ namespace Ui {
 
 namespace pc{
 
+
 struct PageUI{
 
-    QColor currentColorPage = Qt::white;
+    PageUI(){
+        ui.setupUi(widget.get());
+    }
 
-    std::shared_ptr<QWidget> widget = nullptr;
+    QColor currentColorPage = qRgba(255,255,255,255);
+    Ui::IndividualPageW      ui;
+    std::shared_ptr<QWidget> widget = std::make_shared<QWidget>();
+};
+
+struct GlobalConsignUI{
+
+    GlobalConsignUI(){
+
+        richTextEdit->init_as_consign();
+        richTextEdit->init_colors(qRgba(0,0,0,255), qRgba(255,255,255,0));
+    }
+
+    std::shared_ptr<RichTextEdit> richTextEdit = std::make_shared<RichTextEdit>();
+};
+
+struct IndividualConsignUI{
+
+    IndividualConsignUI(){
+        ui.setupUi(widget.get());
+        ui.wTop->setEnabled(false);
+        ui.tbConsigns->setEnabled(false);
+        ui.vlIndividualConsign->addWidget(richTextEdit.get());
+
+        richTextEdit->init_as_individual_consign();
+        richTextEdit->init_colors(qRgba(0,0,0,255), qRgba(255,255,255,0));
+    }
+
+    Ui::IndividualConsignW        ui;
+    std::shared_ptr<QWidget>      widget       = std::make_shared<QWidget>();
+    std::shared_ptr<RichTextEdit> richTextEdit = std::make_shared<RichTextEdit>();
 };
 
 class UIElements : public QObject{
@@ -42,12 +75,12 @@ class UIElements : public QObject{
 public :
 
 
-    UIElements(QSharedPointer<Ui::PhotosConsigneMainW> mainUI) : m_mainUI(mainUI) {}
+    UIElements(QSharedPointer<Ui::PhotosConsigneMainW> mainUI);
 
     ~UIElements();
 
     // consign related
-    void insert_individual_consign(int index, bool whiteSpace = false);
+    void insert_individual_consign(bool whiteSpace = false);
     void remove_individual_consign(int index);
     void reset_individual_consigns(int nbPhotos);
 
@@ -79,18 +112,11 @@ public :
     ImageLabel   *selectedPhotoW     = nullptr;
     PreviewLabel *previewW           = nullptr;
     RichTextEdit *titleTEdit         = nullptr;
-    RichTextEdit *globalConsignTEdit = nullptr;
 
-    QList<std::shared_ptr<RichTextEdit>> individualConsignsTEditLoaded;
-    QList<std::shared_ptr<QWidget>>      individualConsignsWLoaded;
-
-    QList<std::shared_ptr<RichTextEdit>> individualConsignsTEditValided;
-    QList<std::shared_ptr<QWidget>>      individualConsignsWValided;
-
-//    QList<std::shared_ptr<QWidget>>      individualPageW; // -> make a struct -> QList<struct> -> stock color and previous position
-    QList<PageUI>      individualPageW;
-
-
+    GlobalConsignUI            globalConsignUI;
+    QList<PageUI>              individualPageUI;
+    QList<IndividualConsignUI> individualConsignsLoadedUI;
+    QList<IndividualConsignUI> individualConsignsValidedUI;
 
 private:
 

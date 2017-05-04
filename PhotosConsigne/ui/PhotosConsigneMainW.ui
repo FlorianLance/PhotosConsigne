@@ -310,11 +310,14 @@ QPushButton:hover:!pressed
             <string notr="true">QPushButton {
       font: bold 12pt Calibri;  
 
-	color : rgb(0,106,255);
 	border-style: outset;
 
     background-color:  rgb(220,220,220);
 
+ }
+
+QPushButton::enabled {
+	color : rgb(0,106,255);
  }
  
  
@@ -372,11 +375,14 @@ QPushButton:hover:!pressed
             <string notr="true">QPushButton {
       font: bold 12pt Calibri;  
 
-	color : rgb(0,106,255);
 	border-style: outset;
 
     background-color:  rgb(220,220,220);
 
+ }
+
+QPushButton::enabled {
+	color : rgb(0,106,255);
  }
  
  
@@ -384,6 +390,7 @@ QPushButton:hover:!pressed
  background-color: white;
      background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                        stop: 0 #f6f7fa, stop: 1 #dadbde);
+
  }
  
 
@@ -3834,8 +3841,7 @@ QToolBox::tab:hover:!pressed
                        </property>
                        <property name="icon">
                         <iconset resource="../resources.qrc">
-                         <normaloff>:/images/ratioTitle</normaloff>
-                         <disabledoff>:/images/ratioTitle</disabledoff>:/images/ratioTitle</iconset>
+                         <normaloff>:/images/ratioTitle</normaloff>:/images/ratioTitle</iconset>
                        </property>
                        <property name="iconSize">
                         <size>

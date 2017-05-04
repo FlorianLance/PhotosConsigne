@@ -26,19 +26,29 @@
 
 using namespace pc;
 
-PCMainUI::PCMainUI(QApplication *parent) : m_version("3.0"), m_mainUI(QSharedPointer<Ui::PhotosConsigneMainW>(new Ui::PhotosConsigneMainW())), m_dynUI(std::make_unique<UIElements>(m_mainUI)){
+PCMainUI::PCMainUI(QApplication *parent) : m_version("3.0"), m_mainUI(QSharedPointer<Ui::PhotosConsigneMainW>(new Ui::PhotosConsigneMainW())){
+
+    Q_UNUSED(parent)
+
+    // use designer ui
+    m_mainUI->setupUi(this);
+
+    // set icon/title
+    setWindowTitle("PhotosConsigne " + m_version + " (générateur de PDF à partir de photos)");
+    setWindowIcon(QIcon(":/images/icon"));
 
     // init ui
-    Q_UNUSED(parent)
-    init_misc_elements();
-    init_rich_text_edit_widgets();
-    init_images_labels_widgets();
+    m_dynUI = std::make_unique<UIElements>(m_mainUI);
 
     // init workers
     m_displayPhotoWorker = std::make_unique<PhotoDisplayWorker>();
     m_pdfGeneratorWorker = std::make_unique<PDFGeneratorWorker>();
 
-    // connections    
+    // retrive static text edit
+    m_settings.titleDoc   = m_dynUI->titleTEdit->textEdit();
+    m_settings.consignDoc = m_dynUI->globalConsignUI.richTextEdit->textEdit();
+
+    // conneccions
     define_workers_connections();
     define_main_UI_connections();
 
@@ -50,6 +60,7 @@ PCMainUI::PCMainUI(QApplication *parent) : m_version("3.0"), m_mainUI(QSharedPoi
 
     // update settings with current UI
     update_settings_with_no_preview();
+    display_global_consign_panel();
 }
 
 PCMainUI::~PCMainUI()
@@ -86,8 +97,7 @@ void PCMainUI::keyPressEvent(QKeyEvent *event){
 void PCMainUI::swap_loaded_pc(int currentIndex, int newIndex){
 
     m_settings.photosLoaded->swap(currentIndex,newIndex);
-    m_dynUI->individualConsignsTEditLoaded.insert(newIndex, m_dynUI->individualConsignsTEditLoaded.takeAt(currentIndex));
-    m_dynUI->individualConsignsWLoaded.insert(newIndex, m_dynUI->individualConsignsWLoaded.takeAt(currentIndex));
+    m_dynUI->individualConsignsLoadedUI.insert(newIndex, m_dynUI->individualConsignsLoadedUI.takeAt(currentIndex));
 
     m_mainUI->lwPhotosList->blockSignals(true);{
         m_mainUI->lwPhotosList->insertItem(newIndex,m_mainUI->lwPhotosList->takeItem(currentIndex));
@@ -99,8 +109,6 @@ void PCMainUI::swap_loaded_pc(int currentIndex, int newIndex){
         m_settings.photosLoaded->at(ii)->globalId = ii;
     }
 }
-
-
 
 void PCMainUI::set_photos_directory()
 {
@@ -185,21 +193,17 @@ void PCMainUI::update_valid_photos()
 {
     // build valid arrays
     auto nbPhotosLoaded = m_settings.photosLoaded->size();
-
     m_settings.photosValided->clear();
     m_settings.photosValided->reserve(nbPhotosLoaded);
-    m_dynUI->individualConsignsTEditValided.clear();
-    m_dynUI->individualConsignsTEditValided.reserve(nbPhotosLoaded);
-    m_dynUI->individualConsignsWValided.clear();
-    m_dynUI->individualConsignsWValided.reserve(nbPhotosLoaded);
+    m_dynUI->individualConsignsValidedUI.clear();
+    m_dynUI->individualConsignsValidedUI.reserve(nbPhotosLoaded);
 
     for(int ii = 0; ii < nbPhotosLoaded; ++ii){
-        if(!m_settings.photosLoaded->at(ii)->isRemoved){
-
-            m_settings.photosValided->push_back(m_settings.photosLoaded->at(ii));
-            m_dynUI->individualConsignsTEditValided.push_back(m_dynUI->individualConsignsTEditLoaded.at(ii));
-            m_dynUI->individualConsignsWValided.push_back(m_dynUI->individualConsignsWLoaded.at(ii));
+        if(m_settings.photosLoaded->at(ii)->isRemoved){
+            continue;
         }
+        m_settings.photosValided->push_back(m_settings.photosLoaded->at(ii));
+        m_dynUI->individualConsignsValidedUI.push_back(m_dynUI->individualConsignsLoadedUI.at(ii));
     }
 
     // update current PD displayed if necessary
@@ -244,13 +248,13 @@ void PCMainUI::update_pages()
         SPCPage pcPage = std::make_shared<PCPage>(PCPage());
 
         // define current nb of photos for this page
-        auto &pageW = m_dynUI->individualPageW[ii];
-        bool individualPageSettings = pageW.widget->findChild<QCheckBox*>("cbEnableInvididualPageSettings")->isChecked();
-        int nbPhotosPage = individualPageSettings ? (pageW.widget->findChild<QSpinBox*>("sbVSizeGrid")->value()*pageW.widget->findChild<QSpinBox*>("sbHSizeGrid")->value()) : m_settings.nbPhotosPerPage;
+        auto &pageUI = m_dynUI->individualPageUI[ii];
+        bool individualPageSettings = pageUI.widget->findChild<QCheckBox*>("cbEnableInvididualPageSettings")->isChecked();
+        int nbPhotosPage = individualPageSettings ? (pageUI.widget->findChild<QSpinBox*>("sbVSizeGrid")->value()*pageUI.widget->findChild<QSpinBox*>("sbHSizeGrid")->value()) : m_settings.nbPhotosPerPage;
 
         // misc
         pcPage->id = ii;
-        pcPage->backgroundColor = individualPageSettings ? pageW.currentColorPage : m_settings.pageColor;
+        pcPage->backgroundColor = individualPageSettings ? pageUI.currentColorPage : m_settings.pageColor;
 
         // sets
         pcPage->sets.reserve(nbPhotosPage);
@@ -268,7 +272,7 @@ void PCMainUI::update_pages()
             }
 
             // retrieve individual consign
-            auto wC = m_dynUI->individualConsignsWValided[currentPhotoId];
+            auto wC = m_dynUI->individualConsignsValidedUI[currentPhotoId].widget;
             bool individualConsignSettings = wC->findChild<QCheckBox*>("cbEnableIndividualConsign")->isChecked();
 
             if(!individualConsignSettings){ // global consign
@@ -284,7 +288,7 @@ void PCMainUI::update_pages()
                                                 ((!wC->findChild<QPushButton *>("pbConsignLeft")->isEnabled())   ? Position::left   : Position::right)));
                 set->ratio          = wC->findChild<QDoubleSpinBox*>("dsbRatioPC")->value();
                 set->consignOnPhoto = wC->findChild<QCheckBox *>("cbWriteOnPhoto")->isChecked();
-                set->consign->doc   = m_dynUI->individualConsignsTEditValided[currentPhotoId]->textEdit()->document();
+                set->consign->doc   = m_dynUI->individualConsignsValidedUI[currentPhotoId].richTextEdit->textEdit()->document();
 
                 // image alignment
                 int individualPhotosAlignment = 0;
@@ -313,17 +317,17 @@ void PCMainUI::update_pages()
         // margins
         if(individualPageSettings){
             pc::RatioMargins &margins       = pcPage->margins;
-            margins.exteriorMarginsEnabled  = pageW.widget->findChild<QCheckBox*>("cbAddExteriorMargins")->isChecked();
-            margins.interiorMarginsEnabled  = pageW.widget->findChild<QCheckBox*>("cbAddInteriorMargins")->isChecked();
-            margins.left                    = pageW.widget->findChild<QDoubleSpinBox*>("dsbLeftMargins")->value();
-            margins.right                   = pageW.widget->findChild<QDoubleSpinBox*>("dsbRightMargins")->value();
-            margins.top                     = pageW.widget->findChild<QDoubleSpinBox*>("dsbTopMargins")->value();
-            margins.bottom                  = pageW.widget->findChild<QDoubleSpinBox*>("dsbBottomMargins")->value();
-            margins.interWidth              = pageW.widget->findChild<QDoubleSpinBox*>("dsbHorizontalMargins")->value();
-            margins.interHeight             = pageW.widget->findChild<QDoubleSpinBox*>("dsbVerticalMargins")->value();
+            margins.exteriorMarginsEnabled  = pageUI.widget->findChild<QCheckBox*>("cbAddExteriorMargins")->isChecked();
+            margins.interiorMarginsEnabled  = pageUI.widget->findChild<QCheckBox*>("cbAddInteriorMargins")->isChecked();
+            margins.left                    = pageUI.widget->findChild<QDoubleSpinBox*>("dsbLeftMargins")->value();
+            margins.right                   = pageUI.widget->findChild<QDoubleSpinBox*>("dsbRightMargins")->value();
+            margins.top                     = pageUI.widget->findChild<QDoubleSpinBox*>("dsbTopMargins")->value();
+            margins.bottom                  = pageUI.widget->findChild<QDoubleSpinBox*>("dsbBottomMargins")->value();
+            margins.interWidth              = pageUI.widget->findChild<QDoubleSpinBox*>("dsbHorizontalMargins")->value();
+            margins.interHeight             = pageUI.widget->findChild<QDoubleSpinBox*>("dsbVerticalMargins")->value();
 
-            pcPage->nbPhotosH = pageW.widget->findChild<QSpinBox*>("sbHSizeGrid")->value();
-            pcPage->nbPhotosV = pageW.widget->findChild<QSpinBox*>("sbVSizeGrid")->value();
+            pcPage->nbPhotosH = pageUI.widget->findChild<QSpinBox*>("sbHSizeGrid")->value();
+            pcPage->nbPhotosV = pageUI.widget->findChild<QSpinBox*>("sbVSizeGrid")->value();
 
         }else{
             pcPage->margins   = m_settings.margins;
@@ -380,7 +384,7 @@ void PCMainUI::define_current_individual_page_ui(){
     int currentIndex = m_mainUI->tbRight->currentIndex();
     m_mainUI->tbRight->blockSignals(true);
     m_mainUI->tbRight->removeItem(2); // remove current pc tab
-    m_mainUI->tbRight->insertItem(2,m_dynUI->individualPageW[m_settings.currentPageId].widget.get(), "PAGE SELECTIONNEE N°" + QString::number(m_settings.currentPageId));
+    m_mainUI->tbRight->insertItem(2,m_dynUI->individualPageUI[m_settings.currentPageId].widget.get(), "PAGE SELECTIONNEE N°" + QString::number(m_settings.currentPageId));
     m_mainUI->tbRight->setCurrentIndex(currentIndex);
     m_mainUI->tbRight->blockSignals(false);
 }
@@ -432,7 +436,7 @@ void PCMainUI::define_selected_pc(int index){
     int currentIndex = m_mainUI->tbRight->currentIndex();
     m_mainUI->tbRight->blockSignals(true);
     m_mainUI->tbRight->removeItem(3); // remove current pc tab
-    m_mainUI->tbRight->addItem(m_dynUI->individualConsignsWValided[m_settings.currentPCDisplayed].get(), "ENSEMBLE PHOTO-CONSIGNE SELECTIONNE N°" + QString::number(m_settings.currentPCDisplayed));
+    m_mainUI->tbRight->addItem(m_dynUI->individualConsignsValidedUI[m_settings.currentPCDisplayed].widget.get(), "ENSEMBLE PHOTO-CONSIGNE SELECTIONNE N°" + QString::number(m_settings.currentPCDisplayed));
     m_mainUI->tbRight->setCurrentIndex(currentIndex);
     m_mainUI->tbRight->blockSignals(false);
 
@@ -480,64 +484,6 @@ void PCMainUI::define_selected_page_from_current_photo(){
 }
 
 
-void PCMainUI::init_misc_elements(){
-
-    // use designer ui
-    m_mainUI->setupUi(this);
-
-    // set icon/title
-    setWindowTitle("PhotosConsigne " + m_version + " (générateur de PDF à partir de photos)");
-    setWindowIcon(QIcon(":/images/icon"));
-
-    // disable textes info tab
-    m_mainUI->twPhotosList->setTabEnabled(1,false);
-    m_mainUI->twPagesList->setTabEnabled(1,false);
-
-    m_mainUI->tbRight->setItemEnabled(2, false); // disable current page tab
-    m_mainUI->tbRight->setItemEnabled(3, false); // disable current pc tab
-    display_global_consign_panel();
-
-    // init definition
-    PaperFormat pf(m_mainUI->cbDPI->currentText(),m_mainUI->cbFormat->currentText());
-    int currentDPI = m_mainUI->cbDPI->currentText().toInt();
-    m_mainUI->laDefWxH->setText(QString::number(pf.widthPixels(currentDPI)) + "x" + QString::number(pf.heightPixels(currentDPI)));
-    m_mainUI->laDefTotal->setText("(" + QString::number(pf.widthPixels(currentDPI)*pf.heightPixels(currentDPI)) + " pixels)");
-}
-
-void PCMainUI::init_images_labels_widgets(){
-
-    // init photo display widgets
-    QHBoxLayout *selectedPhotoLayout = new QHBoxLayout();
-    m_mainUI->wSelectedPhotoW->setLayout(selectedPhotoLayout);
-    m_dynUI->selectedPhotoW = new ImageLabel();
-    selectedPhotoLayout->addWidget(m_dynUI->selectedPhotoW);
-    m_mainUI->twMiddle->setTabEnabled(0, false);
-    m_mainUI->pbAdd->hide();
-
-    // init preview image widget
-    m_dynUI->previewW = new PreviewLabel();
-    m_mainUI->vlImagePreview->addWidget(m_dynUI->previewW);
-}
-
-void PCMainUI::init_rich_text_edit_widgets(){
-
-    // init text edit widgets
-    //  title
-    m_dynUI->titleTEdit = new RichTextEdit();
-    m_dynUI->titleTEdit->set_doc_locker(&m_dynUI->docLocker);
-    m_mainUI->hlTitleBottom->addWidget(m_dynUI->titleTEdit);
-    m_dynUI->titleTEdit->setEnabled(false);
-    m_dynUI->titleTEdit->init_as_title();
-    m_settings.titleDoc = m_dynUI->titleTEdit->textEdit();
-
-    //  global consign
-    m_dynUI->globalConsignTEdit = new RichTextEdit();
-    m_dynUI->globalConsignTEdit->set_doc_locker(&m_dynUI->docLocker);
-    m_dynUI->globalConsignTEdit->init_as_consign();
-    m_mainUI->vlGlobalConsign->addWidget(m_dynUI->globalConsignTEdit);
-    m_settings.consignDoc =  m_dynUI->globalConsignTEdit->textEdit();
-}
-
 void PCMainUI::enable_ui()
 {
     m_mainUI->lwPhotosList->setEnabled(true);
@@ -552,11 +498,10 @@ void PCMainUI::update_photos_list_style()
 {
     for(int ii = 0; ii < m_mainUI->lwPhotosList->count(); ++ii){
 
-        bool individual = m_dynUI->individualConsignsWLoaded[ii]->findChild<QCheckBox*>("cbEnableIndividualConsign")->isChecked();
-
+        bool individual = m_dynUI->individualConsignsLoadedUI[ii].widget->findChild<QCheckBox*>("cbEnableIndividualConsign")->isChecked();
         QBrush brush = m_mainUI->lwPhotosList->item(ii)->foreground();
-
         SPhoto photo = m_settings.photosLoaded->at(ii);
+
         if(!photo->isOnDocument && !photo->isRemoved){
             brush.setColor(QRgb(qRgb(255,0,0)));
         }else if(!photo->isOnDocument){
@@ -723,7 +668,6 @@ void PCMainUI::define_workers_connections()
         // update ui
         enable_ui();
         update_valid_photos();
-
         m_settings.resetPages = true;
         update_settings();
 
@@ -1079,39 +1023,6 @@ void PCMainUI::define_main_UI_connections()
             display_individual_page_settings_panel();
         }
     });
-    // # associate sliders with spin boxes
-    m_dynUI->associate_double_spinbox_with_slider(m_mainUI->dsbGlobalRatioPC, m_mainUI->hsGlobalRatioPC);
-    m_dynUI->associate_double_spinbox_with_slider(m_mainUI->dsbRatioTitle, m_mainUI->hsRatioTitle);
-    m_dynUI->associate_double_spinbox_with_slider(m_mainUI->dsbLeftMargins, m_mainUI->hsLeftMargins, m_mainUI->dsbRightMargins, m_mainUI->hsRightMargins);
-    m_dynUI->associate_double_spinbox_with_slider(m_mainUI->dsbTopMargins, m_mainUI->hsTopMargins, m_mainUI->dsbBottomMargins, m_mainUI->hsBottomMargins);
-    m_dynUI->associate_double_spinbox_with_slider(m_mainUI->dsbHorizontalMargins, m_mainUI->hsHorizontalMargins);
-    m_dynUI->associate_double_spinbox_with_slider(m_mainUI->dsbVerticalMargins, m_mainUI->hsVerticalMargins);
-
-    // # associate buttons
-    m_dynUI->associate_buttons({m_mainUI->pbGlobalConsignBottom,m_mainUI->pbGlobalConsignLeft,m_mainUI->pbGlobalConsignRight,m_mainUI->pbGlobalConsignTop});
-    m_dynUI->associate_buttons({m_mainUI->pbGlobalImageAligmentLeft,m_mainUI->pbGlobalImageAligmentRight, m_mainUI->pbGlobalImageAligmentHMiddle});
-    m_dynUI->associate_buttons({m_mainUI->pbGlobalImageAligmentVMiddle,m_mainUI->pbGlobalImageAligmentTop,m_mainUI->pbGlobalImageAligmentBottom});
-    m_dynUI->associate_buttons({m_mainUI->pbLandscape,m_mainUI->pbPortrait});
-
-    // # associate checkboxes with UI
-    m_dynUI->checkbox_enable_UI(m_mainUI->cbAddExteriorMargins, {m_mainUI->hsLeftMargins, m_mainUI->hsRightMargins, m_mainUI->hsTopMargins, m_mainUI->hsBottomMargins,
-                       m_mainUI->dsbLeftMargins, m_mainUI->dsbRightMargins, m_mainUI->dsbTopMargins, m_mainUI->dsbBottomMargins});
-    m_dynUI->checkbox_enable_UI(m_mainUI->cbAddInteriorMargins, {m_mainUI->hsHorizontalMargins,m_mainUI->hsVerticalMargins,m_mainUI->dsbHorizontalMargins,m_mainUI->dsbVerticalMargins});
-    m_dynUI->checkbox_enable_UI(m_mainUI->cbAddTitle, {m_mainUI->cbAllPagesTitle, m_mainUI->rbBottomTitle, m_mainUI->rbTopTitle,
-                                              m_mainUI->rbWriteOnPCTitle, m_mainUI->hsRatioTitle, m_mainUI->dsbRatioTitle, m_dynUI->titleTEdit});
-
-    /// # udpate settings
-    m_dynUI->update_settings_buttons({m_mainUI->pbGlobalConsignBottom,m_mainUI->pbGlobalConsignLeft,m_mainUI->pbGlobalConsignRight,m_mainUI->pbGlobalConsignTop,
-                            m_mainUI->pbGlobalImageAligmentLeft,m_mainUI->pbGlobalImageAligmentRight, m_mainUI->pbGlobalImageAligmentHMiddle,
-                            m_mainUI->pbGlobalImageAligmentVMiddle,m_mainUI->pbGlobalImageAligmentTop,m_mainUI->pbGlobalImageAligmentBottom,
-                            m_mainUI->pbLandscape,m_mainUI->pbPortrait},true);
-    m_dynUI->update_settings_sliders({m_mainUI->hsGlobalRatioPC, m_mainUI->hsRatioTitle, m_mainUI->hsLeftMargins, m_mainUI->hsRightMargins, m_mainUI->hsTopMargins,
-                            m_mainUI->hsBottomMargins, m_mainUI->hsHorizontalMargins, m_mainUI->hsVerticalMargins},true);
-    m_dynUI->update_settings_double_spinboxes({m_mainUI->dsbGlobalRatioPC, m_mainUI->dsbRatioTitle, m_mainUI->dsbLeftMargins, m_mainUI->dsbRightMargins,
-                                     m_mainUI->dsbTopMargins,m_mainUI->dsbBottomMargins,m_mainUI->dsbHorizontalMargins,m_mainUI->dsbVerticalMargins},true);
-    m_dynUI->update_settings_checkboxes({m_mainUI->cbAddExteriorMargins,m_mainUI->cbAddInteriorMargins,
-                               m_mainUI->cbAddTitle, m_mainUI->cbAllPagesTitle},true);
-    m_dynUI->update_settings_checkboxes({m_mainUI->cbCutLines, m_mainUI->cbSaveOnlyCurrentPage});
 
     connect(m_mainUI->cbWriteOnPhoto, &QCheckBox::clicked, this, [=](bool checked){
 
@@ -1179,7 +1090,7 @@ void PCMainUI::define_main_UI_connections()
     });
     // # list widgets
     connect(m_dynUI->titleTEdit->textEdit(), &TextEdit::textChanged, this, &PCMainUI::update_settings);
-    connect(m_dynUI->globalConsignTEdit->textEdit(), &TextEdit::textChanged, this, &PCMainUI::update_settings);
+    connect(m_dynUI->globalConsignUI.richTextEdit->textEdit(), &TextEdit::textChanged, this, &PCMainUI::update_settings);
 }
 
 void PCMainUI::update_settings(){
@@ -1263,13 +1174,13 @@ void PCMainUI::update_settings(){
 
     // # consigns
     m_settings.consignOnPhoto = m_mainUI->cbWriteOnPhoto->isChecked();
-    m_settings.consignDoc     = m_dynUI->globalConsignTEdit->textEdit();
+    m_settings.consignDoc     = m_dynUI->globalConsignUI.richTextEdit->textEdit();
 
     m_settings.consignsDoc.clear();
     m_settings.consignsDoc.reserve(nbPhotosValid);
 
-    for(const auto &richText : m_dynUI->individualConsignsTEditValided){
-        m_settings.consignsDoc.push_back(richText->textEdit());
+    for(const auto &consignUI : m_dynUI->individualConsignsValidedUI){
+        m_settings.consignsDoc.push_back(consignUI.richTextEdit->textEdit());
     }
 
     // reconstruct the pages
@@ -1325,21 +1236,18 @@ void PCMainUI::display_title_panel(){
 }
 
 void PCMainUI::display_global_consign_panel(){
-    qDebug() << "display_global_consign_panel";
     m_mainUI->tbRight->blockSignals(true);
     m_mainUI->tbRight->setCurrentIndex(1);
     m_mainUI->tbRight->blockSignals(false);
 }
 
-void PCMainUI::display_individual_consign_settings_panel(){
-    qDebug() << "display_individual_consign_settings_panel";
+void PCMainUI::display_individual_consign_settings_panel(){    
     m_mainUI->tbRight->blockSignals(true);
     m_mainUI->tbRight->setCurrentIndex(3);
     m_mainUI->tbRight->blockSignals(false);
 }
 
 void PCMainUI::display_individual_page_settings_panel(){
-    qDebug() << "display_individual_page_settings_panel";
     m_mainUI->tbRight->blockSignals(true);
     m_mainUI->tbRight->setCurrentIndex(2);
     m_mainUI->tbRight->blockSignals(false);
