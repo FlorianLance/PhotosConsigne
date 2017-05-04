@@ -41,13 +41,32 @@
 
 int main(int argc,char** argv)
 {
-//    QApplication::setAttribute(Qt::AA_Use96Dpi);
+
+
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QTranslator qtTranslator;
     qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
 
     QApplication app(argc, argv);
     app.installTranslator(&qtTranslator);
+
+
+//    QPrinter printer(QPrinter::HighResolution);
+//    printer.setOutputFormat(QPrinter::PdfFormat);
+//    printer.setOutputFileName("out.pdf");
+
+//    QTextDocument document;
+////    QString html = "<a href='http://www.google.com'>google</a>";
+
+////    QString html = "<iframe width=\"420\" height=\"315\" src=\"https://www.youtube.com/embed/XGSy3_Czz8k\"></iframe>";
+
+
+//    document.setHtml(html);
+
+//    document.print( &printer );
+//    return 0;
+
+
 
 
 //    QFont font = app.font();

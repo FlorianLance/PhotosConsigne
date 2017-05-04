@@ -33,7 +33,8 @@ SOURCES += \
     src/UI/PCMainUI.cpp \
     src/UI/RichTextUI.cpp \
     src/UI/ImageLabel.cpp \
-    src/Utility.cpp
+    src/Utility.cpp \
+    src/UI/UIElements.cpp
 
 HEADERS += \
     include/Utility.h \
@@ -42,7 +43,8 @@ HEADERS += \
     include/UI/RichTextUI.hpp \
     include/Workers/PCMainWorker.hpp \
     include/thirdparty/asyncfuture/asyncfuture.h \
-    include/Workers/ImageReader.hpp
+    include/Workers/ImageReader.hpp \
+    include/UI/UIElements.hpp
 
 FORMS += \
     ui/MainUI.ui \

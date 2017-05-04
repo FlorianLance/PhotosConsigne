@@ -1835,7 +1835,7 @@ QPushButton:hover:!pressed
 </string>
                 </property>
                 <property name="text">
-                 <string>couleur de la page</string>
+                 <string>couleurs des pages</string>
                 </property>
                </widget>
               </item>
@@ -1862,6 +1862,13 @@ QPushButton:hover:!pressed
              </layout>
             </item>
            </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pbTest">
+            <property name="text">
+             <string>PushButton</string>
+            </property>
+           </widget>
           </item>
           <item>
            <spacer name="horizontalSpacer_3">

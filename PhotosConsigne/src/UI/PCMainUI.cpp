@@ -244,13 +244,13 @@ void PCMainUI::update_pages()
         SPCPage pcPage = std::make_shared<PCPage>(PCPage());
 
         // define current nb of photos for this page
-        auto pageW = m_dynUI->individualPageW[ii];
-        bool individualPageSettings = pageW->findChild<QCheckBox*>("cbEnableInvididualPageSettings")->isChecked();
-        int nbPhotosPage = individualPageSettings ? (pageW->findChild<QSpinBox*>("sbVSizeGrid")->value()*pageW->findChild<QSpinBox*>("sbHSizeGrid")->value()) : m_settings.nbPhotosPerPage;
+        auto &pageW = m_dynUI->individualPageW[ii];
+        bool individualPageSettings = pageW.widget->findChild<QCheckBox*>("cbEnableInvididualPageSettings")->isChecked();
+        int nbPhotosPage = individualPageSettings ? (pageW.widget->findChild<QSpinBox*>("sbVSizeGrid")->value()*pageW.widget->findChild<QSpinBox*>("sbHSizeGrid")->value()) : m_settings.nbPhotosPerPage;
 
         // misc
         pcPage->id = ii;
-
+        pcPage->backgroundColor = individualPageSettings ? pageW.currentColorPage : m_settings.pageColor;
 
         // sets
         pcPage->sets.reserve(nbPhotosPage);
@@ -313,17 +313,17 @@ void PCMainUI::update_pages()
         // margins
         if(individualPageSettings){
             pc::RatioMargins &margins       = pcPage->margins;
-            margins.exteriorMarginsEnabled  = pageW->findChild<QCheckBox*>("cbAddExteriorMargins")->isChecked();
-            margins.interiorMarginsEnabled  = pageW->findChild<QCheckBox*>("cbAddInteriorMargins")->isChecked();
-            margins.left                    = pageW->findChild<QDoubleSpinBox*>("dsbLeftMargins")->value();
-            margins.right                   = pageW->findChild<QDoubleSpinBox*>("dsbRightMargins")->value();
-            margins.top                     = pageW->findChild<QDoubleSpinBox*>("dsbTopMargins")->value();
-            margins.bottom                  = pageW->findChild<QDoubleSpinBox*>("dsbBottomMargins")->value();
-            margins.interWidth              = pageW->findChild<QDoubleSpinBox*>("dsbHorizontalMargins")->value();
-            margins.interHeight             = pageW->findChild<QDoubleSpinBox*>("dsbVerticalMargins")->value();
+            margins.exteriorMarginsEnabled  = pageW.widget->findChild<QCheckBox*>("cbAddExteriorMargins")->isChecked();
+            margins.interiorMarginsEnabled  = pageW.widget->findChild<QCheckBox*>("cbAddInteriorMargins")->isChecked();
+            margins.left                    = pageW.widget->findChild<QDoubleSpinBox*>("dsbLeftMargins")->value();
+            margins.right                   = pageW.widget->findChild<QDoubleSpinBox*>("dsbRightMargins")->value();
+            margins.top                     = pageW.widget->findChild<QDoubleSpinBox*>("dsbTopMargins")->value();
+            margins.bottom                  = pageW.widget->findChild<QDoubleSpinBox*>("dsbBottomMargins")->value();
+            margins.interWidth              = pageW.widget->findChild<QDoubleSpinBox*>("dsbHorizontalMargins")->value();
+            margins.interHeight             = pageW.widget->findChild<QDoubleSpinBox*>("dsbVerticalMargins")->value();
 
-            pcPage->nbPhotosH = pageW->findChild<QSpinBox*>("sbHSizeGrid")->value();
-            pcPage->nbPhotosV = pageW->findChild<QSpinBox*>("sbVSizeGrid")->value();
+            pcPage->nbPhotosH = pageW.widget->findChild<QSpinBox*>("sbHSizeGrid")->value();
+            pcPage->nbPhotosV = pageW.widget->findChild<QSpinBox*>("sbVSizeGrid")->value();
 
         }else{
             pcPage->margins   = m_settings.margins;
@@ -380,7 +380,7 @@ void PCMainUI::define_current_individual_page_ui(){
     int currentIndex = m_mainUI->tbRight->currentIndex();
     m_mainUI->tbRight->blockSignals(true);
     m_mainUI->tbRight->removeItem(2); // remove current pc tab
-    m_mainUI->tbRight->insertItem(2,m_dynUI->individualPageW[m_settings.currentPageId].get(), "PAGE SELECTIONNEE N°" + QString::number(m_settings.currentPageId));
+    m_mainUI->tbRight->insertItem(2,m_dynUI->individualPageW[m_settings.currentPageId].widget.get(), "PAGE SELECTIONNEE N°" + QString::number(m_settings.currentPageId));
     m_mainUI->tbRight->setCurrentIndex(currentIndex);
     m_mainUI->tbRight->blockSignals(false);
 }
@@ -702,6 +702,7 @@ void PCMainUI::define_workers_connections()
 
         define_selected_page_from_current_photo();
         define_selected_pc_from_current_photo();
+        update_settings();
         display_preview_panel();
     });
 
@@ -753,6 +754,13 @@ void PCMainUI::define_workers_connections()
 
 void PCMainUI::define_main_UI_connections()
 {
+
+    connect(m_mainUI->pbTest, &QPushButton::clicked, this, [&]{
+       for(int ii = 0; ii< 1000; ++ii){
+           update_settings();
+       }
+    });
+
     // dyn ui elements
     connect(m_dynUI.get(), &UIElements::update_settings_signal, this, &PCMainUI::update_settings);
     connect(m_dynUI.get(), &UIElements::set_progress_bar_state_signal, m_mainUI->progressBarLoading, &QProgressBar::setValue);

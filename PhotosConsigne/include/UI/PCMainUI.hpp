@@ -16,6 +16,7 @@
 
 // # workers
 #include "PCMainWorker.hpp"
+#include "UIElements.hpp"
 
 
 namespace pc {

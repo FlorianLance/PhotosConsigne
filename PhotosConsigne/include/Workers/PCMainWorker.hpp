@@ -119,7 +119,7 @@ class PDFGeneratorWorker : public QObject
 
 public :
 
-    PDFGeneratorWorker()
+    PDFGeneratorWorker() : m_previewWriter(std::make_unique<QPrinter>(QPrinter::HighResolution))
     {}
 
     void draw_page(QPainter &painter, GlobalData settings, PCPages &pcPages, const int idPageToDraw, const qreal factorUpscale, const bool preview, const bool drawZones)
@@ -181,7 +181,7 @@ public :
         ExtraPCInfo infos;
         infos.pagesNb    = pcPages.pages.size();
         infos.pageNum    = idPageToDraw;
-        infos.pageColor  = settings.pageColor;
+        infos.pageColor  = pcPage->backgroundColor;
         infos.photoNum   = 0;
         infos.photoPCNum = 0;        
         for(auto &&page : pcPages.pages){
@@ -211,6 +211,8 @@ public :
 
             // draw consign
             if(pcSet->consign->rectOnPage.width()> 0 ){
+                qDebug() << "consigne rect: " << QRectF(pcSet->rectOnPage.x(),pcSet->rectOnPage.y(),
+                                                        pcSet->consign->rectOnPage.width(), pcPage->rectOnPage.height()) << " " << pcSet->consign->rectOnPage;
                 draw_doc_html_with_size_factor(painter, m_docLocker, pcSet->consign->doc, QRectF(pcSet->rectOnPage.x(),pcSet->rectOnPage.y(),
                                                                                      pcSet->consign->rectOnPage.width(), pcPage->rectOnPage.height()), pcSet->consign->rectOnPage, factorUpscale, infos);
             }
@@ -230,6 +232,7 @@ public :
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
             }
             draw_doc_html_with_size_factor(painter, m_docLocker, pcPage->title->doc, pcPage->rectOnPage, pcPage->title->rectOnPage, factorUpscale, infos);
+            qDebug() << pcPage->title->doc->toHtml();
         }
 
 
@@ -277,20 +280,33 @@ public slots :
     {
         m_docLocker = docLocker;
         m_pageToDraw = pcPages.pages[settings.currentPageId];
-        bool landScape     = settings.orientation == PageOrientation::landScape;
-        qreal widthPreview   = landScape ? pcPages.paperFormat.heightRatio*m_previewDPI : pcPages.paperFormat.widthRatio  * m_previewDPI;
-        qreal heightPreview  = landScape ? pcPages.paperFormat.widthRatio *m_previewDPI : pcPages.paperFormat.heightRatio * m_previewDPI;
+//        bool landScape     = settings.orientation == PageOrientation::landScape;
+//        qreal widthPreview   = landScape ? pcPages.paperFormat.heightRatio*m_previewDPI : pcPages.paperFormat.widthRatio  * m_previewDPI;
+//        qreal heightPreview  = landScape ? pcPages.paperFormat.widthRatio *m_previewDPI : pcPages.paperFormat.heightRatio * m_previewDPI;
+
+        // test
+        bool landScape = settings.orientation == PageOrientation::landScape;
+        QPageLayout pageLayout(QPageSize(static_cast<QPageSize::PageSizeId>(pcPages.paperFormat.format)),
+                               landScape ? QPageLayout::Landscape : QPageLayout::Portrait, QMarginsF(0.,0.,0.,0.));
+        m_previewWriter->setPageLayout(pageLayout);
+        m_previewWriter->setResolution(96);
+        int widthPreview   = m_previewWriter->width();
+        int heightPreview  = m_previewWriter->height();
+        // end test
+
 
         // create preview image
         QImage image(widthPreview, heightPreview, QImage::Format_RGB32);
 
         // fill background
-        image.fill(settings.pageColor);
+        image.fill(m_pageToDraw->backgroundColor);
 
         QPainter painter(&image);
         m_pageToDraw->compute_sizes(QRectF(0 ,0, widthPreview, heightPreview));
         draw_page(painter, settings, pcPages, settings.currentPageId, 1., true, settings.displayZones);
         painter.end();
+
+        qDebug() <<" -> size image: " << image.rect();
 
         if(settings.grayScale){
             for (int ii = 0; ii < image.height(); ii++) {
@@ -318,7 +334,7 @@ public slots :
         m_totalPC = settings.photosValided->size();
         emit set_progress_bar_state_signal(0);        
 
-        QPrinter pdfWriter(QPrinter::PrinterResolution);
+        QPrinter pdfWriter(QPrinter::HighResolution);
         pdfWriter.setOutputFormat(QPrinter::PdfFormat);
         pdfWriter.setOutputFileName(pcPages.pdfFileName);
         pdfWriter.setCreator("created with PhotosConsigne (https://github.com/FlorianLance/PhotosConsigne)");        
@@ -360,7 +376,8 @@ public slots :
 
             emit set_progress_bar_text_signal("Création page " + QString::number(ii));
 
-            pdfPainter.fillRect(pcPages.pages[ii].get()->rectOnPage, settings.pageColor);
+            pdfPainter.fillRect(pcPages.pages[ii]->rectOnPage, pcPages.pages[ii]->backgroundColor);
+            qDebug() << "-pdf generation factor: " << (1.*pcPages.paperFormat.dpi/m_previewDPI) << " " << pdfWriter.pageRect();
             draw_page(pdfPainter, settings, pcPages, ii, 1.*pcPages.paperFormat.dpi/m_previewDPI, false, false);
 
             if(ii < pcPages.pages.size()-1 && !settings.saveOnlyCurrentPage){
@@ -424,7 +441,9 @@ private :
     QReadWriteLock *m_docLocker = nullptr;
     bool m_continueLoop = true;
 
-    const int m_previewDPI  = 100;
+    const int m_previewDPI  = 96;
     int m_totalPC = 0;
+
+    std::unique_ptr<QPrinter> m_previewWriter;
 };
 }

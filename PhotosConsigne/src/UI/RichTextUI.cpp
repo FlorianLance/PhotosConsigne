@@ -176,11 +176,20 @@ void RichTextEdit::init_as_title(){
 
     textEdit()->setHtml(
     "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html>"
-    "<head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\""
+    "<head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head>"
+    "<body style=\""
     " font-family:'Calibri'; background-color:#ffffff;font-size:20pt; font-weight:400; font-style:normal;\">\n<p align=\"center\" style=\"-qt-paragraph-type:empty;"
     " margin-top:0px; margin-bottom:0px; background-color:#ffffff;margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n<p align=\"center\""
     " style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\""
-    " font-family:'Calibri'; font-size:20pt; background-color:#ffffff;\">Entrez votre titre ici...</span></p></body></html>" );
+    " font-family:'Calibri'; font-size:20pt; background-color:#ffffff;\">Entrez votre titre ici...</span>"
+    "</p></body></html>" );
+
+//    QString html = "<a href='http://www.google.com'>google</a>";
+//    textEdit()->setHtml(html);
+//    <iframe width="420" height="315"
+//   src="https://www.youtube.com/embed/XGSy3_Czz8k">
+//   </iframe>
+
     comboSize->setCurrentIndex(9);
 }
 
@@ -390,9 +399,7 @@ void RichTextEdit::setup_text_actions(){
         textEdit()->setFocus();
     });
 
-//    m_menuLayoutCenter->addSpacing(8);
     m_menuLayoutCenter->addStretch();
-
     QLabel *insertLabel = new QLabel("Insérer: ");
     insertLabel->setStyleSheet("QWidget::enabled {color : rgb(0,106,255);}");
     m_menuLayoutBottom->addWidget(insertLabel);
@@ -556,57 +563,47 @@ void RichTextEdit::setup_text_actions(){
     return;
 }
 
-void RichTextEdit::text_bold()
-{
-    m_docLocker->lockForWrite();
+void RichTextEdit::text_bold(){
+
     QTextCharFormat fmt;
     fmt.setFontWeight(actionTextBold->isChecked() ? QFont::Bold : QFont::Normal);
     merge_format_on_word_or_selection(fmt);
-    m_docLocker->unlock();
 }
 
 void RichTextEdit::text_underline(){
 
-    m_docLocker->lockForWrite();
     QTextCharFormat fmt;
     fmt.setFontUnderline(actionTextUnderline->isChecked());
     merge_format_on_word_or_selection(fmt);
-    m_docLocker->unlock();
 }
 
 void RichTextEdit::text_italic(){
 
-    m_docLocker->lockForWrite();
     QTextCharFormat fmt;
     fmt.setFontItalic(actionTextItalic->isChecked());
     merge_format_on_word_or_selection(fmt);
-    m_docLocker->unlock();
 }
 
 void RichTextEdit::text_family(const QString &f){
 
-    m_docLocker->lockForWrite();
     QTextCharFormat fmt;
     fmt.setFontFamily(f);
     merge_format_on_word_or_selection(fmt);
-    m_docLocker->unlock();
 }
 
 void RichTextEdit::text_size(const QString &p){
 
-    m_docLocker->lockForWrite();
-    qreal pointSize = p.toFloat();
+    qreal pointSize = p.toDouble();
     if (p.toFloat() > 0) {
         QTextCharFormat fmt;
         fmt.setFontPointSize(pointSize);
         merge_format_on_word_or_selection(fmt);
     }
-    m_docLocker->unlock();
 }
 
 void RichTextEdit::text_style(int styleIndex){
 
-    m_docLocker->lockForWrite();
+
     QTextCursor cursor = m_textEdit->textCursor();
 
     if (styleIndex != 0) {
@@ -640,6 +637,7 @@ void RichTextEdit::text_style(int styleIndex){
                 break;
         }
 
+        m_textEdit->locker->lockForWrite();
         cursor.beginEditBlock();
 
         QTextBlockFormat blockFmt = cursor.blockFormat();
@@ -659,21 +657,21 @@ void RichTextEdit::text_style(int styleIndex){
         cursor.createList(listFmt);
 
         cursor.endEditBlock();
+        m_textEdit->locker->unlock();
     } else {
         // ####
+        m_textEdit->locker->lockForWrite();
         QTextBlockFormat bfmt;
         bfmt.setObjectIndex(-1);
         cursor.mergeBlockFormat(bfmt);
+        m_textEdit->locker->unlock();
     }
-    m_docLocker->unlock();
 }
 
 void RichTextEdit::text_color(){
 
-    m_docLocker->lockForWrite();
     QColor col = QColorDialog::getColor(m_textEdit->textColor(), this, "Choix de la couleur du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
     if (!col.isValid()){
-        m_docLocker->unlock();
         return;
     }
 
@@ -681,15 +679,12 @@ void RichTextEdit::text_color(){
     fmt.setForeground(col);
     merge_format_on_word_or_selection(fmt);
     color_text_changed(col);
-    m_docLocker->unlock();
 }
 
 void RichTextEdit::background_text_color(){
 
-    m_docLocker->lockForWrite();
     QColor col = QColorDialog::getColor(m_textEdit->textBackgroundColor(), this, "CHoix de la couleur de l'arrière-plan du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
     if (!col.isValid()){
-        m_docLocker->unlock();
         return;
     }
 
@@ -697,12 +692,11 @@ void RichTextEdit::background_text_color(){
     fmt.setBackground(col);
     merge_format_on_word_or_selection(fmt);
     background_color_text_changed(col);
-    m_docLocker->unlock();
 }
 
 void RichTextEdit::text_align(QAction *a){
 
-    m_docLocker->lockForWrite();
+    m_textEdit->locker->lockForWrite();
     if (a == actionAlignLeft)
         m_textEdit->setAlignment(Qt::AlignLeft | Qt::AlignAbsolute);
     else if (a == actionAlignCenter)
@@ -711,7 +705,7 @@ void RichTextEdit::text_align(QAction *a){
         m_textEdit->setAlignment(Qt::AlignRight | Qt::AlignAbsolute);
     else if (a == actionAlignJustify)
         m_textEdit->setAlignment(Qt::AlignJustify);
-    m_docLocker->unlock();
+    m_textEdit->locker->unlock();
 }
 
 void RichTextEdit::current_char_format_changed(const QTextCharFormat &format){
@@ -723,9 +717,7 @@ void RichTextEdit::current_char_format_changed(const QTextCharFormat &format){
 
 void RichTextEdit::cursor_position_changed(){
 
-    m_docLocker->lockForWrite();
     alignment_changed(m_textEdit->alignment());
-    m_docLocker->unlock();
 }
 
 void RichTextEdit::clipboard_data_changed(){
@@ -738,10 +730,14 @@ void RichTextEdit::clipboard_data_changed(){
 void RichTextEdit::merge_format_on_word_or_selection(const QTextCharFormat &format){
 
     QTextCursor cursor = m_textEdit->textCursor();
-    if (!cursor.hasSelection())
+    if (!cursor.hasSelection()){
         cursor.select(QTextCursor::WordUnderCursor);
+    }
     cursor.mergeCharFormat(format);
+
+    m_textEdit->locker->lockForWrite();
     m_textEdit->mergeCurrentCharFormat(format);
+    m_textEdit->locker->unlock();
 }
 
 void RichTextEdit::font_changed(const QFont &f){
@@ -803,7 +799,9 @@ void TextEdit::insertFromMimeData(const QMimeData *source){
         }
     }
     else{
+        locker->lockForWrite();
         QTextEdit::insertFromMimeData(source);
+        locker->unlock();
     }
 }
 
@@ -822,7 +820,10 @@ void TextEdit::insert_image(){
     imageFormat.setWidth( image.width() );
     imageFormat.setHeight( image.height() );
     imageFormat.setName( Uri.toString() );
+
+    locker->lockForWrite();
     textCursor().insertImage(imageFormat);
+    locker->unlock();
 }
 
 void TextEdit::drop_image(const QUrl &url, const QImage &image){
@@ -830,18 +831,22 @@ void TextEdit::drop_image(const QUrl &url, const QImage &image){
     if (!image.isNull()){
 
         document()->addResource(QTextDocument::ImageResource, url, image);
-
         QTextImageFormat format;
         format.setWidth(image.width());
         format.setHeight(image.height());
         format.setName(url.toString());
+        locker->lockForWrite();
         textCursor().insertImage(format);
+        locker->unlock();
     }
 }
 
 void TextEdit::drop_text_file(const QUrl &url){
 
     QFile file(url.toLocalFile());
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        locker->lockForWrite();
         textCursor().insertText(file.readAll());
+        locker->unlock();
+    }
 }

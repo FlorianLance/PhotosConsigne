@@ -86,6 +86,10 @@ private:
     void drop_image(const QUrl& url, const QImage& image);
 
     void drop_text_file(const QUrl& url);
+
+public:
+
+    QReadWriteLock *locker = nullptr;
 };
 
 class RichTextEdit : public QWidget
@@ -98,7 +102,7 @@ public:
 
     TextEdit* textEdit() {return m_textEdit;}
 
-    void set_doc_locker(QReadWriteLock *docLocker){m_docLocker = docLocker;}
+    void set_doc_locker(QReadWriteLock *docLocker){m_textEdit->locker = docLocker;}
 
     void init_as_title();
 
@@ -171,5 +175,5 @@ private:
     QHBoxLayout *m_menuLayoutCenter = nullptr;
     QHBoxLayout *m_menuLayoutBottom = nullptr;
     QToolButton *centerAButton = nullptr;
-    QReadWriteLock *m_docLocker = nullptr;
+
 };
