@@ -15,6 +15,7 @@
 
 // debug
 #include <QDebug>
+#include <QElapsedTimer>
 
 // local
 // # ui
@@ -123,13 +124,13 @@ namespace pc
 
         QSize scaled_size() const noexcept {return scaledPhoto.size();}
 
-        void draw(QPainter &painter, const QRectF &rectPhoto, bool preview, bool drawImageSize, PaperFormat format, QRectF pageRect);
+        void draw(QPainter &painter, const QRectF &rectPhoto, bool preview, bool drawImageSize, const PaperFormat &format, const QRectF &pageRect);
 
     private:
 
-        void draw(QPainter &painter, QRectF rectPhoto, QImage photo, bool preview, bool drawImageSize, PaperFormat format, QRectF pageRect);
+        void draw(QPainter &painter, const QRectF &rectPhoto, const QImage &photo, bool preview, bool drawImageSize, PaperFormat format, const QRectF &pageRect);
 
-        void draw_huge(QPainter &painter, QRectF rectPhoto);
+        void draw_huge(QPainter &painter, const QRectF &rectPhoto);
 
     public:
 
@@ -148,9 +149,26 @@ namespace pc
         QFileInfo info;
     };
 
+
+
+    struct ExtraPCInfo{
+
+        ExtraPCInfo(){}
+
+        QFileInfo fileInfo;
+        QString namePCAssociatedPhoto = "";
+        int pageNum       = -1;
+        int pagesNb       = -1;
+        int photoNum      = -1;
+        int photoPCNum    = -1;
+        int photoTotalNum = -1;
+        QColor pageColor = Qt::white;
+    };
+
+
     struct Consign : public RectPageItem {
 
-        QTextDocument *doc = nullptr;
+        std::shared_ptr<QString> html = nullptr;
         void compute_sizes(QRectF upperRect){
             rectOnPage = std::move(upperRect);
         }
@@ -158,7 +176,7 @@ namespace pc
 
     struct Title : public RectPageItem { // ############ TO BE REMOVED
 
-        QTextDocument *doc = nullptr;
+        std::shared_ptr<QString> html = nullptr;
         void compute_sizes(QRectF upperRect){
             rectOnPage = std::move(upperRect);
         }
@@ -166,7 +184,7 @@ namespace pc
 
     struct Header : public RectPageItem {
 
-        QTextDocument *doc = nullptr;
+        std::shared_ptr<QString> html = nullptr;
         void compute_sizes(QRectF upperRect){
             rectOnPage = std::move(upperRect);
         }
@@ -174,7 +192,7 @@ namespace pc
 
     struct Footer : public RectPageItem {
 
-        QTextDocument *doc = nullptr;
+        std::shared_ptr<QString> html = nullptr;
         void compute_sizes(QRectF upperRect){
             rectOnPage = std::move(upperRect);
         }
@@ -200,7 +218,7 @@ namespace pc
         int id; /**< id of the page */
 
         bool displayCutLines;
-//        int nbPhotos;
+    //        int nbPhotos;
         int nbPhotosV;
         int nbPhotosH;
         qreal ratioWithTitle;
@@ -225,11 +243,11 @@ namespace pc
 
     struct PCPages{
 
-        // paths        
+        // paths
         QString pdfFileName = "";
 
         PaperFormat paperFormat;
-        QVector<SPCPage> pages;        
+        QVector<SPCPage> pages;
 
         int page_photos_number(int index) const{
             return pages[index]->sets.size();
@@ -240,21 +258,6 @@ namespace pc
                 page->compute_sizes(QRectF(0,0,width,height));
         }
     };
-
-    struct ExtraPCInfo{
-
-        ExtraPCInfo(){}
-
-        QFileInfo fileInfo;
-        QString namePCAssociatedPhoto = "";
-        int pageNum       = -1;
-        int pagesNb       = -1;
-        int photoNum      = -1;
-        int photoPCNum    = -1;
-        int photoTotalNum = -1;
-        QColor pageColor = Qt::white;
-    };
-
 
 
 
@@ -290,35 +293,32 @@ namespace pc
 
         PageOrientation orientation;
         RatioMargins margins;
+
         // # misc consign
         bool consignOnPhoto;
-        TextEdit *consignDoc = nullptr;
-        QVector<TextEdit *> consignsDoc;
 
         // title
         bool titleAdded;
         bool titleOnAllPages;
         qreal ratioTitle;
         Position titlePositionFromPC;
-        TextEdit *titleDoc = nullptr;
 
         QString photosDirectoryPath= "";
-
         SPhotos photosLoaded  = std::make_shared<QList<SPhoto>>(QList<SPhoto>());
         SPhotos photosValided = std::make_shared<QList<SPhoto>>(QList<SPhoto>());
     };
 
 
     // define static functions
-    static void draw_doc_html_with_size_factor(QPainter &painter, QReadWriteLock *docLocker, QTextDocument *document, QRectF upperRect, QRectF docRect, qreal sizeFactor, ExtraPCInfo infos = ExtraPCInfo()){
+    static QString format_html_for_generation(QString html, qreal sizeFactor, ExtraPCInfo infos = ExtraPCInfo()){
 
-        docLocker->lockForRead();
-        QSharedPointer<QTextDocument> doc = QSharedPointer<QTextDocument>(document->clone(nullptr));
-        docLocker->unlock();        
+//        QElapsedTimer timer;
+//        timer.start();
 
-        QString html = doc->toHtml();
         int index = 0;
-        html = html.replace("family:'Helvetica'; font-size:", "#B_#B_#B_#B_");
+        html = html.replace("margin-top:12px; margin-bottom:12px", "margin-top:0px; margin-bottom:0px");
+        html = html.replace("style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\"",
+                            "B_#B_#B_#B_");
         QVector<qreal> sizes;
         while (index != -1){
             index = html.indexOf(QString("font-size:"));
@@ -346,7 +346,10 @@ namespace pc
             html = html.insert(index, "font-size:" + QString::number(sizes[currentIdSize++])  + "pt;");
         }
 
-        html = html.replace("#B_#B_#B_#B_", "family:'Helvetica'; font-size:");
+
+        html = html.replace("B_#B_#B_#B_","style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\"");
+
+
         html = html.replace("$nom$", "$name$");
         index = 0;
         while(index != -1){
@@ -419,9 +422,11 @@ namespace pc
             html = html.remove(index, indexEndImg - index);
             html = html.insert(index, "#I_#I_#I_#I_" + QString::number(currentImage++)  + "_#I_#I_#I_#I");
 
+
             newImages.push_back("<img src=" + subString.mid(9, indexWidth-10)
-                                + " width=\""+ QString::number(sizeFactor* onlyWidth.toFloat())
-                                + "\" height=\"" + QString::number(sizeFactor* onlyHeight.toFloat())+ "\" />");
+                                + " width=\""    + QString::number(sizeFactor * onlyWidth.toDouble())
+                                + "\" height=\"" + QString::number(sizeFactor * onlyHeight.toDouble())+ "\" />");
+            qDebug() << newImages.last();
         }
 
         index = 0;
@@ -437,20 +442,7 @@ namespace pc
             html = html.insert(index, newImages[currentImage++]);
         }
 
-        QImage pixDoc(QSize(upperRect.width(),upperRect.height()), QImage::Format_ARGB32);
-        pixDoc.fill(QColor(255,255,255,0)); // ## to be parametreized
-
-        QPainter painterDoc(&pixDoc);
-        painterDoc.setPen(QPen());
-
-        doc->setPageSize(QSizeF(upperRect.width(), upperRect.height()));
-        doc->setHtml(html);
-        doc->drawContents(&painterDoc);
-
-        if(pixDoc.width() > 0){
-            QImage cropped = pixDoc.copy(0,0, docRect.width(), docRect.height());
-            painter.drawImage(QRectF(docRect.x(),docRect.y(),docRect.width(),docRect.height()), cropped);
-        }
-
+//        qDebug() << "Format html took" << timer.elapsed() << "milliseconds";
+        return html;
     }
 }

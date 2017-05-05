@@ -26,7 +26,7 @@
 
 using namespace pc;
 
-PCMainUI::PCMainUI(QApplication *parent) : m_version("3.0"), m_mainUI(QSharedPointer<Ui::PhotosConsigneMainW>(new Ui::PhotosConsigneMainW())){
+PCMainUI::PCMainUI(QApplication *parent) : m_version("3.0"), m_mainUI(std::make_shared<Ui::PhotosConsigneMainW>()){
 
     Q_UNUSED(parent)
 
@@ -44,10 +44,6 @@ PCMainUI::PCMainUI(QApplication *parent) : m_version("3.0"), m_mainUI(QSharedPoi
     m_displayPhotoWorker = std::make_unique<PhotoDisplayWorker>();
     m_pdfGeneratorWorker = std::make_unique<PDFGeneratorWorker>();
 
-    // retrive static text edit
-    m_settings.titleDoc   = m_dynUI->titleTEdit->textEdit();
-    m_settings.consignDoc = m_dynUI->globalConsignUI.richTextEdit->textEdit();
-
     // conneccions
     define_workers_connections();
     define_main_UI_connections();
@@ -61,6 +57,8 @@ PCMainUI::PCMainUI(QApplication *parent) : m_version("3.0"), m_mainUI(QSharedPoi
     // update settings with current UI
     update_settings_with_no_preview();
     display_global_consign_panel();
+
+    emit init_document_signal();
 }
 
 PCMainUI::~PCMainUI()
@@ -195,15 +193,16 @@ void PCMainUI::update_valid_photos()
     auto nbPhotosLoaded = m_settings.photosLoaded->size();
     m_settings.photosValided->clear();
     m_settings.photosValided->reserve(nbPhotosLoaded);
-    m_dynUI->individualConsignsValidedUI.clear();
-    m_dynUI->individualConsignsValidedUI.reserve(nbPhotosLoaded);
+//    m_dynUI->individualConsignsValidedUI.clear();
+//    m_dynUI->individualConsignsValidedUI.reserve(nbPhotosLoaded);
 
     for(int ii = 0; ii < nbPhotosLoaded; ++ii){
         if(m_settings.photosLoaded->at(ii)->isRemoved){
             continue;
         }
+
         m_settings.photosValided->push_back(m_settings.photosLoaded->at(ii));
-        m_dynUI->individualConsignsValidedUI.push_back(m_dynUI->individualConsignsLoadedUI.at(ii));
+//        m_dynUI->individualConsignsValidedUI.push_back(m_dynUI->individualConsignsLoadedUI.at(ii));
     }
 
     // update current PD displayed if necessary
@@ -279,7 +278,7 @@ void PCMainUI::update_pages()
                 set->consignPositionFromPhoto   = m_settings.consignPositionFromPhotos;
                 set->ratio                      = m_settings.PCRation;
                 set->consignOnPhoto             = m_settings.consignOnPhoto;
-                set->consign->doc               = m_settings.consignDoc->document();
+                set->consign->html              = m_dynUI->globalConsignUI.html;
                 set->photo->alignment           = m_settings.photoAlignment;
             }else{ // individual consign
 
@@ -288,7 +287,7 @@ void PCMainUI::update_pages()
                                                 ((!wC->findChild<QPushButton *>("pbConsignLeft")->isEnabled())   ? Position::left   : Position::right)));
                 set->ratio          = wC->findChild<QDoubleSpinBox*>("dsbRatioPC")->value();
                 set->consignOnPhoto = wC->findChild<QCheckBox *>("cbWriteOnPhoto")->isChecked();
-                set->consign->doc   = m_dynUI->individualConsignsValidedUI[currentPhotoId].richTextEdit->textEdit()->document();
+                set->consign->html  = m_dynUI->individualConsignsValidedUI[currentPhotoId].html;
 
                 // image alignment
                 int individualPhotosAlignment = 0;
@@ -340,7 +339,7 @@ void PCMainUI::update_pages()
             if(pcPage->title == nullptr){
                 pcPage->title = std::make_shared<Title>(Title());
             }
-            pcPage->title->doc     = m_settings.titleDoc->document();
+            pcPage->title->html         = m_dynUI->titleUI.html;
             pcPage->titlePositionFromPC = m_settings.titlePositionFromPC;
             pcPage->ratioWithTitle      = m_settings.ratioTitle;
         }else{
@@ -575,6 +574,8 @@ void PCMainUI::define_workers_connections()
     connect(this, &PCMainUI::kill_signal,                       m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::kill);
     connect(this, &PCMainUI::start_preview_generation_signal,   m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::generate_preview);
     connect(this, &PCMainUI::start_PDF_generation_signal,       m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::generate_PDF);
+    connect(this, &PCMainUI::init_document_signal, m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::init_document);
+    connect(m_dynUI.get(), &UIElements::resource_added_signal, m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::add_resource);
 
     // pdf generator worker -> ui
     connect(m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::end_preview_signal, this, [=](QImage previewImage){
@@ -810,7 +811,7 @@ void PCMainUI::define_main_UI_connections()
             m_pcPages.pdfFileName = filePath;
             m_mainUI->pbSavePDF->setEnabled(false);
             m_mainUI->pbOpenPDF->setEnabled(false);
-            emit start_PDF_generation_signal(&m_dynUI->docLocker, m_settings, m_pcPages);
+            emit start_PDF_generation_signal(m_settings, m_pcPages);
         }
     });
     connect(m_mainUI->pbLeft, &QPushButton::clicked, this, [&]{ // previous image
@@ -1038,17 +1039,19 @@ void PCMainUI::define_main_UI_connections()
 
         if(!checked){
             switch(m_dynUI->previousGlobalConsignPositionFromPhotos){
-                case Position::bottom:
+            case Position::bottom:
                     m_mainUI->pbGlobalConsignBottom->setEnabled(false);
                 break;
-                case Position::left:
+            case Position::left:
                     m_mainUI->pbGlobalConsignLeft->setEnabled(false);
                 break;
-                case Position::right:
+            case Position::right:
                     m_mainUI->pbGlobalConsignRight->setEnabled(false);
                 break;
-                case Position::top:
+            case Position::top:
                     m_mainUI->pbGlobalConsignTop->setEnabled(false);
+                break;
+            case Position::on:
                 break;
             }
         }
@@ -1089,11 +1092,21 @@ void PCMainUI::define_main_UI_connections()
         update_settings();
     });
     // # list widgets
-    connect(m_dynUI->titleTEdit->textEdit(), &TextEdit::textChanged, this, &PCMainUI::update_settings);
+    connect(m_dynUI->titleUI.richTextEdit->textEdit(), &TextEdit::textChanged, this, &PCMainUI::update_settings);
     connect(m_dynUI->globalConsignUI.richTextEdit->textEdit(), &TextEdit::textChanged, this, &PCMainUI::update_settings);
 }
 
 void PCMainUI::update_settings(){
+
+    // update valid consigns
+    m_dynUI->individualConsignsValidedUI.clear();
+    m_dynUI->individualConsignsValidedUI.reserve(m_settings.photosLoaded->size());
+    for(int ii = 0; ii < m_settings.photosLoaded->size(); ++ii){
+        if(m_settings.photosLoaded->at(ii)->isRemoved){
+            continue;
+        }
+        m_dynUI->individualConsignsValidedUI.push_back(m_dynUI->individualConsignsLoadedUI.at(ii));
+    }
 
     // nb of photos to be used (== nb of pc)
     auto nbPhotosValid          = m_settings.photosValided->size();
@@ -1151,11 +1164,10 @@ void PCMainUI::update_settings(){
     m_pcPages.paperFormat            = PaperFormat(m_mainUI->cbDPI->currentText(), m_mainUI->cbFormat->currentText());        
 
     // # title
-    m_settings.titleAdded                   = m_mainUI->cbAddTitle->isChecked();
-    m_settings.titleOnAllPages              = m_mainUI->cbAllPagesTitle->isChecked();
+    m_settings.titleAdded             = m_mainUI->cbAddTitle->isChecked();
+    m_settings.titleOnAllPages        = m_mainUI->cbAllPagesTitle->isChecked();
     m_settings.ratioTitle             = m_mainUI->dsbRatioTitle->value();
     m_settings.titlePositionFromPC    = (m_mainUI->rbTopTitle->isChecked()) ? Position::top : (m_mainUI->rbBottomTitle->isChecked() ? Position::bottom : Position::on);
-    m_settings.titleDoc                     = m_dynUI->titleTEdit->textEdit();
 
     // # margins
     pc::RatioMargins &margins       = m_settings.margins;
@@ -1174,14 +1186,6 @@ void PCMainUI::update_settings(){
 
     // # consigns
     m_settings.consignOnPhoto = m_mainUI->cbWriteOnPhoto->isChecked();
-    m_settings.consignDoc     = m_dynUI->globalConsignUI.richTextEdit->textEdit();
-
-    m_settings.consignsDoc.clear();
-    m_settings.consignsDoc.reserve(nbPhotosValid);
-
-    for(const auto &consignUI : m_dynUI->individualConsignsValidedUI){
-        m_settings.consignsDoc.push_back(consignUI.richTextEdit->textEdit());
-    }
 
     // reconstruct the pages
     update_pages();
@@ -1213,7 +1217,7 @@ void PCMainUI::update_settings(){
         m_previewLocker.lockForWrite();
         m_isPreviewComputing = true;
         m_previewLocker.unlock();
-        emit start_preview_generation_signal(&m_dynUI->docLocker, m_settings, m_pcPages);
+        emit start_preview_generation_signal(m_settings, m_pcPages);
     }
 }
 

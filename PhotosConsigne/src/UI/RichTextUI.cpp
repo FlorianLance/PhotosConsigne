@@ -100,6 +100,7 @@ RichTextEdit::RichTextEdit(QWidget *parent)
     setWindowTitle(QCoreApplication::applicationName());
 
     m_textEdit = new TextEdit();
+    m_backGround.setAlpha(0);
 
     QFont textFont("Calibri");
     textFont.setStyleHint(QFont::SansSerif);
@@ -170,12 +171,18 @@ RichTextEdit::RichTextEdit(QWidget *parent)
     connect(QApplication::clipboard(), &QClipboard::dataChanged, this, &RichTextEdit::clipboard_data_changed);
 
     m_textEdit->setFocus();
+
+    // send html
+    connect(m_textEdit, &TextEdit::textChanged, this, [=]{
+
+        emit html_updated_signal(std::make_shared<QString>(m_textEdit->toHtml()));
+    });
 }
 
 void RichTextEdit::init_as_title(){
 
     QString html = "<p align=\"center\" align=\"center style= margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
-    "<span style=\"font-family:'Calibri'; font-size:20pt; background-color:#ffffff;\">"
+    "<span style=\"font-family:'Calibri'; font-size:20pt; background-color:transparent;\">" //
     "<br />Entrez votre titre ici..."
     "</span>";
     textEdit()->setHtml(html);
@@ -186,7 +193,7 @@ void RichTextEdit::init_as_title(){
 void RichTextEdit::init_as_consign(){
 
     QString html = "<p align=\"center\" align=\"center style= margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
-    "<span style=\"font-family:'Calibri'; font-size:14pt; background-color:#ffffff;\">"
+    "<span style=\"font-family:'Calibri'; font-size:14pt; background-color:transparent;\">"
     "<br />Texte commun à toutes les photos..."
     "</span>";
     textEdit()->setHtml(html);
@@ -196,16 +203,14 @@ void RichTextEdit::init_as_consign(){
 void RichTextEdit::init_as_individual_consign(){
 
     QString html = "<p align=\"center\" align=\"center style= margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
-    "<span style=\"font-family:'Calibri'; font-size:14pt; background-color:#ffffff;\">"
+    "<span style=\"font-family:'Calibri'; font-size:14pt; background-color:transparent;\">"
     "<br />Texte individuel..."
     "</span>";
     textEdit()->setHtml(html);
     comboSize->setCurrentIndex(7);
 }
 
-void RichTextEdit::init_colors(QColor foreGround, QColor backGround){
-    this->foreGround = foreGround;
-    this->backGround = backGround;
+void RichTextEdit::init_colors_icons(QColor foreGround, QColor backGround){
 
     color_text_changed(foreGround);
     background_color_text_changed(backGround);
@@ -601,7 +606,6 @@ void RichTextEdit::text_size(const QString &p){
 
 void RichTextEdit::text_style(int styleIndex){
 
-
     QTextCursor cursor = m_textEdit->textCursor();
 
     if (styleIndex != 0) {
@@ -635,7 +639,6 @@ void RichTextEdit::text_style(int styleIndex){
                 break;
         }
 
-        m_textEdit->locker->lockForWrite();
         cursor.beginEditBlock();
 
         QTextBlockFormat blockFmt = cursor.blockFormat();
@@ -655,46 +658,42 @@ void RichTextEdit::text_style(int styleIndex){
         cursor.createList(listFmt);
 
         cursor.endEditBlock();
-        m_textEdit->locker->unlock();
     } else {
         // ####
-        m_textEdit->locker->lockForWrite();
         QTextBlockFormat bfmt;
         bfmt.setObjectIndex(-1);
-        cursor.mergeBlockFormat(bfmt);
-        m_textEdit->locker->unlock();
+        cursor.mergeBlockFormat(bfmt);        
     }
 }
 
 void RichTextEdit::text_color(){
 
-    foreGround = QColorDialog::getColor(foreGround, this, "Choix de la couleur du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
-    if (!foreGround.isValid()){
+    m_foreGround = QColorDialog::getColor(m_foreGround, this, "Choix de la couleur du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
+    if (!m_foreGround.isValid()){
         return;
     }
 
     QTextCharFormat fmt;
-    fmt.setForeground(foreGround);
+    fmt.setForeground(m_foreGround);
     merge_format_on_word_or_selection(fmt);
-    color_text_changed(foreGround);
+    color_text_changed(m_foreGround);
 }
 
 void RichTextEdit::background_text_color(){
 
-    backGround = QColorDialog::getColor(backGround, this, "CHoix de la couleur de l'arrière-plan du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
-    if (!backGround.isValid()){
+    m_backGround = QColorDialog::getColor(m_backGround, this, "CHoix de la couleur de l'arrière-plan du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
+    if (!m_backGround.isValid()){
         return;
     }
 
     QTextCharFormat fmt;
-    fmt.setBackground(backGround);
+    fmt.setBackground(m_backGround);
     merge_format_on_word_or_selection(fmt);
-    background_color_text_changed(backGround);
+    background_color_text_changed(m_backGround);
 }
 
 void RichTextEdit::text_align(QAction *a){
 
-    m_textEdit->locker->lockForWrite();
     if (a == actionAlignLeft)
         m_textEdit->setAlignment(Qt::AlignLeft | Qt::AlignAbsolute);
     else if (a == actionAlignCenter)
@@ -703,7 +702,6 @@ void RichTextEdit::text_align(QAction *a){
         m_textEdit->setAlignment(Qt::AlignRight | Qt::AlignAbsolute);
     else if (a == actionAlignJustify)
         m_textEdit->setAlignment(Qt::AlignJustify);
-    m_textEdit->locker->unlock();
 }
 
 void RichTextEdit::current_char_format_changed(const QTextCharFormat &format){
@@ -733,9 +731,7 @@ void RichTextEdit::merge_format_on_word_or_selection(const QTextCharFormat &form
     }
     cursor.mergeCharFormat(format);
 
-    m_textEdit->locker->lockForWrite();
     m_textEdit->mergeCurrentCharFormat(format);
-    m_textEdit->locker->unlock();
 }
 
 void RichTextEdit::font_changed(const QFont &f){
@@ -744,7 +740,7 @@ void RichTextEdit::font_changed(const QFont &f){
     comboSize->setCurrentIndex(comboSize->findText(QString::number(f.pointSize())));
     actionTextBold->setChecked(f.bold());
     actionTextItalic->setChecked(f.italic());
-    actionTextUnderline->setChecked(f.underline());
+    actionTextUnderline->setChecked(f.underline());;
 }
 
 void RichTextEdit::color_text_changed(const QColor &c){
@@ -763,8 +759,6 @@ void RichTextEdit::background_color_text_changed(const QColor &c){
 
 void RichTextEdit::alignment_changed(Qt::Alignment a){
 
-//    qDebug() << "PLAIN "  << textEdit()->toPlainText();
-//    qDebug() << "HTML " << textEdit()->toHtml();
     if (a & Qt::AlignLeft)
         actionAlignLeft->setChecked(true);
     else if (a & Qt::AlignHCenter)
@@ -799,9 +793,7 @@ void TextEdit::insertFromMimeData(const QMimeData *source){
         }
     }
     else{
-        locker->lockForWrite();
         QTextEdit::insertFromMimeData(source);
-        locker->unlock();
     }
 }
 
@@ -812,18 +804,16 @@ void TextEdit::insert_image(){
         return;
     }
 
-    QUrl Uri ( QString ( "file://%1" ).arg ( file ) );
+    QUrl url ( QString ( "file://%1" ).arg ( file ) );
     QImage image = QImageReader ( file ).read();
-    document()->addResource(QTextDocument::ImageResource, Uri, image);
+    document()->addResource(QTextDocument::ImageResource, url, image);
+    emit resource_added_signal(url, image);
 
     QTextImageFormat imageFormat;
     imageFormat.setWidth( image.width() );
     imageFormat.setHeight( image.height() );
-    imageFormat.setName( Uri.toString() );
-
-    locker->lockForWrite();
+    imageFormat.setName( url.toString() );
     textCursor().insertImage(imageFormat);
-    locker->unlock();
 }
 
 void TextEdit::drop_image(const QUrl &url, const QImage &image){
@@ -831,13 +821,13 @@ void TextEdit::drop_image(const QUrl &url, const QImage &image){
     if (!image.isNull()){
 
         document()->addResource(QTextDocument::ImageResource, url, image);
+        emit resource_added_signal(url, image);
+
         QTextImageFormat format;
         format.setWidth(image.width());
         format.setHeight(image.height());
         format.setName(url.toString());
-        locker->lockForWrite();
         textCursor().insertImage(format);
-        locker->unlock();
     }
 }
 
@@ -845,8 +835,6 @@ void TextEdit::drop_text_file(const QUrl &url){
 
     QFile file(url.toLocalFile());
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        locker->lockForWrite();
         textCursor().insertText(file.readAll());
-        locker->unlock();
     }
 }

@@ -9,7 +9,7 @@
  */
 
 // local
-#include "Utility.h"
+#include "Utility.hpp"
 // # generated ui
 #include "ui_PhotosConsigneMainW.h"
 #include "ui_IndividualConsign.h"
@@ -28,6 +28,12 @@ namespace Ui {
 
 namespace pc{
 
+struct ImageResource{
+
+    bool hasBeenAdded = false;
+    QUrl url;
+    QImage image;
+};
 
 struct PageUI{
 
@@ -40,33 +46,54 @@ struct PageUI{
     std::shared_ptr<QWidget> widget = std::make_shared<QWidget>();
 };
 
+struct TitleUI{
+
+    TitleUI(){
+
+        richTextEdit->init_as_title();
+        richTextEdit->init_colors_icons(qRgba(0,0,0,255), qRgba(225,225,225,0));
+        richTextEdit->setEnabled(false);
+        html = std::make_shared<QString>(richTextEdit->textEdit()->document()->toHtml());
+    }
+
+    std::shared_ptr<QString>        html = nullptr;
+    std::shared_ptr<RichTextEdit>   richTextEdit = std::make_shared<RichTextEdit>();
+};
+
 struct GlobalConsignUI{
 
     GlobalConsignUI(){
 
         richTextEdit->init_as_consign();
-        richTextEdit->init_colors(qRgba(0,0,0,255), qRgba(255,255,255,0));
+        richTextEdit->init_colors_icons(qRgba(0,0,0,255), qRgba(225,225,225,0));
+        html = std::make_shared<QString>(richTextEdit->textEdit()->document()->toHtml());
     }
 
-    std::shared_ptr<RichTextEdit> richTextEdit = std::make_shared<RichTextEdit>();
+    std::shared_ptr<QString>         html = nullptr;
+    std::shared_ptr<RichTextEdit>    richTextEdit = std::make_shared<RichTextEdit>();
 };
 
 struct IndividualConsignUI{
 
     IndividualConsignUI(){
+
         ui.setupUi(widget.get());
         ui.wTop->setEnabled(false);
         ui.tbConsigns->setEnabled(false);
         ui.vlIndividualConsign->addWidget(richTextEdit.get());
 
         richTextEdit->init_as_individual_consign();
-        richTextEdit->init_colors(qRgba(0,0,0,255), qRgba(255,255,255,0));
+        richTextEdit->init_colors_icons(qRgba(0,0,0,255), qRgba(225,225,225,0));
+        html = std::make_shared<QString>(richTextEdit->textEdit()->document()->toHtml());
     }
 
-    Ui::IndividualConsignW        ui;
-    std::shared_ptr<QWidget>      widget       = std::make_shared<QWidget>();
-    std::shared_ptr<RichTextEdit> richTextEdit = std::make_shared<RichTextEdit>();
+    Ui::IndividualConsignW          ui;
+    std::shared_ptr<QString>        html = nullptr;
+    std::shared_ptr<QWidget>        widget       = std::make_shared<QWidget>();
+    std::shared_ptr<RichTextEdit>   richTextEdit = std::make_shared<RichTextEdit>();
 };
+
+
 
 class UIElements : public QObject{
 
@@ -75,7 +102,7 @@ class UIElements : public QObject{
 public :
 
 
-    UIElements(QSharedPointer<Ui::PhotosConsigneMainW> mainUI);
+    UIElements(std::shared_ptr<Ui::PhotosConsigneMainW> mainUI);
 
     ~UIElements();
 
@@ -101,7 +128,6 @@ public :
     void checkbox_enable_UI(QCheckBox *cb, QVector<QWidget*> widgets, bool inverted = false);
 
     // members
-    QReadWriteLock  docLocker;
     QTimer          zonesTimer;
     Position        previousGlobalConsignPositionFromPhotos;
 //        QList<Position> previousIndividualConsignPositionFromPhotos;
@@ -111,8 +137,8 @@ public :
 
     ImageLabel   *selectedPhotoW     = nullptr;
     PreviewLabel *previewW           = nullptr;
-    RichTextEdit *titleTEdit         = nullptr;
 
+    TitleUI                    titleUI;
     GlobalConsignUI            globalConsignUI;
     QList<PageUI>              individualPageUI;
     QList<IndividualConsignUI> individualConsignsLoadedUI;
@@ -120,7 +146,7 @@ public :
 
 private:
 
-    QSharedPointer<Ui::PhotosConsigneMainW> m_mainUI = nullptr;
+    std::shared_ptr<Ui::PhotosConsigneMainW> m_mainUI = nullptr;
 
 signals:
 
@@ -133,5 +159,7 @@ signals:
     void insert_white_space_signal();
 
     void send_page_color_signal(QColor col);
+
+    void resource_added_signal(QUrl url, QImage image);
 };
 }

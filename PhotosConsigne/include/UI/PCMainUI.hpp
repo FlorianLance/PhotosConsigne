@@ -16,6 +16,7 @@
 
 // # workers
 #include "PCMainWorker.hpp"
+#include "PDFGeneratorWorker.hpp"
 #include "UIElements.hpp"
 
 
@@ -90,13 +91,15 @@ private :
 
 signals :
 
+    void init_document_signal();
+
     void kill_signal();
 
     void send_photos_dir_signal(QString photosDir, QStringList photosNames);
 
-    void start_preview_generation_signal(QReadWriteLock *docLocker, GlobalData settings, PCPages pcPages);
+    void start_preview_generation_signal(GlobalData settings, PCPages pcPages);
 
-    void start_PDF_generation_signal(QReadWriteLock *docLocker, GlobalData settings, PCPages pcPages);
+    void start_PDF_generation_signal(GlobalData settings, PCPages pcPages);
 
 private:
 
@@ -109,8 +112,8 @@ private:
     GlobalData m_settings;  /**< global parameters of the document */
 
     // ui
-    QSharedPointer<Ui::PhotosConsigneMainW>  m_mainUI = nullptr; /**< main widget */
-    std::unique_ptr<UIElements> m_dynUI  = nullptr; /**< dynamic ui elements */    
+    std::shared_ptr<Ui::PhotosConsigneMainW>  m_mainUI = nullptr; /**< main widget */
+    std::unique_ptr<UIElements>               m_dynUI  = nullptr; /**< dynamic ui elements */
 
     // threads
     std::unique_ptr<PhotoDisplayWorker> m_displayPhotoWorker = nullptr;
@@ -118,6 +121,6 @@ private:
 
     // workers
     QThread m_displayPhotoWorkerThread;
-    QThread m_pdfGeneratorWorkerThread;    
+    QThread m_pdfGeneratorWorkerThread;
 };
 }

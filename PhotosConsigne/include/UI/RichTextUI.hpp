@@ -64,6 +64,9 @@
 #include <QDebug>
 #include <QReadWriteLock>
 
+
+#include <memory>
+
 class QAction;
 class QComboBox;
 class QFontComboBox;
@@ -74,6 +77,8 @@ class QPrinter;
 
 class TextEdit : public QTextEdit
 {
+    Q_OBJECT
+
 public:
 
     bool canInsertFromMimeData(const QMimeData* source) const;
@@ -87,9 +92,9 @@ private:
 
     void drop_text_file(const QUrl& url);
 
-public:
+signals:
 
-    QReadWriteLock *locker = nullptr;
+    void resource_added_signal(QUrl url, QImage image);
 };
 
 class RichTextEdit : public QWidget
@@ -102,20 +107,18 @@ public:
 
     TextEdit* textEdit() {return m_textEdit;}
 
-    void set_doc_locker(QReadWriteLock *docLocker){m_textEdit->locker = docLocker;}
-
     void init_as_title();
 
     void init_as_consign();
 
     void init_as_individual_consign();
 
-    void init_colors(QColor foreGround, QColor backGround);
-
-public slots:
+    void init_colors_icons(QColor foreGround, QColor backGround);
 
 
-protected:
+signals :
+
+    void html_updated_signal(std::shared_ptr<QString> html);
 
 
 private slots:
@@ -136,8 +139,8 @@ private slots:
 
 private:
 
-    QColor foreGround = qRgba(0,0,0,255);
-    QColor backGround = qRgba(255,255,255,0);
+    QColor m_foreGround = qRgba(0,0,0,255);
+    QColor m_backGround = qRgba(255,255,255,0);
 
     void setup_edit_actions();
     void setup_text_actions();

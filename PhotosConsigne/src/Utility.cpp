@@ -1,5 +1,5 @@
 
-#include "Utility.h"
+#include "Utility.hpp"
 
 
 
@@ -131,7 +131,7 @@ void pc::PCSet::compute_sizes(QRectF upperRect){
             consignRect = QRectF(rectOnPage.x(), rectOnPage.y() + heightPhotoV, widthConsigneV, heightConsigneV);
             photoRect   = QRectF(rectOnPage.x(), rectOnPage.y(), widthPhotoV, heightPhotoV);
             break;
-        default:
+        case Position::on:
             break;
         }
     }
@@ -168,7 +168,7 @@ pc::Photo::Photo(const QString &path, bool isWhiteSpace) : isWhiteSpace(isWhiteS
     }
 }
 
-void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, bool preview, bool drawImageSize, pc::PaperFormat format, QRectF pageRect){
+void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, bool preview, bool drawImageSize, const pc::PaperFormat &format, const QRectF &pageRect){
 
     if(isWhiteSpace){
         return;
@@ -190,10 +190,15 @@ void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, bool preview, b
     }
 }
 
-void pc::Photo::draw(QPainter &painter, QRectF rectPhoto, QImage photo, bool preview, bool drawImageSize, pc::PaperFormat format, QRectF pageRect){
+void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, const QImage &photo, bool preview, bool drawImageSize, pc::PaperFormat format, const QRectF &pageRect){
+
+    QElapsedTimer timer;
+    timer.start();
 
     QImage rotatedPhoto = preview ? photo.scaled(rectPhoto.width(),rectPhoto.height(), Qt::KeepAspectRatio) :
                                     (photo.transformed(QTransform().rotate(rotation))).scaled(rectPhoto.width(),rectPhoto.height(), Qt::KeepAspectRatio);
+
+    qDebug() << "   draw 1" << timer.elapsed() << "ms";
 
     qreal newX     = rectPhoto.x(), newY = rectPhoto.y();
     qreal newWidth = rotatedPhoto.width(), newHeight = rotatedPhoto.height();
@@ -223,11 +228,13 @@ void pc::Photo::draw(QPainter &painter, QRectF rectPhoto, QImage photo, bool pre
     }
 
 
-    //            QImage rotatedPhoto2 = photo.copy(QRect(0,0,newWidth,newHeight));
+    qDebug() << "   draw 2" << timer.elapsed() << "ms";
 
     // draw image
     QRectF newRectPhoto(newX, newY, newWidth, newHeight);
     painter.drawImage(newRectPhoto, rotatedPhoto, QRectF(0.,0.,rotatedPhoto.width(),rotatedPhoto.height()));
+
+    qDebug() << "   draw 3" << timer.elapsed() << "ms";
 
     if(drawImageSize && newWidth > 100 && newHeight > 50){
 
@@ -244,9 +251,11 @@ void pc::Photo::draw(QPainter &painter, QRectF rectPhoto, QImage photo, bool pre
 
         painter.drawText(QRectF(newX, newY, newWidth, newHeight),  Qt::AlignCenter,sizeImageStr);
     }
+
+    qDebug() << "   draw 4" << timer.elapsed() << "ms";
 }
 
-void pc::Photo::draw_huge(QPainter &painter, QRectF rectPhoto){
+void pc::Photo::draw_huge(QPainter &painter, const QRectF &rectPhoto){
 
     QImage rotatedPhoto = QImage(pathPhoto).transformed(QTransform().rotate(rotation));
     QSizeF upscaledSize(rectPhoto.width(),rectPhoto.height());
@@ -279,7 +288,7 @@ void pc::Photo::draw_huge(QPainter &painter, QRectF rectPhoto){
             newY = rectPhoto.y() + rectPhoto.height()*0.5-upscaledSize.height()*0.5;
         }
     }
-    rectPhoto = QRectF(newX,newY,rectPhoto.width(),rectPhoto.height());
+     QRectF newRect(newX,newY,rectPhoto.width(),rectPhoto.height());
 
     // draw tiles
     int widthUpPerTile  = (upscaledSize.width() /10);
@@ -312,7 +321,7 @@ void pc::Photo::draw_huge(QPainter &painter, QRectF rectPhoto){
             QRectF itUpRect(ii* widthUpPerTile, jj * heightUpPerTile, lastTileUpH ? widthUpTileRemainder : widthUpPerTile, lastTileUpV ? heightUpTileRemainder : heightUpPerTile);
             size_t offset = itRect.x() * rotatedPhoto.depth() / 8 + itRect.y() * rotatedPhoto.bytesPerLine();
 
-            painter.drawImage(rectPhoto.x()+itUpRect.x(),rectPhoto.y()+itUpRect.y(), QImage(rotatedPhoto.bits() + offset, itRect.width(),itRect.height(),
+            painter.drawImage(newRect.x()+itUpRect.x(),newRect.y()+itUpRect.y(), QImage(rotatedPhoto.bits() + offset, itRect.width(),itRect.height(),
                                                                                             rotatedPhoto.bytesPerLine(), rotatedPhoto.format()).scaled(itUpRect.width(),itUpRect.height()));
         }
     }

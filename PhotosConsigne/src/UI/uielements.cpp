@@ -16,7 +16,10 @@
 
 using namespace pc;
 
-pc::UIElements::UIElements(QSharedPointer<Ui::PhotosConsigneMainW> mainUI) : m_mainUI(mainUI) {
+pc::UIElements::UIElements(std::shared_ptr<Ui::PhotosConsigneMainW> mainUI) : m_mainUI(mainUI) {
+
+    qRegisterMetaType<std::shared_ptr<QString>>("std::shared_ptr<QString>");
+    qRegisterMetaType<std::shared_ptr<QTextDocument>>("std::shared_ptr<QTextDocument>");
 
     // init widgets
     // # photo display widgets
@@ -33,16 +36,18 @@ pc::UIElements::UIElements(QSharedPointer<Ui::PhotosConsigneMainW> mainUI) : m_m
 
     // # text edit widgets
     // ## title
-    titleTEdit = new RichTextEdit();
-    titleTEdit->set_doc_locker(&docLocker);
-    m_mainUI->hlTitleBottom->addWidget(titleTEdit);
-    titleTEdit->setEnabled(false);
-    titleTEdit->init_as_title();
-    titleTEdit->init_colors(qRgba(0,0,0,255), qRgba(255,255,255,0));
+    m_mainUI->hlTitleBottom->addWidget(titleUI.richTextEdit.get());
+    connect(titleUI.richTextEdit.get(), &RichTextEdit::html_updated_signal, this, [&](std::shared_ptr<QString> html){
+        titleUI.html = html;
+    });
+    connect(titleUI.richTextEdit->textEdit(), &TextEdit::resource_added_signal, this, &UIElements::resource_added_signal);
 
     // ## global consign
-    globalConsignUI.richTextEdit->set_doc_locker(&docLocker);
     m_mainUI->vlGlobalConsign->addWidget(globalConsignUI.richTextEdit.get());
+    connect(globalConsignUI.richTextEdit.get(), &RichTextEdit::html_updated_signal, this, [&](std::shared_ptr<QString> html){
+        globalConsignUI.html = html;
+    });
+    connect(globalConsignUI.richTextEdit->textEdit(), &TextEdit::resource_added_signal, this, &UIElements::resource_added_signal);
 
     // disable ui
     // # tab texte infos
@@ -78,7 +83,7 @@ pc::UIElements::UIElements(QSharedPointer<Ui::PhotosConsigneMainW> mainUI) : m_m
                        m_mainUI->dsbLeftMargins, m_mainUI->dsbRightMargins, m_mainUI->dsbTopMargins, m_mainUI->dsbBottomMargins});
     checkbox_enable_UI(m_mainUI->cbAddInteriorMargins, {m_mainUI->hsHorizontalMargins,m_mainUI->hsVerticalMargins,m_mainUI->dsbHorizontalMargins,m_mainUI->dsbVerticalMargins});
     checkbox_enable_UI(m_mainUI->cbAddTitle, {m_mainUI->cbAllPagesTitle, m_mainUI->rbBottomTitle, m_mainUI->rbTopTitle,
-                                              m_mainUI->rbWriteOnPCTitle, m_mainUI->hsRatioTitle, m_mainUI->dsbRatioTitle, titleTEdit, m_mainUI->pbRatioTitlePage});
+                                              m_mainUI->rbWriteOnPCTitle, m_mainUI->hsRatioTitle, m_mainUI->dsbRatioTitle, titleUI.richTextEdit.get(), m_mainUI->pbRatioTitlePage});
 
     /// # udpate settings
     update_settings_buttons({m_mainUI->pbGlobalConsignBottom,m_mainUI->pbGlobalConsignLeft,m_mainUI->pbGlobalConsignRight,m_mainUI->pbGlobalConsignTop,
@@ -91,7 +96,7 @@ pc::UIElements::UIElements(QSharedPointer<Ui::PhotosConsigneMainW> mainUI) : m_m
                                      m_mainUI->dsbTopMargins,m_mainUI->dsbBottomMargins,m_mainUI->dsbHorizontalMargins,m_mainUI->dsbVerticalMargins},true);
     update_settings_checkboxes({m_mainUI->cbAddExteriorMargins,m_mainUI->cbAddInteriorMargins,
                                m_mainUI->cbAddTitle, m_mainUI->cbAllPagesTitle},true);
-    update_settings_checkboxes({m_mainUI->cbCutLines, m_mainUI->cbSaveOnlyCurrentPage});
+    update_settings_checkboxes({m_mainUI->cbCutLines, m_mainUI->cbSaveOnlyCurrentPage});    
 }
 
 pc::UIElements::~UIElements(){
@@ -107,7 +112,11 @@ void pc::UIElements::insert_individual_consign(bool whiteSpace){
 
     IndividualConsignUI &consignUI = individualConsignsLoadedUI.last();
     Ui::IndividualConsignW &ui = consignUI.ui;
-    consignUI.richTextEdit->set_doc_locker(&docLocker);
+
+    connect(consignUI.richTextEdit.get(), &RichTextEdit::html_updated_signal, this, [&](std::shared_ptr<QString> html){
+        consignUI.html = html;
+    });    
+    connect(consignUI.richTextEdit->textEdit(), &TextEdit::resource_added_signal, this, &UIElements::resource_added_signal);
 
     associate_buttons({ui.pbConsignBottom, ui.pbConsignLeft, ui.pbConsignRight, ui.pbConsignTop});
     associate_buttons({ui.pbImageAligmentRight, ui.pbImageAligmentLeft, ui.pbImageAligmentHMiddle});

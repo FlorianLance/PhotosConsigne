@@ -37,14 +37,15 @@ SOURCES += \
     src/UI/UIElements.cpp
 
 HEADERS += \
-    include/Utility.h \
     include/UI/PCMainUI.hpp \
     include/UI/ImageLabel.hpp \
     include/UI/RichTextUI.hpp \
     include/Workers/PCMainWorker.hpp \
     include/thirdparty/asyncfuture/asyncfuture.h \
     include/Workers/ImageReader.hpp \
-    include/UI/UIElements.hpp
+    include/UI/UIElements.hpp \
+    include/Workers/PDFGeneratorWorker.hpp \
+    include/Utility.hpp
 
 FORMS += \
     ui/MainUI.ui \
