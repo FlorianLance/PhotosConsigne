@@ -64,6 +64,12 @@
         <file alias="orderPlus">resources/images/orderPlus.png</file>
         <file alias="mail">resources/images/mail.png</file>
         <file alias="duplicate">resources/images/duplicate.png</file>
+        <file alias="image">resources/images/image.png</file>
+        <file alias="blank">resources/images/blank_image.png</file>
+        <file alias="pages">resources/images/pages.png</file>
+        <file alias="link">resources/icons/link.png</file>
+        <file alias="overline">resources/icons/overline.png</file>
+        <file alias="strike">resources/icons/strike.png</file>
     </qresource>
     <qresource prefix="/style">
         <file alias="buttons">resources/style/buttons.qss</file>

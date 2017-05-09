@@ -53,7 +53,8 @@ FORMS += \
     ui/IndividualConsign.ui \
     ui/Support.ui \
     ui/Help.ui \
-    ui/IndividualPage.ui
+    ui/IndividualPage.ui \
+    ui/InsertLink.ui
 
 DISTFILES += \
     deploiement/PhotosConsigne_x64.iss \

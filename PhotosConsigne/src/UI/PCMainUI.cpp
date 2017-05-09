@@ -55,7 +55,7 @@ PCMainUI::PCMainUI(QApplication *parent) : m_version("3.0"), m_mainUI(std::make_
     m_pdfGeneratorWorkerThread.start();
 
     // update settings with current UI
-    update_settings_with_no_preview();
+    update_settings();//_with_no_preview();
     display_global_consign_panel();
 
     emit init_document_signal();
@@ -193,8 +193,6 @@ void PCMainUI::update_valid_photos()
     auto nbPhotosLoaded = m_settings.photosLoaded->size();
     m_settings.photosValided->clear();
     m_settings.photosValided->reserve(nbPhotosLoaded);
-//    m_dynUI->individualConsignsValidedUI.clear();
-//    m_dynUI->individualConsignsValidedUI.reserve(nbPhotosLoaded);
 
     for(int ii = 0; ii < nbPhotosLoaded; ++ii){
         if(m_settings.photosLoaded->at(ii)->isRemoved){
@@ -202,7 +200,6 @@ void PCMainUI::update_valid_photos()
         }
 
         m_settings.photosValided->push_back(m_settings.photosLoaded->at(ii));
-//        m_dynUI->individualConsignsValidedUI.push_back(m_dynUI->individualConsignsLoadedUI.at(ii));
     }
 
     // update current PD displayed if necessary
@@ -391,9 +388,15 @@ void PCMainUI::define_current_individual_page_ui(){
 void PCMainUI::update_photo_to_display(SPhoto photo)
 {
     if(!photo->isWhiteSpace){
-        m_dynUI->selectedPhotoW->set_image(QImage(photo->pathPhoto).transformed(QTransform().rotate(photo->rotation)));
-        m_dynUI->selectedPhotoW->update();
+        m_dynUI->selectedPhotoW->set_image(QImage(photo->pathPhoto).transformed(QTransform().rotate(photo->rotation)));        
+    }else{
+
+        QImage whiteImg(100, 100, QImage::Format_RGB32);
+        whiteImg.fill(Qt::white);
+        m_dynUI->selectedPhotoW->set_image(whiteImg);
     }
+
+    m_dynUI->selectedPhotoW->update();
 }
 
 void PCMainUI::define_selected_photo(int index){
@@ -435,7 +438,7 @@ void PCMainUI::define_selected_pc(int index){
     int currentIndex = m_mainUI->tbRight->currentIndex();
     m_mainUI->tbRight->blockSignals(true);
     m_mainUI->tbRight->removeItem(3); // remove current pc tab
-    m_mainUI->tbRight->addItem(m_dynUI->individualConsignsValidedUI[m_settings.currentPCDisplayed].widget.get(), "ENSEMBLE PHOTO-CONSIGNE SELECTIONNE N°" + QString::number(m_settings.currentPCDisplayed));
+    m_mainUI->tbRight->insertItem(3,m_dynUI->individualConsignsValidedUI[m_settings.currentPCDisplayed].widget.get(), "ENSEMBLE PHOTO-CONSIGNE SELECTIONNE N°" + QString::number(m_settings.currentPCDisplayed));
     m_mainUI->tbRight->setCurrentIndex(currentIndex);
     m_mainUI->tbRight->blockSignals(false);
 
@@ -546,6 +549,8 @@ void PCMainUI::display_donate_window(){
 
     m_dynUI->wSupport = std::make_unique<QWidget>();
     m_dynUI->wSupport->setWindowIcon(QIcon(":/images/icon"));
+    m_dynUI->wSupport->setWindowModality(Qt::ApplicationModal);
+    m_dynUI->wSupport->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 
     Ui::SupportW support;
     support.setupUi(m_dynUI->wSupport.get());
@@ -634,14 +639,17 @@ void PCMainUI::define_workers_connections()
 
     // preview label -> ui
     connect(m_dynUI->previewW, &PreviewLabel::double_click_on_photo_signal, this, [&]{
-        define_selected_photo(m_settings.photosValided->at(m_settings.currentPCDisplayed)->globalId);
-        display_photo_panel();
+        if(m_settings.currentPCDisplayed < m_settings.photosValided->size()){
+            define_selected_photo(m_settings.photosValided->at(m_settings.currentPCDisplayed)->globalId);
+            display_photo_panel();
+        }
     });
     // preview label -> pdf worker
-    connect(m_dynUI->previewW, &PreviewLabel::click_on_page_signal, m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::update_PC_selection);
     connect(m_dynUI->previewW, &PreviewLabel::click_on_page_signal, this, [&]{
         display_individual_consign_settings_panel();
     });
+    connect(m_dynUI->previewW, &PreviewLabel::click_on_page_signal, m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::update_PC_selection);
+
 
     // image label -> ui
     connect(m_dynUI->selectedPhotoW, &ImageLabel::double_click_signal, this, [&]{
@@ -699,18 +707,19 @@ void PCMainUI::define_workers_connections()
 
 void PCMainUI::define_main_UI_connections()
 {
-
-    connect(m_mainUI->pbTest, &QPushButton::clicked, this, [&]{
-       for(int ii = 0; ii< 1000; ++ii){
-           update_settings();
-       }
-    });
-
     // dyn ui elements
     connect(m_dynUI.get(), &UIElements::update_settings_signal, this, &PCMainUI::update_settings);
     connect(m_dynUI.get(), &UIElements::set_progress_bar_state_signal, m_mainUI->progressBarLoading, &QProgressBar::setValue);
     connect(m_dynUI.get(), &UIElements::set_progress_bar_text_signal, m_mainUI->laLoadingText, &QLabel::setText);
-    connect(m_dynUI.get(), &UIElements::insert_white_space_signal, this, [&](){
+
+    // timer
+    connect(&m_dynUI->zonesTimer, &QTimer::timeout, this, [=]{
+        m_dynUI->zonesTimer.stop();
+        update_settings();
+    });
+
+    // insert new image/blank
+    connect(m_mainUI->pbInsertNewWhiteSpace, &QPushButton::clicked, this, [&]{
 
         int indexPhoto = m_settings.currentPhotoId;
 
@@ -727,7 +736,7 @@ void PCMainUI::define_main_UI_connections()
 
         // insert new element in photo list widget
         m_mainUI->lwPhotosList->blockSignals(true);
-        m_mainUI->lwPhotosList->insertItem(indexPhoto,"(Espace blanc)");
+        m_mainUI->lwPhotosList->insertItem(indexPhoto,"(" + whiteSpacePhoto->namePhoto + ")");
         m_mainUI->lwPhotosList->blockSignals(false);
 
         // insert new consign in UI
@@ -738,12 +747,45 @@ void PCMainUI::define_main_UI_connections()
 
         define_selected_photo(indexPhoto);
         define_selected_pc_from_current_photo();
-    });
 
-    // timer
-    connect(&m_dynUI->zonesTimer, &QTimer::timeout, this, [=]{
-        m_dynUI->zonesTimer.stop();
+        m_mainUI->twMiddle->setTabEnabled(0, true);
+    });
+    connect(m_mainUI->pbInsertNewImage, &QPushButton::clicked, this, [&]{
+
+        QString filePath = QFileDialog::getOpenFileName(this, tr("Choisissez une image à insérer dans la liste"),
+                                                        QDir::homePath(), "Images (*.png *.jpg *.jpeg *.jfif, *.jpe *.tif *.bmp *.pdm *.ppm *.xdm *.xpm)");
+        if(filePath.size() == 0){
+            return;
+        }
+
+        int indexPhoto = m_settings.currentPhotoId;
+
+        SPhoto photo = std::make_shared<Photo>(Photo(filePath));
+
+
+        // insert it
+        m_settings.photosLoaded->insert(indexPhoto, photo);
+
+        // rest global ids
+        for(int ii = 0; ii < m_settings.photosLoaded->size(); ++ii){
+            m_settings.photosLoaded->at(ii)->globalId = ii;
+        }
+
+        // insert new element in photo list widget
+        m_mainUI->lwPhotosList->blockSignals(true);
+        m_mainUI->lwPhotosList->insertItem(indexPhoto,"(Ajoutée) " + photo->pathPhoto.split('/').last());
+        m_mainUI->lwPhotosList->blockSignals(false);
+
+        // insert new consign in UI
+        m_dynUI->insert_individual_consign(indexPhoto);
+
+        update_valid_photos();
         update_settings();
+
+        define_selected_photo(indexPhoto);
+        define_selected_pc_from_current_photo();
+
+        m_mainUI->twMiddle->setTabEnabled(0, true);
     });
 
     // page color
@@ -777,8 +819,10 @@ void PCMainUI::define_main_UI_connections()
 
         m_dynUI->wHelp = std::make_unique<QWidget>();
         m_dynUI->wHelp->setWindowIcon(QIcon(":/images/icon"));
+//        m_dynUI->wHelp->setWindowModality(Qt::ApplicationModal);
+        m_dynUI->wHelp->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 
-        Ui::HelpW help;
+        Ui::HelpW help;        
         help.setupUi(m_dynUI->wHelp.get());
 
         connect(help.pbFAQ, &QPushButton::clicked, this, [=]{
@@ -815,6 +859,12 @@ void PCMainUI::define_main_UI_connections()
         }
     });
     connect(m_mainUI->pbLeft, &QPushButton::clicked, this, [&]{ // previous image
+
+        int currRow = m_mainUI->lwPhotosList->currentRow();
+        if(currRow == -1){
+            return;
+        }
+
         int &currId = m_settings.currentPhotoId;
         if(currId == 0){
             currId = m_settings.photosLoaded->size()-1;
@@ -827,6 +877,10 @@ void PCMainUI::define_main_UI_connections()
     });
     connect(m_mainUI->pbRight, &QPushButton::clicked, this, [&]{ // next image
 
+        if(m_mainUI->lwPhotosList->currentRow() == -1){
+            return;
+        }
+
         int &currId = m_settings.currentPhotoId;
         if(currId == m_settings.photosLoaded->size()-1){
             currId = 0;
@@ -837,21 +891,33 @@ void PCMainUI::define_main_UI_connections()
         update_photo_to_display(m_settings.photosLoaded.get()->at(currId));
         m_mainUI->lwPhotosList->setCurrentRow(currId);
     });
-    connect(m_mainUI->pbRotateLeft, &QPushButton::clicked, this, [&] // rotate left photo
-    {
+    connect(m_mainUI->pbRotateLeft, &QPushButton::clicked, this, [&] {// rotate left photo
+
+        if(m_mainUI->lwPhotosList->currentRow() == -1){
+            return;
+        }
+
         SPhoto photo       = m_settings.photosLoaded.get()->at(m_settings.currentPhotoId);
         photo->rotation    =(photo->rotation - 90)%360;
         photo->scaledPhoto = photo->scaledPhoto.transformed(QTransform().rotate(-90));
         update_photo_to_display(photo);
     });
-    connect(m_mainUI->pbRotateRight, &QPushButton::clicked, this, [&] // rotate right photo
-    {
+    connect(m_mainUI->pbRotateRight, &QPushButton::clicked, this, [&]{ // rotate right photo
+
+        if(m_mainUI->lwPhotosList->currentRow() == -1){
+            return;
+        }
+
         SPhoto photo        = m_settings.photosLoaded.get()->at(m_settings.currentPhotoId);
         photo->rotation     = (photo->rotation + 90)%360;
         photo->scaledPhoto  = photo->scaledPhoto.transformed(QTransform().rotate(90));
         update_photo_to_display(photo);
     });
     connect(m_mainUI->pbAdd, &QPushButton::clicked, this, [&]{// add/remove photo from list
+
+        if(m_mainUI->lwPhotosList->currentRow() == -1){
+            return;
+        }
 
         m_settings.photosLoaded.get()->at(m_settings.currentPhotoId)->isRemoved = false;
 
@@ -860,8 +926,12 @@ void PCMainUI::define_main_UI_connections()
         update_settings_with_no_preview();
     });
 
-    connect(m_mainUI->pbRemove, &QPushButton::clicked, this, [&] // add/remove photo from list
-    {
+    connect(m_mainUI->pbRemove, &QPushButton::clicked, this, [&] {// add/remove photo from list
+
+        if(m_mainUI->lwPhotosList->currentRow() == -1){
+            return;
+        }
+
         SPhoto currPhoto = m_settings.photosLoaded->at(m_settings.currentPhotoId);
         currPhoto->isRemoved = true;
 
@@ -882,6 +952,10 @@ void PCMainUI::define_main_UI_connections()
             // define selected id photo
             idPhotoSelected = m_settings.currentPhotoId;
 
+            int count = m_mainUI->lwPhotosList->count();
+            if(idPhotoSelected >= count){
+                idPhotoSelected = count-1;
+            }
         }else{
 
             // define selected id photo
@@ -893,6 +967,7 @@ void PCMainUI::define_main_UI_connections()
             }
         }
 
+
         define_selected_photo(idPhotoSelected);
         define_selected_pc_from_current_photo();
 
@@ -902,6 +977,10 @@ void PCMainUI::define_main_UI_connections()
         update_settings_with_no_preview();
     });
     connect(m_mainUI->pbDuplicate, &QPushButton::clicked, this, [&]{
+
+        if(m_mainUI->lwPhotosList->currentRow() == -1){
+            return;
+        }
 
         // copy current photo
         int currentIndex = m_mainUI->lwPhotosList->currentRow();
@@ -919,7 +998,7 @@ void PCMainUI::define_main_UI_connections()
 
         // insert new element in photo list widget
         m_mainUI->lwPhotosList->blockSignals(true);
-        m_mainUI->lwPhotosList->insertItem(currentIndex+1,"(Copie) " + QString::number(currentIndex+1) + ". " + duplicatedPhoto->pathPhoto.split("/").last() + "");
+        m_mainUI->lwPhotosList->insertItem(currentIndex+1,"(Copie) " +  duplicatedPhoto->namePhoto);
         m_mainUI->lwPhotosList->blockSignals(false);
 
         // insert new consign in UI
@@ -935,6 +1014,7 @@ void PCMainUI::define_main_UI_connections()
             qWarning() << "-Warning: minus order photo -> bad index";
             return;
         }
+
         swap_loaded_pc(row,row-1);
         define_selected_photo(row-1);
         define_selected_pc_from_current_photo();
@@ -963,9 +1043,10 @@ void PCMainUI::define_main_UI_connections()
 
     // # tab widgets
      connect(m_mainUI->twMiddle, &QTabWidget::currentChanged, this, [&](int index){
-        if(index == 1){
-            update_settings();
-        }else if(index == 0){
+         update_settings();
+//        if(index == 1){
+//            update_settings();
+        if(index == 0){
             define_selected_photo(m_settings.currentPhotoId);
             display_photo_panel();
         }

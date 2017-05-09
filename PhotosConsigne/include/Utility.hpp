@@ -316,7 +316,7 @@ namespace pc
 //        timer.start();
 
         int index = 0;
-        html = html.replace("margin-top:12px; margin-bottom:12px", "margin-top:0px; margin-bottom:0px");
+        html = html.replace("margin-top:12px; margin-bottom:12px", "margin-top:0px; margin-bottom:0px margin-left:0px margin-right:0px padding:0px");
         html = html.replace("style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\"",
                             "B_#B_#B_#B_");
         QVector<qreal> sizes;
@@ -346,9 +346,10 @@ namespace pc
             html = html.insert(index, "font-size:" + QString::number(sizes[currentIdSize++])  + "pt;");
         }
 
+        html = html.replace("B_#B_#B_#B_","style=\"font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:300; "
+                                          " font-style:normal;\"");
 
-        html = html.replace("B_#B_#B_#B_","style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\"");
-
+        // text-decoration:line-through;  // text-decoration:overline ; oblique // tables
 
         html = html.replace("$nom$", "$name$");
         index = 0;
@@ -426,7 +427,6 @@ namespace pc
             newImages.push_back("<img src=" + subString.mid(9, indexWidth-10)
                                 + " width=\""    + QString::number(sizeFactor * onlyWidth.toDouble())
                                 + "\" height=\"" + QString::number(sizeFactor * onlyHeight.toDouble())+ "\" />");
-            qDebug() << newImages.last();
         }
 
         index = 0;
@@ -442,6 +442,7 @@ namespace pc
             html = html.insert(index, newImages[currentImage++]);
         }
 
+//        qDebug() << html;
 //        qDebug() << "Format html took" << timer.elapsed() << "milliseconds";
         return html;
     }

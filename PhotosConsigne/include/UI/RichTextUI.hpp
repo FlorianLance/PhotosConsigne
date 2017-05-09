@@ -63,7 +63,9 @@
 #include <QToolButton>
 #include <QDebug>
 #include <QReadWriteLock>
-
+#include <QLabel>
+#include <QComboBox>
+#include <QFontComboBox>
 
 #include <memory>
 
@@ -87,14 +89,19 @@ public:
 
     void insert_image();
 
+    void insert_link();
+
+signals:
+
+    void resource_added_signal(QUrl url, QImage image);
+
 private:
     void drop_image(const QUrl& url, const QImage& image);
 
     void drop_text_file(const QUrl& url);
 
-signals:
+    std::unique_ptr<QWidget> m_insertLinkW = nullptr;
 
-    void resource_added_signal(QUrl url, QImage image);
 };
 
 class RichTextEdit : public QWidget
@@ -115,6 +122,8 @@ public:
 
     void init_colors_icons(QColor foreGround, QColor backGround);
 
+    void init_with_another(RichTextEdit *richEdit, QString *html = nullptr);
+
 
 signals :
 
@@ -125,6 +134,8 @@ private slots:
 
     void text_bold();
     void text_underline();
+    void text_overline();
+    void text_strike();
     void text_italic();
     void text_family(const QString &f);
     void text_size(const QString &p);
@@ -139,9 +150,6 @@ private slots:
 
 private:
 
-    QColor m_foreGround = qRgba(0,0,0,255);
-    QColor m_backGround = qRgba(255,255,255,0);
-
     void setup_edit_actions();
     void setup_text_actions();
 
@@ -151,9 +159,17 @@ private:
     void background_color_text_changed(const QColor &c);
     void alignment_changed(Qt::Alignment a);
 
+    // misc
+    QColor m_foreGround = qRgba(0,0,0,255);
+    QColor m_backGround = qRgba(255,255,255,0);
+    QString m_fileName = nullptr;
+
+    // actions
     QAction *actionSave = nullptr;
     QAction *actionTextBold = nullptr;
     QAction *actionTextUnderline = nullptr;
+    QAction *actionTextOverline = nullptr;
+    QAction *actionTextStrike = nullptr;
     QAction *actionTextItalic = nullptr;
     QAction *actionTextColor = nullptr;
     QAction *actionBackgroundTextColor = nullptr;
@@ -165,22 +181,40 @@ private:
     QAction *actionUndo = nullptr;
     QAction *actionRedo = nullptr;
     QAction *actionInsertImage = nullptr;
+    QAction *actionLink = nullptr;
     QAction *actionCut = nullptr;
     QAction *actionCopy = nullptr;
-    QAction *actionPaste = nullptr;
+    QAction *actionPaste = nullptr;    
 
-    QComboBox *comboStyle = nullptr;
-    QComboBox *comboCodes = nullptr;
-    QFontComboBox *comboFont = nullptr;
-    QComboBox *comboSize = nullptr;
-
-    QToolBar *tb = nullptr;
-    QString fileName = nullptr;
-    TextEdit *m_textEdit = nullptr;
-
+    // layouts
     QVBoxLayout *m_mainLayout       = nullptr;
     QHBoxLayout *m_menuLayoutTop    = nullptr;
     QHBoxLayout *m_menuLayoutCenter = nullptr;
     QHBoxLayout *m_menuLayoutBottom = nullptr;
-    QToolButton *centerAButton = nullptr;
+
+    // components
+    QToolBar *m_tb = nullptr;
+    TextEdit *m_textEdit = nullptr;
+
+    QComboBox *m_comboStyle = nullptr;
+    QComboBox *m_comboCodes = nullptr;
+    QComboBox *m_comboSize = nullptr;
+    QFontComboBox *m_comboFont = nullptr;
+
+    QToolButton *m_boldButton = nullptr;
+    QToolButton *m_italicButton = nullptr;
+    QToolButton *m_underlineButton = nullptr;
+    QToolButton *m_overlineButton = nullptr;
+    QToolButton *m_strikeButton = nullptr;
+    QToolButton *m_leftAButton = nullptr;
+
+    QToolButton *m_centerRButton = nullptr;
+    QToolButton *m_centerAButton = nullptr;
+    QToolButton *m_justifyButton = nullptr;
+    QToolButton *m_insertImageButton = nullptr;
+    QToolButton *m_insertLinkButton = nullptr;
+    QToolButton *m_colorTextButton = nullptr;
+    QToolButton *m_backgroundColorTextButton = nullptr;
+
+    QLabel *m_insertLabel = nullptr;    
 };

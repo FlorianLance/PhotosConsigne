@@ -52,17 +52,22 @@ void ImageLabel::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
+
+    QSize widgetSize = event->rect().size();
     QSize imageSize = m_image.size();
-    imageSize.scale(event->rect().size(), Qt::KeepAspectRatio);
+//    imageSize.scale(event->rect().size(), Qt::KeepAspectRatio);
+    imageSize.scale(QSize(widgetSize.width()-2, widgetSize.height()-2), Qt::KeepAspectRatio);
 
     QImage scaledImage = m_image.scaled(imageSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     m_imageRect = QRectF(width()*0.5-scaledImage.size().width()*0.5,height()*0.5-scaledImage.size().height()*0.5,
                          scaledImage.width(), scaledImage.height());
 
-
-
-    painter.drawImage(m_imageRect.x(), m_imageRect.y(), scaledImage);
+    QPen pen;
+    pen.setColor(Qt::black);
+    painter.setPen(pen);
+    painter.drawRect(QRect(0, 0, widgetSize.width(), widgetSize.height()));
+    painter.drawImage(static_cast<int>(m_imageRect.x()), static_cast<int>(m_imageRect.y()), scaledImage);
 }
 
 const QImage* ImageLabel::Image() const {

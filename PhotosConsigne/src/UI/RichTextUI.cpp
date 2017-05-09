@@ -55,7 +55,6 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QColorDialog>
-#include <QComboBox>
 #include <QFontComboBox>
 #include <QFile>
 #include <QFileDialog>
@@ -74,7 +73,7 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QMimeData>
-#include <QLabel>
+
 #ifndef QT_NO_PRINTER
 #include <QPrintDialog>
 #include <QPrinter>
@@ -82,6 +81,12 @@
 #endif
 
 #include "UI/RichTextUI.hpp"
+
+#include "ui_InsertLink.h"
+
+namespace Ui {
+    class InsertLinkW;
+}
 
 
 #ifdef Q_OS_MAC
@@ -112,8 +117,8 @@ RichTextEdit::RichTextEdit(QWidget *parent)
     format.setForeground(Qt::black);
     m_textEdit->setCurrentCharFormat(format);
 
-    m_textEdit->setStyleSheet("");
-    m_textEdit->setFontWeight(50);
+//    m_textEdit->setStyleSheet("");
+//    m_textEdit->setFontWeight(50);
     connect(m_textEdit, &TextEdit::currentCharFormatChanged,this, &RichTextEdit::current_char_format_changed);
     connect(m_textEdit, &TextEdit::cursorPositionChanged,this, &RichTextEdit::cursor_position_changed);
     connect(m_textEdit, &TextEdit::textChanged, this, []{});
@@ -186,8 +191,7 @@ void RichTextEdit::init_as_title(){
     "<br />Entrez votre titre ici..."
     "</span>";
     textEdit()->setHtml(html);
-//    <a href='http://www.google.com'>google</a>
-    comboSize->setCurrentIndex(9);
+    m_comboSize->setCurrentIndex(9);
 }
 
 void RichTextEdit::init_as_consign(){
@@ -197,7 +201,7 @@ void RichTextEdit::init_as_consign(){
     "<br />Texte commun à toutes les photos..."
     "</span>";
     textEdit()->setHtml(html);
-    comboSize->setCurrentIndex(7);
+    m_comboSize->setCurrentIndex(7);
 }
 
 void RichTextEdit::init_as_individual_consign(){
@@ -207,13 +211,68 @@ void RichTextEdit::init_as_individual_consign(){
     "<br />Texte individuel..."
     "</span>";
     textEdit()->setHtml(html);
-    comboSize->setCurrentIndex(7);
+    m_comboSize->setCurrentIndex(7);
 }
 
 void RichTextEdit::init_colors_icons(QColor foreGround, QColor backGround){
 
     color_text_changed(foreGround);
     background_color_text_changed(backGround);
+}
+
+void RichTextEdit::init_with_another(RichTextEdit *richEdit, QString *html){
+
+    if(html != nullptr){
+        m_textEdit->blockSignals(true);
+        m_textEdit->setHtml(*html);
+        m_textEdit->blockSignals(false);
+    }
+
+    m_comboStyle->blockSignals(true);
+    m_comboStyle->setCurrentIndex(richEdit->m_comboSize->currentIndex());
+    m_comboStyle->blockSignals(false);
+    m_comboCodes->blockSignals(true);
+    m_comboCodes->setCurrentIndex(richEdit->m_comboCodes->currentIndex());
+    m_comboCodes->blockSignals(false);
+    m_comboSize->blockSignals(true);
+    m_comboSize->setCurrentIndex(richEdit->m_comboSize->currentIndex());
+    m_comboSize->blockSignals(false);
+    m_comboFont->blockSignals(true);
+    m_comboFont->setCurrentIndex(richEdit->m_comboFont->currentIndex());
+    m_comboFont->blockSignals(false);
+
+    m_boldButton->blockSignals(true);
+    m_boldButton->setChecked(richEdit->m_boldButton->isChecked());
+    m_boldButton->blockSignals(false);
+    m_italicButton->blockSignals(true);
+    m_italicButton->setChecked(richEdit->m_italicButton->isChecked());
+    m_italicButton->blockSignals(false);
+    m_underlineButton->blockSignals(true);
+    m_underlineButton->setChecked(richEdit->m_underlineButton->isChecked());
+    m_underlineButton->blockSignals(false);
+    m_overlineButton->blockSignals(true);
+    m_overlineButton->setChecked(richEdit->m_overlineButton->isChecked());
+    m_overlineButton->blockSignals(false);
+    m_leftAButton->blockSignals(true);
+    m_leftAButton->setChecked(richEdit->m_leftAButton->isChecked());
+    m_leftAButton->blockSignals(false);
+
+    m_centerRButton->blockSignals(true);
+    m_centerRButton->setChecked(richEdit->m_centerRButton->isChecked());
+    m_centerRButton->blockSignals(false);
+    m_centerAButton->blockSignals(true);
+    m_centerAButton->setChecked(richEdit->m_centerAButton->isChecked());
+    m_centerAButton->blockSignals(false);
+    m_justifyButton->blockSignals(true);
+    m_justifyButton->setChecked(richEdit->m_justifyButton->isChecked());
+    m_justifyButton->blockSignals(false);
+
+    m_colorTextButton->blockSignals(true);
+    m_colorTextButton->setIcon(richEdit->m_colorTextButton->icon());
+    m_colorTextButton->blockSignals(false);
+    m_backgroundColorTextButton->blockSignals(true);
+    m_backgroundColorTextButton->setIcon(richEdit->m_backgroundColorTextButton->icon());
+    m_backgroundColorTextButton->blockSignals(false);
 }
 
 void RichTextEdit::setup_edit_actions()
@@ -298,11 +357,11 @@ void RichTextEdit::setup_text_actions(){
     actionTextBold->setFont(bold);
     actionTextBold->setCheckable(true);
 
-    QToolButton *boldButton = new QToolButton();
-    boldButton->setDefaultAction(actionTextBold);
-    boldButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonFollowStyle);
-    m_menuLayoutCenter->addWidget(boldButton);
-    connect(boldButton,&QToolButton::clicked, this, [=]{
+    m_boldButton = new QToolButton();
+    m_boldButton->setDefaultAction(actionTextBold);
+    m_boldButton->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonFollowStyle);
+    m_menuLayoutCenter->addWidget(m_boldButton);
+    connect(m_boldButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
 
@@ -319,10 +378,10 @@ void RichTextEdit::setup_text_actions(){
     actionTextItalic->setFont(italic);
     actionTextItalic->setCheckable(true);
 
-    QToolButton *italicButton = new QToolButton();
-    italicButton->setDefaultAction(actionTextItalic);
-    m_menuLayoutCenter->addWidget(italicButton);
-    connect(italicButton,&QToolButton::clicked, this, [=]{
+    m_italicButton = new QToolButton();
+    m_italicButton->setDefaultAction(actionTextItalic);
+    m_menuLayoutCenter->addWidget(m_italicButton);
+    connect(m_italicButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
 
@@ -338,10 +397,48 @@ void RichTextEdit::setup_text_actions(){
     actionTextUnderline->setFont(underline);
     actionTextUnderline->setCheckable(true);
 
-    QToolButton *underlineButton = new QToolButton();
-    underlineButton->setDefaultAction(actionTextUnderline);
-    m_menuLayoutCenter->addWidget(underlineButton);
-    connect(underlineButton,&QToolButton::clicked, this, [=]{
+    m_underlineButton = new QToolButton();
+    m_underlineButton->setDefaultAction(actionTextUnderline);
+    m_menuLayoutCenter->addWidget(m_underlineButton);
+    connect(m_underlineButton,&QToolButton::clicked, this, [=]{
+        textEdit()->setFocus();
+    });
+
+    // overline
+    const QIcon overlineIcon = QIcon(":/images/overline");
+    actionTextOverline = new QAction(overlineIcon, tr("Surligner"), this);
+    connect(actionTextOverline, &QAction::triggered, this, &RichTextEdit::text_overline);
+    actionTextOverline->setShortcut(Qt::CTRL + Qt::Key_O);
+    actionTextOverline->setPriority(QAction::LowPriority);
+
+    QFont overline;
+    overline.setOverline(true);
+    actionTextOverline->setFont(overline);
+    actionTextOverline->setCheckable(true);
+
+    m_overlineButton = new QToolButton();
+    m_overlineButton->setDefaultAction(actionTextOverline);
+    m_menuLayoutCenter->addWidget(m_overlineButton);
+    connect(m_overlineButton,&QToolButton::clicked, this, [=]{
+        textEdit()->setFocus();
+    });
+
+    // strike
+    const QIcon strikeIcon = QIcon(":/images/strike");
+    actionTextStrike = new QAction(strikeIcon, tr("Barrer"), this);
+    connect(actionTextStrike, &QAction::triggered, this, &RichTextEdit::text_strike);
+    actionTextStrike->setShortcut(Qt::CTRL + Qt::Key_S);
+    actionTextStrike->setPriority(QAction::LowPriority);
+
+    QFont strike;
+    strike.setStrikeOut(true);
+    actionTextStrike->setFont(strike);
+    actionTextStrike->setCheckable(true);
+
+    m_strikeButton = new QToolButton();
+    m_strikeButton->setDefaultAction(actionTextStrike);
+    m_menuLayoutCenter->addWidget(m_strikeButton);
+    connect(m_strikeButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
 
@@ -353,10 +450,10 @@ void RichTextEdit::setup_text_actions(){
     actionAlignLeft->setCheckable(true);
     actionAlignLeft->setPriority(QAction::LowPriority);
 
-    QToolButton *leftAButton = new QToolButton();
-    leftAButton->setDefaultAction(actionAlignLeft);
-    m_menuLayoutCenter->addWidget(leftAButton);
-    connect(leftAButton,&QToolButton::clicked, this, [=]{
+    m_leftAButton = new QToolButton();
+    m_leftAButton->setDefaultAction(actionAlignLeft);
+    m_menuLayoutCenter->addWidget(m_leftAButton);
+    connect(m_leftAButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
 
@@ -367,10 +464,10 @@ void RichTextEdit::setup_text_actions(){
     actionAlignCenter->setCheckable(true);
     actionAlignCenter->setPriority(QAction::LowPriority);
 
-    centerAButton = new QToolButton();
-    centerAButton->setDefaultAction(actionAlignCenter);
-    m_menuLayoutCenter->addWidget(centerAButton);
-    connect(centerAButton,&QToolButton::clicked, this, [=]{
+    m_centerAButton = new QToolButton();
+    m_centerAButton->setDefaultAction(actionAlignCenter);
+    m_menuLayoutCenter->addWidget(m_centerAButton);
+    connect(m_centerAButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
 
@@ -381,10 +478,10 @@ void RichTextEdit::setup_text_actions(){
     actionAlignRight->setCheckable(true);
     actionAlignRight->setPriority(QAction::LowPriority);
 
-    QToolButton *centerRButton = new QToolButton();
-    centerRButton->setDefaultAction(actionAlignRight);
-    m_menuLayoutCenter->addWidget(centerRButton);
-    connect(centerRButton,&QToolButton::clicked, this, [=]{
+    m_centerRButton = new QToolButton();
+    m_centerRButton->setDefaultAction(actionAlignRight);
+    m_menuLayoutCenter->addWidget(m_centerRButton);
+    connect(m_centerRButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
 
@@ -395,17 +492,17 @@ void RichTextEdit::setup_text_actions(){
     actionAlignJustify->setCheckable(true);
     actionAlignJustify->setPriority(QAction::LowPriority);
 
-    QToolButton *justifyButton = new QToolButton();
-    justifyButton->setDefaultAction(actionAlignJustify);
-    m_menuLayoutCenter->addWidget(justifyButton);
-    connect(justifyButton,&QToolButton::clicked, this, [=]{
+    m_justifyButton = new QToolButton();
+    m_justifyButton->setDefaultAction(actionAlignJustify);
+    m_menuLayoutCenter->addWidget(m_justifyButton);
+    connect(m_justifyButton,&QToolButton::clicked, this, [=]{
         textEdit()->setFocus();
     });
 
     m_menuLayoutCenter->addStretch();
-    QLabel *insertLabel = new QLabel("Insérer: ");
-    insertLabel->setStyleSheet("QWidget::enabled {color : rgb(0,106,255);}");
-    m_menuLayoutBottom->addWidget(insertLabel);
+    m_insertLabel = new QLabel("Insérer: ");
+    m_insertLabel->setStyleSheet("QWidget::enabled {color : rgb(0,106,255);}");
+    m_menuLayoutBottom->addWidget(m_insertLabel);
     m_menuLayoutBottom->addSpacing(8);
 
     // image insert
@@ -415,27 +512,44 @@ void RichTextEdit::setup_text_actions(){
     actionInsertImage->setCheckable(true);
     actionInsertImage->setPriority(QAction::LowPriority);
 
-    QToolButton *insertImageButton = new QToolButton();
-    insertImageButton->setDefaultAction(actionInsertImage);
-    m_menuLayoutBottom->addWidget(insertImageButton);
-    connect(insertImageButton,&QToolButton::clicked, this, [=]{
+    m_insertImageButton = new QToolButton();
+    m_insertImageButton->setDefaultAction(actionInsertImage);
+    m_menuLayoutBottom->addWidget(m_insertImageButton);
+    connect(m_insertImageButton,&QToolButton::clicked, this, [=]{
         textEdit()->insert_image();
         textEdit()->setFocus();        
     });
 
     m_menuLayoutBottom->addSpacing(4);
 
+    // web link
+    const QIcon linkIcon = QIcon(":/images/link");
+    actionLink = new QAction(linkIcon, tr("Insérer lien web"), this);
+    actionLink->setShortcut(Qt::CTRL + Qt::Key_W);
+    actionLink->setCheckable(true);
+    actionLink->setPriority(QAction::LowPriority);
+
+    m_insertLinkButton = new QToolButton();
+    m_insertLinkButton->setDefaultAction(actionLink);
+    m_menuLayoutBottom->addWidget(m_insertLinkButton);
+    connect(m_insertLinkButton,&QToolButton::clicked, this, [=]{
+        textEdit()->insert_link();
+        textEdit()->setFocus();
+    });
+
+    m_menuLayoutBottom->addSpacing(4);
+
     // textes codes inserts
-    comboCodes = new QComboBox();
-    m_menuLayoutBottom->addWidget(comboCodes);
-    comboCodes->setToolTip("Insérer un code, il sera remplacé dans l'aperçu.");
-    comboCodes->addItem("Nom photo");
-    comboCodes->addItem("Date");
-    comboCodes->addItem("Date de la photo");
-    comboCodes->addItem("Numéro de la photo");
-    comboCodes->addItem("Numéro de page");
-    connect(comboCodes, QOverload<int>::of(&QComboBox::activated), this, [=](int index){
-        comboCodes->clearFocus();
+    m_comboCodes = new QComboBox();
+    m_menuLayoutBottom->addWidget(m_comboCodes);
+    m_comboCodes->setToolTip("Insérer un code, il sera remplacé dans l'aperçu.");
+    m_comboCodes->addItem("Nom photo");
+    m_comboCodes->addItem("Date");
+    m_comboCodes->addItem("Date de la photo");
+    m_comboCodes->addItem("Numéro de la photo");
+    m_comboCodes->addItem("Numéro de page");
+    connect(m_comboCodes, QOverload<int>::of(&QComboBox::activated), this, [=](int index){
+        m_comboCodes->clearFocus();
         textEdit()->setFocus();
         QString code;
         switch(index){
@@ -459,28 +573,30 @@ void RichTextEdit::setup_text_actions(){
         textEdit()->textCursor().insertText(code);
     });
 
-     m_menuLayoutBottom->addSpacing(4);
+    m_menuLayoutBottom->addSpacing(4);
 
-    comboStyle = new QComboBox();
-    m_menuLayoutBottom->addWidget(comboStyle);
-    comboStyle->setToolTip("Insérer une liste");
-    comboStyle->addItem("Standard (pas de liste)"); // Standard
-    comboStyle->addItem("Liste en balle (Disque)"); // Bullet List (Disc)
-    comboStyle->addItem("Liste en balle (Cercle)"); // Bullet List (Circle)
-    comboStyle->addItem("Liste en balle (Carré)"); // Bullet List (Square)
-    comboStyle->addItem("Liste ordonnée (Décimale)"); // Ordered List (Decimal)
-    comboStyle->addItem("Liste ordonnée (Alpha min.)"); // Ordered List (Alpha lower)
-    comboStyle->addItem("Liste ordonnée (Alpha maj.)"); // Ordered List (Alpha upper)
-    comboStyle->addItem("Liste ordonnée (Roman min.)"); // Ordered List (Roman lower)
-    comboStyle->addItem("Liste ordonnée (Roman maj.)"); // Ordered List (Roman upper)
 
-    connect(comboStyle, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
-        comboStyle->clearFocus();
+
+    m_comboStyle = new QComboBox();
+    m_menuLayoutBottom->addWidget(m_comboStyle);
+    m_comboStyle->setToolTip("Insérer une liste");
+    m_comboStyle->addItem("Standard (pas de liste)"); // Standard
+    m_comboStyle->addItem("Liste en balle (Disque)"); // Bullet List (Disc)
+    m_comboStyle->addItem("Liste en balle (Cercle)"); // Bullet List (Circle)
+    m_comboStyle->addItem("Liste en balle (Carré)"); // Bullet List (Square)
+    m_comboStyle->addItem("Liste ordonnée (Décimale)"); // Ordered List (Decimal)
+    m_comboStyle->addItem("Liste ordonnée (Alpha min.)"); // Ordered List (Alpha lower)
+    m_comboStyle->addItem("Liste ordonnée (Alpha maj.)"); // Ordered List (Alpha upper)
+    m_comboStyle->addItem("Liste ordonnée (Roman min.)"); // Ordered List (Roman lower)
+    m_comboStyle->addItem("Liste ordonnée (Roman maj.)"); // Ordered List (Roman upper)
+
+    connect(m_comboStyle, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
+        m_comboStyle->clearFocus();
         textEdit()->setFocus();
     });
 
     typedef void (QComboBox::*QComboIntSignal)(int);
-    connect(comboStyle, static_cast<QComboIntSignal>(&QComboBox::activated), this, &RichTextEdit::text_style);
+    connect(m_comboStyle, static_cast<QComboIntSignal>(&QComboBox::activated), this, &RichTextEdit::text_style);
 
     m_menuLayoutBottom->addStretch();
 
@@ -509,9 +625,9 @@ void RichTextEdit::setup_text_actions(){
         textEdit()->setFocus();
     });
 
-    QToolButton *colorTextButton = new QToolButton();
-    colorTextButton->setDefaultAction(actionTextColor);
-    m_menuLayoutTop->addWidget(colorTextButton);
+    m_colorTextButton = new QToolButton();
+    m_colorTextButton->setDefaultAction(actionTextColor);
+    m_menuLayoutTop->addWidget(m_colorTextButton);
     m_menuLayoutTop->addSpacing(4);
 
     // background text color
@@ -522,45 +638,45 @@ void RichTextEdit::setup_text_actions(){
         background_text_color();
         textEdit()->setFocus();
     });
-    QToolButton *backgroundColorTextButton = new QToolButton();
-    backgroundColorTextButton->setDefaultAction(actionBackgroundTextColor);
-    m_menuLayoutTop->addWidget(backgroundColorTextButton);
+    m_backgroundColorTextButton = new QToolButton();
+    m_backgroundColorTextButton->setDefaultAction(actionBackgroundTextColor);
+    m_menuLayoutTop->addWidget(m_backgroundColorTextButton);
     m_menuLayoutTop->addSpacing(8);
 
     // font
     typedef void (QComboBox::*QComboStringSignal)(const QString &);
-    comboFont = new QFontComboBox();
-    comboFont->setToolTip("Choix de la police");
-    connect(comboFont, static_cast<QComboStringSignal>(&QComboBox::activated), this, [=](QString police){
+    m_comboFont = new QFontComboBox();
+    m_comboFont->setToolTip("Choix de la police");
+    connect(m_comboFont, static_cast<QComboStringSignal>(&QComboBox::activated), this, [=](QString police){
         text_family(police);
         textEdit()->setFocus();
     });
-    m_menuLayoutTop->addWidget(comboFont);
+    m_menuLayoutTop->addWidget(m_comboFont);
     m_menuLayoutTop->addSpacing(4);
 
     // font size
-    comboSize = new QComboBox();
-    comboSize->setToolTip("Définir la taille de la police");
-    comboSize->setObjectName("comboSize");
-    comboSize->setEditable(true);
-    comboSize->setInsertPolicy(QComboBox::InsertAtBottom);
-    comboSize->setValidator( new QIntValidator(0, 150, this) );
-    comboSize->setMinimumWidth(45);
-    comboSize->setMaximumWidth(45);
+    m_comboSize = new QComboBox();
+    m_comboSize->setToolTip("Définir la taille de la police");
+    m_comboSize->setObjectName("comboSize");
+    m_comboSize->setEditable(true);
+    m_comboSize->setInsertPolicy(QComboBox::InsertAtBottom);
+    m_comboSize->setValidator( new QIntValidator(0, 150, this) );
+    m_comboSize->setMinimumWidth(45);
+    m_comboSize->setMaximumWidth(45);
 
-    connect(comboSize, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
-        comboSize->clearFocus();
+    connect(m_comboSize, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
+        m_comboSize->clearFocus();
         textEdit()->setFocus();
     });
 
-    m_menuLayoutTop->addWidget(comboSize);
+    m_menuLayoutTop->addWidget(m_comboSize);
 
     const QList<int> standardSizes = QFontDatabase::standardSizes();
     foreach (int size, standardSizes)
-        comboSize->addItem(QString::number(size));
-    comboSize->setCurrentIndex(standardSizes.indexOf(QApplication::font().pointSize()));
+        m_comboSize->addItem(QString::number(size));
+    m_comboSize->setCurrentIndex(standardSizes.indexOf(QApplication::font().pointSize()));
 
-    connect(comboSize, static_cast<QComboStringSignal>(&QComboBox::activated), this, &RichTextEdit::text_size);
+    connect(m_comboSize, static_cast<QComboStringSignal>(&QComboBox::activated), this, &RichTextEdit::text_size);
     m_menuLayoutTop->addStretch();
 
     return;
@@ -577,6 +693,21 @@ void RichTextEdit::text_underline(){
 
     QTextCharFormat fmt;
     fmt.setFontUnderline(actionTextUnderline->isChecked());
+    merge_format_on_word_or_selection(fmt);
+}
+
+
+void RichTextEdit::text_overline(){
+
+    QTextCharFormat fmt;
+    fmt.setFontOverline(actionTextOverline->isChecked());
+    merge_format_on_word_or_selection(fmt);
+}
+
+void RichTextEdit::text_strike(){
+
+    QTextCharFormat fmt;
+    fmt.setFontStrikeOut(actionTextStrike->isChecked());
     merge_format_on_word_or_selection(fmt);
 }
 
@@ -736,10 +867,12 @@ void RichTextEdit::merge_format_on_word_or_selection(const QTextCharFormat &form
 
 void RichTextEdit::font_changed(const QFont &f){
 
-    comboFont->setCurrentIndex(comboFont->findText(QFontInfo(f).family()));
-    comboSize->setCurrentIndex(comboSize->findText(QString::number(f.pointSize())));
+    m_comboFont->setCurrentIndex(m_comboFont->findText(QFontInfo(f).family()));
+    m_comboSize->setCurrentIndex(m_comboSize->findText(QString::number(f.pointSize())));
     actionTextBold->setChecked(f.bold());
     actionTextItalic->setChecked(f.italic());
+    actionTextOverline->setChecked(f.overline());
+    actionTextStrike->setChecked(f.strikeOut());
     actionTextUnderline->setChecked(f.underline());;
 }
 
@@ -814,6 +947,43 @@ void TextEdit::insert_image(){
     imageFormat.setHeight( image.height() );
     imageFormat.setName( url.toString() );
     textCursor().insertImage(imageFormat);
+}
+
+void TextEdit::insert_link(){
+
+    m_insertLinkW = std::make_unique<QWidget>();
+    m_insertLinkW->setWindowIcon(QIcon(":/images/icon"));
+    m_insertLinkW->setWindowModality(Qt::ApplicationModal);
+
+    Ui::InsertLinkW insertLink;
+    insertLink.setupUi(m_insertLinkW.get());
+
+    connect(insertLink.pbCancel, &QPushButton::clicked, this, [&]{
+        m_insertLinkW = nullptr;
+    });
+
+    connect(insertLink.pbValidate, &QPushButton::clicked, this, [&]{
+
+        QString link = m_insertLinkW->findChild<QLineEdit *>("leLink")->text();
+        QString text = m_insertLinkW->findChild<QLineEdit *>("leText")->text();
+
+        if(text.size() == 0 || link.size() == 0){
+            m_insertLinkW = nullptr;
+            return;
+        }
+
+        QTextCursor cursor = textCursor();
+        if (!cursor.hasSelection()){
+            cursor.select(QTextCursor::WordUnderCursor);
+        }
+
+        insertPlainText("$$LINK$$");
+        setHtml(toHtml().replace("$$LINK$$", "<a href='" + link + "'>" + text + "</a>"));
+        m_insertLinkW = nullptr;
+    });
+
+    m_insertLinkW->show();
+
 }
 
 void TextEdit::drop_image(const QUrl &url, const QImage &image){

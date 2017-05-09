@@ -34,6 +34,7 @@
 #include <QLibraryInfo>
 #include <QDesktopWidget>
 
+
 // Photos consigne
 //#include "MainInterface.h"
 #include "MainUI.h"
@@ -56,9 +57,39 @@ int main(int argc,char** argv)
 //    printer.setOutputFileName("out.pdf");
 
 //    QTextDocument document;
-////    QString html = "<a href='http://www.google.com'>google</a>";
 
-////    QString html = "<iframe width=\"420\" height=\"315\" src=\"https://www.youtube.com/embed/XGSy3_Czz8k\"></iframe>";
+//QString html ="<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"
+//    "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
+//    "<head>"
+//    "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />"
+//    "<title>test</title>"
+//    "</head>"
+//    "<style>"
+//    "body"
+//    "{"
+//    "background-color:#000;"
+//    "width:1280px;"
+//    "height:720px;"
+//    "margin:0px;"
+//    "}"
+//    ".text"
+//    "{"
+//    "color:#FFF;"
+//    "width:400px;"
+//    //"letter-spacing:150px;"
+//    "word-spacing:15px;"
+//    "margin-left:30px;"
+//    "font-size:200px;"
+//    "font-weight:200;"
+//    "}"
+//    "</style>"
+//    "<body>"
+//    "<br /><br />"
+//    "<div class=\"text\">test test test</div>"
+//    "</body>"
+//    "</html>";
+
+//////    QString html = "<iframe width=\"420\" height=\"315\" src=\"https://www.youtube.com/embed/XGSy3_Czz8k\"></iframe>";
 
 
 //    document.setHtml(html);

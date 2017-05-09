@@ -45,7 +45,7 @@ public slots:
     /**
      * @brief Set the current image
      */
-    void set_image(const QImage&);
+    void set_image(const QImage &image);
 
 signals:
 
@@ -122,37 +122,30 @@ protected:
 
     virtual void mousePressEvent(QMouseEvent * ev ) override{
 
-        qDebug() << "mousePressEvent PreviewLabel";
         bool inside = m_imageRect.contains(ev->pos());
         if(inside){
-
-            qDebug() << "inside!";
 
             QPointF posRelative =(ev->pos() - m_imageRect.topLeft());
             posRelative.setX(posRelative.x()/m_imageRect.width());
             posRelative.setY(posRelative.y()/m_imageRect.height());
 
-            emit click_on_page_signal(posRelative);
-
             if(m_doubleClickTimer.isActive() && m_currentPCRect.contains(ev->pos())){
                 if(m_currentPCRectId != -1){
-                    qDebug() << "PreviewLabel double click!!";
                     emit double_click_on_photo_signal(m_currentPCRectId);
                 }
             }else{
-                qDebug() << "PreviewLabel start";
                 m_doubleClickTimer.start(300);
+                emit click_on_page_signal(posRelative);
             }
         }
     }
 
-    void paintEvent(QPaintEvent *event){
+    void paintEvent(QPaintEvent *event) override{
+
         ImageLabel::paintEvent(event);
 
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
-
-
         if(m_pcRectRelative.width() > 0 && m_rectTimer.isActive()){
              m_currentPCRect = QRectF(m_imageRect.x() + m_pcRectRelative.x()*m_imageRect.width(),
                                     m_imageRect.y() + m_pcRectRelative.y()*m_imageRect.height(),

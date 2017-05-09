@@ -106,6 +106,31 @@ pc::UIElements::~UIElements(){
 }
 
 
+void pc::UIElements::init_individual_consign_with_global(IndividualConsignUI &consignUI, bool copyHtml){
+
+    Ui::IndividualConsignW &ui = consignUI.ui;
+
+    safe_init_push_button_enabled_state(ui.pbConsignBottom,m_mainUI->pbGlobalConsignBottom->isEnabled());
+    safe_init_push_button_enabled_state(ui.pbConsignTop,m_mainUI->pbGlobalConsignTop->isEnabled());
+    safe_init_push_button_enabled_state(ui.pbConsignLeft,m_mainUI->pbGlobalConsignLeft->isEnabled());
+    safe_init_push_button_enabled_state(ui.pbConsignRight,m_mainUI->pbGlobalConsignRight->isEnabled());
+
+    safe_init_push_button_enabled_state(ui.pbImageAligmentBottom,m_mainUI->pbGlobalImageAligmentBottom->isEnabled());
+    safe_init_push_button_enabled_state(ui.pbImageAligmentTop,m_mainUI->pbGlobalImageAligmentTop->isEnabled());
+    safe_init_push_button_enabled_state(ui.pbImageAligmentLeft,m_mainUI->pbGlobalImageAligmentLeft->isEnabled());
+    safe_init_push_button_enabled_state(ui.pbImageAligmentRight,m_mainUI->pbGlobalImageAligmentRight->isEnabled());
+
+    safe_init_checkboxe_checked_state(ui.cbWriteOnPhoto, m_mainUI->cbWriteOnPhoto->isChecked());
+    safe_init_double_spinbox_value(ui.dsbRatioPC, m_mainUI->dsbGlobalRatioPC->value());
+    safe_init_slider_value(ui.hsRatioPC, m_mainUI->hsGlobalRatioPC->value());
+
+    consignUI.richTextEdit->init_with_another(globalConsignUI.richTextEdit.get(), copyHtml ? globalConsignUI.html.get() : nullptr);
+    if(copyHtml){
+        consignUI.html = std::make_shared<QString>(*globalConsignUI.html);
+    }
+}
+
+
 void pc::UIElements::insert_individual_consign(bool whiteSpace){
 
     individualConsignsLoadedUI.push_back(IndividualConsignUI());
@@ -115,6 +140,7 @@ void pc::UIElements::insert_individual_consign(bool whiteSpace){
 
     connect(consignUI.richTextEdit.get(), &RichTextEdit::html_updated_signal, this, [&](std::shared_ptr<QString> html){
         consignUI.html = html;
+        qDebug() << "-update consign!";
     });    
     connect(consignUI.richTextEdit->textEdit(), &TextEdit::resource_added_signal, this, &UIElements::resource_added_signal);
 
@@ -146,13 +172,61 @@ void pc::UIElements::insert_individual_consign(bool whiteSpace){
         emit update_settings_signal();
     });
 
-    ui.pbInsertWhiteSpace->setEnabled(!whiteSpace);
-    connect(ui.pbInsertWhiteSpace, &QPushButton::clicked, [=]{
-        emit insert_white_space_signal();
-    });
-
     associate_double_spinbox_with_slider(ui.dsbRatioPC, ui.hsRatioPC);
 
+    connect(ui.pbAllGlobalParameters, &QPushButton::clicked, this, [&]{
+        for(auto &&consign : individualConsignsValidedUI){
+            consign.ui.cbEnableIndividualConsign->blockSignals(true);
+            consign.ui.cbEnableIndividualConsign->setChecked(false);
+            consign.ui.cbEnableIndividualConsign->blockSignals(false);
+            consign.ui.wTop->setEnabled(false);
+            consign.ui.tbConsigns->setEnabled(false);
+        }
+        emit update_settings_signal();
+    });
+
+    connect(ui.pbAllIndividualParameters, &QPushButton::clicked, this, [&]{
+        for(auto &&consign : individualConsignsValidedUI){
+            consign.ui.cbEnableIndividualConsign->blockSignals(true);
+            consign.ui.cbEnableIndividualConsign->setChecked(true);
+            consign.ui.cbEnableIndividualConsign->blockSignals(false);
+            consign.ui.wTop->setEnabled(true);
+            consign.ui.tbConsigns->setEnabled(true);
+        }
+        emit update_settings_signal();
+    });
+
+    connect(ui.pbCopyGlobalToIndividuals, &QPushButton::clicked, this, [&]{
+
+        for(auto &&consign : individualConsignsLoadedUI){
+            init_individual_consign_with_global(consign);
+        }
+
+        emit update_settings_signal();
+    });
+
+    connect(ui.pbCopyIndividualToGlobal, &QPushButton::clicked, this, [&]{
+
+        safe_init_push_button_enabled_state(m_mainUI->pbGlobalConsignBottom, ui.pbConsignBottom->isEnabled());
+        safe_init_push_button_enabled_state(m_mainUI->pbGlobalConsignTop, ui.pbConsignTop->isEnabled());
+        safe_init_push_button_enabled_state(m_mainUI->pbGlobalConsignLeft, ui.pbConsignLeft->isEnabled());
+        safe_init_push_button_enabled_state(m_mainUI->pbGlobalConsignRight, ui.pbConsignRight->isEnabled());
+
+        safe_init_push_button_enabled_state(m_mainUI->pbGlobalImageAligmentBottom, ui.pbImageAligmentBottom->isEnabled());
+        safe_init_push_button_enabled_state(m_mainUI->pbGlobalImageAligmentTop, ui.pbImageAligmentTop->isEnabled());
+        safe_init_push_button_enabled_state(m_mainUI->pbGlobalImageAligmentLeft, ui.pbImageAligmentLeft->isEnabled());
+        safe_init_push_button_enabled_state(m_mainUI->pbGlobalImageAligmentRight, ui.pbImageAligmentRight->isEnabled());
+
+        safe_init_checkboxe_checked_state(m_mainUI->cbWriteOnPhoto, ui.cbWriteOnPhoto->isChecked());
+        safe_init_double_spinbox_value(m_mainUI->dsbGlobalRatioPC, ui.dsbRatioPC->value());
+        safe_init_slider_value(m_mainUI->hsGlobalRatioPC, ui.hsRatioPC->value());
+
+        globalConsignUI.richTextEdit->init_with_another(consignUI.richTextEdit.get(), consignUI.html.get());
+        globalConsignUI.html = std::make_shared<QString>(*consignUI.html);
+    });
+
+    // init new individual ui with global ui
+    init_individual_consign_with_global(consignUI, false);
 }
 
 void pc::UIElements::remove_individual_consign(int index){
@@ -195,7 +269,6 @@ void pc::UIElements::update_individual_pages(const GlobalData &settings)
             ui.sbHSizeGrid->setValue(settings.nbPhotosPageH);
             ui.sbNbPhotos->setEnabled(false);
 
-            // define connections...
             // # associate sliders with spin boxes
             associate_double_spinbox_with_slider(ui.dsbLeftMargins, ui.hsLeftMargins, ui.dsbRightMargins, ui.hsRightMargins);
             associate_double_spinbox_with_slider(ui.dsbTopMargins, ui.hsTopMargins, ui.dsbBottomMargins, ui.hsBottomMargins);
@@ -338,7 +411,7 @@ void pc::UIElements::associate_buttons(QVector<QPushButton *> buttons){
 void pc::UIElements::associate_double_spinbox_with_slider(QDoubleSpinBox *sb, QSlider *slider){
     connect(sb, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [=](double value){
         slider->blockSignals(true);
-        slider->setValue(1000*value);
+        slider->setValue(static_cast<int>(1000*value));
         slider->blockSignals(false);
     });
     // # sliders
@@ -356,7 +429,7 @@ void pc::UIElements::associate_double_spinbox_with_slider(QDoubleSpinBox *sb1, Q
             sb1->setValue(value);
         }
         slider1->blockSignals(true);
-        slider1->setValue(1000*value);
+        slider1->setValue(static_cast<int>(1000*value));
         slider1->blockSignals(false);
     });
     connect(sb2, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [=](double value){
@@ -365,14 +438,14 @@ void pc::UIElements::associate_double_spinbox_with_slider(QDoubleSpinBox *sb1, Q
             sb2->setValue(value);
         }
         slider2->blockSignals(true);
-        slider2->setValue(1000*value);
+        slider2->setValue(static_cast<int>(1000*value));
         slider2->blockSignals(false);
     });
     // # sliders
     connect(slider1, &QSlider::valueChanged, [=](double value){
         if(value + slider2->value() > 1000){
             value = 1000 - slider2->value();
-            slider1->setValue(value);
+            slider1->setValue(static_cast<int>(value));
         }
         sb1->blockSignals(true);
         sb1->setValue(value*0.001);
@@ -381,7 +454,7 @@ void pc::UIElements::associate_double_spinbox_with_slider(QDoubleSpinBox *sb1, Q
     connect(slider2, &QSlider::valueChanged, [=](double value){
         if(value + slider1->value() > 1000){
             value = 1000 - slider1->value();
-            slider2->setValue(value);
+            slider2->setValue(static_cast<int>(value));
         }
         sb2->blockSignals(true);
         sb2->setValue(value*0.001);
@@ -394,6 +467,30 @@ void pc::UIElements::checkbox_enable_UI(QCheckBox *cb, QVector<QWidget *> widget
         for(auto &&widget : widgets)
             widget->setEnabled(inverted ? (!checked) : checked);
     });
+}
+
+void UIElements::safe_init_push_button_enabled_state(QPushButton *button, bool state){
+    button->blockSignals(true);
+    button->setEnabled(state);
+    button->blockSignals(false);
+}
+
+void UIElements::safe_init_checkboxe_checked_state(QCheckBox *cb, bool state){
+    cb->blockSignals(true);
+    cb->setChecked(state);
+    cb->blockSignals(false);
+}
+
+void UIElements::safe_init_double_spinbox_value(QDoubleSpinBox *dsb, qreal value){
+    dsb->blockSignals(true);
+    dsb->setValue(value);
+    dsb->blockSignals(false);
+}
+
+void UIElements::safe_init_slider_value(QSlider *slider, int value){
+    slider->blockSignals(true);
+    slider->setValue(value);
+    slider->blockSignals(false);
 }
 
 

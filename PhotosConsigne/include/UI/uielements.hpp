@@ -110,6 +110,7 @@ public :
     void insert_individual_consign(bool whiteSpace = false);
     void remove_individual_consign(int index);
     void reset_individual_consigns(int nbPhotos);
+    void init_individual_consign_with_global(IndividualConsignUI &consignUI, bool copyHtml = true);
 
     // pages related
     void update_individual_pages(const GlobalData &settings);
@@ -126,6 +127,12 @@ public :
     void associate_double_spinbox_with_slider(QDoubleSpinBox *sb, QSlider *slider);
     void associate_double_spinbox_with_slider(QDoubleSpinBox *sb1, QSlider *slider1, QDoubleSpinBox *sb2, QSlider *slider2);
     void checkbox_enable_UI(QCheckBox *cb, QVector<QWidget*> widgets, bool inverted = false);
+
+    void safe_init_push_button_enabled_state(QPushButton* button, bool state);
+    void safe_init_checkboxe_checked_state(QCheckBox *cb, bool state);
+    void safe_init_double_spinbox_value(QDoubleSpinBox *dsb, qreal value);
+    void safe_init_slider_value(QSlider *slider, int value);
+
 
     // members
     QTimer          zonesTimer;
@@ -155,8 +162,6 @@ signals:
     void set_progress_bar_state_signal(int state);
 
     void set_progress_bar_text_signal(QString text);
-
-    void insert_white_space_signal();
 
     void send_page_color_signal(QColor col);
 

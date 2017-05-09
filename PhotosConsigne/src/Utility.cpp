@@ -146,7 +146,7 @@ pc::Photo::Photo(const QString &path, bool isWhiteSpace) : isWhiteSpace(isWhiteS
     constexpr int maxWidth = 800;;
 
     if(isWhiteSpace){
-        namePhoto = "Espace vide";
+        namePhoto = "Espace transparent";
     }else{
 
         info            = QFileInfo(path);
@@ -192,13 +192,13 @@ void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, bool preview, b
 
 void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, const QImage &photo, bool preview, bool drawImageSize, pc::PaperFormat format, const QRectF &pageRect){
 
-    QElapsedTimer timer;
-    timer.start();
+//    QElapsedTimer timer;
+//    timer.start();
 
-    QImage rotatedPhoto = preview ? photo.scaled(rectPhoto.width(),rectPhoto.height(), Qt::KeepAspectRatio) :
-                                    (photo.transformed(QTransform().rotate(rotation))).scaled(rectPhoto.width(),rectPhoto.height(), Qt::KeepAspectRatio);
+    QImage rotatedPhoto = preview ? photo.scaled(static_cast<int>(rectPhoto.width()),static_cast<int>(rectPhoto.height()), Qt::KeepAspectRatio) :
+                                    (photo.transformed(QTransform().rotate(rotation))).scaled(static_cast<int>(rectPhoto.width()),static_cast<int>(rectPhoto.height()), Qt::KeepAspectRatio);
 
-    qDebug() << "   draw 1" << timer.elapsed() << "ms";
+//    qDebug() << "   draw 1" << timer.elapsed() << "ms";
 
     qreal newX     = rectPhoto.x(), newY = rectPhoto.y();
     qreal newWidth = rotatedPhoto.width(), newHeight = rotatedPhoto.height();
@@ -228,13 +228,13 @@ void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, const QImage &p
     }
 
 
-    qDebug() << "   draw 2" << timer.elapsed() << "ms";
+//    qDebug() << "   draw 2" << timer.elapsed() << "ms";
 
     // draw image
     QRectF newRectPhoto(newX, newY, newWidth, newHeight);
     painter.drawImage(newRectPhoto, rotatedPhoto, QRectF(0.,0.,rotatedPhoto.width(),rotatedPhoto.height()));
 
-    qDebug() << "   draw 3" << timer.elapsed() << "ms";
+//    qDebug() << "   draw 3" << timer.elapsed() << "ms";
 
     if(drawImageSize && newWidth > 100 && newHeight > 50){
 
@@ -252,7 +252,7 @@ void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, const QImage &p
         painter.drawText(QRectF(newX, newY, newWidth, newHeight),  Qt::AlignCenter,sizeImageStr);
     }
 
-    qDebug() << "   draw 4" << timer.elapsed() << "ms";
+//    qDebug() << "   draw 4" << timer.elapsed() << "ms";
 }
 
 void pc::Photo::draw_huge(QPainter &painter, const QRectF &rectPhoto){
