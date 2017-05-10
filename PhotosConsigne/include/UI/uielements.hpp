@@ -87,6 +87,7 @@ struct IndividualConsignUI{
         html = std::make_shared<QString>(richTextEdit->textEdit()->document()->toHtml());
     }
 
+    Position previousConsignPositionFromPhotos;
     Ui::IndividualConsignW          ui;
     std::shared_ptr<QString>        html = nullptr;
     std::shared_ptr<QWidget>        widget       = std::make_shared<QWidget>();
@@ -107,7 +108,7 @@ public :
     ~UIElements();
 
     // consign related
-    void insert_individual_consign(bool whiteSpace = false);
+    void insert_individual_consign(int index);
     void remove_individual_consign(int index);
     void reset_individual_consigns(int nbPhotos);
     void init_individual_consign_with_global(IndividualConsignUI &consignUI, bool copyHtml = true);
@@ -121,6 +122,7 @@ public :
     void update_settings_spinboxes(QVector<QSpinBox*> spinBoxes, bool displayZones = false);
     void update_settings_double_spinboxes(QVector<QDoubleSpinBox*> dSpinBoxes, bool displayZones = false);
     void update_settings_checkboxes(QVector<QCheckBox*> checkBoxes, bool displayZones = false);
+    void update_settings_combo_box(QVector<QComboBox *> comboBox, bool displayZones);
     void update_settings_format_combo_boxes(QComboBox *comboDpi, QComboBox *comboFormat, bool displayZones = false);
     void update_settings_radio_buttons(QVector<QRadioButton*> radioButtons, bool displayZones = false);
     void associate_buttons (QVector<QPushButton*> buttons);

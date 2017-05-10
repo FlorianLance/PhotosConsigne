@@ -76,4 +76,38 @@
         <file alias="rotateLeft">resources/style/leftRotationPushButton.qss</file>
     </qresource>
     <qresource prefix="/profils"/>
+    <qresource prefix="/images/background">
+        <file alias="BDiagPattern">resources/images/background/BDiagPattern.png</file>
+        <file alias="CrossPattern">resources/images/background/CrossPattern.png</file>
+        <file alias="Dense1Pattern">resources/images/background/Dense1Pattern.png</file>
+        <file alias="Dense2Pattern">resources/images/background/Dense2Pattern.png</file>
+        <file alias="Dense3Pattern">resources/images/background/Dense3Pattern.png</file>
+        <file alias="Dense4Pattern">resources/images/background/Dense4Pattern.png</file>
+        <file alias="Dense5Pattern">resources/images/background/Dense5Pattern.png</file>
+        <file alias="Dense6Pattern">resources/images/background/Dense6Pattern.png</file>
+        <file alias="Dense7Pattern">resources/images/background/Dense7Pattern.png</file>
+        <file alias="DiagCrossPattern">resources/images/background/DiagCrossPattern.png</file>
+        <file alias="FDiagPattern">resources/images/background/FDiagPattern.png</file>
+        <file alias="HorPattern">resources/images/background/HorPattern.png</file>
+        <file alias="SolidPattern">resources/images/background/SolidPattern.png</file>
+    </qresource>
+    <qresource prefix="/images/photos">
+        <file alias="remove_photos">resources/images/photos/remove_photos.png</file>
+    </qresource>
+    <qresource prefix="/images/borders">
+        <file alias="dash_line">resources/images/borders/dash_line.png</file>
+        <file alias="dot_line">resources/images/borders/dot_line.png</file>
+        <file alias="solid_lines">resources/images/borders/solid_line.png</file>
+        <file alias="dash_dot_dot_line">resources/images/borders/dash_dot_dot_line.png</file>
+        <file alias="dash_dot_line">resources/images/borders/dash_dot_line.png</file>
+        <file alias="width1">resources/images/borders/width1.png</file>
+        <file alias="width2">resources/images/borders/width2.png</file>
+        <file alias="width3">resources/images/borders/width3.png</file>
+        <file alias="width4">resources/images/borders/width4.png</file>
+        <file alias="width5">resources/images/borders/width5.png</file>
+        <file alias="width6">resources/images/borders/width6.png</file>
+        <file alias="bevel_join">resources/images/borders/bevel_join.png</file>
+        <file alias="miter_join">resources/images/borders/miter_join.png</file>
+        <file alias="round_join">resources/images/borders/round_join.png</file>
+    </qresource>
 </RCC>

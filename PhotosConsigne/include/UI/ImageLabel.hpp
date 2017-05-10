@@ -56,12 +56,16 @@ protected:
 
     virtual void mousePressEvent(QMouseEvent *ev){
 
+        qDebug() << "click!!!";
         bool inside = m_imageRect.contains(ev->pos());
         if(inside){
+            qDebug() << "click on photo!!!";
             if(m_doubleClickTimer.isActive()){
+                qDebug() << "DOUBLE!!!";
                 emit double_click_signal();
             }else{
                 m_doubleClickTimer.start(300);
+                qDebug() << "SINGLE!!!";
             }
         }
     }

@@ -28,6 +28,7 @@ pc::UIElements::UIElements(std::shared_ptr<Ui::PhotosConsigneMainW> mainUI) : m_
     selectedPhotoW = new ImageLabel();
     selectedPhotoLayout->addWidget(selectedPhotoW);
     m_mainUI->twMiddle->setTabEnabled(0, false);
+    m_mainUI->twGeneralSettings->setTabEnabled(0, false);
     m_mainUI->pbAdd->hide();
 
     // # preview image widget
@@ -76,7 +77,6 @@ pc::UIElements::UIElements(std::shared_ptr<Ui::PhotosConsigneMainW> mainUI) : m_
     associate_buttons({m_mainUI->pbGlobalConsignBottom,m_mainUI->pbGlobalConsignLeft,m_mainUI->pbGlobalConsignRight,m_mainUI->pbGlobalConsignTop});
     associate_buttons({m_mainUI->pbGlobalImageAligmentLeft,m_mainUI->pbGlobalImageAligmentRight, m_mainUI->pbGlobalImageAligmentHMiddle});
     associate_buttons({m_mainUI->pbGlobalImageAligmentVMiddle,m_mainUI->pbGlobalImageAligmentTop,m_mainUI->pbGlobalImageAligmentBottom});
-    associate_buttons({m_mainUI->pbLandscape,m_mainUI->pbPortrait});
 
     // # associate checkboxes with UI
     checkbox_enable_UI(m_mainUI->cbAddExteriorMargins, {m_mainUI->hsLeftMargins, m_mainUI->hsRightMargins, m_mainUI->hsTopMargins, m_mainUI->hsBottomMargins,
@@ -85,18 +85,19 @@ pc::UIElements::UIElements(std::shared_ptr<Ui::PhotosConsigneMainW> mainUI) : m_
     checkbox_enable_UI(m_mainUI->cbAddTitle, {m_mainUI->cbAllPagesTitle, m_mainUI->rbBottomTitle, m_mainUI->rbTopTitle,
                                               m_mainUI->rbWriteOnPCTitle, m_mainUI->hsRatioTitle, m_mainUI->dsbRatioTitle, titleUI.richTextEdit.get(), m_mainUI->pbRatioTitlePage});
 
-    /// # udpate settings
+    /// # update settings
     update_settings_buttons({m_mainUI->pbGlobalConsignBottom,m_mainUI->pbGlobalConsignLeft,m_mainUI->pbGlobalConsignRight,m_mainUI->pbGlobalConsignTop,
                             m_mainUI->pbGlobalImageAligmentLeft,m_mainUI->pbGlobalImageAligmentRight, m_mainUI->pbGlobalImageAligmentHMiddle,
-                            m_mainUI->pbGlobalImageAligmentVMiddle,m_mainUI->pbGlobalImageAligmentTop,m_mainUI->pbGlobalImageAligmentBottom,
-                            m_mainUI->pbLandscape,m_mainUI->pbPortrait},true);
+                            m_mainUI->pbGlobalImageAligmentVMiddle,m_mainUI->pbGlobalImageAligmentTop,m_mainUI->pbGlobalImageAligmentBottom,},true);
     update_settings_sliders({m_mainUI->hsGlobalRatioPC, m_mainUI->hsRatioTitle, m_mainUI->hsLeftMargins, m_mainUI->hsRightMargins, m_mainUI->hsTopMargins,
                             m_mainUI->hsBottomMargins, m_mainUI->hsHorizontalMargins, m_mainUI->hsVerticalMargins},true);
     update_settings_double_spinboxes({m_mainUI->dsbGlobalRatioPC, m_mainUI->dsbRatioTitle, m_mainUI->dsbLeftMargins, m_mainUI->dsbRightMargins,
                                      m_mainUI->dsbTopMargins,m_mainUI->dsbBottomMargins,m_mainUI->dsbHorizontalMargins,m_mainUI->dsbVerticalMargins},true);
     update_settings_checkboxes({m_mainUI->cbAddExteriorMargins,m_mainUI->cbAddInteriorMargins,
-                               m_mainUI->cbAddTitle, m_mainUI->cbAllPagesTitle},true);
-    update_settings_checkboxes({m_mainUI->cbCutLines, m_mainUI->cbSaveOnlyCurrentPage});    
+                               m_mainUI->cbAddTitle, m_mainUI->cbAllPagesTitle, m_mainUI->cbEnableBorders},true);
+    update_settings_checkboxes({m_mainUI->cbSaveOnlyCurrentPage});
+    update_settings_combo_box({m_mainUI->cbOrientation}, true);
+    update_settings_combo_box({m_mainUI->cbBordersLineWidth, m_mainUI->cbBordersLineStyle, m_mainUI->cbBordersJoin}, false);
 }
 
 pc::UIElements::~UIElements(){
@@ -122,7 +123,7 @@ void pc::UIElements::init_individual_consign_with_global(IndividualConsignUI &co
 
     safe_init_checkboxe_checked_state(ui.cbWriteOnPhoto, m_mainUI->cbWriteOnPhoto->isChecked());
     safe_init_double_spinbox_value(ui.dsbRatioPC, m_mainUI->dsbGlobalRatioPC->value());
-    safe_init_slider_value(ui.hsRatioPC, m_mainUI->hsGlobalRatioPC->value());
+    safe_init_slider_value(ui.hsRatioPC, m_mainUI->hsGlobalRatioPC->value());    
 
     consignUI.richTextEdit->init_with_another(globalConsignUI.richTextEdit.get(), copyHtml ? globalConsignUI.html.get() : nullptr);
     if(copyHtml){
@@ -131,16 +132,15 @@ void pc::UIElements::init_individual_consign_with_global(IndividualConsignUI &co
 }
 
 
-void pc::UIElements::insert_individual_consign(bool whiteSpace){
+void pc::UIElements::insert_individual_consign(int index){
 
-    individualConsignsLoadedUI.push_back(IndividualConsignUI());
+    individualConsignsLoadedUI.insert(index,IndividualConsignUI());
 
-    IndividualConsignUI &consignUI = individualConsignsLoadedUI.last();
+    IndividualConsignUI &consignUI = individualConsignsLoadedUI[index];
     Ui::IndividualConsignW &ui = consignUI.ui;
 
     connect(consignUI.richTextEdit.get(), &RichTextEdit::html_updated_signal, this, [&](std::shared_ptr<QString> html){
         consignUI.html = html;
-        qDebug() << "-update consign!";
     });    
     connect(consignUI.richTextEdit->textEdit(), &TextEdit::resource_added_signal, this, &UIElements::resource_added_signal);
 
@@ -156,7 +156,13 @@ void pc::UIElements::insert_individual_consign(bool whiteSpace){
 
     checkbox_enable_UI(ui.cbEnableIndividualConsign, {ui.wTop, ui.tbConsigns});
     connect(consignUI.richTextEdit->textEdit(), &TextEdit::textChanged, this, &UIElements::update_settings_signal);
-    connect(ui.cbWriteOnPhoto, &QCheckBox::clicked, this, [=](bool checked){
+    connect(ui.cbWriteOnPhoto, &QCheckBox::clicked, this, [&](bool checked){
+
+        if(checked){
+            consignUI.previousConsignPositionFromPhotos = ( !ui.pbConsignTop->isEnabled())    ? Position::top :
+                                                  ((!ui.pbConsignBottom->isEnabled()) ? Position::bottom :
+                                                  ((!ui.pbConsignLeft->isEnabled())   ? Position::left : Position::right));
+        }
 
         ui.hsRatioPC->setEnabled(!checked);
         ui.dsbRatioPC->setEnabled(!checked);
@@ -166,7 +172,22 @@ void pc::UIElements::insert_individual_consign(bool whiteSpace){
         ui.pbConsignTop->setEnabled(!checked);
 
         if(!checked){
-            ui.pbConsignBottom->setEnabled(false);
+            switch(consignUI.previousConsignPositionFromPhotos){
+            case Position::top :
+                ui.pbConsignBottom->setEnabled(false);
+                break;
+            case Position::bottom :
+                ui.pbConsignBottom->setEnabled(false);
+                break;
+            case Position::left :
+                ui.pbConsignLeft->setEnabled(false);
+                break;
+            case Position::right :
+                ui.pbConsignRight->setEnabled(false);
+                break;
+            case Position::on : // don't happen
+                break;
+            }
         }
 
         emit update_settings_signal();
@@ -361,6 +382,18 @@ void pc::UIElements::update_settings_double_spinboxes(QVector<QDoubleSpinBox *> 
 void pc::UIElements::update_settings_checkboxes(QVector<QCheckBox *> checkBoxes, bool displayZones){
     for(auto &&cb : checkBoxes){
         connect(cb, &QCheckBox::clicked, this, [=]{
+            if(displayZones){
+                zonesTimer.start(1000);
+            }
+            emit update_settings_signal();
+        });
+    }
+}
+
+void pc::UIElements::update_settings_combo_box(QVector<QComboBox *> comboBox, bool displayZones){
+    for(auto &&cb : comboBox){
+
+        connect(cb, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
             if(displayZones){
                 zonesTimer.start(1000);
             }

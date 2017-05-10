@@ -24,21 +24,21 @@ public :
         SPCPage pcPage = pcPages.pages[idPageToDraw];
 
         // draw cut lines
-        if(pcPage->displayCutLines){
+//        if(pcPage->displayCutLines){
 
-            painter.setOpacity(1);
-            QPen pen;
-            pen.setStyle(Qt::DashLine);
-            pen.setColor(Qt::darkGray);
-            pen.setWidthF((pcPage->rectOnPage.width()+pcPage->rectOnPage.height())*0.5/1000.);
-            painter.setPen(pen);
-            for(auto &&hLine : pcPage->horizontalCutLines){
-                painter.drawLine(hLine);
-            }
-            for(auto &&vLine : pcPage->verticalCutLines){
-                painter.drawLine(vLine);
-            }
-        }
+//            painter.setOpacity(1);
+//            QPen pen;
+//            pen.setStyle(Qt::DashLine);
+//            pen.setColor(Qt::darkGray);
+//            pen.setWidthF((pcPage->rectOnPage.width()+pcPage->rectOnPage.height())*0.5/1000.);
+//            painter.setPen(pen);
+//            for(auto &&hLine : pcPage->horizontalCutLines){
+//                painter.drawLine(hLine);
+//            }
+//            for(auto &&vLine : pcPage->verticalCutLines){
+//                painter.drawLine(vLine);
+//            }
+//        }
 
         if(drawZones){
 
@@ -68,7 +68,7 @@ public :
                 }
 
                 // draw photo
-                if(pcSet->photo->rectOnPage.width()){
+                if(pcSet->photo->rectOnPage.width() > 0){
                     painter.setOpacity(0.3);
                     painter.fillRect(pcSet->photo->rectOnPage, QRgb(qRgb(255,255,0)));
                 }
@@ -93,7 +93,7 @@ public :
             infos.photoNum   = pcSet->totalId;
             infos.photoPCNum = pcSet->id;
             infos.namePCAssociatedPhoto = pcSet->photo->namePhoto;
-            infos.fileInfo = pcSet->photo->info;
+            infos.fileInfo = pcSet->photo->info;            
 
             if(!preview){
                 emit set_progress_bar_text_signal("Dessin photo-consigne n°" + QString::number(pcSet->totalId));
@@ -114,7 +114,10 @@ public :
             // draw photo
             if(pcSet->photo != nullptr){
                 if(pcSet->photo->rectOnPage.width() > 0 && pcSet->photo->rectOnPage.height() > 0){ // ############################ costly
-                    painter.fillRect(pcSet->photo->rectOnPage, pcPage->backgroundColor);
+
+                    if(!drawZones){
+                        painter.fillRect(pcSet->photo->rectOnPage, pcPage->backgroundColor);
+                    }
                     pcSet->photo->draw(painter, pcSet->photo->rectOnPage, preview, settings.displayZones, pcPages.paperFormat, pcPage->rectOnPage);
                 }
             }
@@ -129,10 +132,22 @@ public :
                 }
             }
 
-
             if(!preview){
                 emit set_progress_bar_state_signal(static_cast<int>(1000. * pcSet->totalId/m_totalPC));
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+            }
+        }
+
+        // borders
+        for(auto &&set : pcPage->sets){
+
+            painter.setOpacity(1.);
+            SPCSet pcSet = set;
+
+            if(settings.displayBorders){
+                settings.borderPen.setWidthF(settings.widthBorder*factorUpscale);
+                painter.setPen(settings.borderPen);
+                painter.drawRect(pcSet->rectOnPage);
             }
         }
 
@@ -222,11 +237,24 @@ public slots :
 
         // create preview image
         QImage image(static_cast<int>(widthPreview), static_cast<int>(heightPreview), QImage::Format_RGB32);
+//        image.fill(Qt::white);
+        QPainter painter(&image);
 
         // fill background
-        image.fill(m_pageToDraw->backgroundColor);
+//        QRadialGradient gradient;
+//              gradient.setColorAt(0, QColor::fromRgbF(0, 1, 0, 1));
+//              gradient.setColorAt(1, QColor::fromRgbF(0, 0, 0, 0));
 
-        QPainter painter(&image);
+//        QBrush brush(gradient);
+
+        QBrush brush;
+        brush.setColor(m_pageToDraw->backgroundColor);
+        brush.setStyle(Qt::SolidPattern);
+
+        painter.fillRect(QRectF(0,0,image.width(),image.height()),brush);
+
+
+
         m_pageToDraw->compute_sizes(QRectF(0 ,0, widthPreview, heightPreview));
 
 //        qDebug() << "Before draw page" << timer.elapsed() << "ms";

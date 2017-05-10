@@ -77,23 +77,23 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
     }
 
     // horizontal cut lines
-    horizontalCutLines.clear();
-    horizontalCutLines.push_back(QLineF(QPointF(0,setsRect.y()), QPointF(rectOnPage.width(),setsRect.y())));
-    horizontalCutLines.push_back(QLineF(QPointF(0,setsRect.y()+setsRect.height()), QPointF(rectOnPage.width(),setsRect.y()+setsRect.height())));
+//    horizontalCutLines.clear();
+//    horizontalCutLines.push_back(QLineF(QPointF(0,setsRect.y()), QPointF(rectOnPage.width(),setsRect.y())));
+//    horizontalCutLines.push_back(QLineF(QPointF(0,setsRect.y()+setsRect.height()), QPointF(rectOnPage.width(),setsRect.y()+setsRect.height())));
 
-    for(int ii = 1; ii < nbPhotosV; ++ii){
-        qreal startV = setsRect.y() + ii*(heightPhotoAndConsign + heightInterMargin) - 0.5*heightInterMargin;
-        horizontalCutLines.push_back(QLineF(QPointF(0,startV), QPointF(rectOnPage.width(),startV)));
-    }
+//    for(int ii = 1; ii < nbPhotosV; ++ii){
+//        qreal startV = setsRect.y() + ii*(heightPhotoAndConsign + heightInterMargin) - 0.5*heightInterMargin;
+//        horizontalCutLines.push_back(QLineF(QPointF(0,startV), QPointF(rectOnPage.width(),startV)));
+//    }
 
-    // vertical cut lines
-    verticalCutLines.clear();
-    verticalCutLines.push_back(QLineF(QPointF(widthLeftMargin ,setsRect.y()), QPointF(widthLeftMargin, setsRect.y() + setsRect.height())));
-    verticalCutLines.push_back(QLineF(QPointF(rectOnPage.width()-widthRightMargin,setsRect.y()), QPointF(rectOnPage.width()-widthRightMargin, setsRect.y() + setsRect.height())));
-    for(int ii = 1; ii < nbPhotosH; ++ii){
-        qreal startH = setsRect.x() + ii*(widthPhotoAndConsign + widthInterMargin) - 0.5*widthInterMargin;
-        verticalCutLines.push_back(QLineF(QPointF(startH,setsRect.y()), QPointF(startH, setsRect.y() + setsRect.height())));
-    }
+//    // vertical cut lines
+//    verticalCutLines.clear();
+//    verticalCutLines.push_back(QLineF(QPointF(widthLeftMargin ,setsRect.y()), QPointF(widthLeftMargin, setsRect.y() + setsRect.height())));
+//    verticalCutLines.push_back(QLineF(QPointF(rectOnPage.width()-widthRightMargin,setsRect.y()), QPointF(rectOnPage.width()-widthRightMargin, setsRect.y() + setsRect.height())));
+//    for(int ii = 1; ii < nbPhotosH; ++ii){
+//        qreal startH = setsRect.x() + ii*(widthPhotoAndConsign + widthInterMargin) - 0.5*widthInterMargin;
+//        verticalCutLines.push_back(QLineF(QPointF(startH,setsRect.y()), QPointF(startH, setsRect.y() + setsRect.height())));
+//    }
 }
 
 void pc::PCSet::compute_sizes(QRectF upperRect){

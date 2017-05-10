@@ -1,7 +1,7 @@
 
 /**
- * \file PCMainWorker.hpp
- * \brief defines PhotoDisplayWorker,PDFGeneratorWorker
+ * \file PhotoLoaderWorker.hpp
+ * \brief defines PhotoLoaderWorker
  * \author Florian Lance
  * \date 04/04/2017
  */
@@ -23,14 +23,15 @@
 
 namespace pc {
 
-class PhotoDisplayWorker : public QObject
-{
+class PhotoLoaderWorker : public QObject{
+
     Q_OBJECT
 
 public :
 
-    PhotoDisplayWorker()
-    {
+    PhotoLoaderWorker(){
+
+        qRegisterMetaType<SPhoto>("SPhoto");
         qRegisterMetaType<SPhotos>("SPhotos");
         qRegisterMetaType<GlobalData>("GlobalData");
         qRegisterMetaType<PCPages>("PCPages");
@@ -39,7 +40,7 @@ public :
         qRegisterMetaType<QReadWriteLock *>("QReadWriteLock *");
     }
 
-    ~PhotoDisplayWorker(){}
+    ~PhotoLoaderWorker(){}
 
 public slots :
 
@@ -58,6 +59,8 @@ public slots :
         m_photosLoaded->reserve(nbPhotos);
         for(auto &&imageName : photosList)
         {
+//            QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+
             bool continueLoop;
             m_locker.lockForRead();
             continueLoop = m_continueLoop;
@@ -71,7 +74,7 @@ public slots :
             SPhoto photo = std::make_shared<Photo>(Photo(path + "/" + imageName));
             if(!photo->scaledPhoto.isNull()){
                 m_photosLoaded->push_back(photo);
-                emit photo_loaded_signal(imageName);
+                emit photo_loaded_signal(photo);
             }
             else{
                 emit set_progress_bar_text_signal("Echec chargement photo n°" + QString::number(idPhoto));
@@ -101,9 +104,10 @@ signals :
 
     void set_progress_bar_text_signal(QString text);
 
+    void photo_loaded_signal(SPhoto photo);
+
     void end_loading_photos_signal(SPhotos photos);
 
-    void photo_loaded_signal(QString photoName);
 
 private :
 

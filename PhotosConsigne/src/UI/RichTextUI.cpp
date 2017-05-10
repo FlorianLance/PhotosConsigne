@@ -88,7 +88,6 @@ namespace Ui {
     class InsertLinkW;
 }
 
-
 #ifdef Q_OS_MAC
 const QString rsrcPath = ":/images/mac";
 #else

@@ -51,7 +51,99 @@ int main(int argc,char** argv)
     QApplication app(argc, argv);
     app.installTranslator(&qtTranslator);
 
+    QImage image(25,25, QImage::Format_ARGB32);
+    QImage image2;
+    QPainter painter(&image);
 
+    QPen pen;
+    QBrush brush;
+
+    brush.setColor(qRgba(127,180,255,255));
+    brush.setStyle(Qt::SolidPattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/SolidPattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+    brush.setStyle(Qt::Dense1Pattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/Dense1Pattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+    brush.setStyle(Qt::Dense2Pattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/Dense2Pattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+    brush.setStyle(Qt::Dense3Pattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/Dense3Pattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+    brush.setStyle(Qt::Dense4Pattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/Dense4Pattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+    brush.setStyle(Qt::Dense5Pattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/Dense5Pattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+    brush.setStyle(Qt::Dense6Pattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/Dense6Pattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+    brush.setStyle(Qt::Dense7Pattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/Dense7Pattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+    brush.setStyle(Qt::HorPattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/HorPattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+    brush.setStyle(Qt::VerPattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/HorPattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+    brush.setStyle(Qt::CrossPattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/CrossPattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+    brush.setStyle(Qt::BDiagPattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/BDiagPattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+    brush.setStyle(Qt::FDiagPattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/FDiagPattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+    brush.setStyle(Qt::DiagCrossPattern);
+    painter.fillRect(0,0,image.width(),image.height(),brush);
+    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+    image2.save("G:/DiagCrossPattern.png");
+    image.fill(qRgba(0,0,0,0));
+
+//    return 0;
 //    QPrinter printer(QPrinter::HighResolution);
 //    printer.setOutputFormat(QPrinter::PdfFormat);
 //    printer.setOutputFileName("out.pdf");

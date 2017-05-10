@@ -15,7 +15,7 @@
 #include <QTimer>
 
 // # workers
-#include "PCMainWorker.hpp"
+#include "PhotoLoaderWorker.hpp"
 #include "PDFGeneratorWorker.hpp"
 #include "UIElements.hpp"
 
@@ -49,7 +49,11 @@ public slots:
     void closeEvent(QCloseEvent *event);
     void keyPressEvent( QKeyEvent * event );
 
-    void set_photos_directory();
+    void add_photos_directory();
+    void insert_photos(SPhotos photos);
+    void insert_transparent_space();
+    void insert_new_photo();
+    void remove_all_photos();
     void define_selected_photo(int index);
     void update_valid_photos();
     void update_photo_to_display(SPhoto photo);
@@ -85,26 +89,27 @@ private :
     // ### windows
     void display_donate_window();
 
-    // ### conections
-    void define_workers_connections();
-    void define_main_UI_connections();
+    // ### conections    
+    void from_main_UI_connections();
+    void from_main_module_connections();
+    void from_pdf_generator_worker_connections();
+    void from_photos_loader_worker_connections();
+    void from_UI_elements_connections();
+
 
 signals :
 
     void init_document_signal();
-
     void kill_signal();
-
     void send_photos_dir_signal(QString photosDir, QStringList photosNames);
-
     void start_preview_generation_signal(GlobalData settings, PCPages pcPages);
-
     void start_PDF_generation_signal(GlobalData settings, PCPages pcPages);
 
 private:
 
     bool m_isPreviewComputing   = false;
     bool m_generatePreviewAgain = false;
+    bool m_isLoadingPhotos      = false;
     QReadWriteLock m_previewLocker;    
     QString m_version;
 
@@ -116,7 +121,7 @@ private:
     std::unique_ptr<UIElements>               m_dynUI  = nullptr; /**< dynamic ui elements */
 
     // threads
-    std::unique_ptr<PhotoDisplayWorker> m_displayPhotoWorker = nullptr;
+    std::unique_ptr<PhotoLoaderWorker> m_loadPhotoWorker = nullptr;
     std::unique_ptr<PDFGeneratorWorker> m_pdfGeneratorWorker = nullptr;
 
     // workers

@@ -40,12 +40,12 @@ HEADERS += \
     include/UI/PCMainUI.hpp \
     include/UI/ImageLabel.hpp \
     include/UI/RichTextUI.hpp \
-    include/Workers/PCMainWorker.hpp \
     include/thirdparty/asyncfuture/asyncfuture.h \
     include/Workers/ImageReader.hpp \
     include/UI/UIElements.hpp \
     include/Workers/PDFGeneratorWorker.hpp \
-    include/Utility.hpp
+    include/Utility.hpp \
+    include/Workers/PhotoLoaderWorker.hpp
 
 FORMS += \
     ui/MainUI.ui \

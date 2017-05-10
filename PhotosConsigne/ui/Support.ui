@@ -71,12 +71,11 @@ Si ce logiciel vous est utile, vous pouvez me remercier et contribuer à sa pér
         <string notr="true">
 
 QPushButton {
-  
+    font: bold 12pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
 	color : rgb(0,106,255);
-	border-style: outset;
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
+
     background-color:  rgb(220,220,220);
 
  }
@@ -149,12 +148,11 @@ QPushButton:hover:!pressed
         <string notr="true">
 
 QPushButton {
-  
+    font: bold 12pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
 	color : rgb(0,106,255);
-	border-style: outset;
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
+
     background-color:  rgb(220,220,220);
 
  }
@@ -170,7 +168,8 @@ QPushButton {
 
 QPushButton:hover:!pressed
 {
-     background-color: rgb(255,255,255);
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
 }</string>
        </property>
        <property name="text">
@@ -221,6 +220,34 @@ QPushButton:hover:!pressed
          <width>130</width>
          <height>50</height>
         </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">
+
+QPushButton {
+    font: bold 12pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
+	color : rgb(0,106,255);
+
+    background-color:  rgb(220,220,220);
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
        </property>
        <property name="text">
         <string/>
@@ -320,12 +347,11 @@ QPushButton:hover:!pressed
         <string notr="true">
 
 QPushButton {
-  
+    font: bold 12pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
 	color : rgb(0,106,255);
-	border-style: outset;
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
+
     background-color:  rgb(220,220,220);
 
  }

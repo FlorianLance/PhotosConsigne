@@ -217,7 +217,6 @@ namespace pc
 
         int id; /**< id of the page */
 
-        bool displayCutLines;
     //        int nbPhotos;
         int nbPhotosV;
         int nbPhotosH;
@@ -234,8 +233,6 @@ namespace pc
         QRectF setsRect;
         QRectF setsAndMarginsRect;
         QVector<QRectF> interMarginsRects;
-        QVector<QLineF> horizontalCutLines;
-        QVector<QLineF> verticalCutLines;
 
         void compute_sizes(QRectF upperRect);
     };
@@ -279,15 +276,14 @@ namespace pc
         int previousPhotoId     = -1;
         int previousPageId      = -2;
         int currentPageId       = -1;       /**< id of the current selected page (page list widget) */
-        int currentPhotoId      = 0;        /**< id of the current selcted photo (photo list widget) */
-        int currentPCDisplayed  = 0;        /**< id of the current PC */
+        int currentPhotoId      = -1;        /**< id of the current selcted photo (photo list widget) */
+        int currentPCDisplayed  = -1;        /**< id of the current PC */
 
         // global
         // # misc
-        bool displayCutLines;
         int photoAlignment;
         qreal PCRation;
-        QColor pageColor = Qt::white;
+        QColor pageColor = Qt::white;        
 
         Position consignPositionFromPhotos;
 
@@ -297,13 +293,18 @@ namespace pc
         // # misc consign
         bool consignOnPhoto;
 
+        // border
+        bool displayBorders = false;
+        qreal widthBorder = 1.;
+        QPen borderPen;
+
         // title
         bool titleAdded;
         bool titleOnAllPages;
         qreal ratioTitle;
         Position titlePositionFromPC;
 
-        QString photosDirectoryPath= "";
+        QString lastPhotosDirectoryPath= "";
         SPhotos photosLoaded  = std::make_shared<QList<SPhoto>>(QList<SPhoto>());
         SPhotos photosValided = std::make_shared<QList<SPhoto>>(QList<SPhoto>());
     };

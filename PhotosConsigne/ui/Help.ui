@@ -52,12 +52,11 @@
       <string notr="true">
 
 QPushButton {
-  
+    font: bold 12pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
 	color : rgb(0,106,255);
-	border-style: outset;
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
+
     background-color:  rgb(220,220,220);
 
  }
@@ -136,12 +135,11 @@ QPushButton:hover:!pressed
       <string notr="true">
 
 QPushButton {
-  
+    font: bold 12pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
 	color : rgb(0,106,255);
-	border-style: outset;
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
+
     background-color:  rgb(220,220,220);
 
  }
@@ -172,12 +170,11 @@ QPushButton:hover:!pressed
       <string notr="true">
 
 QPushButton {
-  
+    font: bold 12pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
 	color : rgb(0,106,255);
-	border-style: outset;
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
+
     background-color:  rgb(220,220,220);
 
  }
@@ -218,7 +215,7 @@ QPushButton:hover:!pressed
       <string notr="true">color : rgb(0,106,255);</string>
      </property>
      <property name="text">
-      <string>Italic: </string>
+      <string>Italique:</string>
      </property>
     </widget>
    </item>
