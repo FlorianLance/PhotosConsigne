@@ -13,36 +13,37 @@
 // std
 #include <memory>
 
-// debug
+// Qt
+// # widgets
+#include <QImage>
+#include <QList>
+#include <QTextDocument>
+#include <QWidget>
+#include <QComboBox>
+// # others
+#include <QPainter>
+#include <QDate>
+#include <QFont>
+#include <QReadWriteLock>
+#include <QPagedPaintDevice>
+// # debug
 #include <QDebug>
 #include <QElapsedTimer>
+
 
 // local
 // # ui
 #include "RichTextUI.hpp"
-#include "ImageLabel.hpp"
+#include "PhotoW.hpp"
+#include "CustomPageW.hpp"
+// # data
+#include "Photo.hpp"
 
-// Qt
-#include <QImage>
-#include <QList>
-#include <QFont>
-#include <QReadWriteLock>
-#include <QPagedPaintDevice>
-#include <QTextDocument>
-#include <QPainter>
-#include <QDate>
 
 
 
 namespace pc
 {
-    // define aliases
-    struct Photo;
-    using SPhoto  = std::shared_ptr<Photo>;
-
-    using Photos  = QList<SPhoto>;
-    using SPhotos = std::shared_ptr<Photos>;
-
     struct Consign;
     using SConsign = std::shared_ptr<Consign>;
 
@@ -68,7 +69,20 @@ namespace pc
     enum class PageOrientation { landScape = 0, portrait = 1};
     enum class Position { top = 0, bottom = 1, left = 2, right = 3, on = 4};
 
+
+
     // define classes
+    struct MobileWidget{
+
+        ~MobileWidget(){
+            if(widget->parent() == nullptr){
+                delete widget;
+            }
+        }
+
+        QWidget *widget = new QWidget();
+    };
+
     struct RatioMargins
     {
         bool exteriorMarginsEnabled;
@@ -83,8 +97,8 @@ namespace pc
 
     struct PaperFormat
     {        
-        int dpi = 300;
-        qreal widthRatio = 8.263;
+        int dpi           = 300;
+        qreal widthRatio  = 8.263;
         qreal heightRatio = 11.693;
         QSizeF sizeMM;
         QPagedPaintDevice::PageSize format = QPagedPaintDevice::PageSize::A4;        
@@ -93,62 +107,14 @@ namespace pc
 
         PaperFormat(QString dpiStr, QString formatStr);
 
-        int64_t widthPixels(int wantedDpi) const noexcept{
+        int64_t width_pixels(int wantedDpi) const noexcept{
             return static_cast<int64_t>(widthRatio*wantedDpi);
         }
 
-        int64_t heightPixels(int wantedDpi) const noexcept{
+        int64_t height_pixels(int wantedDpi) const noexcept{
             return static_cast<int64_t>(heightRatio*wantedDpi);
         }
     };
-
-
-    struct RectPageItem{
-        QRectF rectOnPage;
-        virtual void compute_sizes(QRectF upperRect) = 0;
-    };
-
-    struct Photo : public RectPageItem {
-
-        Photo() = delete;   
-
-        Photo(const Photo &photo) = default;
-
-        Photo(const QString &path, bool isWhiteSpace = false);
-
-        void compute_sizes(QRectF upperRect){
-            rectOnPage = std::move(upperRect);
-        }
-
-        QSize size() const noexcept {return originalSize;}
-
-        QSize scaled_size() const noexcept {return scaledPhoto.size();}
-
-        void draw(QPainter &painter, const QRectF &rectPhoto, bool preview, bool drawImageSize, const PaperFormat &format, const QRectF &pageRect);
-
-    private:
-
-        void draw(QPainter &painter, const QRectF &rectPhoto, const QImage &photo, bool preview, bool drawImageSize, PaperFormat format, const QRectF &pageRect);
-
-        void draw_huge(QPainter &painter, const QRectF &rectPhoto);
-
-    public:
-
-        bool isWhiteSpace = false;
-        bool isADuplicate = false;
-        bool isRemoved    = false;
-        bool isOnDocument = false;
-        int alignment;
-        int rotation = 0;
-        int globalId = 0;
-
-        QSize originalSize;
-        QImage scaledPhoto;
-        QString pathPhoto;
-        QString namePhoto;
-        QFileInfo info;
-    };
-
 
 
     struct ExtraPCInfo{
@@ -206,30 +172,68 @@ namespace pc
         SPhoto photo = nullptr;
         SConsign consign = nullptr;
 
-        bool consignOnPhoto;
         qreal ratio;
         Position consignPositionFromPhoto;
 
         void compute_sizes(QRectF upperRect);
     };
 
+    struct BackGroundSettings{
+
+        bool displayPhoto = false;
+        bool displayPattern = false;
+
+        Qt::BrushStyle patternBrushStyle = Qt::BDiagPattern;
+
+        QColor color = Qt::white;
+        QColor colorPattern = Qt::black;
+
+        SPhoto photo = nullptr;
+    };
+
+    struct BordersSettings{
+
+        bool display = false;
+        qreal width = 1.;
+        QPen pen;
+    };
+
     struct PCPage : public RectPageItem{
 
         int id; /**< id of the page */
 
+        // generate
     //        int nbPhotos;
+        bool drawThisPage;
+        PageOrientation orientation;
         int nbPhotosV;
         int nbPhotosH;
-        qreal ratioWithTitle;
+        int nbPhotosPage;
+
+        // margins
         RatioMargins margins;
 
-        QColor backgroundColor;
-        SHeader header = nullptr;
-        SFooter footer = nullptr;
+        // border
+        BordersSettings bordersSettings;
+
+        // background
+        BackGroundSettings backgroundSettings;
+
+        // title
+        qreal ratioWidthTitle;
         Position titlePositionFromPC; // ############ TO BE REMOVED
         STitle title = nullptr;       // ############ TO BE REMOVED
+
+        // header
+        SHeader header = nullptr;
+
+        // footer
+        SFooter footer = nullptr;
+
+        // sets
         QVector<SPCSet> sets;
 
+        // rects
         QRectF setsRect;
         QRectF setsAndMarginsRect;
         QVector<QRectF> interMarginsRects;
@@ -240,9 +244,8 @@ namespace pc
 
     struct PCPages{
 
-        // paths
+        bool grayScale;
         QString pdfFileName = "";
-
         PaperFormat paperFormat;
         QVector<SPCPage> pages;
 
@@ -256,6 +259,20 @@ namespace pc
         }
     };
 
+    struct DebugMessage{
+
+        DebugMessage(QString message): m_message(message){
+            qDebug() << "[->" << m_message;
+        }
+
+        ~DebugMessage(){
+            qDebug() << "   " << m_message << "<-]";
+        }
+
+        QString m_message;
+    };
+
+
 
 
     struct GlobalData{
@@ -265,38 +282,38 @@ namespace pc
         bool grayScale           = false;
         bool saveOnlyCurrentPage = false;
         bool noPreviewGeneration = false;
-        bool displayZones        = false;
 
         int nbPages;                        /**< number of pages for the document */
-        int nbPhotosPageH;                  /**< size of the grid horizontally */
-        int nbPhotosPageV;                  /**< size of the grid vertically */
+        int nbPhotosPageWidth;                  /**< size of the grid horizontally */
+        int nbPhotosPageHeight;                  /**< size of the grid vertically */
         int nbPhotosPerPage;                /**< number of photos per page (< H*V) */
         int lastPagePhotosNb;               /**< ######################################## TO BE REMOVED*/
 
-        int previousPhotoId     = -1;
-        int previousPageId      = -2;
-        int currentPageId       = -1;       /**< id of the current selected page (page list widget) */
-        int currentPhotoId      = -1;        /**< id of the current selcted photo (photo list widget) */
-        int currentPCDisplayed  = -1;        /**< id of the current PC */
+        int previousPhotoId     = 0;
+        int previousPageId      = 0;
+        int currentPageId       = 0;    /**< id of the current selected page (page list widget) */
+        int currentPhotoId      = 0;    /**< id of the current selcted photo (photo list widget) */
+        int currentSetId        = 0;    /**< id of the current set (Photo + consign) */
+
+        int currentIndividualSetUIDisplayed  = -1;
+        int currentIndividualPageUIDisplayed = -1;
 
         // global
         // # misc
         int photoAlignment;
-        qreal PCRation;
-        QColor pageColor = Qt::white;        
+        qreal PCRatio;
 
         Position consignPositionFromPhotos;
+        PhotoAdjust photoAdust = PhotoAdjust::adjust;
 
         PageOrientation orientation;
         RatioMargins margins;
 
-        // # misc consign
-        bool consignOnPhoto;
-
         // border
-        bool displayBorders = false;
-        qreal widthBorder = 1.;
-        QPen borderPen;
+        BordersSettings bordersSettings;
+
+        // backgound
+        BackGroundSettings backgroundSettings;
 
         // title
         bool titleAdded;

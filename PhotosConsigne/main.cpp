@@ -41,8 +41,13 @@
 #include "PCMainUI.hpp"
 
 int main(int argc,char** argv)
-{
-
+{    
+    qSetMessagePattern("\033[32m%{time h:mm:ss.zzz}%{if-category}\033[32m %{category}:%{endif} "
+                       "%{if-debug}\033[34m%{function}%{endif}"
+                       "%{if-warning}\033[31m%}%{endif}"
+                       "%{if-critical}\033[31m%%{endif}"
+                       "%{if-fatal}\033[31m%%{endif}"
+                       "\033[0m %{message}");
 
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QTranslator qtTranslator;
@@ -51,97 +56,140 @@ int main(int argc,char** argv)
     QApplication app(argc, argv);
     app.installTranslator(&qtTranslator);
 
-    QImage image(25,25, QImage::Format_ARGB32);
-    QImage image2;
-    QPainter painter(&image);
+//    QImage image(25,25, QImage::Format_ARGB32);
+//    QImage image2;
+//    QPainter painter(&image);
 
-    QPen pen;
-    QBrush brush;
+//    QPen pen;
+//    QBrush brush;
 
-    brush.setColor(qRgba(127,180,255,255));
-    brush.setStyle(Qt::SolidPattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/SolidPattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setColor(qRgba(127,180,255,255));
+//    brush.setStyle(Qt::SolidPattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/SolidPattern.png");
+//    image.fill(qRgba(0,0,0,0));
 
-    brush.setStyle(Qt::Dense1Pattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/Dense1Pattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setStyle(Qt::Dense1Pattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/Dense1Pattern.png");
+//    image.fill(qRgba(0,0,0,0));
 
-    brush.setStyle(Qt::Dense2Pattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/Dense2Pattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setStyle(Qt::Dense2Pattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/Dense2Pattern.png");
+//    image.fill(qRgba(0,0,0,0));
 
-    brush.setStyle(Qt::Dense3Pattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/Dense3Pattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setStyle(Qt::Dense3Pattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/Dense3Pattern.png");
+//    image.fill(qRgba(0,0,0,0));
 
-    brush.setStyle(Qt::Dense4Pattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/Dense4Pattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setStyle(Qt::Dense4Pattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/Dense4Pattern.png");
+//    image.fill(qRgba(0,0,0,0));
 
-    brush.setStyle(Qt::Dense5Pattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/Dense5Pattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setStyle(Qt::Dense5Pattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/Dense5Pattern.png");
+//    image.fill(qRgba(0,0,0,0));
 
-    brush.setStyle(Qt::Dense6Pattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/Dense6Pattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setStyle(Qt::Dense6Pattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/Dense6Pattern.png");
+//    image.fill(qRgba(0,0,0,0));
 
-    brush.setStyle(Qt::Dense7Pattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/Dense7Pattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setStyle(Qt::Dense7Pattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/Dense7Pattern.png");
+//    image.fill(qRgba(0,0,0,0));
 
-    brush.setStyle(Qt::HorPattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/HorPattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setStyle(Qt::HorPattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/HorPattern.png");
+//    image.fill(qRgba(0,0,0,0));
 
-    brush.setStyle(Qt::VerPattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/HorPattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setStyle(Qt::VerPattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/HorPattern.png");
+//    image.fill(qRgba(0,0,0,0));
 
-    brush.setStyle(Qt::CrossPattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/CrossPattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setStyle(Qt::CrossPattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/CrossPattern.png");
+//    image.fill(qRgba(0,0,0,0));
 
-    brush.setStyle(Qt::BDiagPattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/BDiagPattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setStyle(Qt::BDiagPattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/BDiagPattern.png");
+//    image.fill(qRgba(0,0,0,0));
 
-    brush.setStyle(Qt::FDiagPattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/FDiagPattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setStyle(Qt::FDiagPattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/FDiagPattern.png");
+//    image.fill(qRgba(0,0,0,0));
 
-    brush.setStyle(Qt::DiagCrossPattern);
-    painter.fillRect(0,0,image.width(),image.height(),brush);
-    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
-    image2.save("G:/DiagCrossPattern.png");
-    image.fill(qRgba(0,0,0,0));
+//    brush.setStyle(Qt::DiagCrossPattern);
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/DiagCrossPattern.png");
+//    image.fill(qRgba(0,0,0,0));
+
+
+//    QLinearGradient gradient1(0,0,25,25);
+//    gradient1.setColorAt(0, qRgba(127,180,255,255));
+//    gradient1.setColorAt(1, qRgba(255,255,255,255));
+//    brush = QBrush(gradient1);
+
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/LinearGradientPattern1.png");
+//    image.fill(qRgba(0,0,0,0));
+
+//    QLinearGradient gradient2(0,12.5,25,12.5);
+//    gradient2.setColorAt(0, qRgba(127,180,255,255));
+//    gradient2.setColorAt(1, qRgba(255,255,255,255));
+//    brush = QBrush(gradient2);
+
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/LinearGradientPattern2.png");
+//    image.fill(qRgba(0,0,0,0));
+
+
+//    QLinearGradient gradient3(12.5,0,12.5,25);
+//    gradient3.setColorAt(0, qRgba(127,180,255,255));
+//    gradient3.setColorAt(1, qRgba(255,255,255,255));
+//    brush = QBrush(gradient3);
+
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/LinearGradientPattern3.png");
+//    image.fill(qRgba(0,0,0,0));
+
+//    QLinearGradient gradient4(0,25,25,0);
+//    gradient4.setColorAt(0, qRgba(127,180,255,255));
+//    gradient4.setColorAt(1, qRgba(255,255,255,255));
+//    brush = QBrush(gradient4);
+
+//    painter.fillRect(0,0,image.width(),image.height(),brush);
+//    image2 = image.scaled(50,50, Qt::KeepAspectRatio);
+//    image2.save("G:/LinearGradientPattern4.png");
+//    image.fill(qRgba(0,0,0,0));
+
 
 //    return 0;
 //    QPrinter printer(QPrinter::HighResolution);

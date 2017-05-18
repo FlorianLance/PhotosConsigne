@@ -33,17 +33,17 @@
 #include <QTime>
 
 // local
-#include "ImageLabel.hpp"
+#include "PhotoW.hpp"
 
 
-ImageLabel::ImageLabel(QWidget *parent) : QWidget(parent) {
+PhotoW::PhotoW(QWidget *parent) : QWidget(parent) {
 
     connect(&m_doubleClickTimer, &QTimer::timeout, this, [&]{
         m_doubleClickTimer.stop();
     });
 }
 
-void ImageLabel::paintEvent(QPaintEvent *event) {
+void PhotoW::paintEvent(QPaintEvent *event) {
     QWidget::paintEvent(event);
 
     if (m_image.isNull())
@@ -64,87 +64,19 @@ void ImageLabel::paintEvent(QPaintEvent *event) {
                          scaledImage.width(), scaledImage.height());
 
     QPen pen;
+    pen.setWidth(1);
     pen.setColor(Qt::black);
-    painter.setPen(pen);
-    painter.drawRect(QRect(0, 0, widgetSize.width(), widgetSize.height()));
+    painter.setPen(pen);    
     painter.drawImage(static_cast<int>(m_imageRect.x()), static_cast<int>(m_imageRect.y()), scaledImage);
+    painter.drawRect(QRectF(m_imageRect.x()-1, m_imageRect.y(), scaledImage.width()+1, scaledImage.height()+1));
 }
 
-const QImage* ImageLabel::Image() const {
+const QImage* PhotoW::Image() const {
     return &m_image;
 }
 
-void ImageLabel::set_image (const QImage &image){
+void PhotoW::set_image (const QImage &image){
     m_image = image;
 }
 
 
-void PreviewWorker::stop_loop(){
-
-    m_locker.lockForWrite();
-    m_isLooping = false;
-    m_locker.unlock();
-}
-
-void PreviewWorker::loop_update(){
-
-    m_locker.lockForWrite();
-    bool isLooping = m_isLooping;
-    m_isLooping = true;
-    m_locker.unlock();
-
-    if(isLooping){
-        return;
-    }
-
-    while (true){
-
-        m_locker.lockForRead();
-        isLooping = m_isLooping;
-        m_locker.unlock();
-
-        if(!isLooping){
-            break;
-        }
-
-        QTime dieTime = QTime::currentTime().addMSecs(33);
-        while( QTime::currentTime() < dieTime){
-            QCoreApplication::processEvents(QEventLoop::AllEvents, 33);
-        }
-
-        emit update_preview_signal();
-    }
-}
-
-PreviewLabel::PreviewLabel(){
-
-    connect(&m_rectTimer, &QTimer::timeout, this, [&]{
-        m_rectTimer.stop();
-        emit stop_update_loop_signal();
-        update();
-    });
-
-    m_worker = std::make_unique<PreviewWorker>();
-    connect(m_worker.get(), &PreviewWorker::update_preview_signal, this, [=]{
-        update();
-    });
-
-    connect(this, &PreviewLabel::start_update_loop_signal, m_worker.get(), &PreviewWorker::loop_update);
-    connect(this, &PreviewLabel::stop_update_loop_signal, m_worker.get(), &PreviewWorker::stop_loop);
-
-    m_worker->moveToThread(&m_workerThread);
-    m_workerThread.start();
-}
-
-PreviewLabel::~PreviewLabel(){
-    m_workerThread.quit();
-    m_workerThread.wait();
-}
-
-void PreviewLabel::draw_current_pc_rect(int idRect, QRectF pcRectRelative){
-
-    m_currentPCRectId = idRect;
-    m_pcRectRelative = pcRectRelative;
-    m_rectTimer.start(2000);
-    emit start_update_loop_signal();
-}

@@ -38,7 +38,7 @@ PCMainUI::PCMainUI(QApplication *parent) : m_version("3.0"), m_mainUI(std::make_
     setWindowIcon(QIcon(":/images/icon"));
 
     // init ui
-    m_dynUI = std::make_unique<UIElements>(m_mainUI);
+    m_dynUI = std::make_unique<UIElements>(this, m_mainUI);
 
     // init workers
     m_loadPhotoWorker = std::make_unique<PhotoLoaderWorker>();
@@ -54,11 +54,13 @@ PCMainUI::PCMainUI(QApplication *parent) : m_version("3.0"), m_mainUI(std::make_
     // init threads
     m_loadPhotoWorker->moveToThread(&m_displayPhotoWorkerThread);
     m_displayPhotoWorkerThread.start();
+
     m_pdfGeneratorWorker->moveToThread(&m_pdfGeneratorWorkerThread);
     m_pdfGeneratorWorkerThread.start();
 
     // update settings with current UI
     update_settings();//_with_no_preview();
+
     display_global_consign_panel();
 
     emit init_document_signal();
@@ -66,20 +68,27 @@ PCMainUI::PCMainUI(QApplication *parent) : m_version("3.0"), m_mainUI(std::make_
 
 PCMainUI::~PCMainUI()
 {
+    qDebug() << "destructor PCMainUI 1";
     emit kill_signal();
 
+    qDebug() << "destructor PCMainUI 2";
     // kill threads
     m_displayPhotoWorkerThread.quit();
     m_displayPhotoWorkerThread.wait();
 
     m_pdfGeneratorWorkerThread.quit();
     m_pdfGeneratorWorkerThread.wait();
+
+    qDebug() << "destructor PCMainUI 3";
 }
 
 void PCMainUI::closeEvent(QCloseEvent *event){
 
+    qDebug() << "closeEvent";
     Q_UNUSED(event);
+    qDebug() << "kill_signal";
     emit kill_signal();
+    qDebug() << "end closeEvent";
 }
 
 void PCMainUI::keyPressEvent(QKeyEvent *event){
@@ -95,26 +104,30 @@ void PCMainUI::keyPressEvent(QKeyEvent *event){
     }
 }
 
-void PCMainUI::swap_loaded_pc(int currentIndex, int newIndex){
+void PCMainUI::swap_loaded_set(int currentIndex, int newIndex){
 
+    DebugMessage dbgMess("swap_loaded_pc");
     m_settings.photosLoaded->swap(currentIndex,newIndex);
-    m_dynUI->individualConsignsLoadedUI.insert(newIndex, m_dynUI->individualConsignsLoadedUI.takeAt(currentIndex));
+    m_dynUI->individualSetsLoadedUI.insert(newIndex, m_dynUI->individualSetsLoadedUI.takeAt(currentIndex));
 
     m_mainUI->lwPhotosList->blockSignals(true);{
         m_mainUI->lwPhotosList->insertItem(newIndex,m_mainUI->lwPhotosList->takeItem(currentIndex));
         m_mainUI->lwPhotosList->setCurrentRow(newIndex);
     }m_mainUI->lwPhotosList->blockSignals(false);
-
-    // rest global ids
-    for(int ii = 0; ii < m_settings.photosLoaded->size(); ++ii){
-        m_settings.photosLoaded->at(ii)->globalId = ii;
-    }
 }
 
-void PCMainUI::add_photos_directory()
-{
+void PCMainUI::add_photos_directory(){    
+
+    DebugMessage dbgMess("add_photos_directory");
+
+    if(m_isLoadingPhotos){
+        emit stop_loading_photos_signal();
+        return;
+    }
+
     QString previousDirectory = m_settings.lastPhotosDirectoryPath;
-    m_settings.lastPhotosDirectoryPath = QFileDialog::getExistingDirectory(this, "Sélection du répertoire d'images", QDir::homePath());
+    m_settings.lastPhotosDirectoryPath = QFileDialog::getExistingDirectory(this, "Sélection du répertoire d'images",
+                            (m_settings.lastPhotosDirectoryPath.size() > 0) ? m_settings.lastPhotosDirectoryPath : QDir::homePath());
 
     // no directory selected
     if(m_settings.lastPhotosDirectoryPath.size() == 0 ){
@@ -151,62 +164,22 @@ void PCMainUI::add_photos_directory()
     }
 
     // block ui
-    m_isLoadingPhotos =  true;
-    m_mainUI->pbAddPhotosDIrectory->setEnabled(false);
-    m_mainUI->twMiddle->setEnabled(false);
-    m_mainUI->tbRight->setEnabled(false);
-    m_mainUI->twGeneralSettings->setEnabled(false);
-    m_mainUI->pbInsertNewWhiteSpace->setEnabled(false);
-    m_mainUI->pbInsertNewImage->setEnabled(false);
-    m_mainUI->lwPhotosList->setEnabled(false);
-    m_mainUI->lwPagesList->setEnabled(false);
-    m_mainUI->sbNbPages->setEnabled(false);
-    m_mainUI->pbRemoveAllPhoto->setEnabled(false);
+    m_isLoadingPhotos = true;
+    set_ui_state_for_adding_photos(false);
 
-    // send directoy and files names to the worker to be loaded
-    emit send_photos_dir_signal(m_settings.lastPhotosDirectoryPath, fileList);
-}
-
-void PCMainUI::insert_photos(SPhotos photos){
-
-    for(auto &&photo : *photos){
-        m_settings.photosLoaded->push_back(photo);
-        m_dynUI->insert_individual_consign(m_settings.photosLoaded->size()-1);
-        m_settings.photosLoaded->at(m_settings.photosLoaded->size()-1)->globalId = m_settings.photosLoaded->size()-1;
+    // update photos paths
+    for(auto &&photoPath : fileList){
+        photoPath = m_settings.lastPhotosDirectoryPath + "/" + photoPath;
     }
 
-    enable_ui();
-    update_valid_photos();
-
-    // update progress bar
-    m_mainUI->laLoadingText->setText("Photos chargées.");
-    m_mainUI->progressBarLoading->setValue(1000);
-
-    if( m_settings.photosLoaded->size() > 0){
-
-        m_mainUI->twMiddle->setTabEnabled(0, true);
-        m_settings.currentPhotoId = 0;
-        update_photo_to_display(m_settings.photosLoaded->at(m_settings.photosLoaded->size()-1));
-        display_photo_panel();
-    }
-
-    // unlock uir
-    m_isLoadingPhotos = false;
-    m_mainUI->twMiddle->setEnabled(true);
-    m_mainUI->tbRight->setEnabled(true);
-    m_mainUI->twGeneralSettings->setEnabled(true);
-    m_mainUI->pbInsertNewImage->setEnabled(true);
-    m_mainUI->pbInsertNewWhiteSpace->setEnabled(true);
-    m_mainUI->lwPhotosList->setEnabled(true);
-    m_mainUI->lwPagesList->setEnabled(true);
-    m_mainUI->sbNbPages->setEnabled(true);
-    m_mainUI->pbRemoveAllPhoto->setEnabled(true);
-
-    update_settings();
+    // send photos path to the worker to be loaded
+    emit start_loading_photos_signal(fileList, m_settings.photosLoaded->size());
 }
+
 
 void PCMainUI::insert_transparent_space(){
 
+    DebugMessage dbgMess("insert_transparent_space");
     int indexPhoto = m_settings.currentPhotoId;
     if(indexPhoto == -1){
         indexPhoto = 0;
@@ -218,126 +191,98 @@ void PCMainUI::insert_transparent_space(){
     // insert it
     m_settings.photosLoaded->insert(indexPhoto, whiteSpacePhoto);
 
-    // rest global ids
-    for(int ii = 0; ii < m_settings.photosLoaded->size(); ++ii){
-        m_settings.photosLoaded->at(ii)->globalId = ii;
-    }
-
     // insert new element in photo list widget
     m_mainUI->lwPhotosList->blockSignals(true);
     m_mainUI->lwPhotosList->insertItem(indexPhoto,"(" + whiteSpacePhoto->namePhoto + ")");
     m_mainUI->lwPhotosList->blockSignals(false);
 
     // insert new consign in UI
-    m_dynUI->insert_individual_consign(indexPhoto);
+    m_dynUI->insert_individual_set(indexPhoto);
 
-    update_valid_photos();
     update_settings();
-
     define_selected_photo(indexPhoto);
-    define_selected_pc_from_current_photo();
+    define_selected_set_from_current_photo();
 
     m_mainUI->twMiddle->setTabEnabled(0, true);
 }
 
-void PCMainUI::insert_new_photo(){
+void PCMainUI::load_new_photos(){
 
-    QString filePath = QFileDialog::getOpenFileName(this, tr("Choisissez une image à insérer dans la liste"),
+    QStringList filePaths = QFileDialog::getOpenFileNames(this, tr("Choisissez les images à insérer dans la liste"),
                                                     QDir::homePath(), "Images (*.png *.jpg *.jpeg *.jfif, *.jpe *.tif *.bmp *.pdm *.ppm *.xdm *.xpm)");
-    if(filePath.size() == 0){
+    if(filePaths.size() == 0){
         return;
     }
 
-    int indexPhoto = m_settings.currentPhotoId;
-    if(indexPhoto == -1){
-        indexPhoto = 0;
-    }
-
-    SPhoto photo = std::make_shared<Photo>(Photo(filePath));
-
-
-    // insert it
-    m_settings.photosLoaded->insert(indexPhoto, photo);
-
-    // rest global ids
-    for(int ii = 0; ii < m_settings.photosLoaded->size(); ++ii){
-        m_settings.photosLoaded->at(ii)->globalId = ii;
-    }
-
-    // insert new element in photo list widget
-    m_mainUI->lwPhotosList->blockSignals(true);
-    m_mainUI->lwPhotosList->insertItem(indexPhoto,"(Ajoutée) " + photo->pathPhoto.split('/').last());
-    m_mainUI->lwPhotosList->blockSignals(false);
-
-    // insert new consign in UI
-    m_dynUI->insert_individual_consign(indexPhoto);
-
-    update_valid_photos();
-    update_settings();
-
-    define_selected_photo(indexPhoto);
-    define_selected_pc_from_current_photo();
-
-    m_mainUI->twMiddle->setTabEnabled(0, true);
+    m_isLoadingPhotos = true;
+    set_ui_state_for_adding_photos(false);
+    emit start_loading_photos_signal(filePaths,  m_settings.currentPhotoId);
 }
 
 void PCMainUI::remove_all_photos(){
 
+    DebugMessage dbgMess("remove_all_photos");
+
     m_mainUI->lwPhotosList->clear();
     m_mainUI->lwPagesList->clear();
 
-    m_settings.previousPageId      = -1;
-    m_settings.currentPageId       = -1;
-    m_settings.currentPhotoId      = -1;
-    m_settings.currentPCDisplayed  = -1;
+    m_settings.previousPageId      = 0;
+    m_settings.currentPageId       = 0;
+    m_settings.currentPhotoId      = 0;
+    m_settings.currentSetId  = 0;
 
     m_settings.photosLoaded->clear();
-    m_dynUI->reset_individual_consigns(0);
+    m_dynUI->reset_individual_sets(0);
 
-    update_valid_photos();
     update_settings();
 }
 
 
 void PCMainUI::update_settings_with_no_preview(){
 
+    DebugMessage dbgMess("update_settings_with_no_preview");
     m_settings.noPreviewGeneration = true;
     update_settings();
     m_settings.noPreviewGeneration = false;
 }
 
-void PCMainUI::update_valid_photos()
-{
+void PCMainUI::build_valid_sets(){
+
+    DebugMessage dbgMess("update_valid_photos");
+
     // build valid arrays
     auto nbPhotosLoaded = m_settings.photosLoaded->size();
     m_settings.photosValided->clear();
     m_settings.photosValided->reserve(nbPhotosLoaded);
+    m_dynUI->individuaSetsValidedUI.clear();
+    m_dynUI->individuaSetsValidedUI.reserve(nbPhotosLoaded);
 
+    // resets id and valid set list
     for(int ii = 0; ii < nbPhotosLoaded; ++ii){
+
+        m_settings.photosLoaded->at(ii)->loadedId = ii;
+
         if(m_settings.photosLoaded->at(ii)->isRemoved){
             continue;
         }
 
         m_settings.photosValided->push_back(m_settings.photosLoaded->at(ii));
+        m_settings.photosValided->last()->id = m_settings.photosValided->size();
+        m_dynUI->individuaSetsValidedUI.push_back(m_dynUI->individualSetsLoadedUI.at(ii));
     }
 
     // update current PD displayed if necessary
     auto nbPhotosValid = m_settings.photosValided->size();
-    if(m_settings.currentPCDisplayed > nbPhotosValid){
-        m_settings.currentPCDisplayed = nbPhotosValid-1;
+    if(m_settings.currentSetId > nbPhotosValid){
+        m_settings.currentSetId = nbPhotosValid-1;
     }
-
-    // update number of individual text edit widgets    
-    if(m_settings.currentPCDisplayed > 0){
-
-        define_selected_pc(m_settings.currentPCDisplayed);
-        display_individual_consign_settings_panel();
-    }    
 }
 
 
-void PCMainUI::update_pages()
-{
+void PCMainUI::build_pages(){
+
+    DebugMessage dbgMess("build_pages");
+
     // update pages ui
     m_dynUI->update_individual_pages(m_settings);
 
@@ -350,11 +295,14 @@ void PCMainUI::update_pages()
     m_pcPages.pages.clear();
     m_pcPages.pages.reserve(m_settings.nbPages);
 
-
     // set all photos not in the document
     for(auto &&validPhoto : (*m_settings.photosValided)){
         validPhoto->isOnDocument = false;
     }
+
+    // general pages parameters
+    m_pcPages.grayScale = m_settings.grayScale;
+    m_pcPages.paperFormat   = PaperFormat(m_mainUI->cbDPI->currentText(), m_mainUI->cbFormat->currentText());
 
     // create new pages
     int currentPhotoId = 0;
@@ -364,16 +312,44 @@ void PCMainUI::update_pages()
 
         // define current nb of photos for this page
         auto &pageUI = m_dynUI->individualPageUI[ii];
-        bool individualPageSettings = pageUI.widget->findChild<QCheckBox*>("cbEnableInvididualPageSettings")->isChecked();
-        int nbPhotosPage = individualPageSettings ? (pageUI.widget->findChild<QSpinBox*>("sbVSizeGrid")->value()*pageUI.widget->findChild<QSpinBox*>("sbHSizeGrid")->value()) : m_settings.nbPhotosPerPage;
+        bool individualPageSettings = pageUI->individual();
 
-        // misc
-        pcPage->id = ii;
-        pcPage->backgroundColor = individualPageSettings ? pageUI.currentColorPage : m_settings.pageColor;
+        // general
+        pcPage->drawThisPage            = m_settings.saveOnlyCurrentPage ? (ii == m_settings.currentPageId) : true;
+        pcPage->id                      = ii;
+        pcPage->orientation             = m_settings.orientation;
+
+        // borders
+        pcPage->bordersSettings         = individualPageSettings ? pageUI->bordersW.settings() : m_dynUI->globalBordersW.settings();
+
+        // background
+        pcPage->backgroundSettings      = individualPageSettings ? pageUI->backgroundW.settings() : m_dynUI->globalBackgroundW.settings();
+
+        // photos
+        pcPage->nbPhotosH               = individualPageSettings ? pageUI->findChild<QSpinBox*>("sbPhotosNbWidth")->value()  : m_settings.nbPhotosPageWidth;
+        pcPage->nbPhotosV               = individualPageSettings ? pageUI->findChild<QSpinBox*>("sbPhotosNbHeight")->value() : m_settings.nbPhotosPageHeight;
+        pcPage->nbPhotosPage            = individualPageSettings ? pageUI->findChild<QSpinBox*>("sbPhotosNbPerPage")->value(): m_settings.nbPhotosPerPage;
+
+        // margins
+        if(individualPageSettings){
+
+            pc::RatioMargins &margins       = pcPage->margins;
+            margins.exteriorMarginsEnabled  = pageUI->findChild<QCheckBox*>("cbAddExteriorMargins")->isChecked();
+            margins.interiorMarginsEnabled  = pageUI->findChild<QCheckBox*>("cbAddInteriorMargins")->isChecked();
+            margins.left                    = pageUI->findChild<QDoubleSpinBox*>("dsbLeftMargins")->value();
+            margins.right                   = pageUI->findChild<QDoubleSpinBox*>("dsbRightMargins")->value();
+            margins.top                     = pageUI->findChild<QDoubleSpinBox*>("dsbTopMargins")->value();
+            margins.bottom                  = pageUI->findChild<QDoubleSpinBox*>("dsbBottomMargins")->value();
+            margins.interWidth              = pageUI->findChild<QDoubleSpinBox*>("dsbHorizontalMargins")->value();
+            margins.interHeight             = pageUI->findChild<QDoubleSpinBox*>("dsbVerticalMargins")->value();
+
+        }else{
+            pcPage->margins         = m_settings.margins;
+        }
 
         // sets
-        pcPage->sets.reserve(nbPhotosPage);
-        for(int jj = 0; jj < nbPhotosPage; ++jj){
+        pcPage->sets.reserve(pcPage->nbPhotosPage);
+        for(int jj = 0; jj < pcPage->nbPhotosPage; ++jj){
 
             SPCSet set = std::make_shared<PCSet>(PCSet());
             set->id      = jj;
@@ -387,67 +363,26 @@ void PCMainUI::update_pages()
             }
 
             // retrieve individual consign
-            auto wC = m_dynUI->individualConsignsValidedUI[currentPhotoId].widget;
+            auto wC = m_dynUI->individuaSetsValidedUI[currentPhotoId].get();
             bool individualConsignSettings = wC->findChild<QCheckBox*>("cbEnableIndividualConsign")->isChecked();
 
             if(!individualConsignSettings){ // global consign
                 set->consignPositionFromPhoto   = m_settings.consignPositionFromPhotos;
-                set->ratio                      = m_settings.PCRation;
-                set->consignOnPhoto             = m_settings.consignOnPhoto;
+                set->ratio                      = m_settings.PCRatio;
                 set->consign->html              = m_dynUI->globalConsignUI.html;
                 set->photo->alignment           = m_settings.photoAlignment;
+                set->photo->adjust              = m_settings.photoAdust;
             }else{ // individual consign
 
-                set->consignPositionFromPhoto = ((!wC->findChild<QPushButton *>("pbConsignTop")->isEnabled())    ? Position::top    :
-                                                ((!wC->findChild<QPushButton *>("pbConsignBottom")->isEnabled()) ? Position::bottom :
-                                                ((!wC->findChild<QPushButton *>("pbConsignLeft")->isEnabled())   ? Position::left   : Position::right)));
+                set->consignPositionFromPhoto = static_cast<Position>(wC->findChild<QComboBox *>("cbPositionConsign")->currentIndex());
                 set->ratio          = wC->findChild<QDoubleSpinBox*>("dsbRatioPC")->value();
-                set->consignOnPhoto = wC->findChild<QCheckBox *>("cbWriteOnPhoto")->isChecked();
-                set->consign->html  = m_dynUI->individualConsignsValidedUI[currentPhotoId].html;
-
-                // image alignment
-                int individualPhotosAlignment = 0;
-                if(!wC->findChild<QPushButton *>("pbImageAligmentHMiddle")->isEnabled()){ // horizontal center
-                    individualPhotosAlignment = individualPhotosAlignment |  Qt::AlignHCenter;
-                }else if(!wC->findChild<QPushButton *>("pbImageAligmentRight")->isEnabled()){ // horizontal right
-                    individualPhotosAlignment = individualPhotosAlignment |  Qt::AlignRight;
-                }else{ // horizontal left
-                    individualPhotosAlignment = individualPhotosAlignment |  Qt::AlignLeft;
-                }
-
-                if(!wC->findChild<QPushButton *>("pbImageAligmentVMiddle")->isEnabled()){// vertical center
-                    individualPhotosAlignment = individualPhotosAlignment | Qt::AlignVCenter;
-                }else if(!wC->findChild<QPushButton *>("pbImageAligmentTop")->isEnabled()){// vertical top
-                    individualPhotosAlignment = individualPhotosAlignment | Qt::AlignTop;
-                }else{
-                    individualPhotosAlignment = individualPhotosAlignment | Qt::AlignBottom;
-                }
-                set->photo->alignment = individualPhotosAlignment;
+                set->consign->html  = m_dynUI->individuaSetsValidedUI[currentPhotoId]->setTextW.html;
+                set->photo->adjust    = Utility::photo_adjust_from_comboBox(wC->findChild<QComboBox*>("cbAdjustPhoto"));
+                set->photo->alignment = Utility::photo_alignment_from_comboBox(wC->findChild<QComboBox *>("cbPhotoAlignment"));
             }
 
             pcPage->sets.push_back(set);
             currentPhotoId++;
-        }
-
-        // margins
-        if(individualPageSettings){
-            pc::RatioMargins &margins       = pcPage->margins;
-            margins.exteriorMarginsEnabled  = pageUI.widget->findChild<QCheckBox*>("cbAddExteriorMargins")->isChecked();
-            margins.interiorMarginsEnabled  = pageUI.widget->findChild<QCheckBox*>("cbAddInteriorMargins")->isChecked();
-            margins.left                    = pageUI.widget->findChild<QDoubleSpinBox*>("dsbLeftMargins")->value();
-            margins.right                   = pageUI.widget->findChild<QDoubleSpinBox*>("dsbRightMargins")->value();
-            margins.top                     = pageUI.widget->findChild<QDoubleSpinBox*>("dsbTopMargins")->value();
-            margins.bottom                  = pageUI.widget->findChild<QDoubleSpinBox*>("dsbBottomMargins")->value();
-            margins.interWidth              = pageUI.widget->findChild<QDoubleSpinBox*>("dsbHorizontalMargins")->value();
-            margins.interHeight             = pageUI.widget->findChild<QDoubleSpinBox*>("dsbVerticalMargins")->value();
-
-            pcPage->nbPhotosH = pageUI.widget->findChild<QSpinBox*>("sbHSizeGrid")->value();
-            pcPage->nbPhotosV = pageUI.widget->findChild<QSpinBox*>("sbVSizeGrid")->value();
-
-        }else{
-            pcPage->margins   = m_settings.margins;
-            pcPage->nbPhotosH = m_settings.nbPhotosPageH;
-            pcPage->nbPhotosV = m_settings.nbPhotosPageV;
         }
 
         // title
@@ -457,32 +392,19 @@ void PCMainUI::update_pages()
             }
             pcPage->title->html         = m_dynUI->titleUI.html;
             pcPage->titlePositionFromPC = m_settings.titlePositionFromPC;
-            pcPage->ratioWithTitle      = m_settings.ratioTitle;
+            pcPage->ratioWidthTitle      = m_settings.ratioTitle;
         }else{
             pcPage->title = nullptr;
         }
 
         // add page to pages list widget and update the ui
         m_pcPages.pages.push_back(pcPage);        
-        m_mainUI->lwPagesList->addItem(QString::number(ii+1) + ". " + QString::number(pcPage->sets.size()) + ((pcPage->sets.size() > 1 ) ? " images." : " image."));
+        m_mainUI->lwPagesList->addItem(QString::number(ii+1) + ". " + QString::number(pcPage->sets.size()) + ((pcPage->sets.size() > 1 ) ? " ensembles." : " ensemble."));
     }
 
     // update current row
-    if(m_settings.currentPageId != -1){
-        if(m_settings.currentPageId >= m_settings.nbPages){
-            m_settings.currentPageId = m_settings.nbPages-1;
-        }
-        m_mainUI->lwPagesList->setCurrentRow(m_settings.currentPageId);
-    }
-
-    // update selecte page settings
-    if(m_settings.currentPageId >= 0){// && m_settings.currentPageId != m_settings.previousPageId){
-        define_current_individual_page_ui();
-    }
-
-    if(m_settings.currentPageId == -1){
-        m_mainUI->lwPagesList->setCurrentRow(0);
-        m_settings.currentPageId = 0;
+    if(m_settings.currentPageId >= m_settings.nbPages){
+        m_settings.currentPageId = m_settings.nbPages-1;
     }
 
     // unlock signals
@@ -490,19 +412,65 @@ void PCMainUI::update_pages()
     m_mainUI->twMiddle->blockSignals(false);
 }
 
+void PCMainUI::display_current_individual_set_ui(){
 
-void PCMainUI::define_current_individual_page_ui(){
+    DebugMessage dbgMess("display_current_individual_set_ui: " + QString::number(m_settings.currentSetId));
+
+    if(m_dynUI->individuaSetsValidedUI.size() == 0){ // empty
+        return;
+    }
+
+    if(m_settings.currentSetId >= m_dynUI->individuaSetsValidedUI.size()){ // id too big
+        m_settings.currentSetId = m_dynUI->individuaSetsValidedUI.size() -1;
+    }
+
+    if(m_dynUI->individuaSetsValidedUI[m_settings.currentSetId]->id == m_settings.currentIndividualSetUIDisplayed){ // already displayed
+        qDebug() << "already displayed set";
+        return;
+    }
+    m_settings.currentIndividualSetUIDisplayed = m_dynUI->individuaSetsValidedUI[m_settings.currentSetId]->id;
 
     int currentIndex = m_mainUI->tbRight->currentIndex();
     m_mainUI->tbRight->blockSignals(true);
-    m_mainUI->tbRight->removeItem(2); // remove current pc tab
-    m_mainUI->tbRight->insertItem(2,m_dynUI->individualPageUI[m_settings.currentPageId].widget.get(), "PAGE SELECTIONNEE N°" + QString::number(m_settings.currentPageId));
+    m_mainUI->tbRight->removeItem(4);
+    m_mainUI->tbRight->insertItem(4, m_dynUI->individuaSetsValidedUI[m_settings.currentSetId].get(),"ENSEMBLE N°" + QString::number(m_settings.currentSetId));
     m_mainUI->tbRight->setCurrentIndex(currentIndex);
     m_mainUI->tbRight->blockSignals(false);
 }
 
+void PCMainUI::display_current_individual_page_ui(){
+
+    DebugMessage dbgMess("display_current_individual_page_ui: " + QString::number(m_settings.currentPageId));
+    if(m_dynUI->individualPageUI.size() == 0){ // empty
+        return;
+    }
+
+    if(m_settings.currentPageId >= m_dynUI->individualPageUI.size()){ // id too big
+        m_settings.currentPageId = m_dynUI->individualPageUI.size() -1;
+    }
+
+    if(m_dynUI->individualPageUI[m_settings.currentPageId]->id == m_settings.currentIndividualPageUIDisplayed){ // already displayed
+        qDebug() << "already displayed page";
+        return;
+    }
+    m_settings.currentIndividualPageUIDisplayed = m_dynUI->individualPageUI[m_settings.currentPageId]->id;
+
+    m_mainUI->lwPagesList->blockSignals(true);
+    m_mainUI->lwPagesList->setCurrentRow(m_settings.currentPageId);
+    m_mainUI->lwPagesList->blockSignals(false);
+
+    int currentIndex = m_mainUI->tbRight->currentIndex();
+    m_mainUI->tbRight->blockSignals(true);
+    m_mainUI->tbRight->removeItem(3);
+    m_mainUI->tbRight->insertItem(3, m_dynUI->individualPageUI[m_settings.currentPageId].get(), "PAGE N°" + QString::number(m_settings.currentPageId));
+    m_mainUI->tbRight->setCurrentIndex(currentIndex);
+    m_mainUI->tbRight->blockSignals(false);
+
+}
+
 void PCMainUI::update_photo_to_display(SPhoto photo)
 {
+    DebugMessage dbgMess("update_photo_to_display");
     if(!photo->isWhiteSpace){
         m_dynUI->selectedPhotoW->set_image(QImage(photo->pathPhoto).transformed(QTransform().rotate(photo->rotation)));
     }else{
@@ -517,6 +485,7 @@ void PCMainUI::update_photo_to_display(SPhoto photo)
 
 void PCMainUI::define_selected_photo(int index){
 
+    DebugMessage dbgMess("define_selected_photo");
     auto nbPhotosLoaded = m_settings.photosLoaded->size();
     if(index == -1 || nbPhotosLoaded == 0){
         qWarning() << "-WARNING: define_selected_pc -> bad index: " << index << " " << nbPhotosLoaded;
@@ -552,24 +521,14 @@ void PCMainUI::define_selected_photo(int index){
     update_photos_list_style();
 }
 
-void PCMainUI::define_selected_pc(int index){
 
-    m_settings.currentPCDisplayed = index;
 
-    int currentIndex = m_mainUI->tbRight->currentIndex();
-    m_mainUI->tbRight->blockSignals(true);
-    m_mainUI->tbRight->removeItem(3); // remove current pc tab
-    m_mainUI->tbRight->insertItem(3,m_dynUI->individualConsignsValidedUI[m_settings.currentPCDisplayed].widget.get(), "ENSEMBLE PHOTO-CONSIGNE SELECTIONNE N°" + QString::number(m_settings.currentPCDisplayed));
-    m_mainUI->tbRight->setCurrentIndex(currentIndex);
-    m_mainUI->tbRight->blockSignals(false);
-
-}
-
-void PCMainUI::define_selected_pc_from_current_photo()
+void PCMainUI::define_selected_set_from_current_photo()
 {
+    DebugMessage dbgMess("define_selected_pc_from_current_photo");
     for(int ii = 0; ii < m_settings.photosValided->size(); ++ii){
-        if(m_settings.photosValided->at(ii)->globalId ==  m_settings.currentPhotoId){
-            define_selected_pc(ii);
+        if(m_settings.photosValided->at(ii)->loadedId ==  m_settings.currentPhotoId){
+            m_settings.currentSetId = ii;
             break;
         }
     }
@@ -577,22 +536,22 @@ void PCMainUI::define_selected_pc_from_current_photo()
 
 void PCMainUI::define_selected_page(int index){
 
+    DebugMessage dbgMess("define_selected_page");
+    if(index > m_dynUI->individualPageUI.size()-1){
+        return;
+    }
     m_settings.currentPageId = index;
-    m_mainUI->lwPagesList->blockSignals(true);
-    m_mainUI->lwPagesList->setCurrentRow(m_settings.currentPageId);
-    m_mainUI->lwPagesList->blockSignals(false);
-
-    define_current_individual_page_ui();
 }
 
 void PCMainUI::define_selected_page_from_current_photo(){
 
+    DebugMessage dbgMess("define_selected_page_from_current_photo");
     int idPage = -1;
     for(const auto &page : m_pcPages.pages){
 
         for(const auto &set : page->sets){
 
-            if(set->photo->globalId == m_settings.photosLoaded->at(m_settings.currentPhotoId)->globalId){
+            if(set->photo->loadedId == m_settings.photosLoaded->at(m_settings.currentPhotoId)->loadedId){
                 idPage = page->id;
                 break;
             }
@@ -603,26 +562,53 @@ void PCMainUI::define_selected_page_from_current_photo(){
     }
 
     if(idPage != -1){
-        define_selected_page(idPage);
+        m_settings.currentPageId = idPage;
     }
 }
 
 
-void PCMainUI::enable_ui()
-{
-    m_mainUI->lwPhotosList->setEnabled(true);
-    m_mainUI->lwPagesList->setEnabled(true);
-    m_mainUI->pbAddPhotosDIrectory->setEnabled(true);
+void PCMainUI::set_ui_state_for_adding_photos(bool state){
 
-    m_mainUI->tbRight->setItemEnabled(2, true); // enable current page tab
-    m_mainUI->tbRight->setItemEnabled(3, true); // enable current pc tab
+    DebugMessage dbgMess("enable_ui");
+
+    if(!state){
+        m_mainUI->pbAddPhotosDIrectory->setIcon(QIcon(":/images/photos/cancel"));
+        m_mainUI->pbAddPhotosDIrectory->setText("Stop");
+    }else{
+        m_mainUI->pbAddPhotosDIrectory->setIcon(QIcon(":/images/dirImages"));
+        m_mainUI->pbAddPhotosDIrectory->setText(tr("Ajouter un dossier"));
+    }
+
+    // tabs
+    // # middle
+    m_mainUI->twMiddle->setEnabled(state);
+    // # right
+    m_mainUI->tbRight->setEnabled(state);    
+    // # action
+    // ## photos
+    m_mainUI->pbInsertNewImage->setEnabled(state);
+    m_mainUI->pbInsertNewWhiteSpace->setEnabled(state);
+    m_mainUI->pbRemoveAllPhoto->setEnabled(state);
+    // ## pdf
+    m_mainUI->pbSavePDF->setEnabled(state);
+    // # photos list
+    m_mainUI->lwPhotosList->setEnabled(state);
+    // # pages list
+    m_mainUI->lwPagesList->setEnabled(state);
+    // # document
+    m_mainUI->tabWDocument->setEnabled(state);
 }
 
-void PCMainUI::update_photos_list_style()
-{
+void PCMainUI::set_ui_state_for_generating_pdf(bool state){
+    m_mainUI->tabActions->setEnabled(state);
+}
+
+void PCMainUI::update_photos_list_style(){
+
+    DebugMessage dbgMess("update_photos_list_style");
     for(int ii = 0; ii < m_mainUI->lwPhotosList->count(); ++ii){
 
-        bool individual = m_dynUI->individualConsignsLoadedUI[ii].widget->findChild<QCheckBox*>("cbEnableIndividualConsign")->isChecked();
+        bool individual = m_dynUI->individualSetsLoadedUI[ii]->findChild<QCheckBox*>("cbEnableIndividualConsign")->isChecked();
         QBrush brush = m_mainUI->lwPhotosList->item(ii)->foreground();
         SPhoto photo = m_settings.photosLoaded->at(ii);
 
@@ -653,16 +639,25 @@ void PCMainUI::update_photos_list_style()
     m_mainUI->twPhotosList->setTabText(1, QString::number(m_settings.photosValided->size()));
 }
 
-void PCMainUI::update_pages_list_style()
-{
+void PCMainUI::update_pages_list_style(){
+
+    DebugMessage dbgMess("update_pages_list_style");
     m_mainUI->twPagesList->setTabText(1, QString::number(m_pcPages.pages.size()));
 
-    QBrush valid;
-    valid.setColor(QRgb(qRgb(0,106,255)));
-    QBrush invalid;
-    invalid.setColor(QRgb(qRgb(255,106,0)));
     for(int ii = 0; ii < m_mainUI->lwPagesList->count(); ++ii){
-        m_mainUI->lwPagesList->item(ii)->setForeground((m_pcPages.pages[ii]->sets.size() == 0) ? invalid : valid);
+
+        bool individual = m_dynUI->individualPageUI[ii]->findChild<QCheckBox*>("cbEnableIndividualPage")->isChecked();
+
+        QBrush brush =  m_mainUI->lwPagesList->item(ii)->foreground();
+        if(m_pcPages.pages[ii]->sets.size() == 0){ // invalid
+            brush.setColor(QRgb(qRgb(255,106,0)));
+        }else if(!individual){ // global
+            brush.setColor(QRgb(qRgb(0,106,255)));
+        }else{ // individual
+            brush.setColor(QRgb(qRgb(0,0,255)));
+        }
+
+        m_mainUI->lwPagesList->item(ii)->setForeground(brush);
     }
 }
 
@@ -698,66 +693,35 @@ void PCMainUI::display_donate_window(){
 void PCMainUI::from_main_UI_connections()
 {
     // dyn ui elements
+    // # update settings
     connect(m_dynUI.get(), &UIElements::update_settings_signal, this, &PCMainUI::update_settings);
+    // # progress
     connect(m_dynUI.get(), &UIElements::set_progress_bar_state_signal, m_mainUI->progressBarLoading, &QProgressBar::setValue);
     connect(m_dynUI.get(), &UIElements::set_progress_bar_text_signal, m_mainUI->laLoadingText, &QLabel::setText);
-
-    // timer
+    // # timer
     connect(&m_dynUI->zonesTimer, &QTimer::timeout, this, [=]{
         m_dynUI->zonesTimer.stop();
         update_settings();
     });
 
-    // remove all photos
+    // main ui
+    // # remove all photos
     connect(m_mainUI->pbRemoveAllPhoto, &QPushButton::clicked, this, &PCMainUI::remove_all_photos);
-
-    // insert new image/blank
+    // # insert new image/blank
     connect(m_mainUI->pbInsertNewWhiteSpace, &QPushButton::clicked, this, &PCMainUI::insert_transparent_space);
-    connect(m_mainUI->pbInsertNewImage, &QPushButton::clicked, this, &PCMainUI::insert_new_photo);
+    connect(m_mainUI->pbInsertNewImage, &QPushButton::clicked, this, &PCMainUI::load_new_photos);
 
-    // page color
-    QPixmap pixColor(50, 50);
-    pixColor.fill(Qt::white);
-    QAction *actionPageColor = new QAction(pixColor, tr("Couleur de la page"), this);
-    connect(actionPageColor, &QAction::triggered, this, [=]{
-
-        QColor col = QColorDialog::getColor(m_settings.pageColor, this, "Choix de la couleur de page");
-        if (!col.isValid())
-            return;
-
-        QPixmap pix(50, 50);
-        pix.fill(col);
-        actionPageColor->setIcon(pix);
-        m_settings.pageColor = col;
-        update_settings();
-    });
-    m_mainUI->tbColorPage->setDefaultAction(actionPageColor);
-
-    // border color
-    pixColor.fill(Qt::black);
-    QAction *actionBorderColor = new QAction(pixColor, tr("Couleur de la bordure"), this);
-    connect(actionBorderColor, &QAction::triggered, this, [=]{
-
-        m_settings.borderPen.setColor(QColorDialog::getColor(m_settings.borderPen.color(), this, "Choix de la couleur de bordure"));
-        if (!m_settings.borderPen.color().isValid())
-            return;
-
-        QPixmap pix(50, 50);
-        pix.fill(m_settings.borderPen.color());
-        actionBorderColor->setIcon(pix);
-        update_settings();
-    });
-    m_mainUI->tbColorBorder->setDefaultAction(actionBorderColor);
-
-    // grayscale
+    // # checkboxes
+    // ## grayscale
     connect(m_mainUI->cbBAndW, &QCheckBox::clicked, this, [=](bool checked){
         m_settings.grayScale = checked;
         update_settings();
     });
 
-    // # push_button
+    // # buttons
+    // ## donate
     connect(m_mainUI->pbDonate, &QPushButton::clicked, this, &PCMainUI::display_donate_window);
-
+    // ## help
     connect(m_mainUI->pbHelp, &QPushButton::clicked, this, [=]{
 
         m_dynUI->wHelp = std::make_unique<QWidget>();
@@ -784,22 +748,24 @@ void PCMainUI::from_main_UI_connections()
 
         m_dynUI->wHelp->show();
     });
-
+    // ## open PDF
     connect(m_mainUI->pbOpenPDF, &QPushButton::clicked, this, [=]{
-        bool success = QDesktopServices::openUrl(QUrl::fromLocalFile(m_pcPages.pdfFileName));
-        if(!success)
+        if(!QDesktopServices::openUrl(QUrl::fromLocalFile(m_pcPages.pdfFileName))){
             QMessageBox::warning(this, tr("Avertissement"), tr("Le PDF n'a pu être lancé.\nVeuillez vous assurez que vous disposez d'un logiciel de lecture de PDF (ex : AdobeReader, SumatraPDF, FoxitReader...) .\n"),QMessageBox::Ok);
+        }
     });
+    // ## add photos directory
     connect(m_mainUI->pbAddPhotosDIrectory, &QPushButton::clicked, this, &PCMainUI::add_photos_directory);
+    // ## save PDF
     connect(m_mainUI->pbSavePDF, &QPushButton::clicked, this, [&]{
         QString filePath = QFileDialog::getSaveFileName(this, "Entrez le nom du fichier PDF", QDir::homePath(), "PDF (*.pdf)");
         if(filePath.size() > 0){
             m_pcPages.pdfFileName = filePath;
-            m_mainUI->pbSavePDF->setEnabled(false);
-            m_mainUI->pbOpenPDF->setEnabled(false);
-            emit start_PDF_generation_signal(m_settings, m_pcPages);
+            set_ui_state_for_generating_pdf(false);
+            emit start_PDF_generation_signal(m_pcPages);
         }
     });
+    // ## left photo
     connect(m_mainUI->pbLeft, &QPushButton::clicked, this, [&]{ // previous image
 
         int currRow = m_mainUI->lwPhotosList->currentRow();
@@ -817,6 +783,7 @@ void PCMainUI::from_main_UI_connections()
         define_selected_photo(currId);
 
     });
+    // ## right photo
     connect(m_mainUI->pbRight, &QPushButton::clicked, this, [&]{ // next image
 
         if(m_mainUI->lwPhotosList->currentRow() == -1){
@@ -832,6 +799,7 @@ void PCMainUI::from_main_UI_connections()
 
         define_selected_photo(currId);
     });
+    // ## rotate photot to the left
     connect(m_mainUI->pbRotateLeft, &QPushButton::clicked, this, [&] {// rotate left photo
 
         if(m_mainUI->lwPhotosList->currentRow() == -1){
@@ -843,6 +811,7 @@ void PCMainUI::from_main_UI_connections()
         photo->scaledPhoto = photo->scaledPhoto.transformed(QTransform().rotate(-90));
         update_photo_to_display(photo);
     });
+    // ## rotate photot to the right
     connect(m_mainUI->pbRotateRight, &QPushButton::clicked, this, [&]{ // rotate right photo
 
         if(m_mainUI->lwPhotosList->currentRow() == -1){
@@ -854,8 +823,10 @@ void PCMainUI::from_main_UI_connections()
         photo->scaledPhoto  = photo->scaledPhoto.transformed(QTransform().rotate(90));
         update_photo_to_display(photo);
     });
+    // ## add again the photo in the list
     connect(m_mainUI->pbAdd, &QPushButton::clicked, this, [&]{// add/remove photo from list
 
+        DebugMessage dbgMess("m_mainUI->pbAdd");
         if(m_mainUI->lwPhotosList->currentRow() == -1){
             return;
         }
@@ -863,12 +834,12 @@ void PCMainUI::from_main_UI_connections()
         m_settings.photosLoaded.get()->at(m_settings.currentPhotoId)->isRemoved = false;
 
         define_selected_photo(m_settings.currentPhotoId);
-        update_valid_photos();
         update_settings_with_no_preview();
     });
-
+    // ## remove the photo from the list
     connect(m_mainUI->pbRemove, &QPushButton::clicked, this, [&] {// add/remove photo from list
 
+        DebugMessage dbgMess("m_mainUI->pbRemove");
         if(m_mainUI->lwPhotosList->currentRow() == -1){
             return;
         }
@@ -888,7 +859,7 @@ void PCMainUI::from_main_UI_connections()
             m_mainUI->lwPhotosList->blockSignals(false);
 
             // insert new consign in UI
-            m_dynUI->remove_individual_consign(m_settings.currentPhotoId);
+            m_dynUI->remove_individual_set(m_settings.currentPhotoId);
 
             // define selected id photo
             idPhotoSelected = m_settings.currentPhotoId;
@@ -910,15 +881,14 @@ void PCMainUI::from_main_UI_connections()
 
 
         define_selected_photo(idPhotoSelected);
-        define_selected_pc_from_current_photo();
-
+        define_selected_set_from_current_photo();
         display_photo_panel();
-
-        update_valid_photos();
         update_settings_with_no_preview();
     });
+    // ## duplicate the photo in the list
     connect(m_mainUI->pbDuplicate, &QPushButton::clicked, this, [&]{
 
+        DebugMessage dbgMess("m_mainUI->pbDuplicate");
         if(m_mainUI->lwPhotosList->currentRow() == -1){
             return;
         }
@@ -926,16 +896,11 @@ void PCMainUI::from_main_UI_connections()
         // copy current photo
         int currentIndex = m_mainUI->lwPhotosList->currentRow();
         SPhoto duplicatedPhoto = std::make_shared<Photo>(Photo(*(m_settings.photosLoaded.get()->at(currentIndex))));
-        duplicatedPhoto->isRemoved = false;
+        duplicatedPhoto->isRemoved    = false;
         duplicatedPhoto->isADuplicate = true;
 
         // insert it
-        m_settings.photosLoaded->insert(currentIndex+1, duplicatedPhoto);
-
-        // rest global ids
-        for(int ii = 0; ii < m_settings.photosLoaded->size(); ++ii){
-            m_settings.photosLoaded->at(ii)->globalId = ii;
-        }
+        m_settings.photosLoaded->insert(currentIndex+1, duplicatedPhoto);        
 
         // insert new element in photo list widget
         m_mainUI->lwPhotosList->blockSignals(true);
@@ -943,11 +908,11 @@ void PCMainUI::from_main_UI_connections()
         m_mainUI->lwPhotosList->blockSignals(false);
 
         // insert new consign in UI
-        m_dynUI->insert_individual_consign(currentIndex+1);
+        m_dynUI->insert_individual_set(currentIndex+1);
 
-        update_valid_photos();
         update_settings_with_no_preview();
     });
+    // ## change photo order (minus)
     connect(m_mainUI->pbOrderMinus, &QPushButton::clicked, this, [&]{
 
         int row = m_mainUI->lwPhotosList->currentRow();
@@ -956,14 +921,14 @@ void PCMainUI::from_main_UI_connections()
             return;
         }
 
-        swap_loaded_pc(row,row-1);
-        define_selected_photo(row-1);
-        define_selected_pc_from_current_photo();
+        swap_loaded_set(row,row-1);
 
-        display_photo_panel();
-        update_valid_photos();
+        define_selected_photo(row-1);
+        define_selected_set_from_current_photo();
+        display_photo_panel();        
         update_settings_with_no_preview();
     });
+    // ## change photo order (plus)
     connect(m_mainUI->pbOrderPlus, &QPushButton::clicked, this, [&]{
 
         int row = m_mainUI->lwPhotosList->currentRow();
@@ -972,34 +937,34 @@ void PCMainUI::from_main_UI_connections()
             return;
         }
 
-        swap_loaded_pc(row,row+1);
+        swap_loaded_set(row,row+1);
+
         define_selected_photo(row+1);
-        define_selected_pc_from_current_photo();
-
-        display_photo_panel();
-
-        update_valid_photos();
+        define_selected_set_from_current_photo();
+        display_photo_panel();       
         update_settings_with_no_preview();
     });
 
     // # tab widgets
      connect(m_mainUI->twMiddle, &QTabWidget::currentChanged, this, [&](int index){
-         update_settings();
-//        if(index == 1){
-//            update_settings();
+
         if(index == 0){
             define_selected_photo(m_settings.currentPhotoId);
-            display_photo_panel();
+            update_settings_with_no_preview();
+        }else{
+            update_settings();
         }
      });
      // # list widget
+     // ## photos list
      connect(m_mainUI->lwPhotosList, &QListWidget::clicked, this, [&](QModelIndex index){
 
          m_settings.previousPhotoId = m_settings.currentPhotoId;
          if(index.row() == m_settings.currentPhotoId && index.row() < m_settings.photosLoaded->size()){
             define_selected_photo(index.row());
-            define_selected_pc_from_current_photo();
+            define_selected_set_from_current_photo();
             define_selected_page_from_current_photo();
+            update_settings_with_no_preview();
             display_photo_panel();
          }
      });
@@ -1008,12 +973,13 @@ void PCMainUI::from_main_UI_connections()
         m_settings.previousPhotoId = m_settings.currentPhotoId;
         if(row < m_settings.photosLoaded->size()){
             define_selected_photo(row);            
-            define_selected_pc_from_current_photo();
-            define_selected_page_from_current_photo();
+            define_selected_set_from_current_photo();
+            define_selected_page_from_current_photo();            
+            update_settings_with_no_preview();
             display_photo_panel();
         }
     });
-
+    // ## pages list
     connect(m_mainUI->lwPagesList, &QListWidget::currentRowChanged, this, [&](int row){
 
         m_settings.previousPageId = m_settings.currentPageId;
@@ -1021,14 +987,7 @@ void PCMainUI::from_main_UI_connections()
         if(row != -1){
             define_selected_page(row);
             display_preview_panel();
-
-            if(m_settings.previousPageId != m_settings.currentPageId){
-
-                update_settings();
-            }else{
-                update_settings_with_no_preview();
-            }                        
-            display_individual_page_settings_panel();
+            update_settings();
         }
     });
     connect(m_mainUI->lwPagesList, &QListWidget::clicked, this, [&](QModelIndex index){
@@ -1038,50 +997,18 @@ void PCMainUI::from_main_UI_connections()
         if(index.row() != -1){
             define_selected_page(index.row());
             display_preview_panel();
-            if(m_settings.previousPageId != m_settings.currentPageId){
-                update_settings();
-            }else{
-                update_settings_with_no_preview();
-            }
-            display_individual_page_settings_panel();
+            update_settings();
         }
     });
 
-    connect(m_mainUI->cbWriteOnPhoto, &QCheckBox::clicked, this, [=](bool checked){
-
-        if(checked){
-            m_dynUI->previousGlobalConsignPositionFromPhotos =  m_settings.consignPositionFromPhotos;
-        }
-        m_mainUI->pbGlobalConsignBottom->setEnabled(!checked);
-        m_mainUI->pbGlobalConsignLeft->setEnabled(!checked);
-        m_mainUI->pbGlobalConsignRight->setEnabled(!checked);
-        m_mainUI->pbGlobalConsignTop->setEnabled(!checked);
-        m_mainUI->dsbGlobalRatioPC->setEnabled(!checked);
-        m_mainUI->hsGlobalRatioPC->setEnabled(!checked);
-
-        if(!checked){
-            switch(m_dynUI->previousGlobalConsignPositionFromPhotos){
-            case Position::bottom:
-                    m_mainUI->pbGlobalConsignBottom->setEnabled(false);
-                break;
-            case Position::left:
-                    m_mainUI->pbGlobalConsignLeft->setEnabled(false);
-                break;
-            case Position::right:
-                    m_mainUI->pbGlobalConsignRight->setEnabled(false);
-                break;
-            case Position::top:
-                    m_mainUI->pbGlobalConsignTop->setEnabled(false);
-                break;
-            case Position::on:
-                break;
-            }
-        }
-
+    // # radio button
+    connect(m_mainUI->rbWriteOnPCTitle, &QRadioButton::clicked, this, [=]{
         update_settings();
     });
-
-
+    connect(m_mainUI->rbWriteOnPCTitle, &QRadioButton::clicked, this, [=]{
+        m_dynUI->zonesTimer.start(1000);
+        update_settings();
+    });
 
     connect(m_mainUI->rbTopTitle, &QRadioButton::clicked, this, [=]{
        m_mainUI->hsRatioTitle->setEnabled(true);
@@ -1096,27 +1023,49 @@ void PCMainUI::from_main_UI_connections()
        m_mainUI->dsbRatioTitle->setEnabled(false);
     });
 
-
-
+    // # spinboxes
     connect(m_mainUI->sbNbPages, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
         m_dynUI->zonesTimer.start(1000);
-        update_valid_photos();
         update_settings();
     });
-    connect(m_mainUI->sbNbPhotosH, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
+    connect(m_mainUI->sbGlobalPhotosNbWidth, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
+
+        int nbMaxPhotos = m_mainUI->sbGlobalPhotosNbWidth->value() * m_mainUI->sbGlobalPhotosNbHeight->value();
+        if(nbMaxPhotos < m_mainUI->sbGlobalPhotosNbPerPage->value()){
+            Utility::safe_init_spinbox_value(m_mainUI->sbGlobalPhotosNbPerPage, nbMaxPhotos);
+        }
+
         m_dynUI->zonesTimer.start(1000);
-        update_valid_photos();
         update_settings();
     });
-    connect(m_mainUI->sbNbPhotosV, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
+    connect(m_mainUI->sbGlobalPhotosNbHeight, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
+
+        int nbMaxPhotos = m_mainUI->sbGlobalPhotosNbWidth->value() * m_mainUI->sbGlobalPhotosNbHeight->value();
+        if(nbMaxPhotos < m_mainUI->sbGlobalPhotosNbPerPage->value()){
+            Utility::safe_init_spinbox_value(m_mainUI->sbGlobalPhotosNbPerPage, nbMaxPhotos);
+        }
+
         m_dynUI->zonesTimer.start(1000);
-        update_valid_photos();
+        update_settings();
+    });
+    connect(m_mainUI->sbGlobalPhotosNbPerPage, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
+
+        int nbMaxPhotos = m_mainUI->sbGlobalPhotosNbWidth->value() * m_mainUI->sbGlobalPhotosNbHeight->value();
+        if(nbMaxPhotos < m_mainUI->sbGlobalPhotosNbPerPage->value()){
+            Utility::safe_init_spinbox_value(m_mainUI->sbGlobalPhotosNbPerPage, nbMaxPhotos);
+        }
+
+        m_dynUI->zonesTimer.start(1000);
         update_settings();
     });
 
-    m_dynUI->update_settings_format_combo_boxes(m_mainUI->cbDPI, m_mainUI->cbFormat);
-    m_dynUI->update_settings_radio_buttons({m_mainUI->rbWriteOnPCTitle});
-    m_dynUI->update_settings_radio_buttons({m_mainUI->rbBottomTitle, m_mainUI->rbTopTitle},true);
+    // # comboBoxes
+    connect(m_mainUI->cbDPI, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
+        update_settings();
+    });
+    connect(m_mainUI->cbFormat, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
+        update_settings();
+    });
 }
 
 
@@ -1130,7 +1079,8 @@ void PCMainUI::from_main_module_connections(){
 
     // to photo display worker
     connect(this, &PCMainUI::kill_signal,            m_loadPhotoWorker.get(), &PhotoLoaderWorker::kill);
-    connect(this, &PCMainUI::send_photos_dir_signal, m_loadPhotoWorker.get(), &PhotoLoaderWorker::load_photos);
+    connect(this, &PCMainUI::start_loading_photos_signal, m_loadPhotoWorker.get(), &PhotoLoaderWorker::load_photos_directory);
+    connect(this, &PCMainUI::stop_loading_photos_signal, m_loadPhotoWorker.get(), &PhotoLoaderWorker::kill);
 }
 
 
@@ -1160,13 +1110,14 @@ void PCMainUI::from_pdf_generator_worker_connections(){
     });
     connect(worker, &PDFGeneratorWorker::end_generation_signal, this, [=](bool success){
 
-        m_mainUI->pbSavePDF->setEnabled(true);
         if(success){
             m_mainUI->pbOpenPDF->setEnabled(true);
             m_mainUI->laLoadingText->setText("PDF généré avec succès\n" + m_pcPages.pdfFileName);
         }else{
             m_mainUI->laLoadingText->setText("Echec génération du PDF");
         }
+
+        set_ui_state_for_generating_pdf(true);
     });
     connect(worker, &PDFGeneratorWorker::set_progress_bar_state_signal, m_mainUI->progressBarLoading, &QProgressBar::setValue);
     connect(worker, &PDFGeneratorWorker::set_progress_bar_text_signal,  m_mainUI->laLoadingText, &QLabel::setText);
@@ -1174,21 +1125,23 @@ void PCMainUI::from_pdf_generator_worker_connections(){
 
         QMessageBox::warning(this, tr("Avertissement"), tr("Le fichier PDF ") + pathFile + tr(" n'a pu être écrit, il se peut que celui-ci soit en cours d'utilisation par un autre logiciel."),QMessageBox::Ok);
         m_mainUI->laLoadingText->setText("Echec génération du PDF");
-        m_mainUI->pbSavePDF->setEnabled(true);
+        set_ui_state_for_generating_pdf(true);
     });
     connect(worker, &PDFGeneratorWorker::current_pc_selected_signal, this, [=](QRectF pcRectRelative, int totalIdPC){
 
+        DebugMessage dbgMess("PDFGeneratorWorker::current_pc_selected_signal");
         if(totalIdPC == -1){
             display_title_panel();
         }else{
-            define_selected_pc(totalIdPC);
+            m_settings.currentSetId = totalIdPC;
         }
 
         m_dynUI->previewW->draw_current_pc_rect(totalIdPC, pcRectRelative);
         m_dynUI->previewW->update();
 
         // update photo list selection
-        define_selected_photo(m_settings.photosValided->at(m_settings.currentPCDisplayed)->globalId);
+        define_selected_photo(m_settings.photosValided->at(m_settings.currentSetId)->loadedId);
+        update_settings_with_no_preview();
     });
 }
 
@@ -1200,28 +1153,51 @@ void PCMainUI::from_photos_loader_worker_connections(){
     connect(worker, &PhotoLoaderWorker::set_progress_bar_state_signal, m_mainUI->progressBarLoading, &QProgressBar::setValue);
     connect(worker, &PhotoLoaderWorker::set_progress_bar_text_signal,  m_mainUI->laLoadingText, &QLabel::setText);
     // # end loading photo
-    connect(worker, &PhotoLoaderWorker::photo_loaded_signal,this, [&](SPhoto photo){
+    connect(worker, &PhotoLoaderWorker::photo_loaded_signal,this, [&](SPhoto photo, int indexToInsert){
 
-        m_mainUI->lwPhotosList->addItem(QString::number(m_mainUI->lwPhotosList->count()+1) + ". " + photo->namePhoto);
-        m_mainUI->twPhotosList->setTabText(1, QString::number(m_mainUI->lwPhotosList->count()+1));
+        DebugMessage dbgMess("PhotoLoaderWorker::photo_loaded_signal");
+        // add row in photos list
+        m_mainUI->lwPhotosList->insertItem(indexToInsert, photo->namePhoto);
+        m_mainUI->twPhotosList->setTabText(1, QString::number(indexToInsert));
 
-        if(m_mainUI->lwPhotosList->count() == 1){
-            m_mainUI->lwPhotosList->setCurrentRow(0);
-        }
+        // add loaded photo
+        m_settings.photosLoaded->insert(indexToInsert, photo);
+        m_dynUI->insert_individual_set(indexToInsert);
 
-        m_settings.currentPhotoId = m_mainUI->lwPhotosList->count()-1;
-//        update_photo_to_display(photo);
-//        QCoreApplication::processEvents(QEventLoop::AllEvents, 5);
-//        display_photo_panel();
+        // update current photo row
+        m_settings.currentPhotoId = indexToInsert;
+        m_mainUI->lwPhotosList->setCurrentRow(m_settings.currentPhotoId);
     });
     // # end loading all photos
-    connect(worker, &PhotoLoaderWorker::end_loading_photos_signal,     this, &PCMainUI::insert_photos);
+    connect(worker, &PhotoLoaderWorker::end_loading_photos_signal,this, [&]{
+
+        DebugMessage dbgMess("PhotoLoaderWorker::end_loading_photos_signal");
+
+
+        // update progress bar
+        m_mainUI->laLoadingText->setText("Photos chargées.");
+        m_mainUI->progressBarLoading->setValue(1000);
+
+        if( m_settings.photosLoaded->size() > 0){
+
+            m_mainUI->twMiddle->setTabEnabled(0, true);
+            m_settings.currentPhotoId = 0;
+            update_photo_to_display(m_settings.photosLoaded->at(m_settings.photosLoaded->size()-1));
+            display_photo_panel();
+        }
+
+        // unlock ui        
+        m_isLoadingPhotos = false;
+        set_ui_state_for_adding_photos(true);
+
+        update_settings();
+    });
 }
 
 void PCMainUI::from_UI_elements_connections(){
 
-    PreviewLabel* previewUI    = m_dynUI->previewW;
-    ImageLabel* displayPhotoUI = m_dynUI->selectedPhotoW;
+    PreviewW* previewUI    = m_dynUI->previewW;
+    PhotoW* displayPhotoUI = m_dynUI->selectedPhotoW;
 
     // # UI elements
     // ### update settings request
@@ -1232,59 +1208,52 @@ void PCMainUI::from_UI_elements_connections(){
 
     // # preview label
     // ### single click
-    connect(previewUI, &PreviewLabel::click_on_page_signal, this, [&]{
+    connect(previewUI, &PreviewW::click_on_page_signal, this, [&]{
         display_individual_consign_settings_panel();
     });
-    connect(previewUI, &PreviewLabel::click_on_page_signal, m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::update_PC_selection);
+    connect(previewUI, &PreviewW::click_on_page_signal, m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::update_PC_selection);
     // ### double click
-    connect(previewUI, &PreviewLabel::double_click_on_photo_signal, this, [&]{
-        if(m_settings.currentPCDisplayed < m_settings.photosValided->size()){
-            define_selected_photo(m_settings.photosValided->at(m_settings.currentPCDisplayed)->globalId);
+    connect(previewUI, &PreviewW::double_click_on_photo_signal, this, [&]{
+        if(m_settings.currentSetId < m_settings.photosValided->size()){
+            define_selected_photo(m_settings.photosValided->at(m_settings.currentSetId)->loadedId);
+            update_settings_with_no_preview();
             display_photo_panel();
         }
     });
 
     // # image label
     // ### double click
-    connect(displayPhotoUI, &ImageLabel::double_click_signal, this, [&]{
+    connect(displayPhotoUI, &PhotoW::double_click_signal, this, [&]{
         define_selected_page_from_current_photo();
-        define_selected_pc_from_current_photo();
+        define_selected_set_from_current_photo();
         update_settings();
         display_preview_panel();
     });
 }
 
-void PCMainUI::update_settings(){
-
-    // update valid consigns
-    m_dynUI->individualConsignsValidedUI.clear();
-    m_dynUI->individualConsignsValidedUI.reserve(m_settings.photosLoaded->size());
-    for(int ii = 0; ii < m_settings.photosLoaded->size(); ++ii){
-        if(m_settings.photosLoaded->at(ii)->isRemoved){
-            continue;
-        }
-        m_dynUI->individualConsignsValidedUI.push_back(m_dynUI->individualConsignsLoadedUI.at(ii));
-    }
+void PCMainUI::retrieve_global_settings_from_ui(){
 
     // nb of photos to be used (== nb of pc)
     auto nbPhotosValid          = m_settings.photosValided->size();
 
     // retrieve global parameters
     // # global nb photos
-    m_settings.nbPhotosPageH    = m_mainUI->sbNbPhotosH->value();
-    m_settings.nbPhotosPageV    = m_mainUI->sbNbPhotosV->value();
-    m_settings.nbPhotosPerPage  = m_settings.nbPhotosPageH * m_settings.nbPhotosPageV;
-
-    // # compute last page photo nb
-    int lastPagePhotosNb = m_settings.photosValided->size() % m_settings.nbPhotosPerPage;
-    if(lastPagePhotosNb == 0){
-        lastPagePhotosNb = m_settings.nbPhotosPerPage;
-    }
+    m_settings.nbPhotosPageWidth    = m_mainUI->sbGlobalPhotosNbWidth->value();
+    m_settings.nbPhotosPageHeight   = m_mainUI->sbGlobalPhotosNbHeight->value();
+    m_settings.nbPhotosPerPage      = m_mainUI->sbGlobalPhotosNbPerPage->value();
+    m_settings.photoAlignment       = Utility::photo_alignment_from_comboBox(m_dynUI->globalSetStyleW.ui.cbPhotoAlignment);
 
     // # retrieve nb of pages
     if(!m_settings.resetPages){
         m_settings.nbPages = m_mainUI->sbNbPages->value();
     }else{
+
+        // # compute last page photo nb
+        int lastPagePhotosNb = m_settings.photosValided->size() % m_settings.nbPhotosPerPage;
+        if(lastPagePhotosNb == 0){
+            lastPagePhotosNb = m_settings.nbPhotosPerPage;
+        }
+
         m_settings.nbPages = nbPhotosValid / m_settings.nbPhotosPerPage;
         if(lastPagePhotosNb != 0){
             ++m_settings.nbPages;
@@ -1296,81 +1265,10 @@ void PCMainUI::update_settings(){
         m_settings.resetPages = false;
     }
 
-    // # border
-    m_settings.displayBorders = m_mainUI->cbEnableBorders->isChecked();
-
-    Qt::PenStyle borderPenStyle = Qt::SolidLine;
-    switch(m_mainUI->cbBordersLineStyle->currentIndex()){
-        case 1:
-            borderPenStyle = Qt::DotLine;
-        break;
-        case 2:
-            borderPenStyle = Qt::DashLine;
-        break;
-        case 3:
-            borderPenStyle = Qt::DashDotLine;
-        break;
-        case 4:
-            borderPenStyle = Qt::DashDotDotLine;
-        break;
-    }
-    m_settings.borderPen.setStyle(borderPenStyle);
-
-    switch(m_mainUI->cbBordersLineWidth->currentIndex()){
-        case 0:
-            m_settings.widthBorder = 1.;
-        break;
-        case 1:
-            m_settings.widthBorder = 3.;
-        break;
-        case 2:
-            m_settings.widthBorder = 5.;
-        break;
-        case 3:
-            m_settings.widthBorder = 7.;
-        break;
-        case 4:
-            m_settings.widthBorder = 9.;
-        break;
-        case 5:
-            m_settings.widthBorder = 15.;
-        break;
-    }
-
-    Qt::PenJoinStyle borderPenJoinStyle = Qt::BevelJoin;
-    switch(m_mainUI->cbBordersJoin->currentIndex()){
-        case 1:
-            borderPenJoinStyle = Qt::MiterJoin;
-        break;
-        case 2:
-            borderPenJoinStyle = Qt::RoundJoin;
-        break;
-    }
-    m_settings.borderPen.setJoinStyle(borderPenJoinStyle);
-
-    // # image alignment
-    int globalPhotosAlignment = 0;
-    if(!m_mainUI->pbGlobalImageAligmentHMiddle->isEnabled()){ // horizontal center
-        globalPhotosAlignment = globalPhotosAlignment |  Qt::AlignHCenter;
-    }else if(!m_mainUI->pbGlobalImageAligmentRight->isEnabled()){ // horizontal right
-        globalPhotosAlignment = globalPhotosAlignment |  Qt::AlignRight;
-    }else{ // horizontal left
-        globalPhotosAlignment = globalPhotosAlignment |  Qt::AlignLeft;
-    }
-
-    if(!m_mainUI->pbGlobalImageAligmentVMiddle->isEnabled()){// vertical center
-        globalPhotosAlignment = globalPhotosAlignment | Qt::AlignVCenter;
-    }else if(!m_mainUI->pbGlobalImageAligmentTop->isEnabled()){ // vertical top
-        globalPhotosAlignment = globalPhotosAlignment | Qt::AlignTop;
-    }else{
-        globalPhotosAlignment = globalPhotosAlignment | Qt::AlignBottom;
-    }
-
+    // # misc
     m_settings.saveOnlyCurrentPage  = m_mainUI->cbSaveOnlyCurrentPage->isChecked();
-    m_settings.PCRation             = m_mainUI->dsbGlobalRatioPC->value();
-    m_settings.photoAlignment       = globalPhotosAlignment;
+    m_settings.PCRatio              = m_dynUI->globalSetStyleW.ui.dsbRatioPC->value();
     m_settings.orientation          = (m_mainUI->cbOrientation->currentIndex() == 0) ? PageOrientation::portrait : PageOrientation::landScape;
-    m_pcPages.paperFormat           = PaperFormat(m_mainUI->cbDPI->currentText(), m_mainUI->cbFormat->currentText());
 
     // # title
     m_settings.titleAdded           = m_mainUI->cbAddTitle->isChecked();
@@ -1379,30 +1277,24 @@ void PCMainUI::update_settings(){
     m_settings.titlePositionFromPC  = (m_mainUI->rbTopTitle->isChecked()) ? Position::top : (m_mainUI->rbBottomTitle->isChecked() ? Position::bottom : Position::on);
 
     // # margins
-    pc::RatioMargins &margins       = m_settings.margins;
-    margins.exteriorMarginsEnabled  = m_mainUI->cbAddExteriorMargins->isChecked();
-    margins.interiorMarginsEnabled  = m_mainUI->cbAddInteriorMargins->isChecked();
-    margins.left                    = m_mainUI->dsbLeftMargins->value();
-    margins.right                   = m_mainUI->dsbRightMargins->value();
-    margins.top                     = m_mainUI->dsbTopMargins->value();
-    margins.bottom                  = m_mainUI->dsbBottomMargins->value();
-    margins.interWidth              = m_mainUI->dsbHorizontalMargins->value();
-    margins.interHeight             = m_mainUI->dsbVerticalMargins->value();
+    m_settings.margins              = m_dynUI->globalMarginsW.settings();
 
-    m_settings.consignPositionFromPhotos = (!m_mainUI->pbGlobalConsignTop->isEnabled())    ? Position::top :
-                                                ((!m_mainUI->pbGlobalConsignBottom->isEnabled()) ? Position::bottom :
-                                                ((!m_mainUI->pbGlobalConsignLeft->isEnabled())   ? Position::left : Position::right));
+    // # position
+    m_settings.consignPositionFromPhotos = static_cast<Position>(m_dynUI->globalSetStyleW.ui.cbPositionConsign->currentIndex());
+}
 
-    // # consigns
-    m_settings.consignOnPhoto = m_mainUI->cbWriteOnPhoto->isChecked();
+void PCMainUI::update_settings(){
 
-    // reconstruct the pages
-    update_pages();
+    DebugMessage dbgMess("update_settings");
 
-    // display preview tab
-    if(!m_settings.noPreviewGeneration){
-        display_preview_panel();
-    }
+    // reconstruct sets
+    build_valid_sets();
+
+    // update global settings
+    retrieve_global_settings_from_ui();
+
+    // reconstruct the pages from global and individual settings
+    build_pages();
 
     // check if the preview is already computing and will ask later to a new update if it's the case
     m_previewLocker.lockForWrite();
@@ -1410,25 +1302,31 @@ void PCMainUI::update_settings(){
     m_generatePreviewAgain = isPreviewComputing;
     m_previewLocker.unlock();
 
-    // check timer for displaying the zones
-    m_settings.displayZones = m_dynUI->zonesTimer.isActive();
-
     // update defintion txt
     int currentDPI = m_mainUI->cbDPI->currentText().toInt();
-    m_mainUI->laDefWxH->setText(QString::number(m_pcPages.paperFormat .widthPixels(currentDPI)) + "x" + QString::number(m_pcPages.paperFormat .heightPixels(currentDPI)));
-    m_mainUI->laDefTotal->setText("(" + QString::number(m_pcPages.paperFormat .widthPixels(currentDPI)*m_pcPages.paperFormat .heightPixels(currentDPI)) + " pixels)");
+    m_mainUI->laDefinition->setText("<p><b>Définition: </b> " + QString::number(m_pcPages.paperFormat .width_pixels(currentDPI))+ "x" +
+                                    QString::number(m_pcPages.paperFormat .height_pixels(currentDPI)) + " pixels</p>");
 
+    // update stylesheet of lists
     update_photos_list_style();
     update_pages_list_style();
+
+    // display current dynamic ui
+    if(m_settings.photosLoaded->size() > 0){
+        display_current_individual_page_ui();
+        display_current_individual_set_ui();
+    }
 
     // ask for a preview generation
     if(!m_settings.noPreviewGeneration && !isPreviewComputing){
         m_previewLocker.lockForWrite();
         m_isPreviewComputing = true;
         m_previewLocker.unlock();
-        emit start_preview_generation_signal(m_settings, m_pcPages);
+        emit start_preview_generation_signal(m_pcPages, m_settings.currentPageId, m_dynUI->zonesTimer.isActive());
+        display_preview_panel();
     }
 }
+
 
 void PCMainUI::display_photo_panel(){
     m_mainUI->twMiddle->blockSignals(true);
@@ -1444,7 +1342,7 @@ void PCMainUI::display_preview_panel(){
 
 void PCMainUI::display_title_panel(){
     m_mainUI->tbRight->blockSignals(true);
-    m_mainUI->tbRight->setCurrentIndex(0);
+    m_mainUI->tbRight->setCurrentIndex(7);
     m_mainUI->tbRight->blockSignals(false);
 }
 
@@ -1456,13 +1354,13 @@ void PCMainUI::display_global_consign_panel(){
 
 void PCMainUI::display_individual_consign_settings_panel(){    
     m_mainUI->tbRight->blockSignals(true);
-    m_mainUI->tbRight->setCurrentIndex(3);
+    m_mainUI->tbRight->setCurrentIndex(4);
     m_mainUI->tbRight->blockSignals(false);
 }
 
 void PCMainUI::display_individual_page_settings_panel(){
     m_mainUI->tbRight->blockSignals(true);
-    m_mainUI->tbRight->setCurrentIndex(2);
+    m_mainUI->tbRight->setCurrentIndex(3);
     m_mainUI->tbRight->blockSignals(false);
 }
 

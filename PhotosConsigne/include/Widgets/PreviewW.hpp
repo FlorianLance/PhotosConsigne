@@ -1,84 +1,11 @@
 
-/**
- * \file ImageLabel.hpp
- * \brief defines ImageLabel
- * \author Florian Lance
- * \date 01/11/15
- */
 
 #pragma once
 
-// Qt
-#include <QWidget>
-#include <QLabel>
-#include <QMouseEvent>
-#include <QDebug>
-#include <QPainter>
-#include <QTimer>
-#include <QThread>
-#include <memory>
-#include <QCoreApplication>
-#include <QReadWriteLock>
+// local
+#include "PhotoW.hpp"
 
-/**
- * @brief Define a QWidget displaying an image.
- */
-class ImageLabel : public QWidget
-{
-    Q_OBJECT
-
-public:
-
-    /**
-     * @brief ImageLabel constructor
-     * @param [in] parent
-     */
-    explicit ImageLabel(QWidget *parent = 0);
-
-    /**
-     * @brief Return current image pointer
-     */
-    const QImage* Image() const;
-
-public slots:
-
-    /**
-     * @brief Set the current image
-     */
-    void set_image(const QImage &image);
-
-signals:
-
-    void double_click_signal();
-
-protected:
-
-
-    virtual void mousePressEvent(QMouseEvent *ev){
-
-        qDebug() << "click!!!";
-        bool inside = m_imageRect.contains(ev->pos());
-        if(inside){
-            qDebug() << "click on photo!!!";
-            if(m_doubleClickTimer.isActive()){
-                qDebug() << "DOUBLE!!!";
-                emit double_click_signal();
-            }else{
-                m_doubleClickTimer.start(300);
-                qDebug() << "SINGLE!!!";
-            }
-        }
-    }
-
-    /**
-     * @brief paintEvent for drawing in the widget
-     */
-    virtual void paintEvent(QPaintEvent *);
-
-    QImage m_image;
-    QRectF m_imageRect;
-    QTimer m_doubleClickTimer;
-};
+namespace pc{
 
 
 class PreviewWorker : public  QObject
@@ -109,14 +36,14 @@ signals:
 
 };
 
-class PreviewLabel : public ImageLabel
+class PreviewW : public PhotoW
 {
     Q_OBJECT
 
 public :
-    PreviewLabel();
+    PreviewW();
 
-    ~PreviewLabel();
+    ~PreviewW();
 
 public slots:
 
@@ -146,7 +73,7 @@ protected:
 
     void paintEvent(QPaintEvent *event) override{
 
-        ImageLabel::paintEvent(event);
+        PhotoW::paintEvent(event);
 
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
@@ -171,7 +98,7 @@ signals:
 
     void double_click_on_photo_signal(int idTotalPhoto);
 
-private:    
+private:
 
     int m_currentPCRectId;
     QRectF m_currentPCRect;
@@ -183,3 +110,10 @@ private:
     std::unique_ptr<PreviewWorker> m_worker = nullptr;
 
 };
+
+
+
+
+
+
+}

@@ -11,10 +11,7 @@
         <file alias="dirImages">resources/images/dirImages.png</file>
         <file alias="save">resources/images/save.png</file>
         <file alias="pdf">resources/images/pdf.png</file>
-        <file alias="textLeft">resources/images/textLeft.png</file>
-        <file alias="textRight">resources/images/textRight.png</file>
         <file alias="textBottom">resources/images/textBottom.png</file>
-        <file alias="textTop">resources/images/textTop.png</file>
         <file alias="landscape2">resources/images/landscape.png</file>
         <file alias="portrait2">resources/images/portrait.png</file>
         <file alias="orientationTxt">resources/images/orientationText.png</file>
@@ -44,8 +41,6 @@
         <file alias="textcenter">resources/icons/textcenter.png</file>
         <file alias="textitalic">resources/icons/textitalic.png</file>
         <file alias="textjustify">resources/icons/textjustify.png</file>
-        <file alias="textleft">resources/icons/textleft.png</file>
-        <file alias="textright">resources/icons/textright.png</file>
         <file alias="textunder">resources/icons/textunder.png</file>
         <file alias="zoomin">resources/icons/zoomin.png</file>
         <file alias="zoomout">resources/icons/zoomout.png</file>
@@ -66,7 +61,6 @@
         <file alias="duplicate">resources/images/duplicate.png</file>
         <file alias="image">resources/images/image.png</file>
         <file alias="blank">resources/images/blank_image.png</file>
-        <file alias="pages">resources/images/pages.png</file>
         <file alias="link">resources/icons/link.png</file>
         <file alias="overline">resources/icons/overline.png</file>
         <file alias="strike">resources/icons/strike.png</file>
@@ -75,7 +69,6 @@
         <file alias="buttons">resources/style/buttons.qss</file>
         <file alias="rotateLeft">resources/style/leftRotationPushButton.qss</file>
     </qresource>
-    <qresource prefix="/profils"/>
     <qresource prefix="/images/background">
         <file alias="BDiagPattern">resources/images/background/BDiagPattern.png</file>
         <file alias="CrossPattern">resources/images/background/CrossPattern.png</file>
@@ -93,6 +86,11 @@
     </qresource>
     <qresource prefix="/images/photos">
         <file alias="remove_photos">resources/images/photos/remove_photos.png</file>
+        <file alias="nb_photos">resources/images/photos/nbPhotos.png</file>
+        <file alias="choose_image">resources/images/photos/choose_image.png</file>
+        <file alias="photo">resources/images/photos/photo.png</file>
+        <file alias="cancel">resources/images/photos/cancel.png</file>
+        <file alias="photos">resources/images/photos/photos.png</file>
     </qresource>
     <qresource prefix="/images/borders">
         <file alias="dash_line">resources/images/borders/dash_line.png</file>
@@ -109,5 +107,42 @@
         <file alias="bevel_join">resources/images/borders/bevel_join.png</file>
         <file alias="miter_join">resources/images/borders/miter_join.png</file>
         <file alias="round_join">resources/images/borders/round_join.png</file>
+    </qresource>
+    <qresource prefix="/images/adjust">
+        <file alias="adjust_bg_image">resources/images/adjust/adjust.png</file>
+        <file alias="center_bg_image">resources/images/adjust/center.png</file>
+        <file alias="extend_bg_image">resources/images/adjust/extend.png</file>
+        <file alias="fill_bg_image">resources/images/adjust/fill.png</file>
+        <file alias="mosaic_bg_image">resources/images/adjust/mosaic.png</file>
+    </qresource>
+    <qresource prefix="/images/aligment">
+        <file alias="center_center">resources/images/alignment/center_center.png</file>
+        <file alias="center_left">resources/images/alignment/center_left.png</file>
+        <file alias="center_right">resources/images/alignment/center_right.png</file>
+        <file alias="down_center">resources/images/alignment/down_center.png</file>
+        <file alias="down_left">resources/images/alignment/down_left.png</file>
+        <file alias="down_right">resources/images/alignment/down_right.png</file>
+        <file alias="top_center">resources/images/alignment/top_center.png</file>
+        <file alias="top_left">resources/images/alignment/top_left.png</file>
+        <file alias="top_right">resources/images/alignment/top_right.png</file>
+    </qresource>
+    <qresource prefix="/images/margins">
+        <file alias="extern_margins">resources/images/margins/extern_margins.png</file>
+        <file alias="intern_margins">resources/images/margins/intern_margins.png</file>
+    </qresource>
+    <qresource prefix="/images/sets">
+        <file alias="nb_sets">resources/images/sets/nb_sets.png</file>
+        <file alias="set">resources/images/sets/set.png</file>
+    </qresource>
+    <qresource prefix="/images/pages">
+        <file alias="nb_pages">resources/images/pages/nb_pages.png</file>
+        <file alias="page">resources/images/pages/page.png</file>
+    </qresource>
+    <qresource prefix="/images/position">
+        <file alias="textBottom">resources/images/position/textBottom.png</file>
+        <file alias="textLeft">resources/images/position/textLeft.png</file>
+        <file alias="textOnPhoto">resources/images/position/textOnPhoto.png</file>
+        <file alias="textRight">resources/images/position/textRight.png</file>
+        <file alias="textTop">resources/images/position/textTop.png</file>
     </qresource>
 </RCC>

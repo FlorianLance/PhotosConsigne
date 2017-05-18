@@ -1,7 +1,7 @@
 
 #include "Utility.hpp"
 
-
+using namespace pc;
 
 void pc::PCPage::compute_sizes(QRectF upperRect){
     rectOnPage = std::move(upperRect);
@@ -13,7 +13,7 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
             titleRect = rectOnPage;
             setsAndMarginsRect = rectOnPage;
         }else{
-            qreal heightTitle = ratioWithTitle * rectOnPage.height();
+            qreal heightTitle = ratioWidthTitle * rectOnPage.height();
             titleRect = QRectF(0, (titlePositionFromPC == Position::top) ? 0 : rectOnPage.height() - heightTitle,
                                rectOnPage.width(), heightTitle);
             setsAndMarginsRect = QRectF(0., (titlePositionFromPC == Position::top) ? titleRect.height() : 0.,
@@ -111,221 +111,33 @@ void pc::PCSet::compute_sizes(QRectF upperRect){
     qreal widthPhotoH     = ratio * rectOnPage.width();
 
     QRectF consignRect, photoRect;
-    if(consignOnPhoto){
+
+    switch (consignPositionFromPhoto) {
+    case Position::top:
+        consignRect = QRectF(rectOnPage.x(), rectOnPage.y(), widthConsigneV, heightConsigneV);
+        photoRect   = QRectF(rectOnPage.x(), rectOnPage.y() + heightConsigneV, widthPhotoV, heightPhotoV);
+        break;
+    case Position::left:
+        consignRect = QRectF(rectOnPage.x(), rectOnPage.y(), widthConsigneH, heightConsigneH);
+        photoRect   = QRectF(rectOnPage.x() + widthConsigneH, rectOnPage.y(), widthPhotoH, heightPhotoH);
+        break;
+    case Position::right:
+        consignRect = QRectF(rectOnPage.x() + widthPhotoH, rectOnPage.y(), widthConsigneH, heightConsigneH);
+        photoRect   = QRectF(rectOnPage.x(), rectOnPage.y(), widthPhotoH, heightPhotoH);
+        break;
+    case Position::bottom:
+        consignRect = QRectF(rectOnPage.x(), rectOnPage.y() + heightPhotoV, widthConsigneV, heightConsigneV);
+        photoRect   = QRectF(rectOnPage.x(), rectOnPage.y(), widthPhotoV, heightPhotoV);
+        break;
+    case Position::on:
         photoRect = consignRect = QRectF(rectOnPage.x(), rectOnPage.y(), rectOnPage.width(), rectOnPage.height());
-    }else{
-        switch (consignPositionFromPhoto) {
-        case Position::top:
-            consignRect = QRectF(rectOnPage.x(), rectOnPage.y(), widthConsigneV, heightConsigneV);
-            photoRect   = QRectF(rectOnPage.x(), rectOnPage.y() + heightConsigneV, widthPhotoV, heightPhotoV);
-            break;
-        case Position::left:
-            consignRect = QRectF(rectOnPage.x(), rectOnPage.y(), widthConsigneH, heightConsigneH);
-            photoRect   = QRectF(rectOnPage.x() + widthConsigneH, rectOnPage.y(), widthPhotoH, heightPhotoH);
-            break;
-        case Position::right:
-            consignRect = QRectF(rectOnPage.x() + widthPhotoH, rectOnPage.y(), widthConsigneH, heightConsigneH);
-            photoRect   = QRectF(rectOnPage.x(), rectOnPage.y(), widthPhotoH, heightPhotoH);
-            break;
-        case Position::bottom:
-            consignRect = QRectF(rectOnPage.x(), rectOnPage.y() + heightPhotoV, widthConsigneV, heightConsigneV);
-            photoRect   = QRectF(rectOnPage.x(), rectOnPage.y(), widthPhotoV, heightPhotoV);
-            break;
-        case Position::on:
-            break;
-        }
+        break;
     }
 
     consign->compute_sizes(consignRect);
     photo->compute_sizes(photoRect);
 }
 
-pc::Photo::Photo(const QString &path, bool isWhiteSpace) : isWhiteSpace(isWhiteSpace), pathPhoto(path){
-
-    constexpr int maxHeight = 800;
-    constexpr int maxWidth = 800;;
-
-    if(isWhiteSpace){
-        namePhoto = "Espace transparent";
-    }else{
-
-        info            = QFileInfo(path);
-        scaledPhoto     = QImage(path);
-        originalSize    = scaledPhoto.size();
-
-        if(!scaledPhoto.isNull()){
-
-            namePhoto = pathPhoto.split('/').last().split('.').first();
-            if(scaledPhoto.size().width() > maxWidth)
-                scaledPhoto = scaledPhoto.scaledToWidth(maxWidth);
-            if(scaledPhoto.size().height() > maxHeight)
-                scaledPhoto = scaledPhoto.scaledToHeight(maxHeight);
-        }
-        else{
-            namePhoto = "Erreur";
-            qWarning() << "-Error: photo not loaded: " << pathPhoto;
-        }
-    }
-}
-
-void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, bool preview, bool drawImageSize, const pc::PaperFormat &format, const QRectF &pageRect){
-
-    if(isWhiteSpace){
-        return;
-    }
-
-    if(scaledPhoto.isNull()){
-        qWarning() << "-Error: photo is null, can't be drawn";
-        return;
-    }
-
-    if(preview){
-        draw(painter, rectPhoto, scaledPhoto, true, drawImageSize, format, pageRect);
-    }else{
-        if(rectPhoto.width() > 5000 || rectPhoto.height() > 5000){
-            draw_huge(painter, rectPhoto);
-        }else{
-            draw(painter, rectPhoto, QImage(pathPhoto), false, false, format, pageRect);
-        }
-    }
-}
-
-void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, const QImage &photo, bool preview, bool drawImageSize, pc::PaperFormat format, const QRectF &pageRect){
-
-//    QElapsedTimer timer;
-//    timer.start();
-
-    QImage rotatedPhoto = preview ? photo.scaled(static_cast<int>(rectPhoto.width()),static_cast<int>(rectPhoto.height()), Qt::KeepAspectRatio) :
-                                    (photo.transformed(QTransform().rotate(rotation))).scaled(static_cast<int>(rectPhoto.width()),static_cast<int>(rectPhoto.height()), Qt::KeepAspectRatio);
-
-//    qDebug() << "   draw 1" << timer.elapsed() << "ms";
-
-    qreal newX     = rectPhoto.x(), newY = rectPhoto.y();
-    qreal newWidth = rotatedPhoto.width(), newHeight = rotatedPhoto.height();
-    if(rotatedPhoto.width() < rectPhoto.width()){
-        if(alignment & Qt::AlignRight){
-            newX     += rectPhoto.width()-rotatedPhoto.width();
-        }
-        else if(alignment & Qt::AlignHCenter){
-            newX     += rectPhoto.width()*0.5  - rotatedPhoto.width()*0.5;
-        }
-    }
-    if(rotatedPhoto.height() < rectPhoto.height()){
-        if(alignment & Qt::AlignBottom){
-            newY      += rectPhoto.height()-rotatedPhoto.height();
-        }
-        else if(alignment & Qt::AlignVCenter){
-            newY      += rectPhoto.height()*0.5-rotatedPhoto.height()*0.5;
-        }
-    }
-
-    if((rectPhoto.width()-rotatedPhoto.width()) > (rectPhoto.height()-rotatedPhoto.height())){
-        newHeight = rectPhoto.height();
-        newY      = rectPhoto.y();
-    }else{
-        newWidth = rectPhoto.width();
-        newX     = rectPhoto.x();
-    }
-
-
-//    qDebug() << "   draw 2" << timer.elapsed() << "ms";
-
-    // draw image
-    QRectF newRectPhoto(newX, newY, newWidth, newHeight);
-    painter.drawImage(newRectPhoto, rotatedPhoto, QRectF(0.,0.,rotatedPhoto.width(),rotatedPhoto.height()));
-
-//    qDebug() << "   draw 3" << timer.elapsed() << "ms";
-
-    if(drawImageSize && newWidth > 100 && newHeight > 50){
-
-        QPen pen;
-        pen.setColor(Qt::red);
-        painter.setPen(pen);
-        QFont font;
-
-        QString sizeImageStr = QString::number(newRectPhoto.width()/pageRect.width()*format.sizeMM.width(), 'i',0) + "x" +
-                QString::number(newRectPhoto.height()/pageRect.height()*format.sizeMM.height(), 'i', 0) +"(mm)";
-        font.setPointSizeF(newRectPhoto.width()/sizeImageStr.size());
-        painter.setFont(font);
-
-
-        painter.drawText(QRectF(newX, newY, newWidth, newHeight),  Qt::AlignCenter,sizeImageStr);
-    }
-
-//    qDebug() << "   draw 4" << timer.elapsed() << "ms";
-}
-
-void pc::Photo::draw_huge(QPainter &painter, const QRectF &rectPhoto){
-
-    QImage rotatedPhoto = QImage(pathPhoto).transformed(QTransform().rotate(rotation));
-    QSizeF upscaledSize(rectPhoto.width(),rectPhoto.height());
-    QSizeF size = rotatedPhoto.size();
-
-    qreal ratioW = 1.*size.width() / upscaledSize.width();
-    qreal ratioH = 1.*size.height() / upscaledSize.height();
-
-    if(ratioW > ratioH){
-        upscaledSize = QSizeF(upscaledSize.width(), size.height()/ratioW);
-    }else{
-        upscaledSize = QSizeF(size.width()/ratioH, upscaledSize.height());
-    }
-
-    // alignment
-    qreal newX = rectPhoto.x(), newY = rectPhoto.y();
-    if(upscaledSize.width() < rectPhoto.width()){
-        if(alignment & Qt::AlignRight){
-            newX = rectPhoto.x() + rectPhoto.width()-upscaledSize.width();
-        }
-        if(alignment & Qt::AlignHCenter){
-            newX = rectPhoto.x() + rectPhoto.width()*0.5 - upscaledSize.width()*0.5;
-        }
-    }
-    if(upscaledSize.height() < rectPhoto.height()){
-        if(alignment & Qt::AlignBottom){
-            newY = rectPhoto.y() + rectPhoto.height()-upscaledSize.height();
-        }
-        if(alignment & Qt::AlignVCenter){
-            newY = rectPhoto.y() + rectPhoto.height()*0.5-upscaledSize.height()*0.5;
-        }
-    }
-     QRectF newRect(newX,newY,rectPhoto.width(),rectPhoto.height());
-
-    // draw tiles
-    int widthUpPerTile  = (upscaledSize.width() /10);
-    int heightUpPerTile = (upscaledSize.height()/10);
-
-    int widthUpTileRemainder  = static_cast<int>(upscaledSize.width())%widthUpPerTile;
-    int heightUpTileRemainder = static_cast<int>(upscaledSize.height())%heightUpPerTile;
-
-    int nbTilesH            = upscaledSize.width()/widthUpPerTile;
-    int widthPerTile        = size.width()/nbTilesH;
-    int widthTileRemainder  = static_cast<int>(size.width())%widthPerTile;
-
-    int nbTilesV            = upscaledSize.height()/heightUpPerTile;
-    int heightPerTile       = size.height()/nbTilesV;
-    int heightTileRemainder = static_cast<int>(size.height())%heightPerTile;
-
-    int nbTotalTilesH = nbTilesH + (widthTileRemainder  > 0 ? 1:0);
-    int nbTotalTilesV = nbTilesV + (heightTileRemainder > 0 ? 1:0);
-
-    for(int ii = 0; ii < nbTotalTilesH; ++ii){
-
-        bool lastTileH   = (widthTileRemainder > 0) && (ii == nbTotalTilesH-1);
-        bool lastTileUpH = (widthUpTileRemainder > 0) && (ii == nbTotalTilesH-1);
-
-        for (int jj = 0; jj < nbTotalTilesV; ++jj){
-
-            bool lastTileV = (heightTileRemainder > 0) && (jj == nbTotalTilesV-1);
-            bool lastTileUpV = (heightUpTileRemainder > 0) && (jj == nbTotalTilesV-1);
-            QRectF itRect(ii* widthPerTile, jj * heightPerTile, lastTileH ? widthTileRemainder : widthPerTile, lastTileV ?  heightTileRemainder : heightPerTile);
-            QRectF itUpRect(ii* widthUpPerTile, jj * heightUpPerTile, lastTileUpH ? widthUpTileRemainder : widthUpPerTile, lastTileUpV ? heightUpTileRemainder : heightUpPerTile);
-            size_t offset = itRect.x() * rotatedPhoto.depth() / 8 + itRect.y() * rotatedPhoto.bytesPerLine();
-
-            painter.drawImage(newRect.x()+itUpRect.x(),newRect.y()+itUpRect.y(), QImage(rotatedPhoto.bits() + offset, itRect.width(),itRect.height(),
-                                                                                            rotatedPhoto.bytesPerLine(), rotatedPhoto.format()).scaled(itUpRect.width(),itUpRect.height()));
-        }
-    }
-}
 
 pc::PaperFormat::PaperFormat(QString dpiStr, QString formatStr){
 
