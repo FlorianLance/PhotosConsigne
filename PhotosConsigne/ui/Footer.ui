@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FooterUI</class>
+ <widget class="QWidget" name="FooterUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="frameEnableFooter">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="leftMargin">
+       <number>3</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>3</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <item>
+       <widget class="QCheckBox" name="cbEnableFooter">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Utiliser les paramètres définis ci-dessous pour cet ensemble</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 12pt Calibri;
+
+
+ }
+</string>
+        </property>
+        <property name="text">
+         <string>Afficher le bas de page</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer1">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="frameFooter">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_34">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QTabWidget" name="tabFooter">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+
+QTabWidget::tab-bar {
+    alignment: center;
+}
+
+QTabWidget::pane { 
+
+	/* border */
+    border: 0px solid rgb(0,106,255);
+    border-top: 1px solid rgb(0,106,255);
+	border-right: 0px solid rgb(0,106,255);
+	border-bottom: 1px solid rgb(0,106,255);
+
+	/* border radius */
+	border-top-right-radius: 0px;
+	border-top-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+
+	/* color */
+	background-color:rgb(255, 255, 255)
+}
+
+QTabBar::tab {
+
+	/* border */
+    border: 0px solid rgb(0,106,255);
+    border-right: 1px solid rgb(0,106,255);
+    border-top: 1px solid rgb(0,106,255);
+
+	/* border radius */
+    border-radius: 0px;
+
+	/* color */
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+	color : rgb(0,106,255);
+
+	/* size */
+	height:4ex;
+	min-width:20ex;
+
+	/* padding */
+    padding: 2px;
+}
+
+/* ################ SELECTION */
+
+QTabBar::tab:!selected {
+
+	/* color */
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+	color : rgb(127,180,255);
+
+	/* font */
+  	font:  11pt Calibri;
+}
+
+
+QTabBar::tab:selected {
+
+	/* color */
+	color : rgb(0,106,255);
+    background-color:  rgb(220,220,220);
+
+	/* font */
+	 font: bold 11pt Calibri;
+}
+
+
+/* ################ HOVER*/
+
+QTabBar::tab:hover  {
+
+	/* color */
+	color : rgb(0,106,255);	
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+
+	/* font */
+	 font: bold 11pt Calibri;
+}
+
+
+/* ################ ORDER */
+
+
+QTabBar::tab:first{
+
+	/* border */
+	border-left: 1px solid rgb(0,106,255);
+
+	/* border radius */
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 0px;
+
+}
+
+QTabBar::tab:last{
+
+	/* border radius */
+	 border-top-right-radius: 4px;
+}
+</string>
+        </property>
+        <property name="tabPosition">
+         <enum>QTabWidget::North</enum>
+        </property>
+        <property name="tabShape">
+         <enum>QTabWidget::Rounded</enum>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <property name="elideMode">
+         <enum>Qt::ElideLeft</enum>
+        </property>
+        <widget class="QWidget" name="pageFooterText">
+         <attribute name="title">
+          <string>TEXTE</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="vlFooterText">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="pageStyle">
+         <attribute name="title">
+          <string>STYLE</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="vlStyle">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="pageFooterBackground">
+         <attribute name="title">
+          <string>FOND</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="vlFooterBackground">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>222</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

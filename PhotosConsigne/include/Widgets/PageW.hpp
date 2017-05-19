@@ -9,10 +9,10 @@
  */
 
 // local
-#include "Utility.hpp"
 #include "BordersW.hpp"
 #include "MarginsW.hpp"
 #include "BackgroundW.hpp"
+#include "GlobalDocumentSettings.hpp"
 
 // generated ui
 #include "ui_Page.h"
@@ -24,13 +24,13 @@ namespace Ui {
 namespace pc{
 
 struct PageW;
-using SPageUI = std::shared_ptr<PageW>;
+using SPageW = std::shared_ptr<PageW>;
 
 struct PageW : public SettingsW{
 
     PageW();
 
-    void init_with_global_settings(const GlobalData &globalSettings);
+    void init_with_global_settings(const GlobalDocumentSettings &globalSettings);
 
     bool individual() const noexcept {
         return ui.cbEnableIndividualPage->isChecked();

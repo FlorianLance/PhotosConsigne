@@ -41,19 +41,19 @@ pc::PageW::PageW() : SettingsW(){
     init_checkboxes_connections({ui.cbEnableIndividualPage}, true);
     Utility::checkbox_enable_UI(ui.cbEnableIndividualPage, {ui.framePage});
 
-//    // # background
-//    connect(&backgroundW, &BackgroundW::settings_updated_signal, this, &PageW::settings_updated_signal);
-//    // # borders
-//    connect(&bordersW, &BordersW::settings_updated_signal, this, &PageW::settings_updated_signal);
-//    // # margins
-//    connect(&marginsW, &MarginsW::settings_updated_signal, this, &PageW::settings_updated_signal);
+    // # background
+    connect(&backgroundW, &BackgroundW::settings_updated_signal, this, &PageW::settings_updated_signal);
+    // # borders
+    connect(&bordersW, &BordersW::settings_updated_signal, this, &PageW::settings_updated_signal);
+    // # margins
+    connect(&marginsW, &MarginsW::settings_updated_signal, this, &PageW::settings_updated_signal);
 
     id = pageUICounter++;
 }
 
 
 
-void pc::PageW::init_with_global_settings(const pc::GlobalData &globalSettings){
+void pc::PageW::init_with_global_settings(const pc::GlobalDocumentSettings &globalSettings){
 
     // init ui
     ui.sbPhotosNbHeight->setValue(globalSettings.nbPhotosPageHeight);

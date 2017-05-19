@@ -129,6 +129,9 @@
     <qresource prefix="/images/margins">
         <file alias="extern_margins">resources/images/margins/extern_margins.png</file>
         <file alias="intern_margins">resources/images/margins/intern_margins.png</file>
+        <file alias="footer_margins">resources/images/margins/footer_marings.png</file>
+        <file alias="header_margins">resources/images/margins/header_margins.png</file>
+        <file alias="footer_header_margins">resources/images/margins/footer_header_margins.png</file>
     </qresource>
     <qresource prefix="/images/sets">
         <file alias="nb_sets">resources/images/sets/nb_sets.png</file>
@@ -144,5 +147,9 @@
         <file alias="textOnPhoto">resources/images/position/textOnPhoto.png</file>
         <file alias="textRight">resources/images/position/textRight.png</file>
         <file alias="textTop">resources/images/position/textTop.png</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file alias="textLeft">resources/icons/textleft.png</file>
+        <file alias="textRight">resources/icons/textright.png</file>
     </qresource>
 </RCC>

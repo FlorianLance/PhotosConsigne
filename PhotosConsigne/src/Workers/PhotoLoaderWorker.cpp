@@ -1,17 +1,25 @@
 
 
+// local
 #include "PhotoLoaderWorker.hpp"
+#include "GlobalDocumentSettings.hpp"
+#include "DocumentElements.hpp"
+
+// Qt
+#include <QCoreApplication>
 
 pc::PhotoLoaderWorker::PhotoLoaderWorker(){
 
     qRegisterMetaType<SPhoto>("SPhoto");
     qRegisterMetaType<SPhotos>("SPhotos");
-    qRegisterMetaType<GlobalData>("GlobalData");
+    qRegisterMetaType<GlobalDocumentSettings>("GlobalDocumentSettings");
     qRegisterMetaType<PCPages>("PCPages");
     qRegisterMetaType<PCPage>("PCPage");
     qRegisterMetaType<QVector<QRectF>>("QVector<QRectF>");
     qRegisterMetaType<QReadWriteLock *>("QReadWriteLock *");
 }
+
+pc::PhotoLoaderWorker::~PhotoLoaderWorker(){}
 
 void pc::PhotoLoaderWorker::load_photos_directory(QStringList photosPath, int startIndexToInsert){
 

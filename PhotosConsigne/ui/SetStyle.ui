@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>370</width>
-    <height>328</height>
+    <width>320</width>
+    <height>385</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>320</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>420</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -29,18 +41,239 @@
    <property name="spacing">
     <number>0</number>
    </property>
-   <item row="0" column="1">
-    <widget class="QFrame" name="frameRatioPC">
+   <item row="5" column="0" colspan="2">
+    <widget class="QFrame" name="framePhotoAlignment">
      <property name="minimumSize">
       <size>
-       <width>100</width>
-       <height>130</height>
+       <width>0</width>
+       <height>100</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>16777215</height>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">.QFrame{
+    border: 0px solid gray;
+    border-radius: 0px;
+}</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_20">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item alignment="Qt::AlignHCenter">
+       <widget class="QComboBox" name="cbPhotoAlignment">
+        <property name="minimumSize">
+         <size>
+          <width>45</width>
+          <height>45</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>45</width>
+          <height>45</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choix du motif de fond&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    border: 1px solid rgb(0,106,255);
+    border-radius: 3px;
+  padding: 1px -1px 1px 1px;
+
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QComboBox::drop-down {
+	width: 0px;
+}
+
+QComboBox:hover{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+}
+
+
+ QComboBox QAbstractItemView {
+     selection-background-color: lightgray;
+ }
+
+
+QComboBox:!enabled {
+    border-color: rgb(150,150,150);
+  
+}
+
+	</string>
+        </property>
+        <property name="currentIndex">
+         <number>1</number>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="frame">
+         <bool>true</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/aligment/center_left</normaloff>:/images/aligment/center_left</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/aligment/center_center</normaloff>:/images/aligment/center_center</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/aligment/center_right</normaloff>:/images/aligment/center_right</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/aligment/top_left</normaloff>:/images/aligment/top_left</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/aligment/top_center</normaloff>:/images/aligment/top_center</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/aligment/top_right</normaloff>:/images/aligment/top_right</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/aligment/down_left</normaloff>:/images/aligment/down_left</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/aligment/down_center</normaloff>:/images/aligment/down_center</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/aligment/down_right</normaloff>:/images/aligment/down_right</iconset>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignHCenter">
+       <widget class="QLabel" name="laConsignAlignment">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+    font:  bold 10pt Calibri;
+ }
+</string>
+        </property>
+        <property name="text">
+         <string>Alignement de la photo</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="QFrame" name="frameRatioPC">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>90</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>90</height>
       </size>
      </property>
      <property name="styleSheet">
@@ -57,76 +290,24 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_17">
       <property name="leftMargin">
-       <number>10</number>
+       <number>5</number>
       </property>
       <property name="topMargin">
        <number>5</number>
       </property>
       <property name="rightMargin">
-       <number>10</number>
+       <number>5</number>
       </property>
       <property name="bottomMargin">
-       <number>5</number>
-      </property>
-      <property name="horizontalSpacing">
        <number>0</number>
       </property>
-      <property name="verticalSpacing">
+      <property name="horizontalSpacing">
        <number>5</number>
       </property>
-      <item row="0" column="0" alignment="Qt::AlignHCenter">
-       <widget class="QPushButton" name="pbRatioPhotoText">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>24</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">
-
-QPushButton {
-    font: bold 12pt Calibri;  
-
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
- }
- 
-QPushButton::enabled {
-
-
- }
-
-QPushButton:hover:!pressed{
-
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-}
-
- QPushButton:pressed{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
-}
-
-</string>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset resource="../resources.qrc">
-          <normaloff>:/images/ratio</normaloff>:/images/ratio</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>100</width>
-          <height>60</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" alignment="Qt::AlignHCenter">
+      <property name="verticalSpacing">
+       <number>0</number>
+      </property>
+      <item row="0" column="2" alignment="Qt::AlignLeft">
        <widget class="QDoubleSpinBox" name="dsbRatioPC">
         <property name="maximumSize">
          <size>
@@ -137,18 +318,49 @@ QPushButton:hover:!pressed{
         <property name="toolTip">
          <string>Ratio par défaut de l'espace entre la photo et la consigne</string>
         </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
         <property name="maximum">
          <double>1.000000000000000</double>
         </property>
         <property name="singleStep">
-         <double>0.010000000000000</double>
+         <double>0.002000000000000</double>
         </property>
         <property name="value">
          <double>0.750000000000000</double>
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="2" alignment="Qt::AlignHCenter">
+      <item row="0" column="1" alignment="Qt::AlignHCenter">
+       <widget class="QSlider" name="hsRatioPC">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Ratio par défaut de l'espace entre la photo et la consigne</string>
+        </property>
+        <property name="maximum">
+         <number>10000</number>
+        </property>
+        <property name="value">
+         <number>7500</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="3" alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="laRatioPhotoConsign">
         <property name="maximumSize">
          <size>
@@ -180,31 +392,227 @@ QWidget:!enabled {
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QSlider" name="hsRatioPC">
+     </layout>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="3">
+    <widget class="Line" name="line1">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>1</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+QFrame{
+background-color: rgb(0,106,255);
+}
+
+
+QFrame:!enabled
+{
+	background-color: rgb(150,150,150);
+}
+
+
+	</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="Line" name="line3">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>1</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+QFrame{
+background-color: rgb(0,106,255);
+}
+
+
+QFrame:!enabled
+{
+	background-color: rgb(150,150,150);
+}
+
+
+	</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0" colspan="2">
+    <widget class="QFrame" name="frameAdjustPhoto">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>130</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_32">
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <property name="leftMargin">
+       <number>2</number>
+      </property>
+      <property name="topMargin">
+       <number>10</number>
+      </property>
+      <property name="rightMargin">
+       <number>2</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item alignment="Qt::AlignHCenter">
+       <widget class="QComboBox" name="cbAdjustPhoto">
         <property name="minimumSize">
          <size>
-          <width>0</width>
-          <height>0</height>
+          <width>150</width>
+          <height>45</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>200</width>
-          <height>16777215</height>
+          <width>16777215</width>
+          <height>45</height>
          </size>
         </property>
         <property name="toolTip">
-         <string>Ratio par défaut de l'espace entre la photo et la consigne</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajustement de l'image de fond&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-        <property name="maximum">
-         <number>1000</number>
+        <property name="styleSheet">
+         <string notr="true">QComboBox {
+    border: 1px solid rgb(0,106,255);
+    border-radius: 3px;
+    padding: 1px 1px 1px -0px;
+
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+
+    font:  10pt Calibri;
+	color : rgb(150,150,150);
+}
+
+
+QComboBox:enabled {
+
+	color : rgb(0,106,255);
+}
+
+
+QComboBox::drop-down {
+	width: 0px;
+}
+
+QComboBox:hover{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+}
+
+ QComboBox QAbstractItemView {
+     selection-background-color: lightgray;
+ }</string>
         </property>
-        <property name="value">
-         <number>750</number>
+        <property name="currentIndex">
+         <number>3</number>
         </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+        <property name="iconSize">
+         <size>
+          <width>72</width>
+          <height>46</height>
+         </size>
+        </property>
+        <property name="frame">
+         <bool>true</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>Centrer</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/adjust/center_bg_image</normaloff>:/images/adjust/center_bg_image</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Etirer</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/adjust/extend_bg_image</normaloff>:/images/adjust/extend_bg_image</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Remplir</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/adjust/fill_bg_image</normaloff>:/images/adjust/fill_bg_image</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Ajuster</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/adjust/adjust_bg_image</normaloff>:/images/adjust/adjust_bg_image</iconset>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Mosaïque</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../resources.qrc">
+           <normaloff>:/images/adjust/mosaic_bg_image</normaloff>:/images/adjust/mosaic_bg_image</iconset>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignHCenter">
+       <widget class="QLabel" name="laAdjustPhoto">
+        <property name="styleSheet">
+         <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+    font:  bold 10pt Calibri;
+ }
+</string>
+        </property>
+        <property name="text">
+         <string>Ajustement de la photo</string>
         </property>
        </widget>
       </item>
@@ -245,18 +653,34 @@ QFrame:!enabled
      </property>
     </widget>
    </item>
-   <item row="0" column="3">
+   <item row="9" column="0">
+    <spacer name="verticalSpacer1">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Expanding</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>93</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="3" column="0" colspan="2">
     <widget class="QFrame" name="frameConsignPosition">
      <property name="minimumSize">
       <size>
-       <width>180</width>
-       <height>130</height>
+       <width>0</width>
+       <height>110</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>16777215</height>
+       <height>110</height>
       </size>
      </property>
      <property name="styleSheet">
@@ -271,9 +695,30 @@ QFrame:!enabled
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_8">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>2</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
        <widget class="QFrame" name="frameSubConsignPosition">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>65</height>
+         </size>
+        </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
         </property>
@@ -427,456 +872,17 @@ QWidget:!enabled {
 </string>
         </property>
         <property name="text">
-         <string>Position</string>
+         <string>Position consigne</string>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="1" column="0" colspan="4">
-    <widget class="Line" name="line3">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>1</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">
-QFrame{
-background-color: rgb(0,106,255);
-}
-
-
-QFrame:!enabled
-{
-	background-color: rgb(150,150,150);
-}
-
-
-	</string>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
-    <widget class="QFrame" name="framePhotoAlignment">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>100</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">.QFrame{
-    border: 0px solid gray;
-    border-radius: 0px;
-}</string>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_20">
-      <property name="spacing">
-       <number>2</number>
-      </property>
-      <property name="leftMargin">
-       <number>5</number>
-      </property>
-      <property name="topMargin">
-       <number>5</number>
-      </property>
-      <property name="rightMargin">
-       <number>5</number>
-      </property>
-      <property name="bottomMargin">
-       <number>5</number>
-      </property>
-      <item alignment="Qt::AlignHCenter">
-       <widget class="QComboBox" name="cbPhotoAlignment">
-        <property name="minimumSize">
-         <size>
-          <width>45</width>
-          <height>45</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>45</width>
-          <height>45</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choix du motif de fond&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QComboBox {
-    border: 1px solid rgb(0,106,255);
-    border-radius: 3px;
-  padding: 1px -1px 1px 1px;
-
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}
-
-QComboBox::drop-down {
-	width: 0px;
-}
-
-QComboBox:hover{
-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-}
-
-
- QComboBox QAbstractItemView {
-     selection-background-color: lightgray;
- }
-
-
-QComboBox:!enabled {
-    border-color: rgb(150,150,150);
-  
-}
-
-	</string>
-        </property>
-        <property name="currentIndex">
-         <number>1</number>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>40</width>
-          <height>40</height>
-         </size>
-        </property>
-        <property name="frame">
-         <bool>true</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/aligment/center_left</normaloff>:/images/aligment/center_left</iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/aligment/center_center</normaloff>:/images/aligment/center_center</iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/aligment/center_right</normaloff>:/images/aligment/center_right</iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/aligment/top_left</normaloff>:/images/aligment/top_left</iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/aligment/top_center</normaloff>:/images/aligment/top_center</iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/aligment/top_right</normaloff>:/images/aligment/top_right</iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/aligment/down_left</normaloff>:/images/aligment/down_left</iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/aligment/down_center</normaloff>:/images/aligment/down_center</iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/aligment/down_right</normaloff>:/images/aligment/down_right</iconset>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item alignment="Qt::AlignHCenter">
-       <widget class="QLabel" name="laConsignAlignment">
-        <property name="styleSheet">
-         <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-    font:  bold 10pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-    font:  bold 10pt Calibri;
- }
-</string>
-        </property>
-        <property name="text">
-         <string>Alignement de la photo</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="2" column="2">
+   <item row="4" column="0" colspan="2">
     <widget class="Line" name="line4">
      <property name="maximumSize">
       <size>
-       <width>1</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">
-QFrame{
-background-color: rgb(0,106,255);
-}
-
-
-QFrame:!enabled
-{
-	background-color: rgb(150,150,150);
-}
-
-
-	</string>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3">
-    <widget class="QFrame" name="frameAdjustPhoto">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_32">
-      <property name="spacing">
-       <number>10</number>
-      </property>
-      <property name="leftMargin">
-       <number>2</number>
-      </property>
-      <property name="topMargin">
-       <number>5</number>
-      </property>
-      <property name="rightMargin">
-       <number>2</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <item alignment="Qt::AlignHCenter">
-       <widget class="QComboBox" name="cbAdjustPhoto">
-        <property name="minimumSize">
-         <size>
-          <width>150</width>
-          <height>45</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>45</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajustement de l'image de fond&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QComboBox {
-    border: 1px solid rgb(0,106,255);
-    border-radius: 3px;
-    padding: 1px 1px 1px -0px;
-
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-
-    font:  10pt Calibri;
-	color : rgb(150,150,150);
-}
-
-
-QComboBox:enabled {
-
-	color : rgb(0,106,255);
-}
-
-
-QComboBox::drop-down {
-	width: 0px;
-}
-
-QComboBox:hover{
-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-}
-
- QComboBox QAbstractItemView {
-     selection-background-color: lightgray;
- }</string>
-        </property>
-        <property name="currentIndex">
-         <number>3</number>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>72</width>
-          <height>46</height>
-         </size>
-        </property>
-        <property name="frame">
-         <bool>true</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>Centrer</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/adjust/center_bg_image</normaloff>:/images/adjust/center_bg_image</iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Etirer</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/adjust/extend_bg_image</normaloff>:/images/adjust/extend_bg_image</iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Remplir</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/adjust/fill_bg_image</normaloff>:/images/adjust/fill_bg_image</iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Ajuster</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/adjust/adjust_bg_image</normaloff>:/images/adjust/adjust_bg_image</iconset>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Mosaïque</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../resources.qrc">
-           <normaloff>:/images/adjust/mosaic_bg_image</normaloff>:/images/adjust/mosaic_bg_image</iconset>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item alignment="Qt::AlignHCenter">
-       <widget class="QLabel" name="laAdjustPhoto">
-        <property name="styleSheet">
-         <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-    font:  bold 10pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-    font:  bold 10pt Calibri;
- }
-</string>
-        </property>
-        <property name="text">
-         <string>Ajustement de la photo</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="4">
-    <widget class="Line" name="line1">
-     <property name="maximumSize">
-      <size>
        <width>16777215</width>
        <height>1</height>
       </size>
@@ -900,19 +906,6 @@ QFrame:!enabled
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
-   </item>
-   <item row="4" column="0">
-    <spacer name="verticalSpacer1">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>93</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>

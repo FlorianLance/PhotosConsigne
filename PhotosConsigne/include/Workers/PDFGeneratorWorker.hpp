@@ -3,9 +3,12 @@
 
 // local
 #include "Utility.hpp"
+#include "DocumentElements.hpp"
 
 // Qt
 #include <QPrinter>
+#include <QUrl>
+#include <QTextDocument>
 
 namespace pc{
 
@@ -17,9 +20,7 @@ public :
 
     PDFGeneratorWorker(){}
 
-    virtual ~PDFGeneratorWorker(){
-        qDebug() << "destructor PDFGeneratorWorker";
-    }
+    virtual ~PDFGeneratorWorker();
 
     void draw_page(QPainter &painter, PCPages &pcPages, const int idPageToDraw, const qreal factorUpscale, const bool preview, const bool drawZones);
 
@@ -53,6 +54,14 @@ signals :
     void abort_pdf_signal(QString pathPDF);
 
     void current_pc_selected_signal(QRectF pcRectRelative, int totalIdPC);
+
+private :
+
+    void draw_zones(QPainter &painter, SPCPage pcPage);
+
+    void draw_backgrounds(QPainter &painter, SPCPage pcPage, ExtraPCInfo &infos);
+
+    void draw_contents(QPainter &painter, SPCPage pcPage, ExtraPCInfo &infos);
 
 
 private :

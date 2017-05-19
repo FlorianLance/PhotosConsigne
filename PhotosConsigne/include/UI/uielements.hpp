@@ -10,17 +10,12 @@
 
 // local
 #include "Utility.hpp"
-// # ui
-#include "PageW.hpp"
-#include "BackgroundW.hpp"
-#include "MarginsW.hpp"
-#include "BordersW.hpp"
-#include "SetStyleW.hpp"
-#include "IndividualSetW.hpp"
 // # widgets
+#include "PageW.hpp"
+#include "SetW.hpp"
+#include "HeaderW.hpp"
+#include "FooterW.hpp"
 #include "PreviewW.hpp"
-
-
 // # generated ui
 #include "ui_PhotosConsigneMainW.h"
 #include "ui_Support.h"
@@ -42,14 +37,6 @@ struct ImageResource{
     QImage image;
 };
 
-struct TitleUI{
-
-    TitleUI();
-
-    std::shared_ptr<QString>        html = nullptr;
-    std::shared_ptr<RichTextEdit>   richTextEdit = std::make_shared<RichTextEdit>();
-};
-
 
 class UIElements : public QObject{
 
@@ -68,7 +55,7 @@ public :
     void reset_individual_sets(int nbPhotos);
 
     // pages related
-    void update_individual_pages(const GlobalData &settings);
+    void update_individual_pages(const GlobalDocumentSettings &settings);
 
     // members
     QTimer zonesTimer;
@@ -79,19 +66,18 @@ public :
     PhotoW   *selectedPhotoW        = nullptr;
     PreviewW *previewW              = nullptr;
 
-    TitleUI         titleUI;
-
-    RichTextUI      globalConsignUI;
-
-
     BackgroundW     globalBackgroundW;
     BordersW        globalBordersW;
     MarginsW        globalMarginsW;
+    RichTextEditW   globalSetTextW;
     SetStyleW       globalSetStyleW;
 
-    QList<SPageUI>         individualPageUI;
-    QList<SIndividualSetW> individualSetsLoadedUI;
-    QList<SIndividualSetW> individuaSetsValidedUI;
+    HeaderW         headerW;
+    FooterW         footerW;
+
+    QList<SPageW>          pageW;
+    QList<SIndividualSetW> setsLoadedW;
+    QList<SIndividualSetW> setsValidedW;
 
 public slots:
 

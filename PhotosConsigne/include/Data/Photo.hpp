@@ -11,9 +11,32 @@
 
 // local
 #include "RectPageItem.hpp"
+#include "PaperFormat.hpp"
+
 
 namespace pc
 {
+
+    struct ExtraPCInfo{
+
+        ExtraPCInfo(){}
+
+        QFileInfo fileInfo;
+        QString namePCAssociatedPhoto = "";
+
+        bool preview        = false;
+        bool displaySizes   = false;
+        qreal factorUpscale = 1.;
+        PaperFormat paperFormat;
+
+        int pageNum       = -1;
+        int pagesNb       = -1;
+        int photoNum      = -1;
+        int photoPCNum    = -1;
+        int photoTotalNum = -1;
+        QColor pageColor = Qt::white;
+    };
+
     // define aliases
     struct Photo;
     using SPhoto  = std::shared_ptr<Photo>;
@@ -27,6 +50,8 @@ namespace pc
     struct Photo : public RectPageItem {
 
         Photo() = delete;
+
+        virtual ~Photo(){}
 
         Photo(const Photo &photo) = default;
 
@@ -42,11 +67,11 @@ namespace pc
 
         QSize scaled_size() const noexcept {return scaledPhoto.size();}
 
-        void draw(QPainter &painter, const QRectF &rectPhoto, bool preview, bool drawImageSize = false, const QSizeF &pageSizeMM = QSizeF(), const QSizeF &pageSize = QSizeF());
+        void draw(QPainter &painter, const QRectF &rectPhoto, const ExtraPCInfo &infos, const QSizeF &pageSize = QSizeF());
 
     private:
 
-        QRectF draw_small(QPainter &painter, const QRectF &rectPhoto, const QImage &photo, bool preview, bool drawImageSize, const QSizeF &pageSizeMM, const QSizeF &pageSize);
+        QRectF draw_small(QPainter &painter, const QRectF &rectPhoto, const QImage &photo, const ExtraPCInfo &infos, const QSizeF &pageSize);
 
         void draw_huge_photo_whith_tiles(QPainter &painter, const QImage &photoToUpscale, const QRectF &rectPhoto);
 

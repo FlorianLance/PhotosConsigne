@@ -84,7 +84,7 @@
 
 
 // local
-#include "RichTextW.hpp"
+#include "RichTextEditW.hpp"
 
 // generated
 #include "ui_InsertLink.h"
@@ -94,15 +94,16 @@ namespace Ui {
     class InsertLinkW;
 }
 
+using namespace pc;
+
+
 #ifdef Q_OS_MAC
 const QString rsrcPath = ":/images/mac";
 #else
 const QString rsrcPath = ":/images";
 #endif
 
-RichTextEdit::RichTextEdit(QWidget *parent)
-    :  QWidget(parent)
-{
+RichTextEditW::RichTextEditW():  SettingsW() {
 
 #ifdef Q_OS_OSX
     setUnifiedTitleAndToolBarOnMac(true);
@@ -121,11 +122,8 @@ RichTextEdit::RichTextEdit(QWidget *parent)
     format.setFont(textFont);
     format.setForeground(Qt::black);
     m_textEdit->setCurrentCharFormat(format);
-
-//    m_textEdit->setStyleSheet("");
-//    m_textEdit->setFontWeight(50);
-    connect(m_textEdit, &TextEdit::currentCharFormatChanged,this, &RichTextEdit::current_char_format_changed);
-    connect(m_textEdit, &TextEdit::cursorPositionChanged,this, &RichTextEdit::cursor_position_changed);
+    connect(m_textEdit, &TextEdit::currentCharFormatChanged,this, &RichTextEditW::current_char_format_changed);
+    connect(m_textEdit, &TextEdit::cursorPositionChanged,this, &RichTextEditW::cursor_position_changed);
     connect(m_textEdit, &TextEdit::textChanged, this, []{});
 
     // set ui
@@ -178,18 +176,43 @@ RichTextEdit::RichTextEdit(QWidget *parent)
     actionRedo->setEnabled(m_textEdit->document()->isRedoAvailable());
     actionCut->setEnabled(true);
     actionCopy->setEnabled(true);
-    connect(QApplication::clipboard(), &QClipboard::dataChanged, this, &RichTextEdit::clipboard_data_changed);
+    connect(QApplication::clipboard(), &QClipboard::dataChanged, this, &RichTextEditW::clipboard_data_changed);
 
     m_textEdit->setFocus();
 
     // send html
     connect(m_textEdit, &TextEdit::textChanged, this, [=]{
-
-        emit html_updated_signal(std::make_shared<QString>(m_textEdit->toHtml()));
+        m_html = std::make_shared<QString>(m_textEdit->toHtml());
+        emit settings_updated_signal(false);
     });
+
+
 }
 
-void RichTextEdit::init_as_title(){
+void RichTextEditW::init_style(RichTextType type){
+
+    // init html
+    switch(type){
+    case RichTextType::individualConsign:
+        init_as_individual_consign();
+        init_colors_icons(qRgba(0,0,0,255), qRgba(225,225,225,0));
+        break;
+    case RichTextType::globalConsign:
+        init_colors_icons(qRgba(0,0,0,255), qRgba(225,225,225,0));
+        init_as_consign();
+        break;
+    case RichTextType::footer:
+        init_colors_icons(qRgba(0,0,0,255), qRgba(225,225,225,0));
+        init_as_footer();
+        break;
+    case RichTextType::header:
+        init_colors_icons(qRgba(0,0,0,255), qRgba(225,225,225,0));
+        init_as_header();
+        break;
+    }
+}
+
+void RichTextEditW::init_as_title(){
 
     QString html = "<p align=\"center\" align=\"center style= margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
     "<span style=\"font-family:'Calibri'; font-size:20pt; background-color:transparent;\">" //
@@ -199,7 +222,28 @@ void RichTextEdit::init_as_title(){
     m_comboSize->setCurrentIndex(9);
 }
 
-void RichTextEdit::init_as_consign(){
+void RichTextEditW::init_as_footer(){
+
+    QString html = "<p align=\"center\" align=\"center style= margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
+    "<span style=\"font-family:'Calibri'; font-size:20pt; background-color:transparent;\">" //
+    "<br />Texte de bas de page..."
+    "</span>";
+    textEdit()->setHtml(html);
+    m_comboSize->setCurrentIndex(9);
+}
+
+
+void RichTextEditW::init_as_header(){
+
+    QString html = "<p align=\"center\" align=\"center style= margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
+    "<span style=\"font-family:'Calibri'; font-size:20pt; background-color:transparent;\">" //
+    "<br />Texte de haut de page..."
+    "</span>";
+    textEdit()->setHtml(html);
+    m_comboSize->setCurrentIndex(9);
+}
+
+void RichTextEditW::init_as_consign(){
 
     QString html = "<p align=\"center\" align=\"center style= margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
     "<span style=\"font-family:'Calibri'; font-size:14pt; background-color:transparent;\">"
@@ -209,7 +253,7 @@ void RichTextEdit::init_as_consign(){
     m_comboSize->setCurrentIndex(7);
 }
 
-void RichTextEdit::init_as_individual_consign(){
+void RichTextEditW::init_as_individual_consign(){
 
     QString html = "<p align=\"center\" align=\"center style= margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">"
     "<span style=\"font-family:'Calibri'; font-size:14pt; background-color:transparent;\">"
@@ -219,68 +263,69 @@ void RichTextEdit::init_as_individual_consign(){
     m_comboSize->setCurrentIndex(7);
 }
 
-void RichTextEdit::init_colors_icons(QColor foreGround, QColor backGround){
+void RichTextEditW::init_colors_icons(QColor foreGround, QColor backGround){
 
     color_text_changed(foreGround);
     background_color_text_changed(backGround);
 }
 
-void RichTextEdit::init_with_another(RichTextEdit *richEdit, QString *html){
+void RichTextEditW::init_with_another(const RichTextEditW &richTextEdit, std::shared_ptr<QString> html){
 
     if(html != nullptr){
         m_textEdit->blockSignals(true);
         m_textEdit->setHtml(*html);
+        m_html = std::make_shared<QString>(*html);
         m_textEdit->blockSignals(false);
     }
 
     m_comboStyle->blockSignals(true);
-    m_comboStyle->setCurrentIndex(richEdit->m_comboSize->currentIndex());
+    m_comboStyle->setCurrentIndex(richTextEdit.m_comboSize->currentIndex());
     m_comboStyle->blockSignals(false);
     m_comboCodes->blockSignals(true);
-    m_comboCodes->setCurrentIndex(richEdit->m_comboCodes->currentIndex());
+    m_comboCodes->setCurrentIndex(richTextEdit.m_comboCodes->currentIndex());
     m_comboCodes->blockSignals(false);
     m_comboSize->blockSignals(true);
-    m_comboSize->setCurrentIndex(richEdit->m_comboSize->currentIndex());
+    m_comboSize->setCurrentIndex(richTextEdit.m_comboSize->currentIndex());
     m_comboSize->blockSignals(false);
     m_comboFont->blockSignals(true);
-    m_comboFont->setCurrentIndex(richEdit->m_comboFont->currentIndex());
+    m_comboFont->setCurrentIndex(richTextEdit.m_comboFont->currentIndex());
     m_comboFont->blockSignals(false);
 
     m_boldButton->blockSignals(true);
-    m_boldButton->setChecked(richEdit->m_boldButton->isChecked());
+    m_boldButton->setChecked(richTextEdit.m_boldButton->isChecked());
     m_boldButton->blockSignals(false);
     m_italicButton->blockSignals(true);
-    m_italicButton->setChecked(richEdit->m_italicButton->isChecked());
+    m_italicButton->setChecked(richTextEdit.m_italicButton->isChecked());
     m_italicButton->blockSignals(false);
     m_underlineButton->blockSignals(true);
-    m_underlineButton->setChecked(richEdit->m_underlineButton->isChecked());
+    m_underlineButton->setChecked(richTextEdit.m_underlineButton->isChecked());
     m_underlineButton->blockSignals(false);
     m_overlineButton->blockSignals(true);
-    m_overlineButton->setChecked(richEdit->m_overlineButton->isChecked());
+    m_overlineButton->setChecked(richTextEdit.m_overlineButton->isChecked());
     m_overlineButton->blockSignals(false);
     m_leftAButton->blockSignals(true);
-    m_leftAButton->setChecked(richEdit->m_leftAButton->isChecked());
+    m_leftAButton->setChecked(richTextEdit.m_leftAButton->isChecked());
     m_leftAButton->blockSignals(false);
 
     m_centerRButton->blockSignals(true);
-    m_centerRButton->setChecked(richEdit->m_centerRButton->isChecked());
+    m_centerRButton->setChecked(richTextEdit.m_centerRButton->isChecked());
     m_centerRButton->blockSignals(false);
     m_centerAButton->blockSignals(true);
-    m_centerAButton->setChecked(richEdit->m_centerAButton->isChecked());
+    m_centerAButton->setChecked(richTextEdit.m_centerAButton->isChecked());
     m_centerAButton->blockSignals(false);
     m_justifyButton->blockSignals(true);
-    m_justifyButton->setChecked(richEdit->m_justifyButton->isChecked());
+    m_justifyButton->setChecked(richTextEdit.m_justifyButton->isChecked());
     m_justifyButton->blockSignals(false);
 
     m_colorTextButton->blockSignals(true);
-    m_colorTextButton->setIcon(richEdit->m_colorTextButton->icon());
+    m_colorTextButton->setIcon(richTextEdit.m_colorTextButton->icon());
     m_colorTextButton->blockSignals(false);
     m_backgroundColorTextButton->blockSignals(true);
-    m_backgroundColorTextButton->setIcon(richEdit->m_backgroundColorTextButton->icon());
+    m_backgroundColorTextButton->setIcon(richTextEdit.m_backgroundColorTextButton->icon());
     m_backgroundColorTextButton->blockSignals(false);
 }
 
-void RichTextEdit::setup_edit_actions()
+void RichTextEditW::setup_edit_actions()
 {
     m_menuLayoutCenter->setContentsMargins(0,0,0,0);
 
@@ -348,12 +393,12 @@ void RichTextEdit::setup_edit_actions()
     m_menuLayoutCenter->addSpacing(8);
 }
 
-void RichTextEdit::setup_text_actions(){
+void RichTextEditW::setup_text_actions(){
 
     // bold
     const QIcon boldIcon = QIcon(":/images/textbold");
     actionTextBold = new QAction(boldIcon, tr("Gras"), this);
-    connect(actionTextBold, &QAction::triggered, this, &RichTextEdit::text_bold);
+    connect(actionTextBold, &QAction::triggered, this, &RichTextEditW::text_bold);
     actionTextBold->setShortcut(Qt::CTRL + Qt::Key_B);
     actionTextBold->setPriority(QAction::LowPriority);
 
@@ -374,7 +419,7 @@ void RichTextEdit::setup_text_actions(){
     // italic
     const QIcon italicIcon = QIcon(":/images/textitalic");
     actionTextItalic = new QAction(italicIcon, tr("Italic"), this);
-    connect(actionTextItalic, &QAction::triggered, this, &RichTextEdit::text_italic);
+    connect(actionTextItalic, &QAction::triggered, this, &RichTextEditW::text_italic);
     actionTextItalic->setPriority(QAction::LowPriority);
     actionTextItalic->setShortcut(Qt::CTRL + Qt::Key_I);
 
@@ -393,7 +438,7 @@ void RichTextEdit::setup_text_actions(){
     // underline
     const QIcon underlineIcon = QIcon(":/images/textunder");
     actionTextUnderline = new QAction(underlineIcon, tr("Souligner"), this);
-    connect(actionTextUnderline, &QAction::triggered, this, &RichTextEdit::text_underline);
+    connect(actionTextUnderline, &QAction::triggered, this, &RichTextEditW::text_underline);
     actionTextUnderline->setShortcut(Qt::CTRL + Qt::Key_U);
     actionTextUnderline->setPriority(QAction::LowPriority);
 
@@ -412,7 +457,7 @@ void RichTextEdit::setup_text_actions(){
     // overline
     const QIcon overlineIcon = QIcon(":/images/overline");
     actionTextOverline = new QAction(overlineIcon, tr("Surligner"), this);
-    connect(actionTextOverline, &QAction::triggered, this, &RichTextEdit::text_overline);
+    connect(actionTextOverline, &QAction::triggered, this, &RichTextEditW::text_overline);
     actionTextOverline->setShortcut(Qt::CTRL + Qt::Key_O);
     actionTextOverline->setPriority(QAction::LowPriority);
 
@@ -431,7 +476,7 @@ void RichTextEdit::setup_text_actions(){
     // strike
     const QIcon strikeIcon = QIcon(":/images/strike");
     actionTextStrike = new QAction(strikeIcon, tr("Barrer"), this);
-    connect(actionTextStrike, &QAction::triggered, this, &RichTextEdit::text_strike);
+    connect(actionTextStrike, &QAction::triggered, this, &RichTextEditW::text_strike);
     actionTextStrike->setShortcut(Qt::CTRL + Qt::Key_S);
     actionTextStrike->setPriority(QAction::LowPriority);
 
@@ -449,7 +494,7 @@ void RichTextEdit::setup_text_actions(){
 
     m_menuLayoutCenter->addSpacing(8);
     // left
-    const QIcon leftIcon = QIcon(":/images/textleft");
+    const QIcon leftIcon = QIcon(":/icons/textLeft");
     actionAlignLeft = new QAction(leftIcon, tr("Aligner à gauche"), this);
     actionAlignLeft->setShortcut(Qt::CTRL + Qt::Key_L);
     actionAlignLeft->setCheckable(true);
@@ -477,7 +522,7 @@ void RichTextEdit::setup_text_actions(){
     });
 
     // right
-    const QIcon rightIcon = QIcon(":/images/textright");
+    const QIcon rightIcon = QIcon(":/icons/textRight");
     actionAlignRight = new QAction(rightIcon, tr("Aligner à droite"), this);
     actionAlignRight->setShortcut(Qt::CTRL + Qt::Key_R);
     actionAlignRight->setCheckable(true);
@@ -601,13 +646,13 @@ void RichTextEdit::setup_text_actions(){
     });
 
     typedef void (QComboBox::*QComboIntSignal)(int);
-    connect(m_comboStyle, static_cast<QComboIntSignal>(&QComboBox::activated), this, &RichTextEdit::text_style);
+    connect(m_comboStyle, static_cast<QComboIntSignal>(&QComboBox::activated), this, &RichTextEditW::text_style);
 
     m_menuLayoutBottom->addStretch();
 
     // Make sure the alignLeft  is always left of the alignRight
     QActionGroup *alignGroup = new QActionGroup(this);
-    connect(alignGroup, &QActionGroup::triggered, this, &RichTextEdit::text_align);
+    connect(alignGroup, &QActionGroup::triggered, this, &RichTextEditW::text_align);
 
     if (QApplication::isLeftToRight()) {
         alignGroup->addAction(actionAlignLeft);
@@ -681,20 +726,20 @@ void RichTextEdit::setup_text_actions(){
         m_comboSize->addItem(QString::number(size));
     m_comboSize->setCurrentIndex(standardSizes.indexOf(QApplication::font().pointSize()));
 
-    connect(m_comboSize, static_cast<QComboStringSignal>(&QComboBox::activated), this, &RichTextEdit::text_size);
+    connect(m_comboSize, static_cast<QComboStringSignal>(&QComboBox::activated), this, &RichTextEditW::text_size);
     m_menuLayoutTop->addStretch();
 
     return;
 }
 
-void RichTextEdit::text_bold(){
+void RichTextEditW::text_bold(){
 
     QTextCharFormat fmt;
     fmt.setFontWeight(actionTextBold->isChecked() ? QFont::Bold : QFont::Normal);
     merge_format_on_word_or_selection(fmt);
 }
 
-void RichTextEdit::text_underline(){
+void RichTextEditW::text_underline(){
 
     QTextCharFormat fmt;
     fmt.setFontUnderline(actionTextUnderline->isChecked());
@@ -702,35 +747,35 @@ void RichTextEdit::text_underline(){
 }
 
 
-void RichTextEdit::text_overline(){
+void RichTextEditW::text_overline(){
 
     QTextCharFormat fmt;
     fmt.setFontOverline(actionTextOverline->isChecked());
     merge_format_on_word_or_selection(fmt);
 }
 
-void RichTextEdit::text_strike(){
+void RichTextEditW::text_strike(){
 
     QTextCharFormat fmt;
     fmt.setFontStrikeOut(actionTextStrike->isChecked());
     merge_format_on_word_or_selection(fmt);
 }
 
-void RichTextEdit::text_italic(){
+void RichTextEditW::text_italic(){
 
     QTextCharFormat fmt;
     fmt.setFontItalic(actionTextItalic->isChecked());
     merge_format_on_word_or_selection(fmt);
 }
 
-void RichTextEdit::text_family(const QString &f){
+void RichTextEditW::text_family(const QString &f){
 
     QTextCharFormat fmt;
     fmt.setFontFamily(f);
     merge_format_on_word_or_selection(fmt);
 }
 
-void RichTextEdit::text_size(const QString &p){
+void RichTextEditW::text_size(const QString &p){
 
     qreal pointSize = p.toDouble();
     if (p.toFloat() > 0) {
@@ -740,7 +785,7 @@ void RichTextEdit::text_size(const QString &p){
     }
 }
 
-void RichTextEdit::text_style(int styleIndex){
+void RichTextEditW::text_style(int styleIndex){
 
     QTextCursor cursor = m_textEdit->textCursor();
 
@@ -802,7 +847,7 @@ void RichTextEdit::text_style(int styleIndex){
     }
 }
 
-void RichTextEdit::text_color(){
+void RichTextEditW::text_color(){
 
     m_foreGround = QColorDialog::getColor(m_foreGround, this, "Choix de la couleur du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
     if (!m_foreGround.isValid()){
@@ -815,7 +860,7 @@ void RichTextEdit::text_color(){
     color_text_changed(m_foreGround);
 }
 
-void RichTextEdit::background_text_color(){
+void RichTextEditW::background_text_color(){
 
     m_backGround = QColorDialog::getColor(m_backGround, this, "CHoix de la couleur de l'arrière-plan du texte", QColorDialog::ColorDialogOption::ShowAlphaChannel);
     if (!m_backGround.isValid()){
@@ -828,7 +873,7 @@ void RichTextEdit::background_text_color(){
     background_color_text_changed(m_backGround);
 }
 
-void RichTextEdit::text_align(QAction *a){
+void RichTextEditW::text_align(QAction *a){
 
     if (a == actionAlignLeft)
         m_textEdit->setAlignment(Qt::AlignLeft | Qt::AlignAbsolute);
@@ -840,26 +885,26 @@ void RichTextEdit::text_align(QAction *a){
         m_textEdit->setAlignment(Qt::AlignJustify);
 }
 
-void RichTextEdit::current_char_format_changed(const QTextCharFormat &format){
+void RichTextEditW::current_char_format_changed(const QTextCharFormat &format){
 
     font_changed(format.font());
     color_text_changed(format.foreground().color());
     background_color_text_changed(format.background().color());
 }
 
-void RichTextEdit::cursor_position_changed(){
+void RichTextEditW::cursor_position_changed(){
 
     alignment_changed(m_textEdit->alignment());
 }
 
-void RichTextEdit::clipboard_data_changed(){
+void RichTextEditW::clipboard_data_changed(){
 
     if (const QMimeData *md = QApplication::clipboard()->mimeData()){
         actionPaste->setEnabled(md->hasText());
     }
 }
 
-void RichTextEdit::merge_format_on_word_or_selection(const QTextCharFormat &format){
+void RichTextEditW::merge_format_on_word_or_selection(const QTextCharFormat &format){
 
     QTextCursor cursor = m_textEdit->textCursor();
     if (!cursor.hasSelection()){
@@ -870,7 +915,7 @@ void RichTextEdit::merge_format_on_word_or_selection(const QTextCharFormat &form
     m_textEdit->mergeCurrentCharFormat(format);
 }
 
-void RichTextEdit::font_changed(const QFont &f){
+void RichTextEditW::font_changed(const QFont &f){
 
     m_comboFont->setCurrentIndex(m_comboFont->findText(QFontInfo(f).family()));
     m_comboSize->setCurrentIndex(m_comboSize->findText(QString::number(f.pointSize())));
@@ -881,21 +926,21 @@ void RichTextEdit::font_changed(const QFont &f){
     actionTextUnderline->setChecked(f.underline());;
 }
 
-void RichTextEdit::color_text_changed(const QColor &c){
+void RichTextEditW::color_text_changed(const QColor &c){
 
     QPixmap pix(16, 16);
     pix.fill(c);
     actionTextColor->setIcon(pix);
 }
 
-void RichTextEdit::background_color_text_changed(const QColor &c){
+void RichTextEditW::background_color_text_changed(const QColor &c){
 
     QPixmap pix(16, 16);
     pix.fill(c);
     actionBackgroundTextColor->setIcon(pix);
 }
 
-void RichTextEdit::alignment_changed(Qt::Alignment a){
+void RichTextEditW::alignment_changed(Qt::Alignment a){
 
     if (a & Qt::AlignLeft)
         actionAlignLeft->setChecked(true);

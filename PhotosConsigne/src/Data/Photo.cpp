@@ -42,7 +42,7 @@ pc::Photo::Photo(const QString &path, bool isWhiteSpace) : isWhiteSpace(isWhiteS
     }
 }
 
-void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, bool preview, bool drawImageSize, const QSizeF &pageSizeMM , const QSizeF &pageSize){
+void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, const ExtraPCInfo &infos, const QSizeF &pageSize){
 
     if(isWhiteSpace){
         return;
@@ -53,19 +53,19 @@ void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, bool preview, b
         return;
     }
 
-    if(preview){
-        draw_small(painter, rectPhoto, scaledPhoto, true, drawImageSize, pageSizeMM, pageSize);
+    if(infos.preview){
+        draw_small(painter, rectPhoto, scaledPhoto, infos, pageSize);
     }else{
         if(rectPhoto.width() > 32000 || rectPhoto.height() > 32000){
 //            draw_huge(painter, rectPhoto);
             qWarning() << "-Error: Format too huge: " << namePhoto << " can't be drawn.";
         }else{
-            draw_small(painter, rectPhoto, (pathPhoto.size() > 0) ? QImage(pathPhoto) : scaledPhoto, false, false, pageSizeMM, pageSize);
+            draw_small(painter, rectPhoto, (pathPhoto.size() > 0) ? QImage(pathPhoto) : scaledPhoto, infos, pageSize);
         }
     }
 }
 
-QRectF pc::Photo::draw_small(QPainter &painter, const QRectF &rectPhoto, const QImage &photo, bool preview, bool drawImageSize, const QSizeF &pageSizeMM, const QSizeF &pageSize){
+QRectF pc::Photo::draw_small(QPainter &painter, const QRectF &rectPhoto, const QImage &photo, const ExtraPCInfo &infos, const QSizeF &pageSize){
 
     int startX, startY;
     qreal newX, newY, newWidth, newHeight;
@@ -79,7 +79,7 @@ QRectF pc::Photo::draw_small(QPainter &painter, const QRectF &rectPhoto, const Q
 
         case PhotoAdjust::adjust:
 
-            photoToDraw = preview ? photo.scaled(rectPhotoWidth,rectPhotoHeight, Qt::KeepAspectRatio) :
+            photoToDraw = infos.preview ? photo.scaled(rectPhotoWidth,rectPhotoHeight, Qt::KeepAspectRatio) :
                                    (photo.transformed(QTransform().rotate(rotation))).scaled(rectPhotoWidth, rectPhotoHeight, Qt::KeepAspectRatio);
 
             newX      = rectPhoto.x();
@@ -115,7 +115,7 @@ QRectF pc::Photo::draw_small(QPainter &painter, const QRectF &rectPhoto, const Q
         break;
         case PhotoAdjust::extend:
 
-            photoToDraw = preview ? photo.scaled(rectPhotoWidth, rectPhotoHeight, Qt::IgnoreAspectRatio) :
+            photoToDraw = infos.preview ? photo.scaled(rectPhotoWidth, rectPhotoHeight, Qt::IgnoreAspectRatio) :
                                     (photo.transformed(QTransform().rotate(rotation))).scaled(rectPhotoWidth, rectPhotoHeight, Qt::IgnoreAspectRatio);
             newX      = rectPhoto.x();
             newY      = rectPhoto.y();
@@ -125,7 +125,7 @@ QRectF pc::Photo::draw_small(QPainter &painter, const QRectF &rectPhoto, const Q
         break;
         case PhotoAdjust::center:
             photoToDraw = photo;
-            if(!preview){
+            if(!infos.preview){
                 photoToDraw = photoToDraw.transformed(QTransform().rotate(rotation));
             }
 
@@ -155,7 +155,7 @@ QRectF pc::Photo::draw_small(QPainter &painter, const QRectF &rectPhoto, const Q
         break;
         case PhotoAdjust::fill:
 
-            photoToDraw = preview ? photo.scaled(rectPhotoWidth, rectPhotoHeight, Qt::KeepAspectRatioByExpanding) :
+            photoToDraw = infos.preview ? photo.scaled(rectPhotoWidth, rectPhotoHeight, Qt::KeepAspectRatioByExpanding) :
                                     (photo.transformed(QTransform().rotate(rotation))).scaled(rectPhotoWidth, rectPhotoHeight, Qt::KeepAspectRatioByExpanding);
 
 
@@ -185,7 +185,7 @@ QRectF pc::Photo::draw_small(QPainter &painter, const QRectF &rectPhoto, const Q
         case PhotoAdjust::mosaic:
 
             QImage tile = photo;
-            if(!preview){
+            if(!infos.preview){
                 tile = tile.transformed(QTransform().rotate(rotation));
             }
 
@@ -236,15 +236,15 @@ QRectF pc::Photo::draw_small(QPainter &painter, const QRectF &rectPhoto, const Q
     painter.drawImage(newRectPhoto, photoToDraw, QRectF(0.,0.,photoToDraw.width(),photoToDraw.height()));
 
     // draw size
-    if(drawImageSize && newWidth > 100 && newHeight > 50){
+    if(infos.displaySizes && newWidth > 100 && newHeight > 50){
 
         QPen pen;
         pen.setColor(Qt::red);
         painter.setPen(pen);
         QFont font;
 
-        QString sizeImageStr = QString::number(newRectPhoto.width()/pageSize.width()*pageSizeMM.width(), 'i',0) + "x" +
-                QString::number(newRectPhoto.height()/pageSize.height()*pageSizeMM.height(), 'i', 0) +"(mm)";
+        QString sizeImageStr = QString::number(newRectPhoto.width()/pageSize.width()*infos.paperFormat.sizeMM.width(), 'i',0) + "x" +
+                QString::number(newRectPhoto.height()/pageSize.height()*infos.paperFormat.sizeMM.height(), 'i', 0) +"(mm)";
         font.setPointSizeF(newRectPhoto.width()/sizeImageStr.size());
         painter.setFont(font);
         painter.drawText(QRectF(newX, newY, newWidth, newHeight),  Qt::AlignCenter,sizeImageStr);

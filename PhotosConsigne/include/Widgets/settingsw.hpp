@@ -8,6 +8,7 @@
 #include <QToolButton>
 #include <QSpinBox>
 #include <QPushButton>
+#include <QToolBox>
 // # dialogs
 #include <QColorDialog>
 #include <QFileDialog>
@@ -16,7 +17,7 @@
 
 // local
 // # data
-#include "Photo.hpp"
+#include "Settings.hpp"
 
 namespace pc {
 
@@ -33,11 +34,14 @@ struct Utility{
     static void checkbox_enable_UI(QCheckBox *cb, QVector<QWidget *> widgets, bool inverted = false);
 
     static void safe_init_push_button_enabled_state(QPushButton* button, bool state);
+    static void safe_init_tool_button_enabled_state(QToolButton* button, bool state);
     static void safe_init_checkboxe_checked_state(QCheckBox *cb, bool state);
     static void safe_init_spinbox_value(QSpinBox *sb, int value);
     static void safe_init_double_spinbox_value(QDoubleSpinBox *dsb, qreal value);
     static void safe_init_slider_value(QSlider *slider, int value);
     static void safe_init_combo_box_index(QComboBox *cb, int index);
+    static void safe_init_tab_widget_index(QTabWidget *tw, int index);
+    static void safe_init_tool_box_index(QToolBox *tb, int index);
 };
 
 

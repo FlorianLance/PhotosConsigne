@@ -167,13 +167,13 @@ Qt::BrushStyle Utility::pattern_style_comboBox(QComboBox *cb){
 void pc::Utility::associate_double_spinbox_with_slider(QDoubleSpinBox *sb, QSlider *slider){
     QObject::connect(sb, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [=](double value){
         slider->blockSignals(true);
-        slider->setValue(static_cast<int>(1000*value));
+        slider->setValue(static_cast<int>(10000*value));
         slider->blockSignals(false);
     });
     // # sliders
     QObject::connect(slider, &QSlider::valueChanged, [=](double value){
         sb->blockSignals(true);
-        sb->setValue(value*0.001);
+        sb->setValue(value*0.0001);
         sb->blockSignals(false);
     });
 }
@@ -185,7 +185,7 @@ void pc::Utility::associate_double_spinbox_with_slider(QDoubleSpinBox *sb1, QSli
             sb1->setValue(value);
         }
         slider1->blockSignals(true);
-        slider1->setValue(static_cast<int>(1000*value));
+        slider1->setValue(static_cast<int>(10000*value));
         slider1->blockSignals(false);
     });
     QObject::connect(sb2, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [=](double value){
@@ -194,26 +194,26 @@ void pc::Utility::associate_double_spinbox_with_slider(QDoubleSpinBox *sb1, QSli
             sb2->setValue(value);
         }
         slider2->blockSignals(true);
-        slider2->setValue(static_cast<int>(1000*value));
+        slider2->setValue(static_cast<int>(10000*value));
         slider2->blockSignals(false);
     });
     // # sliders
     QObject::connect(slider1, &QSlider::valueChanged, [=](double value){
-        if(value + slider2->value() > 1000){
-            value = 1000 - slider2->value();
+        if(value + slider2->value() > 10000){
+            value = 10000 - slider2->value();
             slider1->setValue(static_cast<int>(value));
         }
         sb1->blockSignals(true);
-        sb1->setValue(value*0.001);
+        sb1->setValue(value*0.0001);
         sb1->blockSignals(false);
     });
     QObject::connect(slider2, &QSlider::valueChanged, [=](double value){
-        if(value + slider1->value() > 1000){
-            value = 1000 - slider1->value();
+        if(value + slider1->value() > 10000){
+            value = 10000 - slider1->value();
             slider2->setValue(static_cast<int>(value));
         }
         sb2->blockSignals(true);
-        sb2->setValue(value*0.001);
+        sb2->setValue(value*0.0001);
         sb2->blockSignals(false);
     });
 }
@@ -227,6 +227,12 @@ void pc::Utility::checkbox_enable_UI(QCheckBox *cb, QVector<QWidget *> widgets, 
 }
 
 void Utility::safe_init_push_button_enabled_state(QPushButton *button, bool state){
+    button->blockSignals(true);
+    button->setEnabled(state);
+    button->blockSignals(false);
+}
+
+void Utility::safe_init_tool_button_enabled_state(QToolButton *button, bool state){
     button->blockSignals(true);
     button->setEnabled(state);
     button->blockSignals(false);
@@ -262,7 +268,17 @@ void Utility::safe_init_combo_box_index(QComboBox *cb, int index){
     cb->blockSignals(false);
 }
 
+void Utility::safe_init_tab_widget_index(QTabWidget *tw, int index){
+    tw->blockSignals(true);
+    tw->setCurrentIndex(index);
+    tw->blockSignals(false);
+}
 
+void Utility::safe_init_tool_box_index(QToolBox *tb, int index){
+    tb->blockSignals(true);
+    tb->setCurrentIndex(index);
+    tb->blockSignals(false);
+}
 
 void SettingsW::init_checkboxes_connections(QVector<QCheckBox *> checkBoxes, bool displayZones){
 

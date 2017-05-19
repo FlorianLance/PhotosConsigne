@@ -48,6 +48,7 @@ int main(int argc,char** argv)
                        "%{if-critical}\033[31m%%{endif}"
                        "%{if-fatal}\033[31m%%{endif}"
                        "\033[0m %{message}");
+//    qSetMessagePattern("");
 
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QTranslator qtTranslator;

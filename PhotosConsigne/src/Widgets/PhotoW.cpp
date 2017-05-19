@@ -29,12 +29,9 @@
 
 // Qt
 #include <QPainter>
-#include <QPaintEvent>
-#include <QTime>
 
 // local
 #include "PhotoW.hpp"
-
 
 PhotoW::PhotoW(QWidget *parent) : QWidget(parent) {
 

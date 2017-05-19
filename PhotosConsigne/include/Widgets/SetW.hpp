@@ -2,54 +2,59 @@
 #pragma once
 
 /**
- * \file IndividualSetUI.hpp
- * \brief defines pc::IndividualSetW/Ui::IndividualSetUI
+ * \file SetW.hpp
+ * \brief defines pc::SetW/Ui::SetUI
  * \author Florian Lance
  * \date 17/05/2017
  */
 
 // local
-#include "Utility.hpp"
-#include "RichTextUI.hpp"
+#include "RichTextEditW.hpp"
 #include "SetStyleW.hpp"
 
 // generated ui
-#include "ui_IndividualSet.h"
+#include "ui_Set.h"
 
 namespace Ui {
-    class IndividualSetUI;
+    class SetUI;
 }
 
 namespace pc{
 
 static int setUICounter = 0;
 
-struct IndividualSetW;
-using SIndividualSetW = std::shared_ptr<IndividualSetW>;
+struct SetW;
+using SIndividualSetW = std::shared_ptr<SetW>;
 
-struct IndividualSetW : public SettingsW{
+struct SetW : public SettingsW{
 
-    IndividualSetW() : SettingsW(), setTextW(RichTextUI(RichTextType::individualConsign)){
+    SetW() : SettingsW(){
 
+        // init ui
         ui.setupUi(this);
         ui.tabSet->setEnabled(true);
         ui.frameSet->setEnabled(false);
+
+        // enable
         init_checkboxes_connections({ui.cbEnableIndividualConsign});
+        init_pushbuttons_connections({ui.pbAllGlobalParameters, ui.pbAllIndividualParameters, ui.pbCopyGlobalToIndividuals, ui.pbCopyIndividualToGlobal});
         Utility::checkbox_enable_UI(ui.cbEnableIndividualConsign, {ui.frameSet});
 
         // text
-        QVBoxLayout *layout = new QVBoxLayout();
-        ui.tabSetText->setLayout(layout);
-        layout->setContentsMargins(QMargins(3,3,3,3));
-        layout->addWidget(setTextW.richTextEdit.get());
+        setTextW.init_style(RichTextType::individualConsign);
+        ui.vlText->addWidget(&setTextW);
+        connect(setTextW.textEdit(), &TextEdit::textChanged, this, [=]{
+            emit settings_updated_signal(false);
+        });
 
         // style
         ui.vlSetStyle->addWidget(&setStyleW);
+        connect(&setStyleW, &SetStyleW::settings_updated_signal, this, &SetW::settings_updated_signal);
 
         id = setUICounter++;
     }
 
-    void init_with_another_set(const SetStyleW &initSetStyle, const RichTextUI &initSetText, bool copyHtml = false){
+    void init_with_another_set(const SetStyleW &initSetStyle, const RichTextEditW &initSetText, bool copyHtml = false){
 
         // style
         Ui::SetStyleUI &setStyleUI           = setStyleW.ui;
@@ -61,13 +66,10 @@ struct IndividualSetW : public SettingsW{
         Utility::safe_init_slider_value(setStyleUI.hsRatioPC, initSetStyleUI.hsRatioPC->value());
 
         // text
-        setTextW.richTextEdit->init_with_another(initSetText.richTextEdit.get(), copyHtml ? initSetText.html.get() : nullptr);
-        if(copyHtml){
-            setTextW.html = std::make_shared<QString>(*initSetText.html);
-        }
+        setTextW.init_with_another(initSetText, copyHtml ? initSetText.html() : nullptr);
     }
 
-    void copy_to_another_set(SetStyleW &copySetStyle, RichTextUI &copySetText, bool copyHtml = false){
+    void copy_to_another_set(SetStyleW &copySetStyle, RichTextEditW &copySetText, bool copyHtml = false){
 
         // style
         Ui::SetStyleUI &setStyleUI           = setStyleW.ui;
@@ -79,17 +81,17 @@ struct IndividualSetW : public SettingsW{
         Utility::safe_init_slider_value(initSetStyleUI.hsRatioPC, setStyleUI.hsRatioPC->value());
 
         // text
-        copySetText.richTextEdit->init_with_another(setTextW.richTextEdit.get(), copyHtml ? setTextW.html.get() : nullptr);
-        if(copyHtml){
-            copySetText.html = std::make_shared<QString>(*setTextW.html);
-        }
+        copySetText.init_with_another(setTextW, copyHtml ? setTextW.html() : nullptr);
     }
 
-
     int id;
-    RichTextUI  setTextW;
-    SetStyleW   setStyleW;
-    Ui::IndividualSetUI ui;            
+
+    // ui
+    Ui::SetUI       ui;
+
+    // sub widgets
+    RichTextEditW   setTextW;
+    SetStyleW       setStyleW;
 };
 }
 

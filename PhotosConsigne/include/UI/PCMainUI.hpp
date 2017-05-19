@@ -70,10 +70,11 @@ public slots:
     void display_preview_panel();
 
     // tab right panels
-    void display_title_panel();
     void display_global_consign_panel();
     void display_individual_consign_settings_panel();
     void display_individual_page_settings_panel();
+    void display_header_panel();
+    void display_footer_panel();
 
     // dynamic ui display
     void display_current_individual_set_ui();
@@ -121,8 +122,8 @@ private:
     QReadWriteLock m_previewLocker;    
     QString m_version;
 
-    PCPages m_pcPages;            /**< document pages to be drawn */
-    GlobalData m_settings;  /**< global parameters of the document */
+    PCPages m_pcPages;                  /**< document pages to be drawn */
+    GlobalDocumentSettings m_settings;  /**< global parameters of the document */
 
     // ui
     std::shared_ptr<Ui::PhotosConsigneMainW>  m_mainUI = nullptr; /**< main widget */

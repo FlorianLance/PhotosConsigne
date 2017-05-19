@@ -10,7 +10,6 @@
 
 // local
 #include "SettingsW.hpp"
-#include "Utility.hpp"
 
 // generated ui
 #include "ui_Borders.h"

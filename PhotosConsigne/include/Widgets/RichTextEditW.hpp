@@ -68,7 +68,8 @@
 #include <QComboBox>
 #include <QFontComboBox>
 
-#include <memory>
+// local
+#include "SettingsW.hpp"
 
 class QAction;
 class QComboBox;
@@ -77,6 +78,9 @@ class QTextEdit;
 class QTextCharFormat;
 class QMenu;
 class QPrinter;
+
+
+namespace pc{
 
 class TextEdit : public QTextEdit
 {
@@ -105,30 +109,23 @@ private:
 
 };
 
-class RichTextEdit : public QWidget
+enum class RichTextType { globalConsign, individualConsign, footer, header};
+
+class RichTextEditW : public SettingsW
 {
     Q_OBJECT
 
 public:
 
-    RichTextEdit(QWidget *parent = 0);
+    RichTextEditW();
+
+    void init_style(RichTextType type);
 
     TextEdit* textEdit() {return m_textEdit;}
 
-    void init_as_title();
+    void init_with_another(const RichTextEditW &richTextEdit, std::shared_ptr<QString> html = nullptr);
 
-    void init_as_consign();
-
-    void init_as_individual_consign();
-
-    void init_colors_icons(QColor foreGround, QColor backGround);
-
-    void init_with_another(RichTextEdit *richEdit, QString *html = nullptr);
-
-
-signals :
-
-    void html_updated_signal(std::shared_ptr<QString> html);
+    std::shared_ptr<QString> html() const noexcept{return m_html;}
 
 
 private slots:
@@ -150,6 +147,14 @@ private slots:
     void clipboard_data_changed();
 
 private:
+
+    // init
+    void init_as_title();
+    void init_as_consign();
+    void init_as_individual_consign();
+    void init_as_footer();
+    void init_as_header();
+    void init_colors_icons(QColor foreGround, QColor backGround);
 
     void setup_edit_actions();
     void setup_text_actions();
@@ -218,4 +223,7 @@ private:
     QToolButton *m_backgroundColorTextButton = nullptr;
 
     QLabel *m_insertLabel = nullptr;
-};
+
+    // curent html
+    std::shared_ptr<QString> m_html = nullptr;
+};}

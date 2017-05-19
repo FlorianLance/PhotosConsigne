@@ -8,18 +8,9 @@
 
 #pragma once
 
-// Qt
-#include <QObject>
-#include <QPixmap>
-#include <QPdfWriter>
-#include <QPainter>
-#include <QPrinter>
-#include <QMessageBox>
-#include <QCoreApplication>
-
 // local
+#include "Photo.hpp"
 #include "Utility.hpp"
-
 
 namespace pc {
 
@@ -31,9 +22,7 @@ public :
 
     PhotoLoaderWorker();
 
-    ~PhotoLoaderWorker(){
-        qDebug() << "destructor PhotoLoaderWorker";
-    }
+    virtual ~PhotoLoaderWorker();
 
 public slots :
 

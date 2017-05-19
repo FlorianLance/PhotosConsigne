@@ -10,15 +10,8 @@
 
 // Qt
 #include <QWidget>
-#include <QLabel>
 #include <QMouseEvent>
-#include <QDebug>
-#include <QPainter>
 #include <QTimer>
-#include <QThread>
-#include <memory>
-#include <QCoreApplication>
-#include <QReadWriteLock>
 
 /**
  * @brief Define a QWidget displaying an image.
