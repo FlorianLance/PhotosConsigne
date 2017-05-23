@@ -6,7 +6,9 @@
 // local
 #include "CustomPageW.hpp"
 
-CustomPageW::CustomPageW(QWidget *parent){
+using namespace pc;
+
+CustomPageW::CustomPageW() : SettingsW(){
 
     QGridLayout *layout = new QGridLayout();
     this->setLayout(layout);

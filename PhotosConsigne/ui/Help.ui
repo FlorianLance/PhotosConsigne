@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>HelpW</class>
- <widget class="QWidget" name="HelpW">
+ <class>HelpUI</class>
+ <widget class="QWidget" name="HelpUI">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -192,7 +192,7 @@ QPushButton:hover:!pressed{
 }</string>
      </property>
      <property name="text">
-      <string>Retour au logiciel</string>
+      <string>Fermer</string>
      </property>
     </widget>
    </item>

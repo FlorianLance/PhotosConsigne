@@ -39,7 +39,7 @@ namespace pc {
         HeaderSettings settings;
 
         void compute_sizes(QRectF upperRect){
-            rectOnPage = std::move(upperRect);
+            rectOnPage = std::move(upperRect);            
         }
     };
 
@@ -77,18 +77,19 @@ namespace pc {
     //        int nbPhotos;
         bool drawThisPage;
         PageOrientation orientation;
-        int nbPhotosV;
-        int nbPhotosH;
-        int nbPhotosPage;
+
 
         // margins
-        RatioMargins margins;
+        MarginsSettings margins;
 
         // border
         BordersSettings bordersSettings;
 
         // background
         BackGroundSettings backgroundSettings;
+
+        // sets
+        PageSetsSettings pageSetsSettings;
 
         // header
         SHeader header = std::make_shared<Header>();

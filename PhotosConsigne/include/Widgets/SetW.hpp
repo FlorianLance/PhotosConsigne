@@ -24,7 +24,7 @@ namespace pc{
 static int setUICounter = 0;
 
 struct SetW;
-using SIndividualSetW = std::shared_ptr<SetW>;
+using SSetW = std::shared_ptr<SetW>;
 
 struct SetW : public SettingsW{
 
@@ -54,35 +54,21 @@ struct SetW : public SettingsW{
         id = setUICounter++;
     }
 
-    void init_with_another_set(const SetStyleW &initSetStyle, const RichTextEditW &initSetText, bool copyHtml = false){
+    static void init_ui(pc::SetW &s1, const pc::SetW &s2, bool copyHtml){
 
         // style
-        Ui::SetStyleUI &setStyleUI           = setStyleW.ui;
-        const Ui::SetStyleUI &initSetStyleUI = initSetStyle.ui;
-        Utility::safe_init_combo_box_index(setStyleUI.cbPositionConsign, initSetStyleUI.cbPositionConsign->currentIndex());
-        Utility::safe_init_combo_box_index(setStyleUI.cbAdjustPhoto, initSetStyleUI.cbAdjustPhoto->currentIndex());
-        Utility::safe_init_combo_box_index(setStyleUI.cbPhotoAlignment, initSetStyleUI.cbPhotoAlignment->currentIndex());
-        Utility::safe_init_double_spinbox_value(setStyleUI.dsbRatioPC, initSetStyleUI.dsbRatioPC->value());
-        Utility::safe_init_slider_value(setStyleUI.hsRatioPC, initSetStyleUI.hsRatioPC->value());
+        Ui::SetStyleUI &ui1         = s1.setStyleW.ui;
+        const Ui::SetStyleUI &ui2   = s2.setStyleW.ui;
+        Utility::safe_init_combo_box_index(ui1.cbPositionConsign,   ui2.cbPositionConsign->currentIndex());
+        Utility::safe_init_combo_box_index(ui1.cbAdjustPhoto,       ui2.cbAdjustPhoto->currentIndex());
+        Utility::safe_init_combo_box_index(ui1.cbPhotoAlignment,    ui2.cbPhotoAlignment->currentIndex());
+        Utility::safe_init_double_spinbox_value(ui1.dsbRatioPC,     ui2.dsbRatioPC->value());
+        Utility::safe_init_slider_value(ui1.hsRatioPC,              ui2.hsRatioPC->value());
 
         // text
-        setTextW.init_with_another(initSetText, copyHtml ? initSetText.html() : nullptr);
+        s1.setTextW.init_with_another(s2.setTextW, copyHtml ? s2.setTextW.html() : nullptr);
     }
 
-    void copy_to_another_set(SetStyleW &copySetStyle, RichTextEditW &copySetText, bool copyHtml = false){
-
-        // style
-        Ui::SetStyleUI &setStyleUI           = setStyleW.ui;
-        const Ui::SetStyleUI &initSetStyleUI = copySetStyle.ui;
-        Utility::safe_init_combo_box_index(initSetStyleUI.cbPositionConsign, setStyleUI.cbPositionConsign->currentIndex());
-        Utility::safe_init_combo_box_index(initSetStyleUI.cbAdjustPhoto, setStyleUI.cbAdjustPhoto->currentIndex());
-        Utility::safe_init_combo_box_index(initSetStyleUI.cbPhotoAlignment, setStyleUI.cbPhotoAlignment->currentIndex());
-        Utility::safe_init_double_spinbox_value(initSetStyleUI.dsbRatioPC, setStyleUI.dsbRatioPC->value());
-        Utility::safe_init_slider_value(initSetStyleUI.hsRatioPC, setStyleUI.hsRatioPC->value());
-
-        // text
-        copySetText.init_with_another(setTextW, copyHtml ? setTextW.html() : nullptr);
-    }
 
     int id;
 

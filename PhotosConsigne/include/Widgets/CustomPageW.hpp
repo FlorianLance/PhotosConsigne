@@ -1,19 +1,27 @@
 
-#include <QWidget>
 
 #pragma once
 
+// local
+#include "SettingsW.hpp"
 
-class CustomPageW : public QWidget{
+namespace pc {
+
+
+
+class CustomPageW : public SettingsW{
 
 
     Q_OBJECT
 
 public:
 
-    CustomPageW(QWidget *parent = 0);
+    CustomPageW();
 
 
     void init(int nbPhotos, int gridH, int gridV);
 
+
+    QVector<QVector<QCheckBox*>> m_points;
 };
+}

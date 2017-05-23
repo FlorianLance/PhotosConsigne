@@ -185,7 +185,10 @@ void PDFGeneratorWorker::draw_contents(QPainter &painter, SPCPage pcPage, ExtraP
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
             }
 
-            draw_html(painter, Drawing::format_html_for_generation(*pcPage->header->settings.text, infos), pcPage->rectOnPage, pcPage->header->rectOnPage);
+            draw_html(painter, Drawing::format_html_for_generation(*pcPage->header->settings.text, infos),
+                      QRectF(pcPage->header->rectOnPage.x(),        pcPage->header->rectOnPage.y(),
+                             pcPage->header->rectOnPage.width(),    pcPage->rectOnPage.height()),
+                      pcPage->header->rectOnPage);
         }
     }
 
@@ -202,7 +205,10 @@ void PDFGeneratorWorker::draw_contents(QPainter &painter, SPCPage pcPage, ExtraP
             QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
         }
 
-        draw_html(painter, Drawing::format_html_for_generation(*pcPage->footer->settings.text, infos), pcPage->rectOnPage, pcPage->footer->rectOnPage);
+        draw_html(painter, Drawing::format_html_for_generation(*pcPage->footer->settings.text, infos),
+                  QRectF(pcPage->footer->rectOnPage.x(),        pcPage->footer->rectOnPage.y(),
+                         pcPage->footer->rectOnPage.width(),    pcPage->rectOnPage.height()),
+                  pcPage->footer->rectOnPage);
     }
 }
 
@@ -212,13 +218,14 @@ void PDFGeneratorWorker::draw_page(QPainter &painter, pc::PCPages &pcPages, cons
     SPCPage pcPage = pcPages.pages[idPageToDraw];
 
     ExtraPCInfo infos;
-    infos.pagesNb    = pcPages.pages.size();
-    infos.pageNum    = idPageToDraw;
-    infos.pageColor  = pcPage->backgroundSettings.color;
-    infos.photoNum   = 0;
-    infos.photoPCNum = 0;
-    infos.preview    = preview;
-    infos.paperFormat= pcPages.paperFormat;
+    infos.pagesNb       = pcPages.pages.size();
+    infos.pageNum       = idPageToDraw;
+    infos.pageColor     = pcPage->backgroundSettings.color;
+    infos.photoNum      = 0;
+    infos.photoPCNum    = 0;
+    infos.preview       = preview;
+    infos.paperFormat   = pcPages.paperFormat;
+    infos.factorUpscale = factorUpscale;
     for(auto &&page : pcPages.pages){
         infos.photoTotalNum += page->sets.size();
     }

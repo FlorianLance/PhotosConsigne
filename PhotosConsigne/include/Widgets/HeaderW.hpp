@@ -33,7 +33,7 @@ struct HeaderW : public SettingsW{
         ui.frameHeader->setEnabled(false);
 
         // enable
-        init_checkboxes_connections({ui.cbEnableHeader});
+        init_checkboxes_connections({ui.cbEnableHeader}, true);
         Utility::checkbox_enable_UI(ui.cbEnableHeader, {ui.frameHeader});
 
         // text

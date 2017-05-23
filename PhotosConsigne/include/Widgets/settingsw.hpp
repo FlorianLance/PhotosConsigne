@@ -66,4 +66,7 @@ public :
 signals:
 
     void settings_updated_signal(bool displayZones);
+    void resource_added_signal(QUrl url, QImage image);
+    void set_progress_bar_state_signal(int state);
+    void set_progress_bar_text_signal(QString text);
 };}

@@ -12,7 +12,7 @@ namespace pc {
     enum class Position { top = 0, bottom = 1, left = 2, right = 3, on = 4};
 
     // define classes
-    struct RatioMargins{
+    struct MarginsSettings{
 
         bool exteriorMarginsEnabled;
         bool interiorMarginsEnabled;
@@ -32,6 +32,13 @@ namespace pc {
         bool display = false;
         qreal width = 1.;
         QPen pen;
+    };
+
+    struct PageSetsSettings{
+
+        int nbPhotos;
+        int nbPhotosH;
+        int nbPhotosV;
     };
 
     struct BackGroundSettings{

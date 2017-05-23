@@ -12,7 +12,8 @@
 #include "BordersW.hpp"
 #include "MarginsW.hpp"
 #include "BackgroundW.hpp"
-#include "GlobalDocumentSettings.hpp"
+#include "PageSetsW.hpp"
+
 
 // generated ui
 #include "ui_Page.h"
@@ -30,11 +31,11 @@ struct PageW : public SettingsW{
 
     PageW();
 
-    void init_with_global_settings(const GlobalDocumentSettings &globalSettings);
+    static void init_ui(pc::PageW &p1, const pc::PageW &p2);
 
-    bool individual() const noexcept {
-        return ui.cbEnableIndividualPage->isChecked();
-    }
+    bool individual() const noexcept;
+
+    void set_enabled(bool enabled) noexcept;
 
     int id;
     QColor borderColor = QColor(0,0,0,0);
@@ -43,6 +44,8 @@ struct PageW : public SettingsW{
     BackgroundW  backgroundW;
     BordersW     bordersW;
     MarginsW     marginsW;
+    PageSetsW    setsW;
+
     Ui::PageUI   ui;
 };
 }

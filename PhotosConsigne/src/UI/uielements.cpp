@@ -7,189 +7,174 @@
  */
 
 
+// Qt
+#include <QDesktopServices>
+#include <QMessageBox>
+//#include <QtGlobal>
+
 // local
 #include "UIElements.hpp"
 
 using namespace pc;
 
-pc::UIElements::UIElements(QWidget *parent, std::shared_ptr<Ui::PhotosConsigneMainW> mainUI):
-    m_mUI(mainUI), m_parent(parent) {
+pc::UIElements::UIElements(QMainWindow *parent) : m_parent(parent) {
+
+    // use designer ui
+    mainUI.setupUi(parent);
 
     // register new types
-    qRegisterMetaType<std::shared_ptr<QString>>("std::shared_ptr<QString>");
-    qRegisterMetaType<std::shared_ptr<QTextDocument>>("std::shared_ptr<QTextDocument>");
+    qRegisterMetaType<std::shared_ptr<QString>>(        "std::shared_ptr<QString>");
+    qRegisterMetaType<std::shared_ptr<QTextDocument>>(  "std::shared_ptr<QTextDocument>");
 
-    // PCMainUI add widgets
-    // # photo display
-    selectedPhotoW = new PhotoW();
-    m_mUI->hlSelectedPhoto->addWidget(selectedPhotoW);
-
-    // # header
-    m_mUI->vlHeader->addWidget(&headerW);
-    // # footer
-    m_mUI->vlFooter->addWidget(&footerW);
     // # preview display
-    previewW = new PreviewW();
-    m_mUI->hlPreview->addWidget(previewW);
-    // # global background
-    m_mUI->vlGlobalBackground->addWidget(&globalBackgroundW);
-    // # global borders
-    m_mUI->vlGlobalBorders->addWidget(&globalBordersW);
-    // # global margins
-    m_mUI->vlGlobalMargins->addWidget(&globalMarginsW);
-    // # global set style
-    m_mUI->vlGlobalSetStyle->addWidget(&globalSetStyleW);
-    // # global consign
-    QHBoxLayout *globalConsignLayout = new QHBoxLayout();
-    globalConsignLayout->setContentsMargins(3,3,3,3);
-    m_mUI->pageAllSetsText->setLayout(globalConsignLayout);
-    globalSetTextW.init_style(RichTextType::globalConsign);
-    globalConsignLayout->addWidget(&globalSetTextW);
+    mainUI.hlPreview->addWidget(&previewW);
+
+    // # photo display
+    mainUI.hlSelectedPhoto->addWidget(&photoW);
+
+    // # right settings
+    mainUI.vlRightSettings->addWidget(&settingsW);
 
     // PCMainUI init uI
     // # definition
-    PaperFormat pf(m_mUI->cbDPI->currentText(),m_mUI->cbFormat->currentText());
-    int currentDPI = m_mUI->cbDPI->currentText().toInt();
-    m_mUI->laDefinition->setTextFormat(Qt::RichText);
-    m_mUI->laDefinition->setText("<p><b>Définition: </b> " + QString::number(pf.width_pixels(currentDPI)) + "x" + QString::number(pf.height_pixels(currentDPI)) + " pixels</p>");
+    PaperFormat pf(mainUI.cbDPI->currentText(),mainUI.cbFormat->currentText());
+    int currentDPI = mainUI.cbDPI->currentText().toInt();
+    mainUI.laDefinition->setTextFormat(Qt::RichText);
+    mainUI.laDefinition->setText("<p><b>Définition: </b> " + QString::number(pf.width_pixels(currentDPI)) + "x" + QString::number(pf.height_pixels(currentDPI)) + " pixels</p>");
     // # buttons
-    m_mUI->pbAdd->hide();
+    mainUI.pbAdd->hide();
     // # list photos
-    m_mUI->twPhotosList->setTabEnabled(1,false); // list photos info tab
+    mainUI.twPhotosList->setTabEnabled(1,false); // list photos info tab
     // # list pages
-    m_mUI->twPagesList->setTabEnabled(1,false);  // list pages info tab
+    mainUI.twPagesList->setTabEnabled(1,false);  // list pages info tab
     // # tabs middles
-    m_mUI->twMiddle->setTabEnabled(0, false);
-    // # tabs right
-    m_mUI->tbRight->setItemEnabled(2, false);
-    m_mUI->tbRight->setItemEnabled(5, false);
-
-    // PCMainUI connections
-    // # header
-    connect(&headerW, &HeaderW::settings_updated_signal, this, &UIElements::ask_for_update);
-    // # footer
-    connect(&footerW, &FooterW::settings_updated_signal, this, &UIElements::ask_for_update);
-    // # global background
-    connect(&globalBackgroundW, &BackgroundW::settings_updated_signal, this, &UIElements::ask_for_update);
-    // # global borders
-    connect(&globalBordersW, &BordersW::settings_updated_signal, this, &UIElements::ask_for_update);
-    // # global margins
-    connect(&globalMarginsW, &MarginsW::settings_updated_signal, this, &UIElements::ask_for_update);
-    // # global set style
-    connect(&globalSetStyleW, &MarginsW::settings_updated_signal, this, &UIElements::ask_for_update);
-    // # global consign
-    connect(globalSetTextW.textEdit(), &TextEdit::resource_added_signal, this, &UIElements::resource_added_signal);
+    mainUI.twMiddle->setTabEnabled(0, false);
 
     // # misc
-    connect(m_mUI->cbSaveOnlyCurrentPage, &QCheckBox::clicked, this, [=]{
-        emit update_settings_signal();
+    connect(mainUI.cbSaveOnlyCurrentPage, &QCheckBox::clicked, this, [=]{
+        ask_for_update(false);
     });
 
-    connect(m_mUI->cbOrientation, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
+    connect(mainUI.cbOrientation, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
+        ask_for_update(true);
+    });
+
+    // right tab
+    connect(&settingsW, &RightSettingsW::settings_updated_signal,       this, &UIElements::ask_for_update);
+    connect(&settingsW, &RightSettingsW::resource_added_signal,         this, &UIElements::resource_added_signal);
+    connect(&settingsW, &RightSettingsW::set_progress_bar_state_signal, this, &UIElements::set_progress_bar_state_signal);
+    connect(&settingsW, &RightSettingsW::set_progress_bar_text_signal,  this, &UIElements::set_progress_bar_text_signal);
+}
+
+
+void UIElements::ask_for_update(bool displayZones){
+    if(displayZones){
         zonesTimer.start(1000);
-        emit update_settings_signal();
-    });
-
-    // test
-//    CustomPageW *test =  new CustomPageW();
-//    m_mUI->hlTest->addWidget(test);
-}
-
-pc::UIElements::~UIElements(){
-
-    pageW.clear();
-    setsLoadedW.clear();
-    setsValidedW.clear();
-}
-
-void pc::UIElements::insert_individual_set(int index){
-
-    setsLoadedW.insert(index,std::make_shared<SetW>());
-    SIndividualSetW &setW = setsLoadedW[index];
-    setW->setEnabled(true);
-    Ui::SetUI &ui = setW->ui;
-
-    connect(setW->setTextW.textEdit(), &TextEdit::resource_added_signal, this, &UIElements::resource_added_signal);
-
-    // # set style
-    connect(setW.get(), &SetW::settings_updated_signal, this, &UIElements::ask_for_update);
-
-    // # init/copy settings
-    connect(ui.pbAllGlobalParameters, &QPushButton::clicked, this, [&]{
-        for(auto &&set : setsValidedW){
-            Utility::safe_init_checkboxe_checked_state(set->ui.cbEnableIndividualConsign, false);
-            set->ui.frameSet->setEnabled(false);
-        }
-        emit update_settings_signal();
-    });
-
-    connect(ui.pbAllIndividualParameters, &QPushButton::clicked, this, [&]{
-        for(auto &&set : setsValidedW){
-            Utility::safe_init_checkboxe_checked_state(set->ui.cbEnableIndividualConsign, true);
-            set->ui.frameSet->setEnabled(true);
-        }
-        emit update_settings_signal();
-    });
-
-    connect(ui.pbCopyGlobalToIndividuals, &QPushButton::clicked, this, [&]{
-
-        for(auto &&set : setsLoadedW){
-            set->init_with_another_set(globalSetStyleW, globalSetTextW, true);
-        }
-
-        emit update_settings_signal();
-    });
-    connect(ui.pbCopyIndividualToGlobal, &QPushButton::clicked, this, [&]{
-        setW->copy_to_another_set(globalSetStyleW, globalSetTextW, true);
-    });
-
-    // init new individual ui with global ui
-    setW->init_with_another_set(globalSetStyleW, globalSetTextW);
-}
-
-void pc::UIElements::remove_individual_set(int index){
-    setsLoadedW.removeAt(index);
-}
-
-void pc::UIElements::reset_individual_sets(int nbPhotos){
-
-    qreal currentState = 750.;
-    qreal offset = 250. / nbPhotos;
-
-    // clean
-    setsLoadedW.clear();
-
-    // insert new consigns
-    for(int ii = 0; ii < nbPhotos; ++ii){
-
-        emit set_progress_bar_text_signal("Consigne individuelle n°" + QString::number(ii));
-        insert_individual_set(ii);
-        currentState += offset;
-        emit set_progress_bar_state_signal(static_cast<int>(currentState));
     }
+    emit settings_updated_signal();
 }
 
-void pc::UIElements::update_individual_pages(const GlobalDocumentSettings &settings){
 
-    DebugMessage dbgMess("update_individual_pages");
-    int diff = pageW.size() - settings.nbPages;
-    if(diff < 0){ // add -diff pages
+void UIElements::display_donate_window(){
 
-        for(int ii = 0; ii < -diff;++ ii){
+    supportW = std::make_unique<QWidget>();
+    supportW->setWindowIcon(QIcon(":/images/icon"));
+    supportW->setWindowModality(Qt::ApplicationModal);
+    supportW->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 
-            pageW.push_back(std::make_shared<PageW>());
+    Ui::SupportUI support;
+    support.setupUi(supportW.get());
 
-            SPageW pageUI = pageW.last();
-            pageUI->init_with_global_settings(settings);
-            connect(pageUI.get(), &PageW::settings_updated_signal, this, &UIElements::ask_for_update);
-
+    delete support.laPatreon;
+    delete support.pbPatreon;
+    delete support.hlPatreon;
+    connect(support.pbPaypal, &QPushButton::clicked, this, [=]{
+        if(!QDesktopServices::openUrl(QUrl("https://www.paypal.me/PhotosConsigne", QUrl::TolerantMode))){
+            QMessageBox::warning(m_parent, tr("Avertissement"), tr("Le site internet du tutoriel n'a pu être lancé, aucun logiciel de navigation web n'a été trouvé.' .\n"),QMessageBox::Ok);
         }
+    });
+    connect(support.pbMail, &QPushButton::clicked, this, [=]{
+        if(!QDesktopServices::openUrl(QUrl("mailto:?to=lance.florian@protonmail.com&subject=PhotosConsigne&body=", QUrl::TolerantMode))){}
+    });
+    connect(support.pbReturn, &QPushButton::clicked, this, [=]{
+        supportW->hide();
+    });
 
-    }else if(diff > 0){ // remove diff pages
-
-        for(int ii = 0; ii < -diff;++ ii){
-            pageW.pop_back();
-        }
-    }
+    supportW->show();
 }
 
+void UIElements::display_help_window(){
+
+    helpW = std::make_unique<QWidget>();
+    helpW->setWindowIcon(QIcon(":/images/icon"));
+    helpW->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+
+    Ui::HelpUI help;
+    help.setupUi(helpW.get());
+
+    connect(help.pbFAQ, &QPushButton::clicked, this, [=]{
+        if(!QDesktopServices::openUrl(QUrl("https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions", QUrl::TolerantMode))){
+            QMessageBox::warning(m_parent, tr("Avertissement"), tr("Le site internet du tutoriel n'a pu être lancé, aucun logiciel de navigation web n'a été trouvé.' .\n"),QMessageBox::Ok);
+        }
+    });
+    connect(help.pbVideosTutorials, &QPushButton::clicked, this, [=]{
+        if(!QDesktopServices::openUrl(QUrl("https://github.com/FlorianLance/PhotosConsigne/wiki/Tutoriels", QUrl::TolerantMode))){
+            QMessageBox::warning(m_parent, tr("Avertissement"), tr("Le site internet du tutoriel n'a pu être lancé, aucun logiciel de navigation web n'a été trouvé.' .\n"),QMessageBox::Ok);
+        }
+    });
+
+    connect(help.pbReturn, &QPushButton::clicked, this, [=]{
+        helpW->hide();
+    });
+
+    helpW->show();
+}
+
+void UIElements::update_global_settings(GlobalDocumentSettings &settings) const{
+
+    // # retrieve nb of pages
+    settings.nbPages                      = mainUI.sbNbPages->value();
+
+    // # only global
+    settings.saveOnlyCurrentPage          = mainUI.cbSaveOnlyCurrentPage->isChecked();
+    settings.PCRatio                      = settingsW.globalSetW.setStyleW.ui.dsbRatioPC->value();
+    settings.orientation                  = (mainUI.cbOrientation->currentIndex() == 0) ? PageOrientation::portrait : PageOrientation::landScape;
+
+    // # set
+    // ## text
+    settings.consignText                  = settingsW.globalSetW.setTextW.html();
+    // ## set style
+    settings.photoAlignment               = Utility::photo_alignment_from_comboBox(settingsW.globalSetW.setStyleW.ui.cbPhotoAlignment);
+    settings.photoAdust                   = Utility::photo_adjust_from_comboBox(settingsW.globalSetW.setStyleW.ui.cbAdjustPhoto);
+    settings.consignPositionFromPhotos    = static_cast<Position>(settingsW.globalSetW.setStyleW.ui.cbPositionConsign->currentIndex());
+
+    // # page
+    // ## margins
+    settings.marginsSettings              = settingsW.globalPageW.marginsW.settings();
+    // ## borders
+    settings.bordersSettings              = settingsW.globalPageW.bordersW.settings();
+    // ## background
+    settings.backgroundSettings           = settingsW.globalPageW.backgroundW.settings();
+    // ## sets
+    settings.setsSettings                 = settingsW.globalPageW.setsW.settings();
+
+    // # header
+    // ## enabled
+    settings.headerSettings.enabled       = settingsW.headerW.ui.cbEnableHeader->isChecked();
+    // ## background
+    settings.headerSettings.background    = settingsW.headerW.headeBackgroundW.settings();
+    // ## text
+    settings.headerSettings.text          = settingsW.headerW.headerTextW.html();
+    // ## style
+    settings.headerSettings.ratio         = settingsW.headerW.sectionStyleW.ui.dsbRatioSection->value();
+
+    // # footer
+    // ## enabled
+    settings.footerSettings.enabled       = settingsW.footerW.ui.cbEnableFooter->isChecked();
+    // ## background
+    settings.footerSettings.background    = settingsW.footerW.footerBackgroundW.settings();
+    // ## text
+    settings.footerSettings.text          = settingsW.footerW.footerTextW.html();
+    // ## style
+    settings.footerSettings.ratio         = settingsW.footerW.sectionStyleW.ui.dsbRatioSection->value();
+}

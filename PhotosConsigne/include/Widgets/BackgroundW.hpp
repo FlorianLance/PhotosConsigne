@@ -11,6 +11,7 @@
 // local
 // # widgets
 #include "SettingsW.hpp"
+#include "GlobalDocumentSettings.hpp"
 
 // generated ui
 #include "ui_Background.h"
@@ -34,7 +35,7 @@ struct BackgroundW : public SettingsW{
         init_image_dialog_connections(ui.tbBackgroundImage, tr("Image du fond"), tr("Choisissez l'image qui sera affichée dans le fond"), photo, QSize(45,45));
     }
 
-    BackGroundSettings settings(){
+    BackGroundSettings settings() const{
 
         BackGroundSettings settings;
 
@@ -52,6 +53,25 @@ struct BackgroundW : public SettingsW{
 
         return settings;
     }
+
+    static void init_ui(BackgroundW &b1, const BackgroundW &b2){
+
+        b1.color        = b2.color;
+        b1.colorPattern = b2.colorPattern;
+        b1.photo        = b2.photo;
+        b1.ui.tbColorPage->setIcon(             b2.ui.tbColorPage->icon());
+        b1.ui.tbBackgoundPatternColor->setIcon( b2.ui.tbBackgoundPatternColor->icon());
+        b1.ui.tbBackgroundImage->setIcon(       b2.ui.tbBackgroundImage->icon());
+
+        Utility::safe_init_checkboxe_checked_state(b1.ui.cbUseBackgroundImage,      b2.ui.cbUseBackgroundImage->isChecked());
+        Utility::safe_init_checkboxe_checked_state(b1.ui.cbDrawBackgoundPattern,    b2.ui.cbDrawBackgoundPattern->isChecked());
+
+        Utility::safe_init_combo_box_index(b1.ui.cbAdjustBackgroundImage,           b2.ui.cbAdjustBackgroundImage->currentIndex());
+        Utility::safe_init_combo_box_index(b1.ui.cbBackgroundPattern,               b2.ui.cbBackgroundPattern->currentIndex());
+        Utility::safe_init_combo_box_index(b1.ui.cbBackgroundImageAligment,         b2.ui.cbBackgroundImageAligment->currentIndex());
+    }
+
+
 
     QColor color        = qRgba(255,255,255,255);
     QColor colorPattern = qRgba(255,255,255,255);

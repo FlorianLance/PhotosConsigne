@@ -11,8 +11,6 @@ namespace pc {
 
 struct GlobalDocumentSettings{
 
-    bool resetPages          = false;   /**< if true, the number of pages will be reseted and initialized in function of the number of valid photos and H/V parameters */
-
     bool grayScale           = false;
     bool saveOnlyCurrentPage = false;
     bool noPreviewGeneration = false;
@@ -30,13 +28,16 @@ struct GlobalDocumentSettings{
     PhotoAdjust photoAdust = PhotoAdjust::adjust;
 
     // margins
-    RatioMargins marginsSettings;
+    MarginsSettings marginsSettings;
 
     // border
     BordersSettings bordersSettings;
 
     // backgound
     BackGroundSettings backgroundSettings;
+
+    // page sets
+    PageSetsSettings setsSettings;
 
     // header
     HeaderSettings headerSettings;
@@ -55,9 +56,6 @@ struct GlobalDocumentSettings{
     int currentSetIdDisplayed  = -1;
 
     // photos
-    int nbPhotosPageWidth;                  /**< size of the grid horizontally */
-    int nbPhotosPageHeight;                  /**< size of the grid vertically */
-    int nbPhotosPerPage;                /**< number of photos per page (< H*V) */
     int previousPhotoId     = 0;
     int currentPhotoId      = 0;    /**< id of the current selcted photo (photo list widget) */
     QString lastPhotosDirectoryPath= "";

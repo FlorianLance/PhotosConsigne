@@ -24,8 +24,8 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
     pageMinusMarginsRect = QRectF(rectOnPage.x() + widthLeftMargin, rectOnPage.y() + heightTopMargin,
                                  rectOnPage.width() - widthLeftMargin - widthRightMargin, rectOnPage.height() - heightTopMargin - heightBottomMargin);
 
-    qreal footerMarginHeight  = margins.footer * pageMinusMarginsRect.height();
-    qreal headerMarginHeight  = margins.header * pageMinusMarginsRect.height();
+    qreal footerMarginHeight  = margins.footerHeaderMarginEnabled ? margins.footer * pageMinusMarginsRect.height() : 0.;
+    qreal headerMarginHeight  = margins.footerHeaderMarginEnabled ? margins.header * pageMinusMarginsRect.height() : 0.;
 
     // header/footer ratios
     qreal headerFooterSetsHeight = pageMinusMarginsRect.height() - footerMarginHeight - headerMarginHeight;
@@ -73,8 +73,8 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
     footer->compute_sizes(footerRect);
 
     // intern margins
-    int nbInterVMargins     = nbPhotosV - 1;
-    int nbInterHMargins     = nbPhotosH - 1;
+    int nbInterVMargins     = pageSetsSettings.nbPhotosV - 1;
+    int nbInterHMargins     = pageSetsSettings.nbPhotosH - 1;
     qreal heightInterMargin = 0., widthInterMargin = 0.;
     if(margins.interiorMarginsEnabled){
         if(nbInterVMargins > 0){
@@ -86,23 +86,23 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
     }
 
     // PC
-    qreal widthSets   = (setsRect.width()  - nbInterHMargins * widthInterMargin)  / nbPhotosH;
-    qreal heightSets  = (setsRect.height() - nbInterVMargins * heightInterMargin) / nbPhotosV;
+    qreal widthSets   = (setsRect.width()  - nbInterHMargins * widthInterMargin)  / pageSetsSettings.nbPhotosH;
+    qreal heightSets  = (setsRect.height() - nbInterVMargins * heightInterMargin) / pageSetsSettings.nbPhotosV;
 
     int currPC = 0;
     interMarginsRects.clear();
     interMarginsRects.reserve(sets.size());
     qreal offsetV = setsRect.y();
-    for(int ii = 0; ii < nbPhotosV; ++ii){
+    for(int ii = 0; ii < pageSetsSettings.nbPhotosV; ++ii){
         qreal offsetH = setsRect.x();
-        for(int jj = 0; jj < nbPhotosH; ++jj){
+        for(int jj = 0; jj < pageSetsSettings.nbPhotosH; ++jj){
             if(currPC >= sets.size())
                 break;
 
             sets[currPC]->compute_sizes(QRectF(offsetH, offsetV, widthSets, heightSets));
             interMarginsRects.push_back(QRectF(offsetH, offsetV,
-                                               (jj < nbPhotosH-1) ? widthSets  + widthInterMargin  : widthSets,
-                                               (ii < nbPhotosV-1) ? heightSets + heightInterMargin : heightSets));
+                                               (jj < pageSetsSettings.nbPhotosH-1) ? widthSets  + widthInterMargin  : widthSets,
+                                               (ii < pageSetsSettings.nbPhotosV-1) ? heightSets + heightInterMargin : heightSets));
 
             offsetH += widthSets + widthInterMargin;
             ++currPC;

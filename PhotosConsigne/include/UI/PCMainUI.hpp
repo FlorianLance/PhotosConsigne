@@ -49,41 +49,38 @@ public slots:
     void closeEvent(QCloseEvent *event);
     void keyPressEvent( QKeyEvent * event );
 
-    // photos
+    // actions
     void add_photos_directory();
     void load_new_photos();
     void remove_all_photos();
-    void update_photo_to_display(SPhoto photo);
-
-    // sets
-    void swap_loaded_set(int currentIndex, int newIndex);
     void insert_transparent_space();
-    void define_selected_photo(int index);
 
     // selection
     void define_selected_page(int index);
+    void select_photo(int index, bool displayPhotoPanel = true);
     void define_selected_page_from_current_photo();
     void define_selected_set_from_current_photo();
 
-    // tab middle panels
+    // ui
+    // # update lists
+    void update_photos_list();
+    void update_pages_list();
+    // # display pannels
+    // ## tab middle panels
     void display_photo_panel();
     void display_preview_panel();
-
-    // tab right panels
-    void display_global_consign_panel();
-    void display_individual_consign_settings_panel();
-    void display_individual_page_settings_panel();
-    void display_header_panel();
-    void display_footer_panel();
-
-    // dynamic ui display
+    // # dynamic ui display
     void display_current_individual_set_ui();
     void display_current_individual_page_ui();
+    // # photo
+    void update_photo_to_display(SPhoto photo);
 
-    // update
-    void build_valid_sets();
-    void retrieve_global_settings_from_ui();
+    // data
+    // # generate sets/pages from ui
+    void build_valid_sets();        
     void build_pages();
+
+    // preview
     void update_settings_with_no_preview();
     void update_settings();
 
@@ -92,11 +89,6 @@ private :
     // state
     void set_ui_state_for_adding_photos(bool state = true);
     void set_ui_state_for_generating_pdf(bool state = true);
-    void update_photos_list_style();
-    void update_pages_list_style();
-
-    // windows
-    void display_donate_window();
 
     // conections
     void from_main_UI_connections();
@@ -126,8 +118,7 @@ private:
     GlobalDocumentSettings m_settings;  /**< global parameters of the document */
 
     // ui
-    std::shared_ptr<Ui::PhotosConsigneMainW>  m_mainUI = nullptr; /**< main widget */
-    std::unique_ptr<UIElements>               m_dynUI  = nullptr; /**< dynamic ui elements */
+    UIElements m_ui; /**< dynamic ui elements */
 
     // threads
     std::unique_ptr<PhotoLoaderWorker> m_loadPhotoWorker = nullptr;

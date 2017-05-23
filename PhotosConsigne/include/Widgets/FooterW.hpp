@@ -33,7 +33,7 @@ struct FooterW : public SettingsW{
         ui.frameFooter->setEnabled(false);
 
         // enable
-        init_checkboxes_connections({ui.cbEnableFooter});
+        init_checkboxes_connections({ui.cbEnableFooter}, true);
         Utility::checkbox_enable_UI(ui.cbEnableFooter, {ui.frameFooter});
 
         // text

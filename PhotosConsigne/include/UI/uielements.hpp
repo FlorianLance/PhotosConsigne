@@ -11,11 +11,8 @@
 // local
 #include "Utility.hpp"
 // # widgets
-#include "PageW.hpp"
-#include "SetW.hpp"
-#include "HeaderW.hpp"
-#include "FooterW.hpp"
 #include "PreviewW.hpp"
+#include "RightSettingsW.hpp"
 // # generated ui
 #include "ui_PhotosConsigneMainW.h"
 #include "ui_Support.h"
@@ -23,9 +20,9 @@
 
 
 namespace Ui {
-    class PhotosConsigneMainW;
-    class SupportW;
-    class HelpW;
+    class PhotosConsigneMainUI;
+    class SupportUI;
+    class HelpUI;
 }
 
 namespace pc{
@@ -44,63 +41,39 @@ class UIElements : public QObject{
 
 public :
 
+    UIElements(QMainWindow *parent);
 
-    UIElements(QWidget *parent, std::shared_ptr<Ui::PhotosConsigneMainW> mainUI);
+    QTimer zonesTimer;  /**< timer for displaying the zones in the preview */
 
-    ~UIElements();
+    std::unique_ptr<QWidget> supportW   = nullptr;  /**< support window */
+    std::unique_ptr<QWidget> helpW      = nullptr;  /**< help window */
 
-    // consign related
-    void insert_individual_set(int index);
-    void remove_individual_set(int index);
-    void reset_individual_sets(int nbPhotos);
+    PhotoW   photoW;                    /**< photo widget */
+    PreviewW previewW;                  /**< preview widget */
+    RightSettingsW settingsW;           /**< right settings widgets */
 
-    // pages related
-    void update_individual_pages(const GlobalDocumentSettings &settings);
-
-    // members
-    QTimer zonesTimer;
-
-    std::unique_ptr<QWidget> wSupport   = nullptr;
-    std::unique_ptr<QWidget> wHelp      = nullptr;
-
-    PhotoW   *selectedPhotoW        = nullptr;
-    PreviewW *previewW              = nullptr;
-
-    BackgroundW     globalBackgroundW;
-    BordersW        globalBordersW;
-    MarginsW        globalMarginsW;
-    RichTextEditW   globalSetTextW;
-    SetStyleW       globalSetStyleW;
-
-    HeaderW         headerW;
-    FooterW         footerW;
-
-    QList<SPageW>          pageW;
-    QList<SIndividualSetW> setsLoadedW;
-    QList<SIndividualSetW> setsValidedW;
+    Ui::PhotosConsigneMainUI mainUI;    /**< ui of the main window */
 
 public slots:
 
-    void ask_for_update(bool displayZones){
-        if(displayZones){
-            zonesTimer.start(1000);
-        }
-        emit update_settings_signal();
-    }
+    void ask_for_update(bool displayZones);
 
+    void display_donate_window();
+
+    void display_help_window();
+
+    void update_global_settings(GlobalDocumentSettings &settings) const;
 
 private:
 
-    std::shared_ptr<Ui::PhotosConsigneMainW> m_mUI = nullptr;
-    QWidget *m_parent = nullptr;
+    QMainWindow *m_parent = nullptr;
 
 signals:
 
-    void update_settings_signal();
-    void set_progress_bar_state_signal(int state);
-    void set_progress_bar_text_signal(QString text);
-    void send_page_color_signal(QColor col);
+    void settings_updated_signal();
     void resource_added_signal(QUrl url, QImage image);
 
+    void set_progress_bar_state_signal(int state);
+    void set_progress_bar_text_signal(QString text);
 };
 }

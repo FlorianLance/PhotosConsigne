@@ -10,6 +10,7 @@
 
 // local
 #include "SettingsW.hpp"
+#include "GlobalDocumentSettings.hpp"
 
 // generated ui
 #include "ui_Borders.h"
@@ -30,7 +31,7 @@ struct BordersW : public SettingsW {
         init_comboboxes_connections({ui.cbBordersLineWidth, ui.cbBordersLineStyle, ui.cbBordersJoin,}, false);
     }
 
-    BordersSettings settings(){
+    BordersSettings settings() const{
 
         BordersSettings settings;
         settings.display = ui.cbEnableBorders->isChecked();
@@ -40,6 +41,16 @@ struct BordersW : public SettingsW {
         settings.pen.setJoinStyle(Utility::borders_join_style_from_comboBox(ui.cbBordersJoin));
         return settings;
     }
+
+    static void init_ui(BordersW &b1, const BordersW &b2){
+        Utility::safe_init_checkboxe_checked_state(b1.ui.cbEnableBorders, b2.ui.cbEnableBorders->isChecked());
+        Utility::safe_init_combo_box_index(b1.ui.cbBordersLineWidth, b2.ui.cbBordersLineWidth->currentIndex());
+        Utility::safe_init_combo_box_index(b1.ui.cbBordersLineStyle, b2.ui.cbBordersLineStyle->currentIndex());
+        Utility::safe_init_combo_box_index(b1.ui.cbBordersJoin, b2.ui.cbBordersJoin->currentIndex());
+        b1.ui.tbColorBorder->setIcon(b2.ui.tbColorBorder->icon());
+        b1.color = b2.color;
+    }
+
 
     QColor color = qRgba(0,0,0,0);
 

@@ -74,7 +74,9 @@ HEADERS += \
     include/Data/Settings.hpp \
     include/Data/GlobalDocumentSettings.hpp \
     include/Data/DocumentElements.hpp \
-    include/Data/PaperFormat.hpp
+    include/Data/PaperFormat.hpp \
+    include/Widgets/PageSetsW.hpp \
+    include/Widgets/RightSettingsW.hpp
 
 FORMS += \
     ui/MainUI.ui \
@@ -90,7 +92,9 @@ FORMS += \
     ui/Set.ui \
     ui/Header.ui \
     ui/SectionStyle.ui \
-    ui/Footer.ui
+    ui/Footer.ui \
+    ui/PageSets.ui \
+    ui/RightSettings.ui
 
 DISTFILES += \
     deploiement/PhotosConsigne_x64.iss \
