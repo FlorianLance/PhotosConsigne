@@ -59,13 +59,10 @@ struct MarginsW : public SettingsW{
         return margins;
     }
 
-    void update_mm_values(bool landScape, const PaperFormat &format){
+    void update_mm_values(const PaperFormat &format){
 
         qreal currentHeight = format.sizeMM.height();
         qreal currentWidth  = format.sizeMM.width();
-        if(landScape){
-            std::swap(currentHeight,currentWidth);
-        }
 
         int left=0,right=0,top =0,bottom =0;
         if(ui.cbAddExteriorMargins->isChecked()){

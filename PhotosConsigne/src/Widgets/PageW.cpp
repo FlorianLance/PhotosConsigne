@@ -12,9 +12,35 @@ pc::PageW::PageW() : SettingsW(){
     ui.vlBorders->addWidget(&bordersW);
     ui.vlMargins->addWidget(&marginsW);
     ui.vlSets->addWidget(&setsW);
+    backgroundW.hide();
+    bordersW.hide();
+    marginsW.hide();
 
     init_checkboxes_connections({ui.cbEnableIndividualPage}, true);
     Utility::checkbox_enable_UI(ui.cbEnableIndividualPage, {ui.framePage});
+
+    connect(ui.tabPage, &QTabWidget::currentChanged, this, [&]{
+
+        backgroundW.hide();
+        bordersW.hide();
+        marginsW.hide();
+        setsW.hide();
+
+        switch (ui.tabPage->currentIndex()) {
+        case 0:
+            setsW.show();
+            break;
+        case 1:
+            marginsW.show();
+            break;
+        case 2:
+            bordersW.show();
+            break;
+        case 3:
+            backgroundW.show();
+            break;
+        }
+    });
 
     // # background
     connect(&backgroundW, &BackgroundW::settings_updated_signal, this, &PageW::settings_updated_signal);

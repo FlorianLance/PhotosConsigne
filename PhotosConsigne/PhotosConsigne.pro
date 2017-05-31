@@ -79,7 +79,6 @@ HEADERS += \
     include/Widgets/RightSettingsW.hpp
 
 FORMS += \
-    ui/MainUI.ui \
     ui/PhotosConsigneMainW.ui \
     ui/Support.ui \
     ui/Help.ui \

@@ -7,7 +7,7 @@ using namespace pc;
 
 
 
-pc::PaperFormat::PaperFormat(QString dpiStr, QString formatStr){
+pc::PaperFormat::PaperFormat(QString dpiStr, QString formatStr, bool landScape){
 
     dpi = dpiStr.toInt();
 
@@ -581,21 +581,6 @@ pc::PaperFormat::PaperFormat(QString dpiStr, QString formatStr){
         heightRatio =  9.2500 ;
         format = QPagedPaintDevice::PageSize::EnvelopeYou4;
         sizeMM = QSizeF(105.00,235.00);
-        //            }else if(formatStr == "LastPageSize"){
-        //               widthRatio =  4.1400 ;
-        //               heightRatio =  9.2500 ;
-        //               format = QPagedPaintDevice::PageSize::LastPageSize;
-        //               sizeMM = QSizeF(105.00,235.00);
-        //            }else if(formatStr == "NPageSize"){
-        //               widthRatio =  4.1400 ;
-        //               heightRatio =  9.2500 ;
-        //               format = QPagedPaintDevice::PageSize::NPageSize;
-        //               sizeMM = QSizeF(105.00,235.00);
-        //            }else if(formatStr == "NPaperSize"){
-        //               widthRatio =  4.1400 ;
-        //               heightRatio =  9.2500 ;
-        //               format = QPagedPaintDevice::PageSize::NPaperSize;
-        //               sizeMM = QSizeF(105.00,235.00);
     }else if(formatStr == "AnsiA" || formatStr == "Letter"){
         widthRatio =  8.5000 ;
         heightRatio =  11.0000 ;
@@ -621,6 +606,11 @@ pc::PaperFormat::PaperFormat(QString dpiStr, QString formatStr){
         heightRatio =  9.5000 ;
         format = QPagedPaintDevice::PageSize::Envelope10;
         sizeMM = QSizeF(105.00,241.00);
+    }
+
+    if(landScape){
+        std::swap(widthRatio,heightRatio);
+        sizeMM = QSizeF(sizeMM.height(), sizeMM.width());
     }
 }
 

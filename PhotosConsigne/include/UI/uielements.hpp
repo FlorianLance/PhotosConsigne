@@ -10,6 +10,7 @@
 
 // local
 #include "Utility.hpp"
+#include "DocumentElements.hpp"
 // # widgets
 #include "PreviewW.hpp"
 #include "RightSettingsW.hpp"
@@ -43,6 +44,14 @@ public :
 
     UIElements(QMainWindow *parent);
 
+    ~UIElements(){
+
+
+        qDebug() << "D UIElements";
+
+    }
+
+
     QTimer zonesTimer;  /**< timer for displaying the zones in the preview */
 
     std::unique_ptr<QWidget> supportW   = nullptr;  /**< support window */
@@ -59,10 +68,23 @@ public slots:
     void ask_for_update(bool displayZones);
 
     void display_donate_window();
-
     void display_help_window();
 
+    void display_photo_panel();
+    void display_preview_panel();
+
+    void set_ui_state_for_adding_photos(bool state = true);
+    void set_ui_state_for_generating_pdf(bool state = true);
+
     void update_global_settings(GlobalDocumentSettings &settings) const;
+
+    void update_photos_list(const GlobalDocumentSettings &settings);
+    void update_pages_list(const PCPages &pcPages);
+
+    void display_current_individual_set_ui(const GlobalDocumentSettings &settings);
+    void display_current_individual_page_ui(const GlobalDocumentSettings &settings);
+
+    void update_UI(const GlobalDocumentSettings &settings);
 
 private:
 

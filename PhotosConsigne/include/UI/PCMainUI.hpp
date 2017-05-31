@@ -61,23 +61,12 @@ public slots:
     void define_selected_page_from_current_photo();
     void define_selected_set_from_current_photo();
 
-    // ui
-    // # update lists
-    void update_photos_list();
-    void update_pages_list();
-    // # display pannels
-    // ## tab middle panels
-    void display_photo_panel();
-    void display_preview_panel();
-    // # dynamic ui display
-    void display_current_individual_set_ui();
-    void display_current_individual_page_ui();
     // # photo
     void update_photo_to_display(SPhoto photo);
 
     // data
     // # generate sets/pages from ui
-    void build_valid_sets();        
+    void build_valid_sets();
     void build_pages();
 
     // preview
@@ -85,10 +74,6 @@ public slots:
     void update_settings();
 
 private :
-
-    // state
-    void set_ui_state_for_adding_photos(bool state = true);
-    void set_ui_state_for_generating_pdf(bool state = true);
 
     // conections
     void from_main_UI_connections();
@@ -99,7 +84,7 @@ private :
 
 signals :
 
-    void init_document_signal();    
+    void init_document_signal();
     void start_loading_photos_signal(QStringList photosPath, int startIdToInsert);
     void stop_loading_photos_signal();
     void start_preview_generation_signal(PCPages pcPages, int idPageToDraw, bool drawZones);

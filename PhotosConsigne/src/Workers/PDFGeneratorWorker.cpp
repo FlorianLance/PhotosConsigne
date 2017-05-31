@@ -69,8 +69,8 @@ void PDFGeneratorWorker::draw_backgrounds(QPainter &painter, SPCPage pcPage, Ext
     // # pattern
     if(pcPage->backgroundSettings.displayPattern){
 
-        qreal widthPattern  = m_referenceDPI* ((pcPage->orientation == PageOrientation::portrait) ? infos.paperFormat.widthRatio  : infos.paperFormat.heightRatio);
-        qreal heightPattern = m_referenceDPI* ((pcPage->orientation == PageOrientation::portrait) ? infos.paperFormat.heightRatio : infos.paperFormat.widthRatio);
+        qreal widthPattern  = m_referenceDPI * infos.paperFormat.widthRatio;
+        qreal heightPattern = m_referenceDPI * infos.paperFormat.heightRatio;
         QRectF patternRect(0., 0., widthPattern, heightPattern);
 
         QImage patternImage(static_cast<int>(patternRect.width()),static_cast<int>(patternRect.height()), QImage::Format_ARGB32);
@@ -278,26 +278,21 @@ void PDFGeneratorWorker::kill(){
 
 void PDFGeneratorWorker::generate_preview(pc::PCPages pcPages, int pageIdToDraw, bool drawZones){
 
-    //        DebugMessage dbgMess("generate_preview");
-    //        QElapsedTimer timer;
-    //        timer.start();
 
+    DebugMessage dbgMess("generate_preview");
     m_pageToDraw    = pcPages.pages[pageIdToDraw];
-    bool landScape  = m_pageToDraw->orientation == PageOrientation::landScape;
-
     int dpi = pcPages.paperFormat.dpi;
-    if(dpi > 150){
-        dpi = 150;
+    if(dpi > 300){
+        dpi = 300;
     }
 
-    qreal widthPreview   = landScape ? pcPages.paperFormat.heightRatio*dpi : pcPages.paperFormat.widthRatio  * dpi;
-    qreal heightPreview  = landScape ? pcPages.paperFormat.widthRatio *dpi : pcPages.paperFormat.heightRatio * dpi;
+    qreal widthPreview   = pcPages.paperFormat.widthRatio  * dpi;
+    qreal heightPreview  = pcPages.paperFormat.heightRatio * dpi;
 
     // create preview image
     QImage image(static_cast<int>(widthPreview), static_cast<int>(heightPreview), QImage::Format_RGB32);
     QPainter painter(&image);
 
-    qDebug() << "compute_sizes !";
     m_pageToDraw->compute_sizes(QRectF(0 ,0, widthPreview, heightPreview));
 
     draw_page(painter, pcPages, pageIdToDraw, 1.*dpi/m_referenceDPI, true, drawZones);
@@ -334,11 +329,9 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
     pdfWriter.setCreator("created with PhotosConsigne (https://github.com/FlorianLance/PhotosConsigne)");
     pdfWriter.setColorMode(pcPages.grayScale ? QPrinter::ColorMode::GrayScale : QPrinter::ColorMode::Color);
 
-    pdfWriter.setPageMargins(QMarginsF(0.,0.,0.,0.));
-    pdfWriter.setPageSize(QPageSize(static_cast<QPageSize::PageSizeId>(pcPages.paperFormat.format)));
-
-    // define dpi resolution
     pdfWriter.setResolution(pcPages.paperFormat.dpi);
+    pdfWriter.setPageSize(QPageSize(static_cast<QPageSize::PageSizeId>(pcPages.paperFormat.format)));
+    pdfWriter.setPageOrientation(pcPages.paperFormat.landscape ? QPageLayout::Landscape : QPageLayout::Portrait);
 
     // init painter
     QPainter pdfPainter;
@@ -352,8 +345,7 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
     pcPages.compute_all_pages_sizes(pdfWriter.width(), pdfWriter.height());
     for(int ii = 0; ii < pcPages.pages.size(); ++ii){
 
-        bool landScape = pcPages.pages[ii]->orientation == PageOrientation::landScape;
-        pdfWriter.setPageOrientation(landScape ? QPageLayout::Landscape : QPageLayout::Portrait);
+        pdfWriter.setPageMargins(QMarginsF(0.,0.,0.,0.));
 
         if(!pcPages.pages[ii]->drawThisPage){
             continue;

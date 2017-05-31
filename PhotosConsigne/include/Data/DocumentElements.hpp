@@ -67,17 +67,10 @@ namespace pc {
         void compute_sizes(QRectF upperRect);
     };
 
-
-
     struct PCPage : public RectPageItem{
 
         int id; /**< id of the page */
-
-        // generate
-    //        int nbPhotos;
         bool drawThisPage;
-        PageOrientation orientation;
-
 
         // margins
         MarginsSettings margins;
@@ -103,8 +96,6 @@ namespace pc {
         // rects
         QRectF setsRect;
         QRectF pageMinusMarginsRect;
-//        QRectF headerRect;
-//        QRectF footerRect;
         QRectF marginHeaderRect;
         QRectF marginFooterRect;
         QVector<QRectF> interMarginsRects;
@@ -116,8 +107,13 @@ namespace pc {
 
         bool grayScale;
         QString pdfFileName = "";
-        PaperFormat paperFormat;
         QVector<SPCPage> pages;
+        PaperFormat paperFormat;
+
+        ~PCPages(){
+            pages.clear();
+        }
+
 
         int page_photos_number(int index) const{
             return pages[index]->sets.size();

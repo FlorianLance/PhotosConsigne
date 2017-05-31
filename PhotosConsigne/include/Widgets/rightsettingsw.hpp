@@ -51,6 +51,30 @@ namespace pc{
             // # whole page
             connect(&globalPageW, &PageW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
 
+            connect(ui.tabAllPages, &QTabWidget::currentChanged, this, [&]{
+
+                globalPageW.backgroundW.hide();
+                globalPageW.bordersW.hide();
+                globalPageW.marginsW.hide();
+                globalPageW.setsW.hide();
+
+                switch (ui.tabAllPages->currentIndex()) {
+                case 0:
+                    globalPageW.setsW.show();
+                    break;
+                case 1:
+                    globalPageW.marginsW.show();
+                    break;
+                case 2:
+                    globalPageW.bordersW.show();
+                    break;
+                case 3:
+                    globalPageW.backgroundW.show();
+                    break;
+                }
+            });
+
+
             // global set
             // # style
             ui.vlGlobalSetStyle->addWidget(&globalSetW.setStyleW);

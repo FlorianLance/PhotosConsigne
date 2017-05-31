@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>519</width>
+    <height>371</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -51,7 +51,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_12">
       <property name="leftMargin">
-       <number>0</number>
+       <number>5</number>
       </property>
       <property name="topMargin">
        <number>3</number>
@@ -63,7 +63,7 @@
        <number>0</number>
       </property>
       <property name="horizontalSpacing">
-       <number>3</number>
+       <number>15</number>
       </property>
       <property name="verticalSpacing">
        <number>0</number>
@@ -226,137 +226,6 @@ QWidget:!enabled {
            </property>
            <property name="text">
             <string>Ligne</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QFrame" name="frameBorderColor">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>75</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_10">
-         <property name="spacing">
-          <number>3</number>
-         </property>
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item alignment="Qt::AlignHCenter">
-          <widget class="QToolButton" name="tbColorBorder">
-           <property name="minimumSize">
-            <size>
-             <width>50</width>
-             <height>50</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>50</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true"> QToolButton:pressed {
- background-color: white;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
- }
- 
-
-
-QToolButton:hover:!pressed
-{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}QToolButton {
-
-    border: 1px solid rgb(0,106,255);
-    border-radius: 3px;
-}
-
-
-
-QToolButton:!enabled {
-
-    border: 1px solid rgb(150,150,150);
-
-}
-
-</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>50</width>
-             <height>50</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item alignment="Qt::AlignHCenter">
-          <widget class="QLabel" name="laBorderColor">
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  9pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-     font:  9pt Calibri;
- }
-QWidget {
-  
-	color : rgb(0,106,255);
-    font:  9pt Calibri;
-
- }
-
-
-</string>
-           </property>
-           <property name="text">
-            <string>Couleur</string>
            </property>
           </widget>
          </item>
@@ -537,36 +406,6 @@ QWidget:!enabled {
         </layout>
        </widget>
       </item>
-      <item row="1" column="0" colspan="4" alignment="Qt::AlignHCenter">
-       <widget class="QCheckBox" name="cbEnableBorders">
-        <property name="toolTip">
-         <string>Activation des marges extérieures</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-    font:  bold 10pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-    font:  bold 10pt Calibri;
- }
-</string>
-        </property>
-        <property name="text">
-         <string>Afficher bordures des ensembles</string>
-        </property>
-        <property name="checked">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="3">
        <widget class="QFrame" name="frameBordersJoin">
         <property name="sizePolicy">
@@ -711,6 +550,167 @@ QWidget:!enabled {
           </widget>
          </item>
         </layout>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QFrame" name="frameBorderColor">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>75</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_10">
+         <property name="spacing">
+          <number>3</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item alignment="Qt::AlignHCenter">
+          <widget class="QToolButton" name="tbColorBorder">
+           <property name="minimumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"> QToolButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QToolButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}QToolButton {
+
+    border: 1px solid rgb(0,106,255);
+    border-radius: 3px;
+}
+
+
+
+QToolButton:!enabled {
+
+    border: 1px solid rgb(150,150,150);
+
+}
+
+</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignHCenter">
+          <widget class="QLabel" name="laBorderColor">
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+
+</string>
+           </property>
+           <property name="text">
+            <string>Couleur</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="4" alignment="Qt::AlignHCenter">
+       <widget class="QCheckBox" name="cbEnableBorders">
+        <property name="toolTip">
+         <string>Activation des marges extérieures</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+    font:  bold 10pt Calibri;
+ }
+</string>
+        </property>
+        <property name="text">
+         <string>Afficher bordures des ensembles</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
      </layout>

@@ -69,8 +69,4 @@ namespace pc {
         BackGroundSettings background;
         std::shared_ptr<QString> text = nullptr;
     };
-
-
-
-
 }

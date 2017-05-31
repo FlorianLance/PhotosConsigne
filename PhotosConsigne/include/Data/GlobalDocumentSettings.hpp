@@ -16,7 +16,7 @@ struct GlobalDocumentSettings{
     bool noPreviewGeneration = false;
 
     // only global
-    PageOrientation orientation;
+    PaperFormat     paperFormat;
 
     // set
     // # text
@@ -47,7 +47,7 @@ struct GlobalDocumentSettings{
 
     // page
     int nbPages;                        /**< number of pages for the document */
-    int previousPageId      = 0;
+    int previousPageId      = -2;
     int currentPageId       = 0;    /**< id of the current selected page (page list widget) */
     int currentPageIdDisplayed = -1;
 

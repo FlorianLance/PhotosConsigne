@@ -2143,7 +2143,7 @@ QPushButton {
 </string>
                        </property>
                        <property name="currentIndex">
-                        <number>3</number>
+                        <number>2</number>
                        </property>
                        <item>
                         <property name="text">
@@ -4178,7 +4178,7 @@ de page</string>
          <widget class="QWidget" name="wRightPanel" native="true">
           <property name="minimumSize">
            <size>
-            <width>460</width>
+            <width>0</width>
             <height>0</height>
            </size>
           </property>
@@ -4253,7 +4253,7 @@ de page</string>
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>0</width>
+                  <width>400</width>
                   <height>0</height>
                  </size>
                 </property>
