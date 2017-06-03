@@ -31,6 +31,10 @@ struct BordersW : public SettingsW {
         init_comboboxes_connections({ui.cbBordersLineWidth, ui.cbBordersLineStyle, ui.cbBordersJoin,}, false);
     }
 
+    virtual ~BordersW(){
+//        DebugMessage("~BordersW");
+    }
+
     BordersSettings settings() const{
 
         BordersSettings settings;

@@ -13,6 +13,7 @@
 #include <QMouseEvent>
 #include <QTimer>
 
+
 /**
  * @brief Define a QWidget displaying an image.
  */
@@ -38,7 +39,7 @@ public slots:
     /**
      * @brief Set the current image
      */
-    void set_image(const QImage &image);
+    void set_image(QImage image);
 
 signals:
 

@@ -36,6 +36,10 @@ struct SetStyleW : public SettingsW{
         init_comboboxes_connections({ui.cbPositionConsign, ui.cbAdjustPhoto}, true);
     }
 
+    virtual ~SetStyleW(){
+//        DebugMessage("~SetStyleW");
+    }
+
     Ui::SetStyleUI ui;
 };
 }

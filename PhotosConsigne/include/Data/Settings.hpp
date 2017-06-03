@@ -36,9 +36,15 @@ namespace pc {
 
     struct PageSetsSettings{
 
+        bool customMode;
+        bool doNotDisplayHeader;
+        bool doNotDisplayFooter;
+
         int nbPhotos;
         int nbPhotosH;
         int nbPhotosV;
+
+        QVector<QRectF> relativePosCustom;
     };
 
     struct BackGroundSettings{

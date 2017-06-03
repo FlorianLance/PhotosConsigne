@@ -10,6 +10,7 @@ using namespace pc;
 pc::PaperFormat::PaperFormat(QString dpiStr, QString formatStr, bool landScape){
 
     dpi = dpiStr.toInt();
+    this->landscape = landScape;
 
     if(formatStr == "A4"){
         widthRatio =  8.2633 ;

@@ -35,6 +35,10 @@ struct BackgroundW : public SettingsW{
         init_image_dialog_connections(ui.tbBackgroundImage, tr("Image du fond"), tr("Choisissez l'image qui sera affichée dans le fond"), photo, QSize(45,45));
     }
 
+    virtual ~BackgroundW(){
+//        DebugMessage("~BackgroundW");
+    }
+
     BackGroundSettings settings() const{
 
         BackGroundSettings settings;

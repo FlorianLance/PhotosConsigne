@@ -52,6 +52,10 @@ struct FooterW : public SettingsW{
         connect(&sectionStyleW, &SectionStyleW::settings_updated_signal, this, &FooterW::settings_updated_signal);
     }
 
+    virtual ~FooterW(){
+//        DebugMessage("~FooterW");
+    }
+
     // ui
     Ui::FooterUI    ui;
 

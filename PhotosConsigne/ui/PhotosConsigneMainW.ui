@@ -3026,6 +3026,13 @@ QTabBar::tab:last{
         </item>
         <item>
          <layout class="QGridLayout" name="glMiddlePanel">
+          <item row="2" column="0" colspan="2">
+           <widget class="Line" name="line_8">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QTabWidget" name="twMiddle">
             <property name="sizeIncrement">
@@ -3097,7 +3104,7 @@ QTabBar::tab:last{
 </string>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="iconSize">
              <size>
@@ -3119,7 +3126,7 @@ QTabBar::tab:last{
              <attribute name="title">
               <string>PHOTO SELECTIONNEE</string>
              </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,3">
+             <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0">
               <property name="spacing">
                <number>0</number>
               </property>
@@ -3156,625 +3163,6 @@ QTabBar::tab:last{
                  <property name="bottomMargin">
                   <number>3</number>
                  </property>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <widget class="QFrame" name="fActionPhotos">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>16777215</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true"/>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::StyledPanel</enum>
-                </property>
-                <property name="frameShadow">
-                 <enum>QFrame::Raised</enum>
-                </property>
-                <layout class="QGridLayout" name="gridLayout_3">
-                 <property name="leftMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="topMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="rightMargin">
-                  <number>0</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>0</number>
-                 </property>
-                 <item row="1" column="6">
-                  <widget class="QPushButton" name="pbRemove">
-                   <property name="minimumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="focusPolicy">
-                    <enum>Qt::NoFocus</enum>
-                   </property>
-                   <property name="toolTip">
-                    <string>Retirer la photo de la liste</string>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-  
-
- background-color: white;
-
- }
- 
- QPushButton:pressed {
- background-color: white;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
- }
- 
-
-
-QPushButton:hover:!pressed
-{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources.qrc">
-                     <normaloff>:/images/remove</normaloff>:/images/remove</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="2">
-                  <spacer name="horizontalSpacer_4">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>40</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item row="1" column="5">
-                  <spacer name="horizontalSpacer_5">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>40</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item row="1" column="8">
-                  <widget class="QPushButton" name="pbDuplicate">
-                   <property name="minimumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="focusPolicy">
-                    <enum>Qt::NoFocus</enum>
-                   </property>
-                   <property name="toolTip">
-                    <string>Dupliquer la photo</string>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-  
-
- background-color: white;
-
- }
- 
- QPushButton:pressed {
- background-color: white;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
- }
- 
-
-
-QPushButton:hover:!pressed
-{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources.qrc">
-                     <normaloff>:/images/duplicate</normaloff>:/images/duplicate</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="10">
-                  <widget class="QPushButton" name="pbRotateRight">
-                   <property name="minimumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="focusPolicy">
-                    <enum>Qt::NoFocus</enum>
-                   </property>
-                   <property name="toolTip">
-                    <string>Rotation à 90° droit de la photo</string>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-  
-
- background-color: white;
-
- }
- 
- QPushButton:pressed {
- background-color: white;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
- }
- 
-
-
-QPushButton:hover:!pressed
-{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources.qrc">
-                     <normaloff>:/images/rotateRight</normaloff>:/images/rotateRight</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="7">
-                  <widget class="QPushButton" name="pbAdd">
-                   <property name="minimumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="focusPolicy">
-                    <enum>Qt::NoFocus</enum>
-                   </property>
-                   <property name="toolTip">
-                    <string>Rajouter la photo dans la liste</string>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-  
-
- background-color: white;
-
- }
- 
- QPushButton:pressed {
- background-color: white;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
- }
- 
-
-
-QPushButton:hover:!pressed
-{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources.qrc">
-                     <normaloff>:/images/add</normaloff>:/images/add</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="4">
-                  <widget class="QPushButton" name="pbOrderPlus">
-                   <property name="minimumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="focusPolicy">
-                    <enum>Qt::NoFocus</enum>
-                   </property>
-                   <property name="toolTip">
-                    <string>Changer l'ordre de la photo en la descendant</string>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-  
-
- background-color: white;
-
- }
- 
- QPushButton:pressed {
- background-color: white;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
- }
- 
-
-
-QPushButton:hover:!pressed
-{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources.qrc">
-                     <normaloff>:/images/orderPlus</normaloff>:/images/orderPlus</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="3">
-                  <widget class="QPushButton" name="pbOrderMinus">
-                   <property name="minimumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="focusPolicy">
-                    <enum>Qt::NoFocus</enum>
-                   </property>
-                   <property name="toolTip">
-                    <string>Changer l'ordre de la photo en la remontant</string>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-  
-
- background-color: white;
-
- }
- 
- QPushButton:pressed {
- background-color: white;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
- }
- 
-
-
-QPushButton:hover:!pressed
-{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources.qrc">
-                     <normaloff>:/images/orderMinus</normaloff>:/images/orderMinus</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="11">
-                  <widget class="QPushButton" name="pbRight">
-                   <property name="minimumSize">
-                    <size>
-                     <width>54</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>54</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="focusPolicy">
-                    <enum>Qt::NoFocus</enum>
-                   </property>
-                   <property name="toolTip">
-                    <string>Photo suivante</string>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-  
-
- background-color: white;
-
- }
- 
- QPushButton:pressed {
- background-color: white;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
- }
- 
-
-
-QPushButton:hover:!pressed
-{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources.qrc">
-                     <normaloff>:/images/rightArrow</normaloff>:/images/rightArrow</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>54</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QPushButton" name="pbLeft">
-                   <property name="minimumSize">
-                    <size>
-                     <width>54</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>54</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="focusPolicy">
-                    <enum>Qt::NoFocus</enum>
-                   </property>
-                   <property name="toolTip">
-                    <string>Photo précédente</string>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-  
-
- background-color: white;
-
- }
- 
- QPushButton:pressed {
- background-color: white;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
- }
- 
-
-
-QPushButton:hover:!pressed
-{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources.qrc">
-                     <normaloff>:/images/leftArrow</normaloff>
-                     <normalon>:/images/leftArrow</normalon>
-                     <selectedoff>:/images/leftArrowPressed</selectedoff>:/images/leftArrow</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>54</width>
-                     <height>50</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QPushButton" name="pbRotateLeft">
-                   <property name="minimumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                   <property name="focusPolicy">
-                    <enum>Qt::NoFocus</enum>
-                   </property>
-                   <property name="toolTip">
-                    <string>Rotation à 90° gauche de la photo</string>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">QPushButton {
-  
-
- background-color: white;
-
- }
- 
- QPushButton:pressed {
- background-color: white;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
- }
- 
-
-
-QPushButton:hover:!pressed
-{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="icon">
-                    <iconset resource="../resources.qrc">
-                     <normaloff>:/images/rotateLeft</normaloff>:/images/rotateLeft</iconset>
-                   </property>
-                   <property name="iconSize">
-                    <size>
-                     <width>45</width>
-                     <height>45</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="9">
-                  <spacer name="horizontalSpacer_6">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>40</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                 <item row="0" column="0" colspan="12">
-                  <widget class="QLabel" name="laPhotoInfo">
-                   <property name="styleSheet">
-                    <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-    font:  10pt Calibri;
-
-
- }
-</string>
-                   </property>
-                   <property name="text">
-                    <string>...</string>
-                   </property>
-                  </widget>
-                 </item>
                 </layout>
                </widget>
               </item>
@@ -4165,11 +3553,670 @@ de page</string>
             </widget>
            </widget>
           </item>
-          <item row="2" column="0" colspan="2">
-           <widget class="Line" name="line_8">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+          <item row="1" column="0">
+           <widget class="QFrame" name="frame_9">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
             </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <property name="spacing">
+              <number>3</number>
+             </property>
+             <property name="leftMargin">
+              <number>3</number>
+             </property>
+             <property name="topMargin">
+              <number>3</number>
+             </property>
+             <property name="rightMargin">
+              <number>3</number>
+             </property>
+             <property name="bottomMargin">
+              <number>3</number>
+             </property>
+             <item>
+              <widget class="QFrame" name="fActionPhotos">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>100</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>100</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true"/>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_3">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item row="1" column="9">
+                 <widget class="QPushButton" name="pbDuplicate">
+                  <property name="minimumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
+                  <property name="toolTip">
+                   <string>Dupliquer la photo</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+  
+
+ background-color: white;
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources.qrc">
+                    <normaloff>:/images/duplicate</normaloff>:/images/duplicate</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="6">
+                 <widget class="QPushButton" name="pbOrderPlus">
+                  <property name="minimumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
+                  <property name="toolTip">
+                   <string>Changer l'ordre de la photo en la descendant</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+  
+
+ background-color: white;
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources.qrc">
+                    <normaloff>:/images/orderPlus</normaloff>:/images/orderPlus</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="7">
+                 <widget class="QPushButton" name="pbRemove">
+                  <property name="minimumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
+                  <property name="toolTip">
+                   <string>Retirer la photo de la liste</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+  
+
+ background-color: white;
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources.qrc">
+                    <normaloff>:/images/remove</normaloff>:/images/remove</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="8">
+                 <widget class="QPushButton" name="pbAdd">
+                  <property name="minimumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
+                  <property name="toolTip">
+                   <string>Rajouter la photo dans la liste</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+  
+
+ background-color: white;
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources.qrc">
+                    <normaloff>:/images/add</normaloff>:/images/add</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <spacer name="horizontalSpacer_4">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="12">
+                 <widget class="QPushButton" name="pbRight">
+                  <property name="minimumSize">
+                   <size>
+                    <width>54</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>54</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
+                  <property name="toolTip">
+                   <string>Photo suivante</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+  
+
+ background-color: white;
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources.qrc">
+                    <normaloff>:/images/rightArrow</normaloff>:/images/rightArrow</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>54</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="11">
+                 <widget class="QPushButton" name="pbRotateRight">
+                  <property name="minimumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
+                  <property name="toolTip">
+                   <string>Rotation à 90° droit de la photo</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+  
+
+ background-color: white;
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources.qrc">
+                    <normaloff>:/images/rotateRight</normaloff>:/images/rotateRight</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QPushButton" name="pbLeft">
+                  <property name="minimumSize">
+                   <size>
+                    <width>54</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>54</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
+                  <property name="toolTip">
+                   <string>Photo précédente</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+  
+
+ background-color: white;
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources.qrc">
+                    <normaloff>:/images/leftArrow</normaloff>
+                    <normalon>:/images/leftArrow</normalon>
+                    <selectedoff>:/images/leftArrowPressed</selectedoff>:/images/leftArrow</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>54</width>
+                    <height>50</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="10">
+                 <spacer name="horizontalSpacer_6">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="3">
+                 <widget class="QPushButton" name="pbOrderMinus">
+                  <property name="minimumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
+                  <property name="toolTip">
+                   <string>Changer l'ordre de la photo en la remontant</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+  
+
+ background-color: white;
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources.qrc">
+                    <normaloff>:/images/orderMinus</normaloff>:/images/orderMinus</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QPushButton" name="pbRotateLeft">
+                  <property name="minimumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                  <property name="focusPolicy">
+                   <enum>Qt::NoFocus</enum>
+                  </property>
+                  <property name="toolTip">
+                   <string>Rotation à 90° gauche de la photo</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+  
+
+ background-color: white;
+
+ }
+ 
+ QPushButton:pressed {
+ background-color: white;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+ }
+ 
+
+
+QPushButton:hover:!pressed
+{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../resources.qrc">
+                    <normaloff>:/images/rotateLeft</normaloff>:/images/rotateLeft</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>45</width>
+                    <height>45</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="13">
+                 <widget class="QLabel" name="laPhotoInfo">
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>35</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  10pt Calibri;
+
+
+ }
+</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="5">
+                 <widget class="QSpinBox" name="sbOrder"/>
+                </item>
+                <item row="1" column="4">
+                 <widget class="QLabel" name="label">
+                  <property name="styleSheet">
+                   <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+ }
+
+
+</string>
+                  </property>
+                  <property name="text">
+                   <string>Changer ordre</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>

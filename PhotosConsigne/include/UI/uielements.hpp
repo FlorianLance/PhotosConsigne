@@ -45,10 +45,7 @@ public :
     UIElements(QMainWindow *parent);
 
     ~UIElements(){
-
-
-        qDebug() << "D UIElements";
-
+//        DebugMessage("~UIElements");
     }
 
 
@@ -57,9 +54,10 @@ public :
     std::unique_ptr<QWidget> supportW   = nullptr;  /**< support window */
     std::unique_ptr<QWidget> helpW      = nullptr;  /**< help window */
 
+    RightSettingsW settingsW;           /**< right settings widgets */
     PhotoW   photoW;                    /**< photo widget */
     PreviewW previewW;                  /**< preview widget */
-    RightSettingsW settingsW;           /**< right settings widgets */
+
 
     Ui::PhotosConsigneMainUI mainUI;    /**< ui of the main window */
 

@@ -72,7 +72,7 @@ const QImage* PhotoW::Image() const {
     return &m_image;
 }
 
-void PhotoW::set_image (const QImage &image){
+void PhotoW::set_image (QImage image){
     m_image = image;
 }
 

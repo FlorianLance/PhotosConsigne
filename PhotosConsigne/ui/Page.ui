@@ -269,7 +269,7 @@ QPushButton:hover:!pressed{
 </string>
         </property>
         <property name="text">
-         <string>Utiliser les paramètres individuels</string>
+         <string>Personnalisez les paramètres pour cette page</string>
         </property>
        </widget>
       </item>
@@ -483,7 +483,7 @@ QTabWidget::pane:!enabled {
           </sizepolicy>
          </property>
          <attribute name="title">
-          <string>ENSEMBLES</string>
+          <string>STYLE</string>
          </attribute>
          <layout class="QVBoxLayout" name="vlSets">
           <property name="spacing">

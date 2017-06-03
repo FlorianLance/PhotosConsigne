@@ -12,6 +12,7 @@
 // local
 #include "RectPageItem.hpp"
 #include "PaperFormat.hpp"
+#include "DebugMessage.hpp"
 
 
 namespace pc
@@ -51,7 +52,9 @@ namespace pc
 
         Photo() = delete;
 
-        virtual ~Photo(){}
+        virtual ~Photo(){
+            DebugMessage("~Photo");
+        }
 
         Photo(const Photo &photo) = default;
 
@@ -88,6 +91,7 @@ namespace pc
         int rotation = 0;
         int loadedId = 0;  // global id from all loaded photos
         int id       = -1; // id from all valid photos
+        int pageId   = -1;
         PhotoAdjust adjust = PhotoAdjust::adjust;
 
         QSize originalSize;

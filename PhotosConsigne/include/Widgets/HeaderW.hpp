@@ -52,6 +52,10 @@ struct HeaderW : public SettingsW{
         connect(&sectionStyleW, &SectionStyleW::settings_updated_signal, this, &HeaderW::settings_updated_signal);
     }
 
+    virtual ~HeaderW(){
+//        DebugMessage("~HeaderW");
+    }
+
     // ui
     Ui::HeaderUI       ui;
 

@@ -238,6 +238,12 @@ void Utility::safe_init_tool_button_enabled_state(QToolButton *button, bool stat
     button->blockSignals(false);
 }
 
+void Utility::safe_init_radio_button_state(QRadioButton *rb, bool state){
+    rb->blockSignals(true);
+    rb->setChecked(state);
+    rb->blockSignals(false);
+}
+
 void Utility::safe_init_checkboxe_checked_state(QCheckBox *cb, bool state){
     cb->blockSignals(true);
     cb->setChecked(state);

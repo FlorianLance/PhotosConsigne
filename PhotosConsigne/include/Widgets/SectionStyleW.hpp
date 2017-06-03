@@ -33,6 +33,10 @@ struct SectionStyleW : public SettingsW{
         init_doublespinboxes_connections({ui.dsbRatioSection}, true);
     }
 
+    virtual ~SectionStyleW(){
+//        DebugMessage("~SectionStyleW");
+    }
+
     Ui::SectionStyleUI ui;
 };
 }

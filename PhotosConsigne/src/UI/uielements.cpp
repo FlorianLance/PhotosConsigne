@@ -33,7 +33,7 @@ pc::UIElements::UIElements(QMainWindow *parent) : m_parent(parent) {
     mainUI.hlSelectedPhoto->addWidget(&photoW);
 
     // # right settings
-    mainUI.vlRightSettings->addWidget(&settingsW);        
+    mainUI.vlRightSettings->addWidget(&settingsW);
 
     // PCMainUI init uI
     // # definition
@@ -240,7 +240,7 @@ void UIElements::update_photos_list(const GlobalDocumentSettings &settings){
     for(int ii = 0; ii < photos->size(); ++ii){
 
         QString ext = photos->at(ii)->isADuplicate ? " (copie)" : "";
-        mainUI.lwPhotosList->addItem(QString::number(ii+1) + ". " + photos->at(ii)->namePhoto + ext);
+        mainUI.lwPhotosList->addItem(QString::number(ii+1) + ". " + photos->at(ii)->namePhoto + ext + ((photos->at(ii)->pageId > -1) ? " (p" + QString::number(photos->at(ii)->pageId) + ")" : ""));
 
         bool individual = settingsW.setsLoadedW[ii]->ui.cbEnableIndividualConsign->isChecked();
         QBrush brush = mainUI.lwPhotosList->item(ii)->foreground();
@@ -339,6 +339,12 @@ void UIElements::update_UI(const GlobalDocumentSettings &settings){
         settingsW.pagesW[ii]->setsW.customW.update_format(settings.paperFormat);
     }
 
+    Utility::safe_init_spinbox_value(mainUI.sbOrder, settings.currentPhotoId);
+
+    if(settings.photosLoaded->size() > 0){
+        mainUI.sbOrder->setMaximum(settings.photosLoaded->size()-1);
+    }
+
     // display current dynamic ui
     if(settings.photosLoaded->size() > 0){
         display_current_individual_page_ui(settings);
@@ -353,7 +359,7 @@ void UIElements::display_current_individual_set_ui(const GlobalDocumentSettings 
     }
 
     if(settings.currentSetId >= settingsW.setsValidedW.size()){ // id too big
-        qWarning() << "-ERROR: display_current_individual_set_ui  " << settings.currentSetId;
+        qWarning() << "-ERROR: display_current_individual_set_ui  " << settings.currentSetId;        
         return;
     }
 
@@ -391,9 +397,9 @@ void UIElements::display_current_individual_page_ui(const GlobalDocumentSettings
 
     int currentIndex = settingsW.ui.tbRight->currentIndex();
     settingsW.ui.tbRight->blockSignals(true);
-    settingsW.ui.tbRight->removeItem(3);
-    settingsW.ui.tbRight->insertItem(3, settingsW.pagesW[settings.currentPageId].get(), "PAGE N°" + QString::number(settings.currentPageId+1));
-    settingsW.ui.tbRight->setItemIcon(3, QIcon(":/images/pages/page"));
+    settingsW.ui.tbRight->removeItem(1);
+    settingsW.ui.tbRight->insertItem(1, settingsW.pagesW[settings.currentPageId].get(), "PAGE N°" + QString::number(settings.currentPageId+1));
+    settingsW.ui.tbRight->setItemIcon(1, QIcon(":/images/pages/page"));
     settingsW.ui.tbRight->setCurrentIndex(currentIndex);
     settingsW.ui.tbRight->blockSignals(false);
 }

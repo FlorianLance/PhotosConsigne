@@ -76,7 +76,8 @@ HEADERS += \
     include/Data/DocumentElements.hpp \
     include/Data/PaperFormat.hpp \
     include/Widgets/PageSetsW.hpp \
-    include/Widgets/RightSettingsW.hpp
+    include/Widgets/RightSettingsW.hpp \
+    include/DebugMessage.hpp
 
 FORMS += \
     ui/PhotosConsigneMainW.ui \

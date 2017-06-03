@@ -55,6 +55,10 @@ namespace pc {
 
     struct PCSet : public RectPageItem{
 
+        virtual ~PCSet(){
+//            DebugMessage("~PCSet");
+        }
+
         int id; /**< id of the set in its page */
         int totalId; /**< global id of the set */
 
@@ -68,6 +72,10 @@ namespace pc {
     };
 
     struct PCPage : public RectPageItem{
+
+        virtual ~PCPage(){
+//            DebugMessage("~PCPage");
+        }
 
         int id; /**< id of the page */
         bool drawThisPage;
@@ -100,7 +108,7 @@ namespace pc {
         QRectF marginFooterRect;
         QVector<QRectF> interMarginsRects;
 
-        void compute_sizes(QRectF upperRect);
+        void compute_sizes(QRectF upperRect);                
     };
 
     struct PCPages{

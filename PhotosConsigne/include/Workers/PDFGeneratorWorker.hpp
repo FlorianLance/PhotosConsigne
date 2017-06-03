@@ -35,7 +35,9 @@ public slots :
 
     void generate_PDF(PCPages pcPages);
 
-    void update_PC_selection(QPointF pos);
+    void update_PC_selection_with_id(int idSet);
+
+    void update_PC_selection_with_pos(QPointF pos);
 
     void init_document();
 
@@ -47,7 +49,7 @@ signals :
 
     void set_progress_bar_text_signal(QString text);
 
-    void end_preview_signal(QImage preview);
+    void end_preview_signal(QImage preview, SPCPage previewPage);
 
     void end_generation_signal(bool finished);
 

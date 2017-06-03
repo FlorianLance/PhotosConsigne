@@ -61,7 +61,7 @@ void pc::PageW::init_ui(pc::PageW &p1, const pc::PageW &p2){
     PageSetsW::init_ui(p1.setsW, p2.setsW);
     BackgroundW::init_ui(p1.backgroundW, p2.backgroundW);
     BordersW::init_ui(p1.bordersW, p2.bordersW);
-    MarginsW::init_ui(p1.marginsW, p2.marginsW);
+    MarginsW::init_ui(p1.marginsW, p2.marginsW);        
 }
 
 bool pc::PageW::individual() const noexcept{

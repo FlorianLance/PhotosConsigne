@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>399</width>
-    <height>350</height>
+    <height>419</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -49,8 +49,26 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <property name="leftMargin">
+       <number>5</number>
+      </property>
+      <property name="topMargin">
+       <number>3</number>
+      </property>
+      <property name="rightMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>3</number>
+      </property>
+      <property name="horizontalSpacing">
+       <number>3</number>
+      </property>
+      <property name="verticalSpacing">
+       <number>10</number>
+      </property>
+      <item row="1" column="1">
        <widget class="QRadioButton" name="rbGrid">
         <property name="text">
          <string>positionnement en grille</string>
@@ -60,14 +78,14 @@
         </property>
        </widget>
       </item>
-      <item>
+      <item row="1" column="2">
        <widget class="QRadioButton" name="rbPersonnalised">
         <property name="text">
          <string>positionnement personnalisé</string>
         </property>
        </widget>
       </item>
-      <item>
+      <item row="1" column="3">
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -79,6 +97,20 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="cbDontDisplayHeader">
+        <property name="text">
+         <string>ne pas afficher le haut de page</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="cbDontDisplayFooter">
+        <property name="text">
+         <string>ne pas afficher le bas de page</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -825,6 +857,13 @@ QPushButton:hover:!pressed{
             </size>
            </property>
           </spacer>
+         </item>
+         <item row="0" column="4">
+          <widget class="QLabel" name="laNbSets">
+           <property name="text">
+            <string>Nb: 0</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>

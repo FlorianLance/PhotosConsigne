@@ -94,9 +94,10 @@ namespace pc{
 
         ~RightSettingsW(){
 
-            pagesW.clear();
+//            DebugMessage("~RightSettingsW");
             setsLoadedW.clear();
             setsValidedW.clear();
+            pagesW.clear();
         }
 
 
@@ -109,9 +110,9 @@ namespace pc{
 
                     pagesW.push_back(std::make_shared<PageW>());
 
-                    SPageW pageW = pagesW.last();
+                    PageW *pageW = pagesW.last().get();
                     PageW::init_ui(*pageW, globalPageW);
-                    connect(pageW.get(), &PageW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
+                    connect(pageW, &PageW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
 
                     connect(pageW->ui.pbAllGlobalParameters, &QPushButton::clicked, this, [&]{
 
@@ -221,17 +222,17 @@ namespace pc{
         void display_global_page_panel(){
             Utility::safe_init_tool_box_index(ui.tbRight, 0);
         }
+        void display_current_page_panel(){
+            Utility::safe_init_tool_box_index(ui.tbRight, 1);
+        }
+
 
         void display_global_set_panel(){
-            Utility::safe_init_tool_box_index(ui.tbRight, 1);
+            Utility::safe_init_tool_box_index(ui.tbRight, 3);
         }
 
         void display_current_set_panel(){
             Utility::safe_init_tool_box_index(ui.tbRight, 4);
-        }
-
-        void display_current_page_panel(){
-            Utility::safe_init_tool_box_index(ui.tbRight, 3);
         }
 
         void display_header_panel(){
@@ -243,6 +244,7 @@ namespace pc{
         }
 
 
+
         // ui
         Ui::RightSettingsUI ui;
 
@@ -250,8 +252,8 @@ namespace pc{
         HeaderW         headerW;
         FooterW         footerW;
 
-        PageW           globalPageW;
         SetW            globalSetW;
+        PageW           globalPageW;
 
         QList<SPageW>   pagesW;
         QList<SSetW>    setsLoadedW;

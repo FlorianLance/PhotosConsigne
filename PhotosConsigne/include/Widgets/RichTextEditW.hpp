@@ -88,6 +88,10 @@ class TextEdit : public QTextEdit
 
 public:
 
+    virtual ~TextEdit(){
+        DebugMessage("~TextEdit");
+    }
+
     bool canInsertFromMimeData(const QMimeData* source) const;
 
     void insertFromMimeData(const QMimeData* source);
@@ -118,6 +122,10 @@ class RichTextEditW : public SettingsW
 public:
 
     RichTextEditW();
+
+    virtual ~RichTextEditW(){
+        DebugMessage("~RichTextEditW");
+    }
 
     void init_style(RichTextType type);
 

@@ -71,30 +71,80 @@ PreviewW::~PreviewW(){
     m_workerThread.wait();
 }
 
-void PreviewW::draw_current_pc_rect(int idRect, QRectF pcRectRelative){
+void PreviewW::set_page(SPCPage previewPage){
+    m_previewPage       = previewPage;
+}
 
-    m_currentPCRectId = idRect;
-    m_pcRectRelative = pcRectRelative;
+void PreviewW::set_current_pc(int idPC){
+
+    if(m_previewPage == nullptr){
+        return;
+    }
+
+    if(idPC == -1){
+        return;
+    }
+
+    m_currentPCRectId = -1;
+
+    int idSet = 0;
+    for(int ii = 0; ii < m_previewPage->sets.size(); ++ii){
+        if(m_previewPage->sets[ii]->totalId == idPC){
+            m_currentPCRectId = idPC;
+            idSet = ii;
+            break;
+        }
+    }
+
+    if(m_currentPCRectId == -1){
+        return;
+    }
+
     m_rectTimer.start(2000);
-    emit start_update_loop_signal();
+    auto set =  m_previewPage->sets[idSet];
+    QRectF rectPage = m_previewPage->rectOnPage;
+    m_pcRectRelative = QRectF(set->rectOnPage.x()/rectPage.width(), set->rectOnPage.y()/rectPage.height(),
+                          set->rectOnPage.width()/rectPage.width(), set->rectOnPage.height()/rectPage.height());
 }
 
 void PreviewW::mousePressEvent(QMouseEvent *ev){
 
     bool inside = m_imageRect.contains(ev->pos());
-    if(inside){
+    if(inside){ // click inside preview image
+
+        if(m_previewPage == nullptr){
+            return;
+        }
 
         QPointF posRelative =(ev->pos() - m_imageRect.topLeft());
         posRelative.setX(posRelative.x()/m_imageRect.width());
         posRelative.setY(posRelative.y()/m_imageRect.height());
 
-        if(m_doubleClickTimer.isActive() && m_currentPCRect.contains(ev->pos())){
-            if(m_currentPCRectId > -1){
-                emit double_click_on_photo_signal(m_currentPCRectId);
+        QRectF rectPage = m_previewPage->rectOnPage;
+        QPointF realPos(rectPage.x() + posRelative.x()*rectPage.width(), rectPage.y() + posRelative.y()*rectPage.height());
+
+        int previousRectId = m_currentPCRectId;
+        m_currentPCRectId = -1;
+        for(auto &&set : m_previewPage->sets){
+            if(set->rectOnPage.contains(realPos)){
+                if(set->totalId > m_currentPCRectId){
+                    m_currentPCRectId = set->totalId;
+                    m_pcRectRelative = QRectF(set->rectOnPage.x()/rectPage.width(), set->rectOnPage.y()/rectPage.height(),
+                                          set->rectOnPage.width()/rectPage.width(), set->rectOnPage.height()/rectPage.height());
+                }
             }
-        }else{
-            m_doubleClickTimer.start(300);
-            emit click_on_page_signal(posRelative);
+        }
+
+        if(m_currentPCRectId > -1){
+
+            if(m_doubleClickTimer.isActive() && m_currentPCRectId == previousRectId){ // second click on same pc before timer finish
+                emit double_click_on_photo_signal(m_currentPCRectId);
+            }else{ // reset timer
+                m_doubleClickTimer.start(300);
+                m_rectTimer.start(2000);
+                emit start_update_loop_signal();
+                emit current_pc_selected_signal(m_currentPCRectId);
+            }
         }
     }
 }
@@ -105,7 +155,8 @@ void PreviewW::paintEvent(QPaintEvent *event){
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-    if(m_pcRectRelative.width() > 0 && m_rectTimer.isActive()){
+    if(m_pcRectRelative.width() > 0 && m_rectTimer.isActive() && m_currentPCRectId > -1){
+
         m_currentPCRect = QRectF(m_imageRect.x() + m_pcRectRelative.x()*m_imageRect.width(),
                                  m_imageRect.y() + m_pcRectRelative.y()*m_imageRect.height(),
                                  m_pcRectRelative.width()*m_imageRect.width(),

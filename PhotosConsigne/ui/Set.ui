@@ -37,7 +37,7 @@
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>30</height>
+       <height>60</height>
       </size>
      </property>
      <property name="frameShape">
@@ -46,7 +46,7 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QGridLayout" name="gridLayout">
       <property name="leftMargin">
        <number>3</number>
       </property>
@@ -59,33 +59,7 @@
       <property name="bottomMargin">
        <number>5</number>
       </property>
-      <item>
-       <widget class="QCheckBox" name="cbEnableIndividualConsign">
-        <property name="minimumSize">
-         <size>
-          <width>150</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Utiliser les paramètres définis ci-dessous pour cet ensemble</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-    font:  bold 12pt Calibri;
-
-
- }
-</string>
-        </property>
-        <property name="text">
-         <string>Utiliser les paramètres individuels</string>
-        </property>
-       </widget>
-      </item>
-      <item>
+      <item row="2" column="4" colspan="2">
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -98,55 +72,18 @@
         </property>
        </spacer>
       </item>
-      <item>
-       <widget class="QPushButton" name="pbAllIndividualParameters">
+      <item row="2" column="1">
+       <widget class="QPushButton" name="pbAllGlobalParameters">
         <property name="minimumSize">
          <size>
           <width>20</width>
           <height>0</height>
          </size>
         </property>
-        <property name="toolTip">
-         <string>Utiliser les paramètres individuels pour tous les ensembles</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">
-
-QPushButton {
-    font: bold 12pt Calibri;  
-    border: 1px solid gray;
-    border-radius: 3px;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
- }
- 
-QPushButton::enabled {
-	color : rgb(0,106,255);
-    border: 1px solid rgb(0,106,255);
- }
-
-QPushButton:hover:!pressed{
-
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}
-
- QPushButton:pressed{
-    background-color:  rgb(220,220,220);
-
-}</string>
-        </property>
-        <property name="text">
-         <string>I</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pbAllGlobalParameters">
-        <property name="minimumSize">
+        <property name="maximumSize">
          <size>
           <width>20</width>
-          <height>0</height>
+          <height>16777215</height>
          </size>
         </property>
         <property name="toolTip">
@@ -184,12 +121,116 @@ QPushButton:hover:!pressed{
         </property>
        </widget>
       </item>
-      <item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="pbAllIndividualParameters">
+        <property name="minimumSize">
+         <size>
+          <width>20</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>20</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Utiliser les paramètres individuels pour tous les ensembles</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+
+QPushButton {
+    font: bold 12pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+ }
+ 
+QPushButton::enabled {
+	color : rgb(0,106,255);
+    border: 1px solid rgb(0,106,255);
+ }
+
+QPushButton:hover:!pressed{
+
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+ QPushButton:pressed{
+    background-color:  rgb(220,220,220);
+
+}</string>
+        </property>
+        <property name="text">
+         <string>I</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QPushButton" name="pbCopyIndividualToGlobal">
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Initialiser le paramètre global avec le paramètre individuel courant</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+
+QPushButton {
+    font: bold 12pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+ }
+ 
+QPushButton::enabled {
+	color : rgb(0,106,255);
+    border: 1px solid rgb(0,106,255);
+ }
+
+QPushButton:hover:!pressed{
+
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+ QPushButton:pressed{
+    background-color:  rgb(220,220,220);
+
+}</string>
+        </property>
+        <property name="text">
+         <string>G=I</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
        <widget class="QPushButton" name="pbCopyGlobalToIndividuals">
         <property name="minimumSize">
          <size>
           <width>30</width>
           <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>16777215</height>
          </size>
         </property>
         <property name="toolTip">
@@ -227,46 +268,29 @@ QPushButton:hover:!pressed{
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="pbCopyIndividualToGlobal">
+      <item row="1" column="0" colspan="5">
+       <widget class="QCheckBox" name="cbEnableIndividualConsign">
         <property name="minimumSize">
          <size>
-          <width>30</width>
+          <width>150</width>
           <height>0</height>
          </size>
         </property>
         <property name="toolTip">
-         <string>Initialiser le paramètre global avec le paramètre individuel courant</string>
+         <string>Utiliser les paramètres définis ci-dessous pour cet ensemble</string>
         </property>
         <property name="styleSheet">
-         <string notr="true">
-
-QPushButton {
-    font: bold 12pt Calibri;  
-    border: 1px solid gray;
-    border-radius: 3px;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
- }
- 
-QPushButton::enabled {
+         <string notr="true">QWidget {
+  
 	color : rgb(0,106,255);
-    border: 1px solid rgb(0,106,255);
+    font:  bold 12pt Calibri;
+
+
  }
-
-QPushButton:hover:!pressed{
-
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}
-
- QPushButton:pressed{
-    background-color:  rgb(220,220,220);
-
-}</string>
+</string>
         </property>
         <property name="text">
-         <string>G=I</string>
+         <string>Personnalisez les paramètres pour cet ensemble</string>
         </property>
        </widget>
       </item>

@@ -42,6 +42,10 @@ struct MarginsW : public SettingsW{
         init_doublespinboxes_connections({ui.dsbLeftMargins, ui.dsbRightMargins, ui.dsbTopMargins,ui.dsbBottomMargins,ui.dsbHorizontalMargins,ui.dsbVerticalMargins, ui.dsbFooterMargin, ui.dsbHeaderMargin},true);
     }
 
+    virtual ~MarginsW(){
+//        DebugMessage("~MarginsW");
+    }
+
     MarginsSettings settings() const noexcept {
 
         MarginsSettings margins;

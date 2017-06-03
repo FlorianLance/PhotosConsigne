@@ -11,6 +11,10 @@ namespace pc {
 
 struct GlobalDocumentSettings{
 
+    virtual ~GlobalDocumentSettings(){
+        DebugMessage("~GlobalDocumentSettings");
+    }
+
     bool grayScale           = false;
     bool saveOnlyCurrentPage = false;
     bool noPreviewGeneration = false;

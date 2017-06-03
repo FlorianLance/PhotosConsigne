@@ -90,6 +90,7 @@ signals :
     void start_preview_generation_signal(PCPages pcPages, int idPageToDraw, bool drawZones);
     void start_PDF_generation_signal(PCPages pcPages);
     void kill_signal();
+    void select_pc_signal(int idPC);
 
 private:
 

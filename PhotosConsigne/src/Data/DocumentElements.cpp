@@ -29,8 +29,8 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
 
     // header/footer ratios
     qreal headerFooterSetsHeight = pageMinusMarginsRect.height() - footerMarginHeight - headerMarginHeight;
-    qreal footerRatio            = footer->settings.enabled ? footer->settings.ratio : 0.;
-    qreal headerRatio            = header->settings.enabled ? header->settings.ratio : 0.;
+    qreal footerRatio            = (footer->settings.enabled && !pageSetsSettings.doNotDisplayFooter) ? footer->settings.ratio : 0.;
+    qreal headerRatio            = (header->settings.enabled && !pageSetsSettings.doNotDisplayHeader) ? header->settings.ratio : 0.;
 
     qreal sum = footerRatio + headerRatio;
     if(sum > 1.){
@@ -90,25 +90,43 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
     qreal heightSets  = (setsRect.height() - nbInterVMargins * heightInterMargin) / pageSetsSettings.nbPhotosV;
 
     int currPC = 0;
-    interMarginsRects.clear();
-    interMarginsRects.reserve(sets.size());
-    qreal offsetV = setsRect.y();
-    for(int ii = 0; ii < pageSetsSettings.nbPhotosV; ++ii){
-        qreal offsetH = setsRect.x();
-        for(int jj = 0; jj < pageSetsSettings.nbPhotosH; ++jj){
+
+    if(!pageSetsSettings.customMode){
+        interMarginsRects.clear();
+        interMarginsRects.reserve(sets.size());
+        qreal offsetV = setsRect.y();
+        for(int ii = 0; ii < pageSetsSettings.nbPhotosV; ++ii){
+            qreal offsetH = setsRect.x();
+            for(int jj = 0; jj < pageSetsSettings.nbPhotosH; ++jj){
+                if(currPC >= sets.size())
+                    break;
+
+                sets[currPC]->compute_sizes(QRectF(offsetH, offsetV, widthSets, heightSets));
+                interMarginsRects.push_back(QRectF(offsetH, offsetV,
+                                                   (jj < pageSetsSettings.nbPhotosH-1) ? widthSets  + widthInterMargin  : widthSets,
+                                                   (ii < pageSetsSettings.nbPhotosV-1) ? heightSets + heightInterMargin : heightSets));
+
+                offsetH += widthSets + widthInterMargin;
+                ++currPC;
+            }
+
+            offsetV += heightSets + heightInterMargin;
+        }
+    }else{
+
+        interMarginsRects.clear();
+        for(int ii = 0; ii < pageSetsSettings.relativePosCustom.size(); ++ii){
             if(currPC >= sets.size())
                 break;
 
-            sets[currPC]->compute_sizes(QRectF(offsetH, offsetV, widthSets, heightSets));
-            interMarginsRects.push_back(QRectF(offsetH, offsetV,
-                                               (jj < pageSetsSettings.nbPhotosH-1) ? widthSets  + widthInterMargin  : widthSets,
-                                               (ii < pageSetsSettings.nbPhotosV-1) ? heightSets + heightInterMargin : heightSets));
+            QRectF &relRect = pageSetsSettings.relativePosCustom[ii];
 
-            offsetH += widthSets + widthInterMargin;
+            sets[currPC]->compute_sizes(QRectF(setsRect.x() + relRect.x()*setsRect.width(),
+                                               setsRect.y() + relRect.y()*setsRect.height(),
+                                               relRect.width()*setsRect.width(),
+                                               relRect.height()*setsRect.height()));
             ++currPC;
         }
-
-        offsetV += heightSets + heightInterMargin;
     }
 }
 

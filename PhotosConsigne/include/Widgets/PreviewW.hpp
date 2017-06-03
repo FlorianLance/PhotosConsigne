@@ -4,6 +4,8 @@
 
 // local
 #include "PhotoW.hpp"
+#include "DebugMessage.hpp"
+#include "DocumentElements.hpp"
 
 // Qt
 #include <QReadWriteLock>
@@ -22,6 +24,11 @@ class PreviewWorker : public  QObject
 public:
 
     PreviewWorker(){}
+
+
+    virtual ~PreviewWorker(){
+        DebugMessage("~PreviewWorker");
+    }
 
 public slots:
 
@@ -54,7 +61,11 @@ public :
 
 public slots:
 
-    void draw_current_pc_rect(int idRect, QRectF pcRectRelative);
+//    void draw_current_pc_rect(int idRect, QRectF pcRectRelative);
+
+    void set_page(SPCPage previewPage);
+
+    void set_current_pc(int idPc);
 
 protected:
 
@@ -64,13 +75,15 @@ protected:
 
 signals:
 
-    void click_on_page_signal(QPointF pos);
+    void click_on_page_signal();
 
     void start_update_loop_signal();
 
     void stop_update_loop_signal();
 
     void double_click_on_photo_signal(int idTotalPhoto);
+
+    void current_pc_selected_signal(int totalId);
 
 private:
 
@@ -80,8 +93,10 @@ private:
 
     QTimer m_rectTimer;
 
+    SPCPage m_previewPage = nullptr;
+
     QThread m_workerThread;
-    std::unique_ptr<PreviewWorker> m_worker = nullptr;
+    std::unique_ptr<PreviewWorker> m_worker = nullptr;        
 
 };
 

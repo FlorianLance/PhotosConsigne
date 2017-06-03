@@ -54,6 +54,10 @@ struct SetW : public SettingsW{
         id = setUICounter++;
     }
 
+    virtual ~SetW(){
+//        DebugMessage("~SetW");
+    }
+
     static void init_ui(pc::SetW &s1, const pc::SetW &s2, bool copyHtml){
 
         // style
@@ -63,7 +67,7 @@ struct SetW : public SettingsW{
         Utility::safe_init_combo_box_index(ui1.cbAdjustPhoto,       ui2.cbAdjustPhoto->currentIndex());
         Utility::safe_init_combo_box_index(ui1.cbPhotoAlignment,    ui2.cbPhotoAlignment->currentIndex());
         Utility::safe_init_double_spinbox_value(ui1.dsbRatioPC,     ui2.dsbRatioPC->value());
-        Utility::safe_init_slider_value(ui1.hsRatioPC,              ui2.hsRatioPC->value());
+        Utility::safe_init_slider_value(ui1.hsRatioPC,              ui2.hsRatioPC->value());        
 
         // text
         s1.setTextW.init_with_another(s2.setTextW, copyHtml ? s2.setTextW.html() : nullptr);

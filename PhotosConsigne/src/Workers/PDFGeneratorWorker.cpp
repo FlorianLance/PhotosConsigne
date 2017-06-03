@@ -9,7 +9,9 @@
 
 using namespace pc;
 
-PDFGeneratorWorker::~PDFGeneratorWorker(){}
+PDFGeneratorWorker::~PDFGeneratorWorker(){
+    DebugMessage("~PDFGeneratorWorker");
+}
 
 
 void PDFGeneratorWorker::draw_zones(QPainter &painter, SPCPage pcPage){
@@ -269,17 +271,14 @@ void PDFGeneratorWorker::draw_html(QPainter &painter, QString html, QRectF upper
 
 void PDFGeneratorWorker::kill(){
 
-    qDebug() << "PDFGeneratorWorker::kill()";
     m_locker.lockForWrite();
     m_continueLoop = false;
     m_locker.unlock();
-    qDebug() << "end PDFGeneratorWorker::kill()";
 }
 
 void PDFGeneratorWorker::generate_preview(pc::PCPages pcPages, int pageIdToDraw, bool drawZones){
 
-
-    DebugMessage dbgMess("generate_preview");
+//    DebugMessage dbgMess("generate_preview");
     m_pageToDraw    = pcPages.pages[pageIdToDraw];
     int dpi = pcPages.paperFormat.dpi;
     if(dpi > 300){
@@ -310,7 +309,7 @@ void PDFGeneratorWorker::generate_preview(pc::PCPages pcPages, int pageIdToDraw,
         }
     }
 
-    emit end_preview_signal(image);
+    emit end_preview_signal(image, m_pageToDraw);
 }
 
 void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
@@ -332,7 +331,9 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
     pdfWriter.setResolution(pcPages.paperFormat.dpi);
     pdfWriter.setPageSize(QPageSize(static_cast<QPageSize::PageSizeId>(pcPages.paperFormat.format)));
     pdfWriter.setPageOrientation(pcPages.paperFormat.landscape ? QPageLayout::Landscape : QPageLayout::Portrait);
+    pdfWriter.setPageMargins(QMarginsF(0.,0.,0.,0.));
 
+    qDebug() << "pcPages.paperFormat.landscape: " << pcPages.paperFormat.landscape;
     // init painter
     QPainter pdfPainter;
     if(!pdfPainter.begin(&pdfWriter)){
@@ -344,8 +345,6 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
 
     pcPages.compute_all_pages_sizes(pdfWriter.width(), pdfWriter.height());
     for(int ii = 0; ii < pcPages.pages.size(); ++ii){
-
-        pdfWriter.setPageMargins(QMarginsF(0.,0.,0.,0.));
 
         if(!pcPages.pages[ii]->drawThisPage){
             continue;
@@ -378,36 +377,54 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
     emit end_generation_signal(true);
 }
 
-void PDFGeneratorWorker::update_PC_selection(QPointF pos){
+void PDFGeneratorWorker::update_PC_selection_with_id(int idSet){
 
-    QRectF rectPage = m_pageToDraw.get()->rectOnPage;
-    QPointF realPos(rectPage.x() + pos.x()*rectPage.width(), rectPage.y() + pos.y()*rectPage.height());
-    for(auto &&set : m_pageToDraw->sets){
-        if(set->rectOnPage.contains(realPos)){
-            QRectF pcRectRelavive(set->rectOnPage.x()/rectPage.width(), set->rectOnPage.y()/rectPage.height(),
-                                  set->rectOnPage.width()/rectPage.width(), set->rectOnPage.height()/rectPage.height());
-            emit current_pc_selected_signal(pcRectRelavive, set->totalId);
-            return;
-        }
-    }
+//    qDebug() << "update_PC_selection_with_id: " << idSet << " " << m_pageToDraw->sets.size();
+//    QRectF rectPage = m_pageToDraw.get()->rectOnPage;
 
-    if(m_pageToDraw->header->settings.enabled){
-        if(m_pageToDraw->header->rectOnPage.contains(realPos)){
+//    SPCSet set = m_pageToDraw->sets[idSet];
+//    QRectF pcRectRelative = QRectF(set->rectOnPage.x()/rectPage.width(), set->rectOnPage.y()/rectPage.height(),
+//                            set->rectOnPage.width()/rectPage.width(), set->rectOnPage.height()/rectPage.height());
+//    emit current_pc_selected_signal(pcRectRelative, idSet);
+}
 
-            QRectF pcRectRelavive(m_pageToDraw->header->rectOnPage.x()/rectPage.width(), m_pageToDraw->header->rectOnPage.y()/rectPage.height(),
-                                  m_pageToDraw->header->rectOnPage.width()/rectPage.width(), m_pageToDraw->header->rectOnPage.height()/rectPage.height());
-            emit current_pc_selected_signal(pcRectRelavive, -1);
-        }
-    }
+void PDFGeneratorWorker::update_PC_selection_with_pos(QPointF pos){
 
-    if(m_pageToDraw->footer->settings.enabled){
-        if(m_pageToDraw->footer->rectOnPage.contains(realPos)){
+//    QRectF rectPage = m_pageToDraw->rectOnPage;
+//    QPointF realPos(rectPage.x() + pos.x()*rectPage.width(), rectPage.y() + pos.y()*rectPage.height());
 
-            QRectF pcRectRelavive(m_pageToDraw->footer->rectOnPage.x()/rectPage.width(), m_pageToDraw->footer->rectOnPage.y()/rectPage.height(),
-                                  m_pageToDraw->footer->rectOnPage.width()/rectPage.width(), m_pageToDraw->footer->rectOnPage.height()/rectPage.height());
-            emit current_pc_selected_signal(pcRectRelavive, -2);
-        }
-    }
+//    int id = -1;
+//    QRectF pcRectRelative;
+//    for(auto &&set : m_pageToDraw->sets){
+//        if(set->rectOnPage.contains(realPos)){
+//            if(set->totalId > id){
+//                id = set->totalId;
+//                pcRectRelative = QRectF(set->rectOnPage.x()/rectPage.width(), set->rectOnPage.y()/rectPage.height(),
+//                                      set->rectOnPage.width()/rectPage.width(), set->rectOnPage.height()/rectPage.height());
+//            }
+//        }
+//    }
+//    if(id > -1){
+//        emit current_pc_selected_signal(pcRectRelative, id);
+//    }
+
+//    if(m_pageToDraw->header->settings.enabled){
+//        if(m_pageToDraw->header->rectOnPage.contains(realPos)){
+
+//            QRectF pcRectRelavive(m_pageToDraw->header->rectOnPage.x()/rectPage.width(), m_pageToDraw->header->rectOnPage.y()/rectPage.height(),
+//                                  m_pageToDraw->header->rectOnPage.width()/rectPage.width(), m_pageToDraw->header->rectOnPage.height()/rectPage.height());
+//            emit current_pc_selected_signal(pcRectRelavive, -1);
+//        }
+//    }
+
+//    if(m_pageToDraw->footer->settings.enabled){
+//        if(m_pageToDraw->footer->rectOnPage.contains(realPos)){
+
+//            QRectF pcRectRelavive(m_pageToDraw->footer->rectOnPage.x()/rectPage.width(), m_pageToDraw->footer->rectOnPage.y()/rectPage.height(),
+//                                  m_pageToDraw->footer->rectOnPage.width()/rectPage.width(), m_pageToDraw->footer->rectOnPage.height()/rectPage.height());
+//            emit current_pc_selected_signal(pcRectRelavive, -2);
+//        }
+//    }
 }
 
 void PDFGeneratorWorker::init_document(){

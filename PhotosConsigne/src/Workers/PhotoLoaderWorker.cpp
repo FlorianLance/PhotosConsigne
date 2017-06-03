@@ -15,11 +15,14 @@ pc::PhotoLoaderWorker::PhotoLoaderWorker(){
     qRegisterMetaType<GlobalDocumentSettings>("GlobalDocumentSettings");
     qRegisterMetaType<PCPages>("PCPages");
     qRegisterMetaType<PCPage>("PCPage");
+    qRegisterMetaType<SPCPage>("SPCPage");
     qRegisterMetaType<QVector<QRectF>>("QVector<QRectF>");
     qRegisterMetaType<QReadWriteLock *>("QReadWriteLock *");
 }
 
-pc::PhotoLoaderWorker::~PhotoLoaderWorker(){}
+pc::PhotoLoaderWorker::~PhotoLoaderWorker(){
+    DebugMessage("~PhotoLoaderWorker");
+}
 
 void pc::PhotoLoaderWorker::load_photos_directory(QStringList photosPath, int startIndexToInsert){
 
