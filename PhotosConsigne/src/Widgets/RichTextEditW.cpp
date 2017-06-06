@@ -128,6 +128,8 @@ RichTextEditW::RichTextEditW():  SettingsW() {
 
     // set ui
     m_mainLayout = new QVBoxLayout();
+    m_mainLayout->setContentsMargins(0,0,0,0);
+
     QWidget *menuWTop = new QWidget();
     QWidget *menuWCenter = new QWidget();
     QWidget *menuWBottom = new QWidget();
@@ -149,6 +151,13 @@ RichTextEditW::RichTextEditW():  SettingsW() {
     m_mainLayout->addWidget(line);
     m_mainLayout->addWidget(menuWBottom);
     m_mainLayout->addWidget(m_textEdit);
+
+//    m_textEdit->setMinimumHeight(600);
+
+    m_mainLayout->setStretchFactor(m_textEdit, 30);
+//    m_mainLayout->setStretch(0,1);
+//    m_mainLayout->setStretch(1,1);
+//    m_mainLayout->setStretch(2,30);
 
     m_mainLayout->setSpacing(2);
     m_mainLayout->setContentsMargins(1,1,1,1);
@@ -628,6 +637,7 @@ void RichTextEditW::setup_text_actions(){
 
 
     m_comboStyle = new QComboBox();
+    m_comboStyle->setMaximumWidth(50);
     m_menuLayoutBottom->addWidget(m_comboStyle);
     m_comboStyle->setToolTip("Insérer une liste");
     m_comboStyle->addItem("Standard (pas de liste)"); // Standard

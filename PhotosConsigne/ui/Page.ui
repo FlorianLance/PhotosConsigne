@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>435</width>
-    <height>482</height>
+    <width>377</width>
+    <height>545</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="maximumSize">
    <size>
@@ -40,7 +46,7 @@
      <property name="maximumSize">
       <size>
        <width>16777215</width>
-       <height>60</height>
+       <height>30</height>
       </size>
      </property>
      <property name="frameShape">
@@ -62,196 +68,17 @@
       <property name="bottomMargin">
        <number>5</number>
       </property>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="pbAllIndividualParameters">
-        <property name="minimumSize">
-         <size>
-          <width>20</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Utiliser les paramètres individuels pour tous les ensembles</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">
-
-QPushButton {
-    font: bold 12pt Calibri;  
-    border: 1px solid gray;
-    border-radius: 3px;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
- }
- 
-QPushButton::enabled {
-	color : rgb(0,106,255);
-    border: 1px solid rgb(0,106,255);
- }
-
-QPushButton:hover:!pressed{
-
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}
-
- QPushButton:pressed{
-    background-color:  rgb(220,220,220);
-
-}</string>
-        </property>
-        <property name="text">
-         <string>I</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="pbAllGlobalParameters">
-        <property name="minimumSize">
-         <size>
-          <width>20</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Utiliser les paramètres globaux pour tous les ensembles</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">
-
-QPushButton {
-    font: bold 12pt Calibri;  
-    border: 1px solid gray;
-    border-radius: 3px;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
- }
- 
-QPushButton::enabled {
-	color : rgb(0,106,255);
-    border: 1px solid rgb(0,106,255);
- }
-
-QPushButton:hover:!pressed{
-
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}
-
- QPushButton:pressed{
-    background-color:  rgb(220,220,220);
-
-}</string>
-        </property>
-        <property name="text">
-         <string>G</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="pbCopyGlobalToIndividuals">
-        <property name="minimumSize">
-         <size>
-          <width>30</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Initialiser tous les ensembles individuels avec le paramètre global</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">
-
-QPushButton {
-    font: bold 12pt Calibri;  
-    border: 1px solid gray;
-    border-radius: 3px;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
- }
- 
-QPushButton::enabled {
-	color : rgb(0,106,255);
-    border: 1px solid rgb(0,106,255);
- }
-
-QPushButton:hover:!pressed{
-
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}
-
- QPushButton:pressed{
-    background-color:  rgb(220,220,220);
-
-}</string>
-        </property>
-        <property name="text">
-         <string>I=G</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="pbCopyIndividualToGlobal">
-        <property name="minimumSize">
-         <size>
-          <width>30</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="toolTip">
-         <string>Initialiser le paramètre global avec le paramètre individuel courant</string>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">
-
-QPushButton {
-    font: bold 12pt Calibri;  
-    border: 1px solid gray;
-    border-radius: 3px;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
- }
- 
-QPushButton::enabled {
-	color : rgb(0,106,255);
-    border: 1px solid rgb(0,106,255);
- }
-
-QPushButton:hover:!pressed{
-
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}
-
- QPushButton:pressed{
-    background-color:  rgb(220,220,220);
-
-}</string>
-        </property>
-        <property name="text">
-         <string>G=I</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="0" colspan="5">
+      <item row="0" column="0" colspan="2">
        <widget class="QCheckBox" name="cbEnableIndividualPage">
         <property name="minimumSize">
          <size>
           <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="sizeIncrement">
+         <size>
+          <width>0</width>
           <height>0</height>
          </size>
         </property>
@@ -269,9 +96,22 @@ QPushButton:hover:!pressed{
 </string>
         </property>
         <property name="text">
-         <string>Personnalisez les paramètres pour cette page</string>
+         <string>Personnalisez cette page</string>
         </property>
        </widget>
+      </item>
+      <item row="0" column="2">
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>
@@ -342,10 +182,13 @@ QPushButton:hover:!pressed{
         </property>
         <property name="styleSheet">
          <string notr="true">
+/* ################################  TAB BAR*/
 
 QTabWidget::tab-bar {
-    alignment: center;
+    alignment: left;
 }
+
+/* ################################  PANE */
 
 QTabWidget::pane { 
 
@@ -354,6 +197,7 @@ QTabWidget::pane {
     border-top: 1px solid rgb(0,106,255);
 	border-right: 0px solid rgb(0,106,255);
 	border-bottom: 1px solid rgb(0,106,255);
+
 
 	/* border radius */
 	border-top-right-radius: 0px;
@@ -365,6 +209,10 @@ QTabWidget::pane {
 	background-color:rgb(255, 255, 255)
 }
 
+/* ################################  TAB*/
+
+/* ################ BASE */
+
 QTabBar::tab {
 
 	/* border */
@@ -374,11 +222,6 @@ QTabBar::tab {
 
 	/* border radius */
     border-radius: 0px;
-
-	/* color */
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-	color : rgb(0,106,255);
 
 	/* size */
 	height:4ex;
@@ -398,7 +241,7 @@ QTabBar::tab:!selected {
 	color : rgb(127,180,255);
 
 	/* font */
-  	font:  11pt Calibri;
+  	font:  10pt Calibri;
 }
 
 
@@ -409,7 +252,7 @@ QTabBar::tab:selected {
     background-color:  rgb(220,220,220);
 
 	/* font */
-	 font: bold 11pt Calibri;
+	 font: bold 10pt Calibri;
 }
 
 
@@ -423,22 +266,19 @@ QTabBar::tab:hover  {
                                        stop: 0 #dadbde, stop: 1 #f6f7fa);
 
 	/* font */
-	 font: bold 11pt Calibri;
+	 font: bold 10pt Calibri;
 }
 
 
-/* ################ ORDER */
-
-
-
+/* ################ FIRST / LAST */
 
 QTabBar::tab:first{
 
 	/* border */
-	border-left: 1px solid rgb(0,106,255);
+	border-left: 0px solid rgb(0,106,255);
 
 	/* border radius */
-	border-top-left-radius: 3px;
+	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 
 }
@@ -448,19 +288,6 @@ QTabBar::tab:last{
 	/* border radius */
 	 border-top-right-radius: 4px;
 }
-
-QTabBar::tab:!enabled{
-	color: rgb(150,150,150);
-}
-
-
-
-QTabWidget::pane:!enabled { 
-/*	border-color : rgb(150,150,150);*/
-	color: rgb(150,150,150);
-}
-
-
 </string>
         </property>
         <property name="tabPosition">
@@ -587,6 +414,12 @@ QTabWidget::pane:!enabled {
           </property>
          </layout>
         </widget>
+        <widget class="QWidget" name="tabMisc">
+         <attribute name="title">
+          <string>AUTRE</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="vlMisc"/>
+        </widget>
        </widget>
       </item>
      </layout>
@@ -596,6 +429,9 @@ QTabWidget::pane:!enabled {
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Expanding</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>

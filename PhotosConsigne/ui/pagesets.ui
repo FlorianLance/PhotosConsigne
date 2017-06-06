@@ -68,7 +68,14 @@
       <property name="verticalSpacing">
        <number>10</number>
       </property>
-      <item row="1" column="1">
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="rbPersonnalised">
+        <property name="text">
+         <string>positionnement personnalisé</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
        <widget class="QRadioButton" name="rbGrid">
         <property name="text">
          <string>positionnement en grille</string>
@@ -78,14 +85,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <widget class="QRadioButton" name="rbPersonnalised">
-        <property name="text">
-         <string>positionnement personnalisé</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
+      <item row="0" column="3">
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -97,20 +97,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="cbDontDisplayHeader">
-        <property name="text">
-         <string>ne pas afficher le haut de page</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QCheckBox" name="cbDontDisplayFooter">
-        <property name="text">
-         <string>ne pas afficher le bas de page</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>
@@ -870,38 +856,6 @@ QPushButton:hover:!pressed{
       </item>
      </layout>
     </widget>
-   </item>
-   <item>
-    <widget class="Line" name="line2">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>1</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">	background-color: rgb(0,106,255);</string>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer1">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Expanding</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>407</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>

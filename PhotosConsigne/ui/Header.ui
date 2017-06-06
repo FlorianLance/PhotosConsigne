@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="vlHeader">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -150,10 +150,13 @@
         </property>
         <property name="styleSheet">
          <string notr="true">
+/* ################################  TAB BAR*/
 
 QTabWidget::tab-bar {
-    alignment: center;
+    alignment: left;
 }
+
+/* ################################  PANE */
 
 QTabWidget::pane { 
 
@@ -162,6 +165,7 @@ QTabWidget::pane {
     border-top: 1px solid rgb(0,106,255);
 	border-right: 0px solid rgb(0,106,255);
 	border-bottom: 1px solid rgb(0,106,255);
+
 
 	/* border radius */
 	border-top-right-radius: 0px;
@@ -173,6 +177,10 @@ QTabWidget::pane {
 	background-color:rgb(255, 255, 255)
 }
 
+/* ################################  TAB*/
+
+/* ################ BASE */
+
 QTabBar::tab {
 
 	/* border */
@@ -182,11 +190,6 @@ QTabBar::tab {
 
 	/* border radius */
     border-radius: 0px;
-
-	/* color */
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-	color : rgb(0,106,255);
 
 	/* size */
 	height:4ex;
@@ -206,7 +209,7 @@ QTabBar::tab:!selected {
 	color : rgb(127,180,255);
 
 	/* font */
-  	font:  11pt Calibri;
+  	font:  10pt Calibri;
 }
 
 
@@ -217,7 +220,7 @@ QTabBar::tab:selected {
     background-color:  rgb(220,220,220);
 
 	/* font */
-	 font: bold 11pt Calibri;
+	 font: bold 10pt Calibri;
 }
 
 
@@ -231,20 +234,19 @@ QTabBar::tab:hover  {
                                        stop: 0 #dadbde, stop: 1 #f6f7fa);
 
 	/* font */
-	 font: bold 11pt Calibri;
+	 font: bold 10pt Calibri;
 }
 
 
-/* ################ ORDER */
-
+/* ################ FIRST / LAST */
 
 QTabBar::tab:first{
 
 	/* border */
-	border-left: 1px solid rgb(0,106,255);
+	border-left: 0px solid rgb(0,106,255);
 
 	/* border radius */
-	border-top-left-radius: 3px;
+	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 
 }
@@ -338,19 +340,6 @@ QTabBar::tab:last{
       </item>
      </layout>
     </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>

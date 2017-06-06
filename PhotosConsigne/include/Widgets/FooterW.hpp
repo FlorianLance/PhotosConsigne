@@ -50,11 +50,31 @@ struct FooterW : public SettingsW{
         // section style
         ui.vlStyle->addWidget(&sectionStyleW);
         connect(&sectionStyleW, &SectionStyleW::settings_updated_signal, this, &FooterW::settings_updated_signal);
+
+        ui.tabFooter->setCurrentIndex(0);
+        connect(ui.tabFooter, &QTabWidget::currentChanged, this, [&]{
+
+            if(ui.vlFooter->count() > 2){
+                delete  ui.vlFooter->takeAt( ui.vlFooter->count() - 1);
+            }
+
+            switch (ui.tabFooter->currentIndex()) {
+            case 0:
+                ui.tabFooter->setMaximumHeight(2000);
+                break;
+            case 1:
+                ui.vlFooter->addStretch();
+                ui.tabFooter->setMaximumHeight(130);
+                break;
+            case 2:
+                ui.vlFooter->addStretch();;
+                ui.tabFooter->setMaximumHeight(130);
+                break;
+            }
+        });
     }
 
-    virtual ~FooterW(){
-//        DebugMessage("~FooterW");
-    }
+
 
     // ui
     Ui::FooterUI    ui;
@@ -63,6 +83,8 @@ struct FooterW : public SettingsW{
     RichTextEditW   footerTextW;
     BackgroundW     footerBackgroundW;
     SectionStyleW   sectionStyleW;
+
+    QSpacerItem *spacerItem = nullptr;
 };
 }
 

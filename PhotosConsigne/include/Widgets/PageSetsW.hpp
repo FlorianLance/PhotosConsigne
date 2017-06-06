@@ -87,12 +87,6 @@ struct PageSetsW : public SettingsW{
             emit settings_updated_signal(false);
             qDebug() << "end ui.rbPersonnalised";
         });
-        connect(ui.cbDontDisplayFooter, &QCheckBox::clicked, this, [=]{
-            emit settings_updated_signal(true);
-        });
-        connect(ui.cbDontDisplayHeader, &QCheckBox::clicked, this, [=]{
-            emit settings_updated_signal(true);
-        });
 
         connect(&customW, &CustomPageW::current_state_signal, this, [&](QPoint p1, QPoint p2, int validSets){
             Q_UNUSED(p1);
@@ -122,9 +116,6 @@ struct PageSetsW : public SettingsW{
         Utility::safe_init_radio_button_state(p1.ui.rbGrid, p2.ui.rbGrid->isChecked());
         Utility::safe_init_radio_button_state(p1.ui.rbPersonnalised, p2.ui.rbPersonnalised->isChecked());
 
-        Utility::safe_init_checkboxe_checked_state(p1.ui.cbDontDisplayHeader, p2.ui.cbDontDisplayHeader->isChecked());
-        Utility::safe_init_checkboxe_checked_state(p1.ui.cbDontDisplayFooter, p2.ui.cbDontDisplayFooter->isChecked());
-
         if(p2.ui.frameCustom->isEnabled()){
             p1.ui.frameCustom->setEnabled(true);
             p1.ui.framePhotosNb->setEnabled(false);
@@ -149,8 +140,6 @@ struct PageSetsW : public SettingsW{
         pageSets.nbPhotos           = ui.sbPhotosNbPerPage->value();
         pageSets.customMode         = ui.rbPersonnalised->isChecked();
         pageSets.relativePosCustom  = customW.relativePositions;
-        pageSets.doNotDisplayHeader = ui.cbDontDisplayHeader->isChecked();
-        pageSets.doNotDisplayFooter = ui.cbDontDisplayFooter->isChecked();
 
         if(customW.currentSecondPoint.x() > -1){
             pageSets.relativePosCustom.push_back(customW.currRelativePos);

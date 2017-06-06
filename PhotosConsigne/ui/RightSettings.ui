@@ -2,12 +2,15 @@
 <ui version="4.0">
  <class>RightSettingsUI</class>
  <widget class="QWidget" name="RightSettingsUI">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>379</width>
-    <height>484</height>
+    <width>420</width>
+    <height>521</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -15,6 +18,12 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>420</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="maximumSize">
    <size>
@@ -47,7 +56,7 @@
       <bool>true</bool>
      </property>
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -66,21 +75,14 @@
      </property>
      <property name="styleSheet">
       <string notr="true">
-
-
-QToolBox::tab{
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-	 font: bold 12pt Calibri;
-	 color : rgb(127,180,255);
-   	border-bottom: 1px solid rgb(0,106,255);
-   	border-top: 1px solid rgb(0,106,255);
-
-
-/*	height:4ex;*/
-
-
+/*
+QScrollBar::vertical {
+	 width: 10px; 
 }
+*/
+
+
+
 
 .QToolBox
 {
@@ -92,6 +94,14 @@ QToolBox::tab{
 }
 
 
+QToolBox::tab{
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+	 font: bold 12pt Calibri;
+	 color : rgb(127,180,255);
+   	border-bottom: 1px solid rgb(0,106,255);
+   	border-top: 1px solid rgb(0,106,255);
+}
 
 
 QToolBox::tab:hover{
@@ -106,35 +116,28 @@ QToolBox::tab:selected {
     background-color:  rgb(220,220,220);
 	qproperty-alignment: AlignCenter;
     font: italic bold 14pt Calibri;
-padding-left: 0px;	
+	padding-left: 0px;	
+
 }
 
 
 
-QToolBox::tab:!enabled{
-	/*padding-left: 100px;*/
+QToolBox::tab:!enabled{	
     background-color:  rgba(200,200,200,0%);
-    border: 1px solid rgba(200,200,200,0%);
+  /*  border: 1px solid rgba(200,200,200,0%);*/
  color : rgb(127,180,255);
-
-
-	
-
 }
 
 QToolBox::tab:first{
-	
     border-top: 1px solid rgb(0,106,255);
 }
 
 
 QToolBox::tab:!selected:last{
-	
     border-bottom: 0px solid rgb(0,106,255);
 }
 
 QToolBox::tab:selected:last{
-	
     border-bottom: 1px solid rgb(0,106,255);
 }
 
@@ -143,15 +146,18 @@ QToolBox::tab:selected:last{
 </string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
+     </property>
+     <property name="tabSpacing">
+      <number>6</number>
      </property>
      <widget class="QWidget" name="pageAllPages">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>377</width>
-        <height>255</height>
+        <width>418</width>
+        <height>346</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -173,7 +179,7 @@ QToolBox::tab:selected:last{
       <attribute name="label">
        <string>POUR TOUTES LES PAGES</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_15">
+      <layout class="QVBoxLayout" name="vlAllPages">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -261,10 +267,13 @@ QToolBox::tab:selected:last{
             </property>
             <property name="styleSheet">
              <string notr="true">
+/* ################################  TAB BAR*/
 
 QTabWidget::tab-bar {
-    alignment: center;
+    alignment: left;
 }
+
+/* ################################  PANE */
 
 QTabWidget::pane { 
 
@@ -273,6 +282,7 @@ QTabWidget::pane {
     border-top: 1px solid rgb(0,106,255);
 	border-right: 0px solid rgb(0,106,255);
 	border-bottom: 1px solid rgb(0,106,255);
+
 
 	/* border radius */
 	border-top-right-radius: 0px;
@@ -284,6 +294,10 @@ QTabWidget::pane {
 	background-color:rgb(255, 255, 255)
 }
 
+/* ################################  TAB*/
+
+/* ################ BASE */
+
 QTabBar::tab {
 
 	/* border */
@@ -293,11 +307,6 @@ QTabBar::tab {
 
 	/* border radius */
     border-radius: 0px;
-
-	/* color */
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-	color : rgb(0,106,255);
 
 	/* size */
 	height:4ex;
@@ -317,7 +326,7 @@ QTabBar::tab:!selected {
 	color : rgb(127,180,255);
 
 	/* font */
-  	font:  11pt Calibri;
+  	font:  10pt Calibri;
 }
 
 
@@ -328,7 +337,7 @@ QTabBar::tab:selected {
     background-color:  rgb(220,220,220);
 
 	/* font */
-	 font: bold 11pt Calibri;
+	 font: bold 10pt Calibri;
 }
 
 
@@ -342,20 +351,19 @@ QTabBar::tab:hover  {
                                        stop: 0 #dadbde, stop: 1 #f6f7fa);
 
 	/* font */
-	 font: bold 11pt Calibri;
+	 font: bold 10pt Calibri;
 }
 
 
-/* ################ ORDER */
-
+/* ################ FIRST / LAST */
 
 QTabBar::tab:first{
 
 	/* border */
-	border-left: 1px solid rgb(0,106,255);
+	border-left: 0px solid rgb(0,106,255);
 
 	/* border radius */
-	border-top-left-radius: 3px;
+	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 
 }
@@ -379,7 +387,7 @@ QTabBar::tab:last{
             <property name="elideMode">
              <enum>Qt::ElideLeft</enum>
             </property>
-            <widget class="QWidget" name="tabAllPagesSets">
+            <widget class="QWidget" name="tabAllPagesPositions">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                <horstretch>0</horstretch>
@@ -387,7 +395,7 @@ QTabBar::tab:last{
               </sizepolicy>
              </property>
              <attribute name="title">
-              <string>STYLE</string>
+              <string>POSITIONS</string>
              </attribute>
              <layout class="QVBoxLayout" name="vlGlobalPageSets">
               <property name="spacing">
@@ -491,6 +499,28 @@ QTabBar::tab:last{
               </property>
              </layout>
             </widget>
+            <widget class="QWidget" name="tabAllPagesMisc">
+             <attribute name="title">
+              <string>AUTRE</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="vlGlobalMisc">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
            </widget>
           </item>
           <item>
@@ -511,17 +541,17 @@ QTabBar::tab:last{
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tPageSelection">
+     <widget class="QWidget" name="pageSelectedPage">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>377</width>
-        <height>255</height>
+        <width>418</width>
+        <height>346</height>
        </rect>
       </property>
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+       <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -533,31 +563,35 @@ QTabBar::tab:last{
       <attribute name="label">
        <string>PAGE N°...</string>
       </attribute>
+      <layout class="QVBoxLayout" name="vlSelectedPage">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+      </layout>
      </widget>
-     <widget class="QWidget" name="pageSeparation1">
+     <widget class="QWidget" name="pageAllSets">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>377</width>
-        <height>255</height>
-       </rect>
-      </property>
-      <attribute name="label">
-       <string/>
-      </attribute>
-     </widget>
-     <widget class="QWidget" name="tbAllSets">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>377</width>
-        <height>255</height>
+        <width>418</width>
+        <height>346</height>
        </rect>
       </property>
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+       <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -569,7 +603,7 @@ QTabBar::tab:last{
       <attribute name="label">
        <string>POUR TOUS LES ENSEMBLES (Photo+Texte)</string>
       </attribute>
-      <layout class="QVBoxLayout" name="vlGlobalConsign">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -587,11 +621,20 @@ QTabBar::tab:last{
        </property>
        <item>
         <widget class="QFrame" name="frameAllSets">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
+         </property>
+         <property name="lineWidth">
+          <number>1</number>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_16">
           <property name="spacing">
@@ -609,10 +652,10 @@ QTabBar::tab:last{
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item>
+          <item alignment="Qt::AlignTop">
            <widget class="QTabWidget" name="tabAllSets">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -631,10 +674,13 @@ QTabBar::tab:last{
             </property>
             <property name="styleSheet">
              <string notr="true">
+/* ################################  TAB BAR*/
 
 QTabWidget::tab-bar {
-    alignment: center;
+    alignment: left;
 }
+
+/* ################################  PANE */
 
 QTabWidget::pane { 
 
@@ -643,6 +689,7 @@ QTabWidget::pane {
     border-top: 1px solid rgb(0,106,255);
 	border-right: 0px solid rgb(0,106,255);
 	border-bottom: 1px solid rgb(0,106,255);
+
 
 	/* border radius */
 	border-top-right-radius: 0px;
@@ -654,6 +701,10 @@ QTabWidget::pane {
 	background-color:rgb(255, 255, 255)
 }
 
+/* ################################  TAB*/
+
+/* ################ BASE */
+
 QTabBar::tab {
 
 	/* border */
@@ -663,11 +714,6 @@ QTabBar::tab {
 
 	/* border radius */
     border-radius: 0px;
-
-	/* color */
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-	color : rgb(0,106,255);
 
 	/* size */
 	height:4ex;
@@ -687,7 +733,7 @@ QTabBar::tab:!selected {
 	color : rgb(127,180,255);
 
 	/* font */
-  	font:  11pt Calibri;
+  	font:  10pt Calibri;
 }
 
 
@@ -698,7 +744,7 @@ QTabBar::tab:selected {
     background-color:  rgb(220,220,220);
 
 	/* font */
-	 font: bold 11pt Calibri;
+	 font: bold 10pt Calibri;
 }
 
 
@@ -712,20 +758,19 @@ QTabBar::tab:hover  {
                                        stop: 0 #dadbde, stop: 1 #f6f7fa);
 
 	/* font */
-	 font: bold 11pt Calibri;
+	 font: bold 10pt Calibri;
 }
 
 
-/* ################ ORDER */
-
+/* ################ FIRST / LAST */
 
 QTabBar::tab:first{
 
 	/* border */
-	border-left: 1px solid rgb(0,106,255);
+	border-left: 0px solid rgb(0,106,255);
 
 	/* border radius */
-	border-top-left-radius: 3px;
+	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
 
 }
@@ -750,11 +795,40 @@ QTabBar::tab:last{
              <enum>Qt::ElideLeft</enum>
             </property>
             <widget class="QWidget" name="pageAllSetsText">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <attribute name="title">
               <string>TEXTE</string>
              </attribute>
+             <layout class="QGridLayout" name="globalConsignLayout">
+              <property name="leftMargin">
+               <number>3</number>
+              </property>
+              <property name="topMargin">
+               <number>3</number>
+              </property>
+              <property name="rightMargin">
+               <number>3</number>
+              </property>
+              <property name="bottomMargin">
+               <number>3</number>
+              </property>
+              <property name="spacing">
+               <number>3</number>
+              </property>
+             </layout>
             </widget>
             <widget class="QWidget" name="tabAllSetsStyle">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <attribute name="title">
               <string>STYLE</string>
              </attribute>
@@ -783,24 +857,68 @@ QTabBar::tab:last{
               </item>
              </layout>
             </widget>
+            <widget class="QWidget" name="tabAllSetsMisc">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <attribute name="title">
+              <string>AUTRE</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="vlAllSetsMisc">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
            </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer1">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Expanding</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tPCSelection">
+     <widget class="QWidget" name="pageSelectedSet">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>377</width>
-        <height>255</height>
+        <width>418</width>
+        <height>346</height>
        </rect>
       </property>
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+       <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -812,27 +930,31 @@ QTabBar::tab:last{
       <attribute name="label">
        <string>ENSEMBLE (Photo+Texte) N°...</string>
       </attribute>
-     </widget>
-     <widget class="QWidget" name="pageSeparation2">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>377</width>
-        <height>255</height>
-       </rect>
-      </property>
-      <attribute name="label">
-       <string/>
-      </attribute>
+      <layout class="QVBoxLayout" name="vlSelectedSet">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+      </layout>
      </widget>
      <widget class="QWidget" name="pageHeader">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>377</width>
-        <height>255</height>
+        <width>418</width>
+        <height>346</height>
        </rect>
       </property>
       <attribute name="label">
@@ -861,8 +983,8 @@ QTabBar::tab:last{
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>377</width>
-        <height>255</height>
+        <width>418</width>
+        <height>346</height>
        </rect>
       </property>
       <attribute name="label">

@@ -77,7 +77,8 @@ HEADERS += \
     include/Data/PaperFormat.hpp \
     include/Widgets/PageSetsW.hpp \
     include/Widgets/RightSettingsW.hpp \
-    include/DebugMessage.hpp
+    include/DebugMessage.hpp \
+    include/Widgets/MiscW.hpp
 
 FORMS += \
     ui/PhotosConsigneMainW.ui \
@@ -94,7 +95,9 @@ FORMS += \
     ui/SectionStyle.ui \
     ui/Footer.ui \
     ui/PageSets.ui \
-    ui/RightSettings.ui
+    ui/RightSettings.ui \
+    ui/MiscPage.ui \
+    ui/MiscSet.ui
 
 DISTFILES += \
     deploiement/PhotosConsigne_x64.iss \

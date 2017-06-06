@@ -92,6 +92,9 @@ namespace pc {
         // sets
         PageSetsSettings pageSetsSettings;
 
+        // misc
+        MiscSettings miscSettings;
+
         // header
         SHeader header = std::make_shared<Header>();
 

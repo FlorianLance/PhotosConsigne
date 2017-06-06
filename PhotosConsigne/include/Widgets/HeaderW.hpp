@@ -50,11 +50,30 @@ struct HeaderW : public SettingsW{
         // section style
         ui.vlStyle->addWidget(&sectionStyleW);
         connect(&sectionStyleW, &SectionStyleW::settings_updated_signal, this, &HeaderW::settings_updated_signal);
+
+        ui.tabHeader->setCurrentIndex(0);
+        connect(ui.tabHeader, &QTabWidget::currentChanged, this, [&]{
+
+            if(ui.vlHeader->count() > 2){
+                delete  ui.vlHeader->takeAt( ui.vlHeader->count() - 1);
+            }
+
+            switch (ui.tabHeader->currentIndex()) {
+            case 0:
+                ui.tabHeader->setMaximumHeight(2000);
+                break;
+            case 1:
+                ui.vlHeader->addStretch();
+                ui.tabHeader->setMaximumHeight(130);
+                break;
+            case 2:
+                ui.vlHeader->addStretch();;
+                ui.tabHeader->setMaximumHeight(130);
+                break;
+            }
+        });
     }
 
-    virtual ~HeaderW(){
-//        DebugMessage("~HeaderW");
-    }
 
     // ui
     Ui::HeaderUI       ui;

@@ -257,6 +257,9 @@ void PDFGeneratorWorker::draw_page(QPainter &painter, pc::PCPages &pcPages, cons
 
 void PDFGeneratorWorker::draw_html(QPainter &painter, QString html, QRectF upperRect, QRectF docRect){
 
+    if(static_cast<int>(upperRect.width()) == 0 || static_cast<int>(upperRect.height()) == 0){
+        return;
+    }
     //        QElapsedTimer timer;
     //        timer.start();
     m_doc->setPageSize(QSizeF(upperRect.width(), upperRect.height()));

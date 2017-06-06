@@ -34,11 +34,15 @@ namespace pc {
         QPen pen;
     };
 
+    struct MiscSettings{
+
+        bool doNotDisplayHeader;
+        bool doNotDisplayFooter;
+    };
+
     struct PageSetsSettings{
 
         bool customMode;
-        bool doNotDisplayHeader;
-        bool doNotDisplayFooter;
 
         int nbPhotos;
         int nbPhotosH;

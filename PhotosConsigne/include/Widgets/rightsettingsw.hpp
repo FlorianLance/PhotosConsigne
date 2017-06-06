@@ -39,15 +39,21 @@ namespace pc{
             ui.vlFooter->addWidget(&footerW);
             connect(&footerW, &FooterW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
 
-            // global page
+            // all pages
+            ui.tabAllPages->setCurrentIndex(0);
             // # background
             ui.vlGlobalBackground->addWidget(&globalPageW.backgroundW);
             // # borders
             ui.vlGlobalBorders->addWidget(&globalPageW.bordersW);
             // # margins
             ui.vlGlobalMargins->addWidget(&globalPageW.marginsW);
-            // # page sets
+            // # sets
             ui.vlGlobalPageSets->addWidget(&globalPageW.setsW);
+            // # misc page
+            ui.vlGlobalMisc->addWidget(&globalPageW.miscW);            
+
+
+
             // # whole page
             connect(&globalPageW, &PageW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
 
@@ -57,6 +63,7 @@ namespace pc{
                 globalPageW.bordersW.hide();
                 globalPageW.marginsW.hide();
                 globalPageW.setsW.hide();
+                globalPageW.miscW.hide();
 
                 switch (ui.tabAllPages->currentIndex()) {
                 case 0:
@@ -70,31 +77,109 @@ namespace pc{
                     break;
                 case 3:
                     globalPageW.backgroundW.show();
+                    break;                
+                case 4:
+                    globalPageW.miscW.show();
                     break;
                 }
             });
 
+            // misc all pages
+            connect(&globalPageW.miscW, &MiscPageW::all_global_pages_signal, this, [&]{
 
-            // global set
+                for(auto &&page : pagesW){
+                    page->set_enabled(false);
+                }
+                emit settings_updated_signal(true);
+            });
+
+            connect(&globalPageW.miscW, &MiscPageW::all_individual_pages_signal, this, [&]{
+
+                for(auto &&page : pagesW){
+                    page->set_enabled(true);
+                }
+                emit settings_updated_signal(true);
+            });
+
+            connect(&globalPageW.miscW, &MiscPageW::replace_individual_with_global_signal, this, [&]{
+
+                for(auto &&page : pagesW){
+                    PageW::init_ui(*page, globalPageW);
+                }
+
+                emit settings_updated_signal(true);
+            });
+            delete globalPageW.miscW.ui.pbReplaceLocalWIthGlobal;
+
+            // misc all sets
+            connect(globalSetW.setMiscW.ui.pbGlobal, &QPushButton::clicked, this, [&]{
+                for(auto &&set : setsValidedW){
+                    Utility::safe_init_checkboxe_checked_state(set->ui.cbEnableIndividualConsign, false);
+                    set->ui.frameSet->setEnabled(false);
+                }
+                emit settings_updated_signal(true);
+            });
+            connect(globalSetW.setMiscW.ui.pbPerPage, &QPushButton::clicked, this, [&]{
+                for(auto &&set : setsValidedW){
+                    Utility::safe_init_checkboxe_checked_state(set->ui.cbEnableIndividualConsign, true);
+                    set->ui.frameSet->setEnabled(true);
+                }
+                emit settings_updated_signal(true);
+            });
+            connect(globalSetW.setMiscW.ui.pbReplaceLocalWIthGlobal, &QPushButton::clicked, this, [&]{
+
+                for(auto &&set : setsLoadedW){
+                    SetW::init_ui(*set, globalSetW, true);
+                }
+
+                emit settings_updated_signal(true);
+            });
+            delete globalSetW.setMiscW.ui.pbReplaceGlobalWithLocal;
+
+
+            // all sets
+            ui.tabAllSets->setCurrentIndex(0);
+            // # misc
+            ui.vlAllSetsMisc->addWidget(&globalSetW.setMiscW);
+            ui.vlAllSetsMisc->setAlignment(Qt::AlignmentFlag::AlignTop);
             // # style
             ui.vlGlobalSetStyle->addWidget(&globalSetW.setStyleW);
+            ui.vlGlobalSetStyle->setAlignment(Qt::AlignmentFlag::AlignTop);
             // # consign
-            QHBoxLayout *globalConsignLayout = new QHBoxLayout();
-            globalConsignLayout->setContentsMargins(3,3,3,3);
-            ui.pageAllSetsText->setLayout(globalConsignLayout);
             globalSetW.setTextW.init_style(RichTextType::globalConsign);
-            globalConsignLayout->addWidget(&globalSetW.setTextW);
+            ui.globalConsignLayout->addWidget(&globalSetW.setTextW);
+            ui.globalConsignLayout->setAlignment(Qt::AlignmentFlag::AlignTop);
             connect(globalSetW.setTextW.textEdit(), &TextEdit::resource_added_signal, this, &RightSettingsW::resource_added_signal);
-            connect(&globalSetW, &SetW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
+            connect(&globalSetW, &SetW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);           
 
-            // # tabs right
-            ui.tbRight->setItemEnabled(2, false);
-            ui.tbRight->setItemEnabled(5, false);
+            ui.verticalSpacer1->changeSize(20, 40, QSizePolicy::Ignored);
+            connect(ui.tabAllSets, &QTabWidget::currentChanged, this, [&]{
+
+                globalSetW.setTextW.hide();
+                globalSetW.setStyleW.hide();
+                globalSetW.setMiscW.hide();
+
+                switch (ui.tabAllSets->currentIndex()) {
+                case 0:
+                    globalSetW.setTextW.show();
+                    ui.verticalSpacer1->changeSize(20, 40, QSizePolicy::Ignored);
+                    break;
+                case 1:
+                    globalSetW.setStyleW.show();
+                    ui.verticalSpacer1->changeSize(20, 40, QSizePolicy::Expanding);
+                    break;
+                case 2:
+                    globalSetW.setMiscW.show();
+                    ui.verticalSpacer1->changeSize(20, 40, QSizePolicy::Expanding);
+                    break;
+                }
+            });
+
+            ui.tbRight->setCurrentIndex(0);
         }
 
         ~RightSettingsW(){
 
-//            DebugMessage("~RightSettingsW");
             setsLoadedW.clear();
             setsValidedW.clear();
             pagesW.clear();
@@ -111,34 +196,14 @@ namespace pc{
                     pagesW.push_back(std::make_shared<PageW>());
 
                     PageW *pageW = pagesW.last().get();
+                    delete pageW->miscW.ui.frameApply;
+                    delete pageW->miscW.ui.line2;
+                    delete pageW->miscW.ui.pbReplaceLocalWIthGlobal;
+
                     PageW::init_ui(*pageW, globalPageW);
                     connect(pageW, &PageW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
 
-                    connect(pageW->ui.pbAllGlobalParameters, &QPushButton::clicked, this, [&]{
-
-                        for(auto &&page : pagesW){
-                            page->set_enabled(false);
-                        }
-                        emit settings_updated_signal(true);
-                    });
-
-                    connect(pageW->ui.pbAllIndividualParameters, &QPushButton::clicked, this, [&]{
-
-                        for(auto &&page : pagesW){
-                            page->set_enabled(true);
-                        }
-                        emit settings_updated_signal(true);
-                    });
-
-                    connect(pageW->ui.pbCopyGlobalToIndividuals, &QPushButton::clicked, this, [&]{
-
-                        for(auto &&page : pagesW){
-                            PageW::init_ui(*page, globalPageW);
-                        }
-
-                        emit settings_updated_signal(true);
-                    });
-                    connect(pageW->ui.pbCopyIndividualToGlobal, &QPushButton::clicked, this, [=]{
+                    connect(&pageW->miscW, &MiscPageW::replace_global_with_individual_signal, this, [=]{
                         PageW::init_ui(globalPageW, *pageW);
                     });
                 }
@@ -155,41 +220,18 @@ namespace pc{
         void insert_individual_set(int index){
 
             setsLoadedW.insert(index,std::make_shared<SetW>());
-            SSetW &setW = setsLoadedW[index];
+            SetW *setW = setsLoadedW[index].get();
             setW->setEnabled(true);
-            Ui::SetUI &ui = setW->ui;
+
+            delete setW->setMiscW.ui.pbReplaceLocalWIthGlobal;
+            delete setW->setMiscW.ui.line1;
+            delete setW->setMiscW.ui.frameApply;
 
             connect(setW->setTextW.textEdit(), &TextEdit::resource_added_signal, this, &RightSettingsW::resource_added_signal);
 
             // # set style
-            connect(setW.get(), &SetW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
-
-            // # init/copy settings
-            connect(ui.pbAllGlobalParameters, &QPushButton::clicked, this, [&]{
-                for(auto &&set : setsValidedW){
-                    Utility::safe_init_checkboxe_checked_state(set->ui.cbEnableIndividualConsign, false);
-                    set->ui.frameSet->setEnabled(false);
-                }
-                emit settings_updated_signal(true);
-            });
-
-            connect(ui.pbAllIndividualParameters, &QPushButton::clicked, this, [&]{
-                for(auto &&set : setsValidedW){
-                    Utility::safe_init_checkboxe_checked_state(set->ui.cbEnableIndividualConsign, true);
-                    set->ui.frameSet->setEnabled(true);
-                }
-                emit settings_updated_signal(true);
-            });
-
-            connect(ui.pbCopyGlobalToIndividuals, &QPushButton::clicked, this, [&]{
-
-                for(auto &&set : setsLoadedW){
-                    SetW::init_ui(*set, globalSetW, true);
-                }
-
-                emit settings_updated_signal(true);
-            });
-            connect(ui.pbCopyIndividualToGlobal, &QPushButton::clicked, this, [&]{
+            connect(setW, &SetW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
+            connect(&setW->setMiscW, &MiscSetW::replace_global_with_individual_signal, this, [=]{
                 SetW::init_ui(globalSetW, *setW, true);
             });
 
@@ -226,21 +268,20 @@ namespace pc{
             Utility::safe_init_tool_box_index(ui.tbRight, 1);
         }
 
-
         void display_global_set_panel(){
-            Utility::safe_init_tool_box_index(ui.tbRight, 3);
+            Utility::safe_init_tool_box_index(ui.tbRight, 2);
         }
 
         void display_current_set_panel(){
-            Utility::safe_init_tool_box_index(ui.tbRight, 4);
+            Utility::safe_init_tool_box_index(ui.tbRight, 3);
         }
 
         void display_header_panel(){
-            Utility::safe_init_tool_box_index(ui.tbRight, 6);
+            Utility::safe_init_tool_box_index(ui.tbRight, 4);
         }
 
         void display_footer_panel(){
-            Utility::safe_init_tool_box_index(ui.tbRight, 7);
+            Utility::safe_init_tool_box_index(ui.tbRight, 5);
         }
 
 

@@ -11,6 +11,7 @@
 // local
 #include "RichTextEditW.hpp"
 #include "SetStyleW.hpp"
+#include "MiscW.hpp"
 
 // generated ui
 #include "ui_Set.h"
@@ -36,19 +37,49 @@ struct SetW : public SettingsW{
         ui.frameSet->setEnabled(false);
 
         // enable
-        init_checkboxes_connections({ui.cbEnableIndividualConsign});
-        init_pushbuttons_connections({ui.pbAllGlobalParameters, ui.pbAllIndividualParameters, ui.pbCopyGlobalToIndividuals, ui.pbCopyIndividualToGlobal});
+        init_checkboxes_connections({ui.cbEnableIndividualConsign});        
         Utility::checkbox_enable_UI(ui.cbEnableIndividualConsign, {ui.frameSet});
 
         // text
         setTextW.init_style(RichTextType::individualConsign);
         ui.vlText->addWidget(&setTextW);
+        ui.vlText->setAlignment(Qt::AlignmentFlag::AlignTop);
+        setTextW.setMinimumHeight(500);
         connect(setTextW.textEdit(), &TextEdit::textChanged, this, [=]{
             emit settings_updated_signal(false);
         });
 
+        // misc
+        ui.vlMisc->addWidget(&setMiscW);
+        ui.vlMisc->setAlignment(Qt::AlignmentFlag::AlignTop);
+        connect(&setMiscW, &SetStyleW::settings_updated_signal, this, &SetW::settings_updated_signal);
+
+        ui.verticalSpacer1->changeSize(20, 40, QSizePolicy::Ignored);
+        connect(ui.tabSet, &QTabWidget::currentChanged, this, [&]{
+
+            setTextW.hide();
+            setStyleW.hide();
+            setMiscW.hide();
+
+            switch (ui.tabSet->currentIndex()) {
+            case 0:
+                setTextW.show();
+                ui.verticalSpacer1->changeSize(20, 40, QSizePolicy::Ignored);
+                break;
+            case 1:
+                setStyleW.show();
+                ui.verticalSpacer1->changeSize(20, 40, QSizePolicy::Expanding);
+                break;
+            case 2:
+                setMiscW.show();
+                ui.verticalSpacer1->changeSize(20, 40, QSizePolicy::Expanding);
+                break;
+            }
+        });
+
         // style
         ui.vlSetStyle->addWidget(&setStyleW);
+        ui.vlSetStyle->setAlignment(Qt::AlignmentFlag::AlignTop);
         connect(&setStyleW, &SetStyleW::settings_updated_signal, this, &SetW::settings_updated_signal);
 
         id = setUICounter++;
@@ -82,6 +113,8 @@ struct SetW : public SettingsW{
     // sub widgets
     RichTextEditW   setTextW;
     SetStyleW       setStyleW;
+    MiscSetW        setMiscW;
+
 };
 }
 

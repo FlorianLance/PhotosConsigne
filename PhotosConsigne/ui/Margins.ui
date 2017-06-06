@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>406</width>
-    <height>366</height>
+    <width>385</width>
+    <height>340</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,10 +25,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="vlMargins">
-   <property name="spacing">
-    <number>0</number>
-   </property>
+  <layout class="QGridLayout" name="glMargins">
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -41,7 +38,10 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item>
+   <property name="horizontalSpacing">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
     <widget class="QFrame" name="frameExternMargins">
      <property name="enabled">
       <bool>true</bool>
@@ -69,13 +69,13 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_8">
       <property name="leftMargin">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="topMargin">
        <number>3</number>
       </property>
       <property name="rightMargin">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="bottomMargin">
        <number>3</number>
@@ -83,7 +83,7 @@
       <property name="spacing">
        <number>3</number>
       </property>
-      <item row="0" column="2">
+      <item row="0" column="1">
        <widget class="QFrame" name="frameExternMargins_sub2">
         <property name="minimumSize">
          <size>
@@ -116,36 +116,8 @@
          <property name="spacing">
           <number>3</number>
          </property>
-         <item row="4" column="1">
-          <widget class="QSlider" name="hsBottomMargins">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>100</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Ratio de la marge extérieure du bas</string>
-           </property>
-           <property name="maximum">
-            <number>10000</number>
-           </property>
-           <property name="value">
-            <number>500</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QDoubleSpinBox" name="dsbTopMargins">
+         <item row="4" column="2">
+          <widget class="QDoubleSpinBox" name="dsbBottomMargins">
            <property name="maximumSize">
             <size>
              <width>50</width>
@@ -153,7 +125,7 @@
             </size>
            </property>
            <property name="toolTip">
-            <string>Ratio de la marge extérieure du haut</string>
+            <string>Ratio de la marge extérieure du bas</string>
            </property>
            <property name="styleSheet">
             <string notr="true">
@@ -186,40 +158,6 @@ QWidget:!enabled {
            </property>
            <property name="value">
             <double>0.050000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0" alignment="Qt::AlignRight">
-          <widget class="QLabel" name="laRightMargins">
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  9pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-     font:  9pt Calibri;
- }
-QWidget {
-  
-	color : rgb(0,106,255);
-    font:  9pt Calibri;
-
- }
-
-
-</string>
-           </property>
-           <property name="text">
-            <string>Droite</string>
            </property>
           </widget>
          </item>
@@ -268,8 +206,133 @@ QWidget:!enabled {
            </property>
           </widget>
          </item>
+         <item row="2" column="0" alignment="Qt::AlignRight">
+          <widget class="QLabel" name="laLeftMargins">
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+
+</string>
+           </property>
+           <property name="text">
+            <string>Gauche</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0" alignment="Qt::AlignRight">
+          <widget class="QLabel" name="laRightMargins">
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+
+</string>
+           </property>
+           <property name="text">
+            <string>Droite</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QDoubleSpinBox" name="dsbTopMargins">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Ratio de la marge extérieure du haut</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  bold 10 ptCalibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+
+     font:  bold 10 ptCalibri;
+ }
+</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.003000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.050000000000000</double>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="3">
           <widget class="QLabel" name="laTopMM">
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="styleSheet">
             <string notr="true">
 
@@ -302,37 +365,31 @@ QWidget {
            </property>
           </widget>
          </item>
-         <item row="2" column="0" alignment="Qt::AlignRight">
-          <widget class="QLabel" name="laLeftMargins">
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  9pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-     font:  9pt Calibri;
- }
-QWidget {
-  
-	color : rgb(0,106,255);
-    font:  9pt Calibri;
-
- }
-
-
-</string>
+         <item row="0" column="1">
+          <widget class="QSlider" name="hsTopMargins">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
            </property>
-           <property name="text">
-            <string>Gauche</string>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Ratio de la marge extérieure du haut</string>
+           </property>
+           <property name="maximum">
+            <number>10000</number>
+           </property>
+           <property name="value">
+            <number>500</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
           </widget>
          </item>
@@ -381,6 +438,46 @@ QWidget:!enabled {
            </property>
           </widget>
          </item>
+         <item row="2" column="3">
+          <widget class="QLabel" name="laLeftMM">
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+
+</string>
+           </property>
+           <property name="text">
+            <string>0 mm</string>
+           </property>
+          </widget>
+         </item>
          <item row="4" column="0" alignment="Qt::AlignRight">
           <widget class="QLabel" name="laBottomMargins">
            <property name="styleSheet">
@@ -415,40 +512,6 @@ QWidget {
            </property>
           </widget>
          </item>
-         <item row="2" column="3">
-          <widget class="QLabel" name="laLeftMM">
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  9pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-     font:  9pt Calibri;
- }
-QWidget {
-  
-	color : rgb(0,106,255);
-    font:  9pt Calibri;
-
- }
-
-
-</string>
-           </property>
-           <property name="text">
-            <string>0 mm</string>
-           </property>
-          </widget>
-         </item>
          <item row="2" column="1">
           <widget class="QSlider" name="hsLeftMargins">
            <property name="minimumSize">
@@ -459,7 +522,7 @@ QWidget {
            </property>
            <property name="maximumSize">
             <size>
-             <width>100</width>
+             <width>70</width>
              <height>16777215</height>
             </size>
            </property>
@@ -477,36 +540,14 @@ QWidget {
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QSlider" name="hsTopMargins">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
+         <item row="3" column="3">
+          <widget class="QLabel" name="laRightMM">
            <property name="maximumSize">
             <size>
-             <width>100</width>
+             <width>60</width>
              <height>16777215</height>
             </size>
            </property>
-           <property name="toolTip">
-            <string>Ratio de la marge extérieure du haut</string>
-           </property>
-           <property name="maximum">
-            <number>10000</number>
-           </property>
-           <property name="value">
-            <number>500</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3">
-          <widget class="QLabel" name="laRightMM">
            <property name="styleSheet">
             <string notr="true">
 
@@ -536,51 +577,6 @@ QWidget {
            </property>
            <property name="text">
             <string>0 mm</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="QDoubleSpinBox" name="dsbBottomMargins">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Ratio de la marge extérieure du bas</string>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  bold 10 ptCalibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-
-     font:  bold 10 ptCalibri;
- }
-</string>
-           </property>
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="maximum">
-            <double>1.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.003000000000000</double>
-           </property>
-           <property name="value">
-            <double>0.050000000000000</double>
            </property>
           </widget>
          </item>
@@ -626,6 +622,12 @@ QWidget {
          </item>
          <item row="4" column="3">
           <widget class="QLabel" name="laBottomMM">
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
            <property name="styleSheet">
             <string notr="true">
 
@@ -658,18 +660,33 @@ QWidget {
            </property>
           </widget>
          </item>
-         <item row="3" column="4">
-          <spacer name="horizontalSpacer1">
+         <item row="4" column="1">
+          <widget class="QSlider" name="hsBottomMargins">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Ratio de la marge extérieure du bas</string>
+           </property>
+           <property name="maximum">
+            <number>10000</number>
+           </property>
+           <property name="value">
+            <number>500</number>
+           </property>
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
+          </widget>
          </item>
          <item row="3" column="1">
           <widget class="QSlider" name="hsRightMargins">
@@ -681,7 +698,7 @@ QWidget {
            </property>
            <property name="maximumSize">
             <size>
-             <width>100</width>
+             <width>70</width>
              <height>16777215</height>
             </size>
            </property>
@@ -800,29 +817,10 @@ QWidget:!enabled {
         </layout>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="label_6">
-        <property name="minimumSize">
-         <size>
-          <width>23</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
-   <item>
+   <item row="2" column="0">
     <widget class="QFrame" name="frameFooterHeaderMargins">
      <property name="enabled">
       <bool>true</bool>
@@ -850,13 +848,13 @@ QWidget:!enabled {
      </property>
      <layout class="QGridLayout" name="gridLayout_29">
       <property name="leftMargin">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="topMargin">
        <number>3</number>
       </property>
       <property name="rightMargin">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="bottomMargin">
        <number>3</number>
@@ -864,6 +862,348 @@ QWidget:!enabled {
       <property name="spacing">
        <number>3</number>
       </property>
+      <item row="1" column="1" rowspan="2">
+       <widget class="QFrame" name="frameFooterHeaderMargins_sub2">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">.QFrame{
+    border: 0px solid gray;
+    border-radius: 0px;
+}</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_30">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <property name="spacing">
+          <number>3</number>
+         </property>
+         <item row="1" column="2">
+          <widget class="QDoubleSpinBox" name="dsbFooterMargin">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Ratio de la marge intérieure verticale</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  bold 10 ptCalibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+
+     font:  bold 10 ptCalibri;
+ }
+</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.003000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.030000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" alignment="Qt::AlignRight">
+          <widget class="QLabel" name="laHeader">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+
+</string>
+           </property>
+           <property name="text">
+            <string>Haut</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QDoubleSpinBox" name="dsbHeaderMargin">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Ratio de la marge intérieure horizontale</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  bold 10 ptCalibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+
+     font:  bold 10 ptCalibri;
+ }
+</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.003000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.030000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QSlider" name="hsFooterMargin">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Ratio de la marge intérieure verticale</string>
+           </property>
+           <property name="maximum">
+            <number>10000</number>
+           </property>
+           <property name="value">
+            <number>300</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QSlider" name="hsHeaderMargin">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Ratio de la marge intérieure horizontale</string>
+           </property>
+           <property name="maximum">
+            <number>10000</number>
+           </property>
+           <property name="value">
+            <number>300</number>
+           </property>
+           <property name="sliderPosition">
+            <number>300</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLabel" name="laHeaderMM">
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+
+</string>
+           </property>
+           <property name="text">
+            <string>0 mm</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLabel" name="laFooterMM">
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+
+</string>
+           </property>
+           <property name="text">
+            <string>0 mm</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" alignment="Qt::AlignRight">
+          <widget class="QLabel" name="laFooter">
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+
+</string>
+           </property>
+           <property name="text">
+            <string>Bas</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
       <item row="1" column="0" rowspan="2">
        <widget class="QFrame" name="frameFooterHeaderMargins_sub1">
         <property name="minimumSize">
@@ -975,382 +1315,10 @@ QWidget:!enabled {
         </layout>
        </widget>
       </item>
-      <item row="1" column="2" rowspan="2">
-       <widget class="QFrame" name="frameFooterHeaderMargins_sub2">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">.QFrame{
-    border: 0px solid gray;
-    border-radius: 0px;
-}</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_30">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <property name="spacing">
-          <number>3</number>
-         </property>
-         <item row="1" column="2">
-          <widget class="QDoubleSpinBox" name="dsbFooterMargin">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Ratio de la marge intérieure verticale</string>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  bold 10 ptCalibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-
-     font:  bold 10 ptCalibri;
- }
-</string>
-           </property>
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="maximum">
-            <double>1.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.003000000000000</double>
-           </property>
-           <property name="value">
-            <double>0.030000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QSlider" name="hsFooterMargin">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>100</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Ratio de la marge intérieure verticale</string>
-           </property>
-           <property name="maximum">
-            <number>10000</number>
-           </property>
-           <property name="value">
-            <number>300</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QDoubleSpinBox" name="dsbHeaderMargin">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Ratio de la marge intérieure horizontale</string>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  bold 10 ptCalibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-
-     font:  bold 10 ptCalibri;
- }
-</string>
-           </property>
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="maximum">
-            <double>1.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.003000000000000</double>
-           </property>
-           <property name="value">
-            <double>0.030000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0" alignment="Qt::AlignRight">
-          <widget class="QLabel" name="laHeader">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  9pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-     font:  9pt Calibri;
- }
-QWidget {
-  
-	color : rgb(0,106,255);
-    font:  9pt Calibri;
-
- }
-
-
-</string>
-           </property>
-           <property name="text">
-            <string>Haut</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QLabel" name="laHeaderMM">
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  9pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-     font:  9pt Calibri;
- }
-QWidget {
-  
-	color : rgb(0,106,255);
-    font:  9pt Calibri;
-
- }
-
-
-</string>
-           </property>
-           <property name="text">
-            <string>0 mm</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QSlider" name="hsHeaderMargin">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>100</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Ratio de la marge intérieure horizontale</string>
-           </property>
-           <property name="maximum">
-            <number>10000</number>
-           </property>
-           <property name="value">
-            <number>300</number>
-           </property>
-           <property name="sliderPosition">
-            <number>300</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" alignment="Qt::AlignRight">
-          <widget class="QLabel" name="laFooter">
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  9pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-     font:  9pt Calibri;
- }
-QWidget {
-  
-	color : rgb(0,106,255);
-    font:  9pt Calibri;
-
- }
-
-
-</string>
-           </property>
-           <property name="text">
-            <string>Bas</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <widget class="QLabel" name="laFooterMM">
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  9pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-     font:  9pt Calibri;
- }
-QWidget {
-  
-	color : rgb(0,106,255);
-    font:  9pt Calibri;
-
- }
-
-
-</string>
-           </property>
-           <property name="text">
-            <string>0 mm</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="4">
-          <spacer name="horizontalSpacer3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="label">
-        <property name="minimumSize">
-         <size>
-          <width>41</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
-   <item>
-    <widget class="Line" name="line2">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>1</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">	background-color: rgb(0,106,255);</string>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item>
+   <item row="4" column="0">
     <widget class="QFrame" name="frameInternMargins">
      <property name="enabled">
       <bool>true</bool>
@@ -1378,13 +1346,13 @@ QWidget {
      </property>
      <layout class="QGridLayout" name="gridLayout_27">
       <property name="leftMargin">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="topMargin">
        <number>3</number>
       </property>
       <property name="rightMargin">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="bottomMargin">
        <number>3</number>
@@ -1538,6 +1506,34 @@ QWidget:!enabled {
          <property name="spacing">
           <number>3</number>
          </property>
+         <item row="0" column="1">
+          <widget class="QSlider" name="hsHorizontalMargins">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>70</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Ratio de la marge intérieure horizontale</string>
+           </property>
+           <property name="maximum">
+            <number>10000</number>
+           </property>
+           <property name="value">
+            <number>500</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
          <item row="1" column="0" alignment="Qt::AlignRight">
           <widget class="QLabel" name="laVerticalMargins">
            <property name="styleSheet">
@@ -1568,164 +1564,18 @@ QWidget {
 </string>
            </property>
            <property name="text">
-            <string>Verticales</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QDoubleSpinBox" name="dsbVerticalMargins">
-           <property name="maximumSize">
-            <size>
-             <width>50</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Ratio de la marge intérieure verticale</string>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  bold 10 ptCalibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-
-     font:  bold 10 ptCalibri;
- }
-</string>
-           </property>
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="maximum">
-            <double>1.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.003000000000000</double>
-           </property>
-           <property name="value">
-            <double>0.050000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QSlider" name="hsHorizontalMargins">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>100</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Ratio de la marge intérieure horizontale</string>
-           </property>
-           <property name="maximum">
-            <number>10000</number>
-           </property>
-           <property name="value">
-            <number>500</number>
-           </property>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <string>Vert.</string>
            </property>
           </widget>
          </item>
          <item row="1" column="3">
           <widget class="QLabel" name="laVInternMM">
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  9pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-     font:  9pt Calibri;
- }
-QWidget {
-  
-	color : rgb(0,106,255);
-    font:  9pt Calibri;
-
- }
-
-
-</string>
-           </property>
-           <property name="text">
-            <string>0 mm</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QDoubleSpinBox" name="dsbHorizontalMargins">
            <property name="maximumSize">
             <size>
-             <width>50</width>
+             <width>60</width>
              <height>16777215</height>
             </size>
            </property>
-           <property name="toolTip">
-            <string>Ratio de la marge intérieure horizontale</string>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  bold 10 ptCalibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-
-     font:  bold 10 ptCalibri;
- }
-</string>
-           </property>
-           <property name="decimals">
-            <number>3</number>
-           </property>
-           <property name="maximum">
-            <double>1.000000000000000</double>
-           </property>
-           <property name="singleStep">
-            <double>0.003000000000000</double>
-           </property>
-           <property name="value">
-            <double>0.050000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QLabel" name="laHInternMM">
            <property name="styleSheet">
             <string notr="true">
 
@@ -1794,22 +1644,139 @@ QWidget {
 </string>
            </property>
            <property name="text">
-            <string>Horizontales</string>
+            <string>Horiz.</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="4">
-          <spacer name="horizontalSpacer2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
+         <item row="1" column="2">
+          <widget class="QDoubleSpinBox" name="dsbVerticalMargins">
+           <property name="maximumSize">
             <size>
-             <width>20</width>
-             <height>20</height>
+             <width>50</width>
+             <height>16777215</height>
             </size>
            </property>
-          </spacer>
+           <property name="toolTip">
+            <string>Ratio de la marge intérieure verticale</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  bold 10 ptCalibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+
+     font:  bold 10 ptCalibri;
+ }
+</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.003000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.050000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QDoubleSpinBox" name="dsbHorizontalMargins">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Ratio de la marge intérieure horizontale</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  bold 10 ptCalibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+
+     font:  bold 10 ptCalibri;
+ }
+</string>
+           </property>
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="singleStep">
+            <double>0.003000000000000</double>
+           </property>
+           <property name="value">
+            <double>0.050000000000000</double>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLabel" name="laHInternMM">
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+
+</string>
+           </property>
+           <property name="text">
+            <string>0 mm</string>
+           </property>
+          </widget>
          </item>
          <item row="1" column="1">
           <widget class="QSlider" name="hsVerticalMargins">
@@ -1821,7 +1788,7 @@ QWidget {
            </property>
            <property name="maximumSize">
             <size>
-             <width>100</width>
+             <width>70</width>
              <height>16777215</height>
             </size>
            </property>
@@ -1845,7 +1812,7 @@ QWidget {
      </layout>
     </widget>
    </item>
-   <item>
+   <item row="3" column="0">
     <widget class="Line" name="line1">
      <property name="maximumSize">
       <size>
@@ -1861,21 +1828,21 @@ QWidget {
      </property>
     </widget>
    </item>
-   <item>
-    <spacer name="verticalSpacer1">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::MinimumExpanding</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
+   <item row="1" column="0">
+    <widget class="Line" name="line2">
+     <property name="maximumSize">
       <size>
-       <width>20</width>
-       <height>81</height>
+       <width>16777215</width>
+       <height>1</height>
       </size>
      </property>
-    </spacer>
+     <property name="styleSheet">
+      <string notr="true">	background-color: rgb(0,106,255);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

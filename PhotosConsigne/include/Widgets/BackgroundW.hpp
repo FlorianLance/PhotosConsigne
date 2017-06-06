@@ -33,6 +33,9 @@ struct BackgroundW : public SettingsW{
         init_color_dialog_connections(ui.tbColorPage, tr("Couleur de la page"), tr("Choix de la couleur de page"), &color, QSize(50,50));
         init_color_dialog_connections(ui.tbBackgoundPatternColor, tr("Couleur du motif de fond"), tr("Choix de la couleur du motif de fond"), &colorPattern, QSize(50,50));
         init_image_dialog_connections(ui.tbBackgroundImage, tr("Image du fond"), tr("Choisissez l'image qui sera affichée dans le fond"), photo, QSize(45,45));
+
+        ui.framePattern->hide();
+        ui.line1->hide();
     }
 
     virtual ~BackgroundW(){

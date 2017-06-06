@@ -13,6 +13,7 @@
 #include "MarginsW.hpp"
 #include "BackgroundW.hpp"
 #include "PageSetsW.hpp"
+#include "MiscW.hpp"
 
 
 // generated ui
@@ -32,15 +33,14 @@ struct PageW : public SettingsW{
 
     PageW();
 
-    virtual ~PageW(){
-//        DebugMessage("~PageW");
-    }
-
     static void init_ui(pc::PageW &p1, const pc::PageW &p2);
 
     bool individual() const noexcept;
 
     void set_enabled(bool enabled) noexcept;
+
+
+public :
 
     int id;
     QColor borderColor = QColor(0,0,0,0);
@@ -50,6 +50,7 @@ struct PageW : public SettingsW{
     BordersW     bordersW;
     MarginsW     marginsW;
     PageSetsW    setsW;
+    MiscPageW    miscW;
 
     Ui::PageUI   ui;
 };

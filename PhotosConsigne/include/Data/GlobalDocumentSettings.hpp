@@ -12,7 +12,6 @@ namespace pc {
 struct GlobalDocumentSettings{
 
     virtual ~GlobalDocumentSettings(){
-        DebugMessage("~GlobalDocumentSettings");
     }
 
     bool grayScale           = false;
@@ -42,6 +41,9 @@ struct GlobalDocumentSettings{
 
     // page sets
     PageSetsSettings setsSettings;
+
+    // misc
+    MiscSettings miscSettings;
 
     // header
     HeaderSettings headerSettings;

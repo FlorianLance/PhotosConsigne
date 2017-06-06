@@ -78,6 +78,8 @@ pc::UIElements::UIElements(QMainWindow *parent) : m_parent(parent) {
 
 
 void UIElements::ask_for_update(bool displayZones){
+
+    qDebug() << "ask_for_update: " << displayZones;
     if(displayZones){
         zonesTimer.start(1000);
     }
@@ -167,6 +169,8 @@ void UIElements::update_global_settings(GlobalDocumentSettings &settings) const{
     settings.backgroundSettings           = settingsW.globalPageW.backgroundW.settings();
     // ## sets
     settings.setsSettings                 = settingsW.globalPageW.setsW.settings();
+    // ## misc
+    settings.miscSettings                 = settingsW.globalPageW.miscW.settings();
 
     // # header
     // ## enabled
@@ -347,8 +351,8 @@ void UIElements::update_UI(const GlobalDocumentSettings &settings){
 
     // display current dynamic ui
     if(settings.photosLoaded->size() > 0){
-        display_current_individual_page_ui(settings);
         display_current_individual_set_ui(settings);
+        display_current_individual_page_ui(settings);
     }
 }
 
@@ -367,12 +371,10 @@ void UIElements::display_current_individual_set_ui(const GlobalDocumentSettings 
         return;
     }
 
-    int currentIndex = settingsW.ui.tbRight->currentIndex();
     settingsW.ui.tbRight->blockSignals(true);
-    settingsW.ui.tbRight->removeItem(4);
-    settingsW.ui.tbRight->insertItem(4, settingsW.setsValidedW[settings.currentSetId].get(),"ENSEMBLE (Photo+Texte) N°" + QString::number(settings.currentSetId+1));
-    settingsW.ui.tbRight->setItemIcon(4, QIcon(":/images/sets/set"));
-    settingsW.ui.tbRight->setCurrentIndex(currentIndex);
+    settingsW.ui.tbRight->setItemText(3, "ENSEMBLE (Photo+Texte) N°" + QString::number(settings.currentSetId+1));
+    settingsW.ui.vlSelectedSet->insertWidget(0,settingsW.setsValidedW[settings.currentSetId].get());
+    settingsW.ui.vlSelectedSet->takeAt(1);
     settingsW.ui.tbRight->blockSignals(false);
 }
 
@@ -395,12 +397,11 @@ void UIElements::display_current_individual_page_ui(const GlobalDocumentSettings
     mainUI.lwPagesList->setCurrentRow(settings.currentPageId);
     mainUI.lwPagesList->blockSignals(false);
 
-    int currentIndex = settingsW.ui.tbRight->currentIndex();
     settingsW.ui.tbRight->blockSignals(true);
-    settingsW.ui.tbRight->removeItem(1);
-    settingsW.ui.tbRight->insertItem(1, settingsW.pagesW[settings.currentPageId].get(), "PAGE N°" + QString::number(settings.currentPageId+1));
-    settingsW.ui.tbRight->setItemIcon(1, QIcon(":/images/pages/page"));
-    settingsW.ui.tbRight->setCurrentIndex(currentIndex);
+    settingsW.ui.tbRight->setItemText(1, "PAGE N°" + QString::number(settings.currentPageId+1));
+    settingsW.ui.vlSelectedPage->insertWidget(0,settingsW.pagesW[settings.currentPageId].get());
+    settingsW.ui.vlSelectedPage->takeAt(1);
+    settingsW.ui.vlSelectedPage->setAlignment(Qt::AlignmentFlag::AlignTop);
     settingsW.ui.tbRight->blockSignals(false);
 }
 

@@ -29,8 +29,8 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
 
     // header/footer ratios
     qreal headerFooterSetsHeight = pageMinusMarginsRect.height() - footerMarginHeight - headerMarginHeight;
-    qreal footerRatio            = (footer->settings.enabled && !pageSetsSettings.doNotDisplayFooter) ? footer->settings.ratio : 0.;
-    qreal headerRatio            = (header->settings.enabled && !pageSetsSettings.doNotDisplayHeader) ? header->settings.ratio : 0.;
+    qreal footerRatio            = (footer->settings.enabled && !miscSettings.doNotDisplayFooter) ? footer->settings.ratio : 0.;
+    qreal headerRatio            = (header->settings.enabled && !miscSettings.doNotDisplayHeader) ? header->settings.ratio : 0.;
 
     qreal sum = footerRatio + headerRatio;
     if(sum > 1.){
