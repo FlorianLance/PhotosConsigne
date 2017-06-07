@@ -47,7 +47,7 @@ void PDFGeneratorWorker::draw_zones(QPainter &painter, SPCPage pcPage){
         Drawing::draw_filled_rect(painter, set->photo->rectOnPage, qRgb(255,255,0), 0.3);
 
         // text
-        Drawing::draw_filled_rect(painter, set->consign->rectOnPage, qRgb(0,0,200), 0.3);
+        Drawing::draw_filled_rect(painter, set->text->rectOnPage, qRgb(0,0,200), 0.3);
     }
 }
 
@@ -57,19 +57,22 @@ void PDFGeneratorWorker::draw_backgrounds(QPainter &painter, SPCPage pcPage, Ext
     // # color
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
-    brush.setColor(pcPage->backgroundSettings.color);
+
+    BackGroundSettings &background = pcPage->settings.background;
+
+    brush.setColor(background.color);
     painter.fillRect(pcPage->rectOnPage,brush);
 
     // # photo
-    if(pcPage->backgroundSettings.displayPhoto){
+    if(pcPage->settings.background.displayPhoto){
 
-        if(pcPage->backgroundSettings.photo != nullptr){
-            pcPage->backgroundSettings.photo->draw(painter, pcPage->rectOnPage, infos, pcPage->rectOnPage.size());
+        if(background.photo != nullptr){
+            background.photo->draw(painter, pcPage->rectOnPage, infos, pcPage->rectOnPage.size());
         }
     }
 
     // # pattern
-    if(pcPage->backgroundSettings.displayPattern){
+    if(background.displayPattern){
 
         qreal widthPattern  = m_referenceDPI * infos.paperFormat.widthRatio;
         qreal heightPattern = m_referenceDPI * infos.paperFormat.heightRatio;
@@ -77,8 +80,8 @@ void PDFGeneratorWorker::draw_backgrounds(QPainter &painter, SPCPage pcPage, Ext
 
         QImage patternImage(static_cast<int>(patternRect.width()),static_cast<int>(patternRect.height()), QImage::Format_ARGB32);
         QPainter patternPainter(&patternImage);
-        brush.setStyle(pcPage->backgroundSettings.patternBrushStyle);
-        brush.setColor(pcPage->backgroundSettings.colorPattern);
+        brush.setStyle(background.patternBrushStyle);
+        brush.setColor(background.colorPattern);
         patternPainter.fillRect(patternRect, brush);
         patternPainter.end();
 
@@ -138,14 +141,14 @@ void PDFGeneratorWorker::draw_contents(QPainter &painter, SPCPage pcPage, ExtraP
             QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
         }
 
+        if(pcSet->settings.style.textPositionFromPhotos != Position::on){
 
-        if(pcSet->consignPositionFromPhoto != Position::on){
-            // draw consign
-            if(pcSet->consign->rectOnPage.width()> 0 && pcSet->consign->rectOnPage.height()>0){ // ############################ costly
+            // draw text
+            if(pcSet->text->rectOnPage.width()> 0 && pcSet->text->rectOnPage.height()>0){ // ############################ costly
 
-                draw_html(painter, Drawing::format_html_for_generation(*pcSet->consign->html, infos),
-                          QRectF(pcSet->rectOnPage.x(),pcSet->rectOnPage.y(),pcSet->consign->rectOnPage.width(), pcPage->rectOnPage.height()),
-                          pcSet->consign->rectOnPage);
+                draw_html(painter, Drawing::format_html_for_generation(*pcSet->settings.text.html, infos),
+                          QRectF(pcSet->rectOnPage.x(),pcSet->rectOnPage.y(),pcSet->text->rectOnPage.width(), pcPage->rectOnPage.height()),
+                          pcSet->text->rectOnPage);
             }
         }
 
@@ -157,14 +160,21 @@ void PDFGeneratorWorker::draw_contents(QPainter &painter, SPCPage pcPage, ExtraP
             }
         }
 
-        if(pcSet->consignPositionFromPhoto == Position::on){
-            // draw consign
-            if(pcSet->consign->rectOnPage.width()> 0 && pcSet->consign->rectOnPage.height()>0){ // ############################ costly
+        if(pcSet->settings.style.textPositionFromPhotos == Position::on){
+            // draw text
+            if(pcSet->text->rectOnPage.width()> 0 && pcSet->text->rectOnPage.height()>0){ // ############################ costly
 
-                draw_html(painter, Drawing::format_html_for_generation(*pcSet->consign->html, infos),
-                          QRectF(pcSet->rectOnPage.x(),pcSet->rectOnPage.y(),pcSet->consign->rectOnPage.width(), pcPage->rectOnPage.height()),
-                          pcSet->consign->rectOnPage);
+                draw_html(painter, Drawing::format_html_for_generation(*pcSet->settings.text.html, infos),
+                          QRectF(pcSet->rectOnPage.x(),pcSet->rectOnPage.y(),pcSet->text->rectOnPage.width(), pcPage->rectOnPage.height()),
+                          pcSet->text->rectOnPage);
             }
+        }
+
+        if(pcSet->settings.borders.display){
+            pcSet->settings.borders.pen.setWidthF(pcSet->settings.borders.width*infos.factorUpscale);
+            painter.setOpacity(1.);
+            painter.setPen(pcSet->settings.borders.pen);
+            painter.drawRect(pcSet->rectOnPage);
         }
 
         if(!infos.preview){
@@ -187,7 +197,7 @@ void PDFGeneratorWorker::draw_contents(QPainter &painter, SPCPage pcPage, ExtraP
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
             }
 
-            draw_html(painter, Drawing::format_html_for_generation(*pcPage->header->settings.text, infos),
+            draw_html(painter, Drawing::format_html_for_generation(*pcPage->header->settings.text.html.get(), infos),
                       QRectF(pcPage->header->rectOnPage.x(),        pcPage->header->rectOnPage.y(),
                              pcPage->header->rectOnPage.width(),    pcPage->rectOnPage.height()),
                       pcPage->header->rectOnPage);
@@ -207,7 +217,7 @@ void PDFGeneratorWorker::draw_contents(QPainter &painter, SPCPage pcPage, ExtraP
             QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
         }
 
-        draw_html(painter, Drawing::format_html_for_generation(*pcPage->footer->settings.text, infos),
+        draw_html(painter, Drawing::format_html_for_generation(*pcPage->footer->settings.text.html.get(), infos),
                   QRectF(pcPage->footer->rectOnPage.x(),        pcPage->footer->rectOnPage.y(),
                          pcPage->footer->rectOnPage.width(),    pcPage->rectOnPage.height()),
                   pcPage->footer->rectOnPage);
@@ -222,11 +232,11 @@ void PDFGeneratorWorker::draw_page(QPainter &painter, pc::PCPages &pcPages, cons
     ExtraPCInfo infos;
     infos.pagesNb       = pcPages.pages.size();
     infos.pageNum       = idPageToDraw;
-    infos.pageColor     = pcPage->backgroundSettings.color;
+    infos.pageColor     = pcPage->settings.background.color;
     infos.photoNum      = 0;
     infos.photoPCNum    = 0;
     infos.preview       = preview;
-    infos.paperFormat   = pcPages.paperFormat;
+    infos.paperFormat   = pcPages.settings.paperFormat;
     infos.factorUpscale = factorUpscale;
     for(auto &&page : pcPages.pages){
         infos.photoTotalNum += page->sets.size();
@@ -241,18 +251,7 @@ void PDFGeneratorWorker::draw_page(QPainter &painter, pc::PCPages &pcPages, cons
 
     draw_contents(painter, pcPage, infos);
 
-    // borders
-    for(auto &&set : pcPage->sets){
 
-        painter.setOpacity(1.);
-        SPCSet pcSet = set;
-
-        if(pcPage->bordersSettings.display){
-            pcPage->bordersSettings.pen.setWidthF(pcPage->bordersSettings.width*factorUpscale);
-            painter.setPen(pcPage->bordersSettings.pen);
-            painter.drawRect(pcSet->rectOnPage);
-        }
-    }
 }
 
 void PDFGeneratorWorker::draw_html(QPainter &painter, QString html, QRectF upperRect, QRectF docRect){
@@ -283,13 +282,13 @@ void PDFGeneratorWorker::generate_preview(pc::PCPages pcPages, int pageIdToDraw,
 
 //    DebugMessage dbgMess("generate_preview");
     m_pageToDraw    = pcPages.pages[pageIdToDraw];
-    int dpi = pcPages.paperFormat.dpi;
+    int dpi = pcPages.settings.paperFormat.dpi;
     if(dpi > 300){
         dpi = 300;
     }
 
-    qreal widthPreview   = pcPages.paperFormat.widthRatio  * dpi;
-    qreal heightPreview  = pcPages.paperFormat.heightRatio * dpi;
+    qreal widthPreview   = pcPages.settings.paperFormat.widthRatio  * dpi;
+    qreal heightPreview  = pcPages.settings.paperFormat.heightRatio * dpi;
 
     // create preview image
     QImage image(static_cast<int>(widthPreview), static_cast<int>(heightPreview), QImage::Format_RGB32);
@@ -301,7 +300,7 @@ void PDFGeneratorWorker::generate_preview(pc::PCPages pcPages, int pageIdToDraw,
 
     painter.end();
 
-    if(pcPages.grayScale){
+    if(pcPages.settings.grayScale){
         for (int ii = 0; ii < image.height(); ii++) {
             QRgb *pixel = reinterpret_cast<QRgb*>(image.scanLine(ii));
             QRgb *end = pixel + image.width();
@@ -329,14 +328,13 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
     pdfWriter.setOutputFormat(QPrinter::PdfFormat);
     pdfWriter.setOutputFileName(pcPages.pdfFileName);
     pdfWriter.setCreator("created with PhotosConsigne (https://github.com/FlorianLance/PhotosConsigne)");
-    pdfWriter.setColorMode(pcPages.grayScale ? QPrinter::ColorMode::GrayScale : QPrinter::ColorMode::Color);
+    pdfWriter.setColorMode(pcPages.settings.grayScale ? QPrinter::ColorMode::GrayScale : QPrinter::ColorMode::Color);
 
-    pdfWriter.setResolution(pcPages.paperFormat.dpi);
-    pdfWriter.setPageSize(QPageSize(static_cast<QPageSize::PageSizeId>(pcPages.paperFormat.format)));
-    pdfWriter.setPageOrientation(pcPages.paperFormat.landscape ? QPageLayout::Landscape : QPageLayout::Portrait);
+    pdfWriter.setResolution(pcPages.settings.paperFormat.dpi);
+    pdfWriter.setPageSize(QPageSize(static_cast<QPageSize::PageSizeId>(pcPages.settings.paperFormat.format)));
+    pdfWriter.setPageOrientation(pcPages.settings.paperFormat.landscape ? QPageLayout::Landscape : QPageLayout::Portrait);
     pdfWriter.setPageMargins(QMarginsF(0.,0.,0.,0.));
 
-    qDebug() << "pcPages.paperFormat.landscape: " << pcPages.paperFormat.landscape;
     // init painter
     QPainter pdfPainter;
     if(!pdfPainter.begin(&pdfWriter)){
@@ -367,7 +365,7 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
 
         emit set_progress_bar_text_signal("Création page " + QString::number(ii));
 
-        qreal factor = 1.*pcPages.paperFormat.dpi/m_referenceDPI;
+        qreal factor = 1.*pcPages.settings.paperFormat.dpi/m_referenceDPI;
         draw_page(pdfPainter, pcPages, ii, factor, false, false);
 
         QCoreApplication::processEvents(QEventLoop::AllEvents, 50);
@@ -380,55 +378,7 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
     emit end_generation_signal(true);
 }
 
-void PDFGeneratorWorker::update_PC_selection_with_id(int idSet){
 
-//    qDebug() << "update_PC_selection_with_id: " << idSet << " " << m_pageToDraw->sets.size();
-//    QRectF rectPage = m_pageToDraw.get()->rectOnPage;
-
-//    SPCSet set = m_pageToDraw->sets[idSet];
-//    QRectF pcRectRelative = QRectF(set->rectOnPage.x()/rectPage.width(), set->rectOnPage.y()/rectPage.height(),
-//                            set->rectOnPage.width()/rectPage.width(), set->rectOnPage.height()/rectPage.height());
-//    emit current_pc_selected_signal(pcRectRelative, idSet);
-}
-
-void PDFGeneratorWorker::update_PC_selection_with_pos(QPointF pos){
-
-//    QRectF rectPage = m_pageToDraw->rectOnPage;
-//    QPointF realPos(rectPage.x() + pos.x()*rectPage.width(), rectPage.y() + pos.y()*rectPage.height());
-
-//    int id = -1;
-//    QRectF pcRectRelative;
-//    for(auto &&set : m_pageToDraw->sets){
-//        if(set->rectOnPage.contains(realPos)){
-//            if(set->totalId > id){
-//                id = set->totalId;
-//                pcRectRelative = QRectF(set->rectOnPage.x()/rectPage.width(), set->rectOnPage.y()/rectPage.height(),
-//                                      set->rectOnPage.width()/rectPage.width(), set->rectOnPage.height()/rectPage.height());
-//            }
-//        }
-//    }
-//    if(id > -1){
-//        emit current_pc_selected_signal(pcRectRelative, id);
-//    }
-
-//    if(m_pageToDraw->header->settings.enabled){
-//        if(m_pageToDraw->header->rectOnPage.contains(realPos)){
-
-//            QRectF pcRectRelavive(m_pageToDraw->header->rectOnPage.x()/rectPage.width(), m_pageToDraw->header->rectOnPage.y()/rectPage.height(),
-//                                  m_pageToDraw->header->rectOnPage.width()/rectPage.width(), m_pageToDraw->header->rectOnPage.height()/rectPage.height());
-//            emit current_pc_selected_signal(pcRectRelavive, -1);
-//        }
-//    }
-
-//    if(m_pageToDraw->footer->settings.enabled){
-//        if(m_pageToDraw->footer->rectOnPage.contains(realPos)){
-
-//            QRectF pcRectRelavive(m_pageToDraw->footer->rectOnPage.x()/rectPage.width(), m_pageToDraw->footer->rectOnPage.y()/rectPage.height(),
-//                                  m_pageToDraw->footer->rectOnPage.width()/rectPage.width(), m_pageToDraw->footer->rectOnPage.height()/rectPage.height());
-//            emit current_pc_selected_signal(pcRectRelavive, -2);
-//        }
-//    }
-}
 
 void PDFGeneratorWorker::init_document(){
     m_doc = std::make_unique<QTextDocument>();

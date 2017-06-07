@@ -75,6 +75,13 @@ struct FooterW : public SettingsW{
     }
 
 
+    void update_settings(FooterSettings &settings) const{
+
+        settings.enabled     = ui.cbEnableFooter->isChecked();
+        footerBackgroundW.update_settings(settings.background);
+        settings.ratio       = sectionStyleW.ui.dsbRatioSection->value();
+        settings.text.html   = footerTextW.html();
+    }
 
     // ui
     Ui::FooterUI    ui;

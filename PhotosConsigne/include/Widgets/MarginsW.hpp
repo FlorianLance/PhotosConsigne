@@ -10,7 +10,6 @@
 
 // local
 #include "SettingsW.hpp"
-#include "GlobalDocumentSettings.hpp"
 
 // generated ui
 #include "ui_Margins.h"
@@ -43,21 +42,19 @@ struct MarginsW : public SettingsW{
     }
 
 
-    MarginsSettings settings() const noexcept {
+    void update_settings(MarginsSettings &settings) const{
 
-        MarginsSettings margins;
-        margins.exteriorMarginsEnabled      = ui.cbAddExteriorMargins->isChecked();
-        margins.interiorMarginsEnabled      = ui.cbAddInteriorMargins->isChecked();
-        margins.footerHeaderMarginEnabled   = ui.cbAddFooterHeaderMargins->isChecked();
-        margins.left                        = ui.dsbLeftMargins->value();
-        margins.right                       = ui.dsbRightMargins->value();
-        margins.top                         = ui.dsbTopMargins->value();
-        margins.bottom                      = ui.dsbBottomMargins->value();
-        margins.interWidth                  = ui.dsbHorizontalMargins->value();
-        margins.interHeight                 = ui.dsbVerticalMargins->value();
-        margins.footer                      = ui.dsbFooterMargin->value();
-        margins.header                      = ui.dsbHeaderMargin->value();
-        return margins;
+        settings.exteriorMarginsEnabled      = ui.cbAddExteriorMargins->isChecked();
+        settings.interiorMarginsEnabled      = ui.cbAddInteriorMargins->isChecked();
+        settings.footerHeaderMarginEnabled   = ui.cbAddFooterHeaderMargins->isChecked();
+        settings.left                        = ui.dsbLeftMargins->value();
+        settings.right                       = ui.dsbRightMargins->value();
+        settings.top                         = ui.dsbTopMargins->value();
+        settings.bottom                      = ui.dsbBottomMargins->value();
+        settings.interWidth                  = ui.dsbHorizontalMargins->value();
+        settings.interHeight                 = ui.dsbVerticalMargins->value();
+        settings.footer                      = ui.dsbFooterMargin->value();
+        settings.header                      = ui.dsbHeaderMargin->value();
     }
 
     void update_mm_values(const PaperFormat &format){

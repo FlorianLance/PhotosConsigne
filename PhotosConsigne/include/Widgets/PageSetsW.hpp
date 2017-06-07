@@ -10,7 +10,6 @@
 
 // local
 #include "CustomPageW.hpp"
-#include "GlobalDocumentSettings.hpp"
 
 // generated ui
 #include "ui_PageSets.h"
@@ -101,9 +100,6 @@ struct PageSetsW : public SettingsW{
 
     }
 
-    virtual ~PageSetsW(){
-//        DebugMessage("~PageSetsW");
-    }
 
     static void init_ui(PageSetsW &p1, const PageSetsW &p2){
 
@@ -131,22 +127,20 @@ struct PageSetsW : public SettingsW{
         CustomPageW::init_ui(p1.customW, p2.customW);
     }
 
+    void update_settings(SetsPositionSettings &settings) const{
 
-    PageSetsSettings settings() const noexcept {
-
-        PageSetsSettings pageSets;
-        pageSets.nbPhotosH          = ui.sbPhotosNbWidth->value();
-        pageSets.nbPhotosV          = ui.sbPhotosNbHeight->value();
-        pageSets.nbPhotos           = ui.sbPhotosNbPerPage->value();
-        pageSets.customMode         = ui.rbPersonnalised->isChecked();
-        pageSets.relativePosCustom  = customW.relativePositions;
+        settings.nbPhotosH          = ui.sbPhotosNbWidth->value();
+        settings.nbPhotosV          = ui.sbPhotosNbHeight->value();
+        settings.nbPhotos           = ui.sbPhotosNbPerPage->value();
+        settings.customMode         = ui.rbPersonnalised->isChecked();
+        settings.relativePosCustom  = customW.relativePositions;
 
         if(customW.currentSecondPoint.x() > -1){
-            pageSets.relativePosCustom.push_back(customW.currRelativePos);
+            settings.relativePosCustom.push_back(customW.currRelativePos);
         }
-
-        return pageSets;
     }
+
+
 
     // ui
     Ui::PageSetsUI    ui;

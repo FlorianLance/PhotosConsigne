@@ -72,7 +72,6 @@ HEADERS += \
     include/Widgets/SetW.hpp \
     include/Widgets/SectionStyleW.hpp \
     include/Data/Settings.hpp \
-    include/Data/GlobalDocumentSettings.hpp \
     include/Data/DocumentElements.hpp \
     include/Data/PaperFormat.hpp \
     include/Widgets/PageSetsW.hpp \

@@ -10,7 +10,6 @@
 
 // local
 #include "SettingsW.hpp"
-#include "GlobalDocumentSettings.hpp"
 
 // generated ui
 #include "ui_Borders.h"
@@ -31,19 +30,13 @@ struct BordersW : public SettingsW {
         init_comboboxes_connections({ui.cbBordersLineWidth, ui.cbBordersLineStyle, ui.cbBordersJoin,}, false);
     }
 
-    virtual ~BordersW(){
-//        DebugMessage("~BordersW");
-    }
+    void update_settings(BordersSettings &settings) const{
 
-    BordersSettings settings() const{
-
-        BordersSettings settings;
         settings.display = ui.cbEnableBorders->isChecked();
         settings.width   = Utility::borders_line_width_from_comboBox(ui.cbBordersLineWidth);
         settings.pen.setColor(color);
         settings.pen.setStyle(Utility::borders_line_style_from_comboBox(ui.cbBordersLineStyle));
         settings.pen.setJoinStyle(Utility::borders_join_style_from_comboBox(ui.cbBordersJoin));
-        return settings;
     }
 
     static void init_ui(BordersW &b1, const BordersW &b2){

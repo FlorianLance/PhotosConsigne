@@ -146,7 +146,7 @@ QToolBox::tab:selected:last{
 </string>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <property name="tabSpacing">
       <number>6</number>
@@ -157,7 +157,7 @@ QToolBox::tab:selected:last{
         <x>0</x>
         <y>0</y>
         <width>418</width>
-        <height>346</height>
+        <height>340</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -195,350 +195,6 @@ QToolBox::tab:selected:last{
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item>
-        <widget class="QFrame" name="frameAllPages">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">
-
-.QFrame{
-
-	border: 0px solid rgb(0,106,255);
-	border-bottom: 0px solid rgb(0,106,255);
-	border-right: 0px solid rgb(0,106,255);
-	border-radius: 0px;
-
-}
-
-</string>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QTabWidget" name="tabAllPages">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">
-/* ################################  TAB BAR*/
-
-QTabWidget::tab-bar {
-    alignment: left;
-}
-
-/* ################################  PANE */
-
-QTabWidget::pane { 
-
-	/* border */
-    border: 0px solid rgb(0,106,255);
-    border-top: 1px solid rgb(0,106,255);
-	border-right: 0px solid rgb(0,106,255);
-	border-bottom: 1px solid rgb(0,106,255);
-
-
-	/* border radius */
-	border-top-right-radius: 0px;
-	border-top-left-radius: 0px;
-	border-bottom-right-radius: 0px;
-	border-bottom-left-radius: 0px;
-
-	/* color */
-	background-color:rgb(255, 255, 255)
-}
-
-/* ################################  TAB*/
-
-/* ################ BASE */
-
-QTabBar::tab {
-
-	/* border */
-    border: 0px solid rgb(0,106,255);
-    border-right: 1px solid rgb(0,106,255);
-    border-top: 1px solid rgb(0,106,255);
-
-	/* border radius */
-    border-radius: 0px;
-
-	/* size */
-	height:4ex;
-	min-width:20ex;
-
-	/* padding */
-    padding: 2px;
-}
-
-/* ################ SELECTION */
-
-QTabBar::tab:!selected {
-
-	/* color */
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-	color : rgb(127,180,255);
-
-	/* font */
-  	font:  10pt Calibri;
-}
-
-
-QTabBar::tab:selected {
-
-	/* color */
-	color : rgb(0,106,255);
-    background-color:  rgb(220,220,220);
-
-	/* font */
-	 font: bold 10pt Calibri;
-}
-
-
-/* ################ HOVER*/
-
-QTabBar::tab:hover  {
-
-	/* color */
-	color : rgb(0,106,255);	
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-
-	/* font */
-	 font: bold 10pt Calibri;
-}
-
-
-/* ################ FIRST / LAST */
-
-QTabBar::tab:first{
-
-	/* border */
-	border-left: 0px solid rgb(0,106,255);
-
-	/* border radius */
-	border-top-left-radius: 0px;
-	border-bottom-left-radius: 0px;
-
-}
-
-QTabBar::tab:last{
-
-	/* border radius */
-	 border-top-right-radius: 4px;
-}
-</string>
-            </property>
-            <property name="tabPosition">
-             <enum>QTabWidget::North</enum>
-            </property>
-            <property name="tabShape">
-             <enum>QTabWidget::Rounded</enum>
-            </property>
-            <property name="currentIndex">
-             <number>0</number>
-            </property>
-            <property name="elideMode">
-             <enum>Qt::ElideLeft</enum>
-            </property>
-            <widget class="QWidget" name="tabAllPagesPositions">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <attribute name="title">
-              <string>POSITIONS</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="vlGlobalPageSets">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>3</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tabAllPagesMargins">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <attribute name="title">
-              <string>MARGES</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="vlGlobalMargins">
-              <property name="spacing">
-               <number>6</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tabAllPagesBorders">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <attribute name="title">
-              <string>BORDURES</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="vlGlobalBorders">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>2</number>
-              </property>
-              <property name="topMargin">
-               <number>2</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tabAllPagesBackground">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <attribute name="title">
-              <string>FOND</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="vlGlobalBackground">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tabAllPagesMisc">
-             <attribute name="title">
-              <string>AUTRE</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="vlGlobalMisc">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-             </layout>
-            </widget>
-           </widget>
-          </item>
-          <item>
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="pageSelectedPage">
@@ -547,7 +203,7 @@ QTabBar::tab:last{
         <x>0</x>
         <y>0</y>
         <width>418</width>
-        <height>346</height>
+        <height>340</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -587,7 +243,7 @@ QTabBar::tab:last{
         <x>0</x>
         <y>0</y>
         <width>418</width>
-        <height>346</height>
+        <height>340</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -603,7 +259,7 @@ QTabBar::tab:last{
       <attribute name="label">
        <string>POUR TOUS LES ENSEMBLES (Photo+Texte)</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="vlAllSets">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -619,293 +275,6 @@ QTabBar::tab:last{
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item>
-        <widget class="QFrame" name="frameAllSets">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
-         <property name="lineWidth">
-          <number>1</number>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_16">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item alignment="Qt::AlignTop">
-           <widget class="QTabWidget" name="tabAllSets">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">
-/* ################################  TAB BAR*/
-
-QTabWidget::tab-bar {
-    alignment: left;
-}
-
-/* ################################  PANE */
-
-QTabWidget::pane { 
-
-	/* border */
-    border: 0px solid rgb(0,106,255);
-    border-top: 1px solid rgb(0,106,255);
-	border-right: 0px solid rgb(0,106,255);
-	border-bottom: 1px solid rgb(0,106,255);
-
-
-	/* border radius */
-	border-top-right-radius: 0px;
-	border-top-left-radius: 0px;
-	border-bottom-right-radius: 0px;
-	border-bottom-left-radius: 0px;
-
-	/* color */
-	background-color:rgb(255, 255, 255)
-}
-
-/* ################################  TAB*/
-
-/* ################ BASE */
-
-QTabBar::tab {
-
-	/* border */
-    border: 0px solid rgb(0,106,255);
-    border-right: 1px solid rgb(0,106,255);
-    border-top: 1px solid rgb(0,106,255);
-
-	/* border radius */
-    border-radius: 0px;
-
-	/* size */
-	height:4ex;
-	min-width:20ex;
-
-	/* padding */
-    padding: 2px;
-}
-
-/* ################ SELECTION */
-
-QTabBar::tab:!selected {
-
-	/* color */
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-	color : rgb(127,180,255);
-
-	/* font */
-  	font:  10pt Calibri;
-}
-
-
-QTabBar::tab:selected {
-
-	/* color */
-	color : rgb(0,106,255);
-    background-color:  rgb(220,220,220);
-
-	/* font */
-	 font: bold 10pt Calibri;
-}
-
-
-/* ################ HOVER*/
-
-QTabBar::tab:hover  {
-
-	/* color */
-	color : rgb(0,106,255);	
-    background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-
-	/* font */
-	 font: bold 10pt Calibri;
-}
-
-
-/* ################ FIRST / LAST */
-
-QTabBar::tab:first{
-
-	/* border */
-	border-left: 0px solid rgb(0,106,255);
-
-	/* border radius */
-	border-top-left-radius: 0px;
-	border-bottom-left-radius: 0px;
-
-}
-
-QTabBar::tab:last{
-
-	/* border radius */
-	 border-top-right-radius: 4px;
-}
-</string>
-            </property>
-            <property name="tabPosition">
-             <enum>QTabWidget::North</enum>
-            </property>
-            <property name="tabShape">
-             <enum>QTabWidget::Rounded</enum>
-            </property>
-            <property name="currentIndex">
-             <number>0</number>
-            </property>
-            <property name="elideMode">
-             <enum>Qt::ElideLeft</enum>
-            </property>
-            <widget class="QWidget" name="pageAllSetsText">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <attribute name="title">
-              <string>TEXTE</string>
-             </attribute>
-             <layout class="QGridLayout" name="globalConsignLayout">
-              <property name="leftMargin">
-               <number>3</number>
-              </property>
-              <property name="topMargin">
-               <number>3</number>
-              </property>
-              <property name="rightMargin">
-               <number>3</number>
-              </property>
-              <property name="bottomMargin">
-               <number>3</number>
-              </property>
-              <property name="spacing">
-               <number>3</number>
-              </property>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tabAllSetsStyle">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <attribute name="title">
-              <string>STYLE</string>
-             </attribute>
-             <layout class="QGridLayout" name="gridLayout_7">
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <item row="0" column="0">
-               <layout class="QVBoxLayout" name="vlGlobalSetStyle">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="tabAllSetsMisc">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <attribute name="title">
-              <string>AUTRE</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="vlAllSetsMisc">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
-               <number>0</number>
-              </property>
-             </layout>
-            </widget>
-           </widget>
-          </item>
-          <item>
-           <spacer name="verticalSpacer1">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Expanding</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="pageSelectedSet">
@@ -914,7 +283,7 @@ QTabBar::tab:last{
         <x>0</x>
         <y>0</y>
         <width>418</width>
-        <height>346</height>
+        <height>340</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -954,9 +323,13 @@ QTabBar::tab:last{
         <x>0</x>
         <y>0</y>
         <width>418</width>
-        <height>346</height>
+        <height>340</height>
        </rect>
       </property>
+      <attribute name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/images/pages/header</normaloff>:/images/pages/header</iconset>
+      </attribute>
       <attribute name="label">
        <string>HAUT DE PAGE</string>
       </attribute>
@@ -984,9 +357,13 @@ QTabBar::tab:last{
         <x>0</x>
         <y>0</y>
         <width>418</width>
-        <height>346</height>
+        <height>340</height>
        </rect>
       </property>
+      <attribute name="icon">
+       <iconset resource="../resources.qrc">
+        <normaloff>:/images/pages/footer</normaloff>:/images/pages/footer</iconset>
+      </attribute>
       <attribute name="label">
        <string>BAS DE PAGE</string>
       </attribute>

@@ -11,7 +11,6 @@
 // local
 // # widgets
 #include "SettingsW.hpp"
-#include "GlobalDocumentSettings.hpp"
 
 // generated ui
 #include "ui_Background.h"
@@ -38,13 +37,7 @@ struct BackgroundW : public SettingsW{
         ui.line1->hide();
     }
 
-    virtual ~BackgroundW(){
-//        DebugMessage("~BackgroundW");
-    }
-
-    BackGroundSettings settings() const{
-
-        BackGroundSettings settings;
+    void update_settings(BackGroundSettings &settings) const{
 
         settings.displayPhoto       = ui.cbUseBackgroundImage->isChecked();
         settings.displayPattern     = ui.cbDrawBackgoundPattern->isChecked();
@@ -57,8 +50,6 @@ struct BackgroundW : public SettingsW{
             settings.photo->alignment = Utility::photo_alignment_from_comboBox(ui.cbBackgroundImageAligment);
             settings.photo->adjust    = Utility::photo_adjust_from_comboBox(ui.cbAdjustBackgroundImage);
         }
-
-        return settings;
     }
 
     static void init_ui(BackgroundW &b1, const BackgroundW &b2){

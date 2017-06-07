@@ -79,7 +79,6 @@ pc::UIElements::UIElements(QMainWindow *parent) : m_parent(parent) {
 
 void UIElements::ask_for_update(bool displayZones){
 
-    qDebug() << "ask_for_update: " << displayZones;
     if(displayZones){
         zonesTimer.start(1000);
     }
@@ -142,55 +141,24 @@ void UIElements::display_help_window(){
     helpW->show();
 }
 
-void UIElements::update_global_settings(GlobalDocumentSettings &settings) const{
+void UIElements::update_global_settings(GlobalSettings &settings) const{
 
-    // # retrieve nb of pages
-    settings.nbPages                      = mainUI.sbNbPages->value();
-
-    // # only global
-    settings.paperFormat                  = PaperFormat(mainUI.cbDPI->currentText(), mainUI.cbFormat->currentText(), mainUI.cbOrientation->currentIndex() == 1);
-    settings.saveOnlyCurrentPage          = mainUI.cbSaveOnlyCurrentPage->isChecked();
-    settings.PCRatio                      = settingsW.globalSetW.setStyleW.ui.dsbRatioPC->value();
+    // # document
+    settings.document.paperFormat           = PaperFormat(mainUI.cbDPI->currentText(), mainUI.cbFormat->currentText(), mainUI.cbOrientation->currentIndex() == 1);
+    settings.document.saveOnlyCurrentPage   = mainUI.cbSaveOnlyCurrentPage->isChecked();
 
     // # set
-    // ## text
-    settings.consignText                  = settingsW.globalSetW.setTextW.html();
-    // ## set style
-    settings.photoAlignment               = Utility::photo_alignment_from_comboBox(settingsW.globalSetW.setStyleW.ui.cbPhotoAlignment);
-    settings.photoAdust                   = Utility::photo_adjust_from_comboBox(settingsW.globalSetW.setStyleW.ui.cbAdjustPhoto);
-    settings.consignPositionFromPhotos    = static_cast<Position>(settingsW.globalSetW.setStyleW.ui.cbPositionConsign->currentIndex());
+    settingsW.globalSetW.update_settings(settings.sets);
 
     // # page
-    // ## margins
-    settings.marginsSettings              = settingsW.globalPageW.marginsW.settings();
-    // ## borders
-    settings.bordersSettings              = settingsW.globalPageW.bordersW.settings();
-    // ## background
-    settings.backgroundSettings           = settingsW.globalPageW.backgroundW.settings();
-    // ## sets
-    settings.setsSettings                 = settingsW.globalPageW.setsW.settings();
-    // ## misc
-    settings.miscSettings                 = settingsW.globalPageW.miscW.settings();
+    settingsW.globalPageW.update_settings(settings.pages);
+    settings.pages.nb = mainUI.sbNbPages->value();
 
     // # header
-    // ## enabled
-    settings.headerSettings.enabled       = settingsW.headerW.ui.cbEnableHeader->isChecked();
-    // ## background
-    settings.headerSettings.background    = settingsW.headerW.headeBackgroundW.settings();
-    // ## text
-    settings.headerSettings.text          = settingsW.headerW.headerTextW.html();
-    // ## style
-    settings.headerSettings.ratio         = settingsW.headerW.sectionStyleW.ui.dsbRatioSection->value();
+    settingsW.headerW.update_settings(settings.header);
 
     // # footer
-    // ## enabled
-    settings.footerSettings.enabled       = settingsW.footerW.ui.cbEnableFooter->isChecked();
-    // ## background
-    settings.footerSettings.background    = settingsW.footerW.footerBackgroundW.settings();
-    // ## text
-    settings.footerSettings.text          = settingsW.footerW.footerTextW.html();
-    // ## style
-    settings.footerSettings.ratio         = settingsW.footerW.sectionStyleW.ui.dsbRatioSection->value();
+    settingsW.footerW.update_settings(settings.footer);
 }
 
 
@@ -232,11 +200,11 @@ void UIElements::set_ui_state_for_generating_pdf(bool state){
     mainUI.tabActions->setEnabled(state);
 }
 
-void UIElements::update_photos_list(const GlobalDocumentSettings &settings){
+void UIElements::update_photos_list(const GlobalSettings &settings){
 
     mainUI.lwPhotosList->blockSignals(true);
 
-    SPhotos photos = settings.photosLoaded;
+    SPhotos photos = settings.photos.loaded;
 
     mainUI.lwPhotosList->clear();
     mainUI.twPhotosList->setTabText(1, QString::number(photos->size()));
@@ -262,7 +230,7 @@ void UIElements::update_photos_list(const GlobalDocumentSettings &settings){
             brush.setColor(QRgb(qRgb(0,106,255)));
         }
 
-        if(ii == settings.currentPhotoId){
+        if(ii == settings.photos.currentId){
             if(photo->isRemoved){
                 mainUI.pbRemove->hide();
                 mainUI.pbAdd->show();
@@ -275,7 +243,7 @@ void UIElements::update_photos_list(const GlobalDocumentSettings &settings){
         mainUI.lwPhotosList->item(ii)->setForeground(brush);
     }
 
-    mainUI.lwPhotosList->setCurrentRow(settings.currentPhotoId);
+    mainUI.lwPhotosList->setCurrentRow(settings.photos.currentId);
     mainUI.lwPhotosList->blockSignals(false);
 }
 
@@ -311,24 +279,24 @@ void UIElements::update_pages_list(const PCPages &pcPages){
     mainUI.lwPagesList->blockSignals(false);
 }
 
-void UIElements::update_UI(const GlobalDocumentSettings &settings){
+void UIElements::update_UI(const GlobalSettings &settings){
 
     // update defition/dim labels
     int currentDPI = mainUI.cbDPI->currentText().toInt();
-    mainUI.laDefinition->setText("<p><b>Définition: </b> " + QString::number(settings.paperFormat .width_pixels(currentDPI))+ "x" +
-                                    QString::number(settings.paperFormat .height_pixels(currentDPI)) +
+    mainUI.laDefinition->setText("<p><b>Définition: </b> " + QString::number(settings.document.paperFormat .width_pixels(currentDPI))+ "x" +
+                                    QString::number(settings.document.paperFormat .height_pixels(currentDPI)) +
                                     " pixels <br /><b>Dimensions: </b> " +
-                                    QString::number(settings.paperFormat.sizeMM.width()) + "x" +
-                                    QString::number(settings.paperFormat.sizeMM.height()) + " mm</p>");
+                                    QString::number(settings.document.paperFormat.sizeMM.width()) + "x" +
+                                    QString::number(settings.document.paperFormat.sizeMM.height()) + " mm</p>");
 
     // update size margins mm
-    settingsW.globalPageW.marginsW.update_mm_values(settings.paperFormat);
+    settingsW.globalPageW.marginsW.update_mm_values(settings.document.paperFormat);
     for(auto &&pageW : settingsW.pagesW){
-        pageW->marginsW.update_mm_values(settings.paperFormat);
+        pageW->marginsW.update_mm_values(settings.document.paperFormat);
      }
 
-    if(settings.photosLoaded->size() > 0){
-        SPhoto currentDisplayedPhoto = settings.photosLoaded->at(settings.currentPhotoId);
+    if(settings.photos.loaded->size() > 0){
+        SPhoto currentDisplayedPhoto = settings.photos.loaded->at(settings.photos.currentId);
         QString textInfo = "<p><b>Chemin:</b> "  + currentDisplayedPhoto->pathPhoto + "<br /><b>Taille photo:</b> " +
                 QString::number(currentDisplayedPhoto->info.size()*0.000001, 'f', 2 ) + "Mo - <b>Dimensions:</b> " +
                 QString::number(currentDisplayedPhoto->size().width())  + "x" +
@@ -338,71 +306,64 @@ void UIElements::update_UI(const GlobalDocumentSettings &settings){
     }
 
     // custom page format
-    settingsW.globalPageW.setsW.customW.update_format(settings.paperFormat);
+    settingsW.globalPageW.setsW.customW.update_format(settings.document.paperFormat);
     for(int ii = 0; ii < settingsW.pagesW.size(); ++ii){
-        settingsW.pagesW[ii]->setsW.customW.update_format(settings.paperFormat);
+        settingsW.pagesW[ii]->setsW.customW.update_format(settings.document.paperFormat);
     }
 
-    Utility::safe_init_spinbox_value(mainUI.sbOrder, settings.currentPhotoId);
+    Utility::safe_init_spinbox_value(mainUI.sbOrder, settings.photos.currentId);
 
-    if(settings.photosLoaded->size() > 0){
-        mainUI.sbOrder->setMaximum(settings.photosLoaded->size()-1);
+    if(settings.photos.loaded->size() > 0){
+        mainUI.sbOrder->setMaximum(settings.photos.loaded->size()-1);
     }
 
     // display current dynamic ui
-    if(settings.photosLoaded->size() > 0){
+    if(settings.photos.loaded->size() > 0){
         display_current_individual_set_ui(settings);
         display_current_individual_page_ui(settings);
     }
 }
 
-void UIElements::display_current_individual_set_ui(const GlobalDocumentSettings &settings){
+void UIElements::display_current_individual_set_ui(const GlobalSettings &settings){
 
     if(settingsW.setsValidedW.size() == 0){ // empty
         return;
     }
 
-    if(settings.currentSetId >= settingsW.setsValidedW.size()){ // id too big
-        qWarning() << "-ERROR: display_current_individual_set_ui  " << settings.currentSetId;        
+    if(settings.sets.currentId >= settingsW.setsValidedW.size()){ // id too big
+        qWarning() << "-ERROR: display_current_individual_set_ui  " << settings.sets.currentId;
         return;
     }
 
-    if(settingsW.setsValidedW[settings.currentSetId]->id == settings.currentSetIdDisplayed){ // already displayed
-        return;
+    for(auto &&setW : settingsW.setsValidedW){
+        setW->hide();
     }
-
-    settingsW.ui.tbRight->blockSignals(true);
-    settingsW.ui.tbRight->setItemText(3, "ENSEMBLE (Photo+Texte) N°" + QString::number(settings.currentSetId+1));
-    settingsW.ui.vlSelectedSet->insertWidget(0,settingsW.setsValidedW[settings.currentSetId].get());
-    settingsW.ui.vlSelectedSet->takeAt(1);
-    settingsW.ui.tbRight->blockSignals(false);
+    settingsW.setsValidedW[settings.sets.currentId]->show();
+    settingsW.ui.tbRight->setItemText(3, "ENSEMBLE (Photo+Texte) N°" + QString::number(settings.sets.currentId+1));
 }
 
-void UIElements::display_current_individual_page_ui(const GlobalDocumentSettings &settings){
+void UIElements::display_current_individual_page_ui(const GlobalSettings &settings){
 
     if(settingsW.pagesW.size() == 0){ // empty
         return;
     }
 
-    if(settings.currentPageId >= settingsW.pagesW.size()){ // id too big
-        qWarning() << "-ERROR: display_current_individual_page_ui  " << settings.currentPageId;
-        return;
-    }
-
-    if(settings.previousPageId == settings.currentPageIdDisplayed){ // already displayed
+    if(settings.pages.currentId >= settingsW.pagesW.size()){ // id too big
+        qWarning() << "-ERROR: display_current_individual_page_ui  " << settings.pages.currentId;
         return;
     }
 
     mainUI.lwPagesList->blockSignals(true);
-    mainUI.lwPagesList->setCurrentRow(settings.currentPageId);
+    mainUI.lwPagesList->setCurrentRow(settings.pages.currentId);
     mainUI.lwPagesList->blockSignals(false);
 
-    settingsW.ui.tbRight->blockSignals(true);
-    settingsW.ui.tbRight->setItemText(1, "PAGE N°" + QString::number(settings.currentPageId+1));
-    settingsW.ui.vlSelectedPage->insertWidget(0,settingsW.pagesW[settings.currentPageId].get());
-    settingsW.ui.vlSelectedPage->takeAt(1);
+    for(auto &&pageW : settingsW.pagesW){
+        pageW->hide();
+    }
+    settingsW.pagesW[settings.pages.currentId]->show();
     settingsW.ui.vlSelectedPage->setAlignment(Qt::AlignmentFlag::AlignTop);
-    settingsW.ui.tbRight->blockSignals(false);
+
+    settingsW.ui.tbRight->setItemText(1, "PAGE N°" + QString::number(settings.pages.currentId+1));
 }
 
 

@@ -74,6 +74,14 @@ struct HeaderW : public SettingsW{
         });
     }
 
+    void update_settings(HeaderSettings &settings) const{
+
+        settings.enabled     = ui.cbEnableHeader->isChecked();
+        headeBackgroundW.update_settings(settings.background);
+        settings.text.html   = headerTextW.html();
+        settings.ratio       = sectionStyleW.ui.dsbRatioSection->value();
+    }
+
 
     // ui
     Ui::HeaderUI       ui;

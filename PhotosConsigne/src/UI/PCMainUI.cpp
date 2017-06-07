@@ -54,7 +54,6 @@ PCMainUI::PCMainUI(QApplication *parent) : m_version("4.0"), m_ui(this){
 
 PCMainUI::~PCMainUI(){
 
-    DebugMessage("~PCMainUI");
     emit kill_signal();
 
     // kill threads
@@ -91,20 +90,20 @@ void PCMainUI::add_photos_directory(){
         return;
     }
 
-    QString previousDirectory = m_settings.lastPhotosDirectoryPath;
-    m_settings.lastPhotosDirectoryPath = QFileDialog::getExistingDirectory(this, "Sélection du répertoire d'images",
-                            (m_settings.lastPhotosDirectoryPath.size() > 0) ? m_settings.lastPhotosDirectoryPath : QDir::homePath());
+    QString previousDirectory = m_settings.photos.lastDirectoryPath;
+    m_settings.photos.lastDirectoryPath = QFileDialog::getExistingDirectory(this, "Sélection du répertoire d'images",
+                            (m_settings.photos.lastDirectoryPath.size() > 0) ? m_settings.photos.lastDirectoryPath : QDir::homePath());
 
     // no directory selected
-    if(m_settings.lastPhotosDirectoryPath.size() == 0 ){
+    if(m_settings.photos.lastDirectoryPath.size() == 0 ){
         if(previousDirectory.size() != 0){
-            m_settings.lastPhotosDirectoryPath = previousDirectory; // retrieve precedent path
+            m_settings.photos.lastDirectoryPath = previousDirectory; // retrieve precedent path
         }
         return;
     }
 
     // retrieve dir
-    QDir dir(m_settings.lastPhotosDirectoryPath);
+    QDir dir(m_settings.photos.lastDirectoryPath);
     dir.setSorting(QDir::NoSort); // will be sorted manually with std::sort
     dir.setFilter(QDir::Files);
     dir.setNameFilters(QStringList() << "*.png" << "*.jpg" << "*.jpeg" << "*.jfif" << "*.jpe" << "*.tif" << "*.gif" << "*.bmp" << "*.pdm" << "*.ppm" << "*.xdm" << "*.xpm");
@@ -122,7 +121,7 @@ void PCMainUI::add_photos_directory(){
     // no photo in the directory
     if(fileList.size() == 0){
         if(previousDirectory.size() != 0){
-            m_settings.lastPhotosDirectoryPath = previousDirectory; // retrieve precedent path
+            m_settings.photos.lastDirectoryPath = previousDirectory; // retrieve precedent path
         }
 
         QMessageBox::warning(this, tr("Avertissement"), tr("Aucune image (jpg,png) n'a pu être trouvée dans ce répertoire, veuillez en selectionner un autre.\n"),QMessageBox::Ok);
@@ -135,20 +134,20 @@ void PCMainUI::add_photos_directory(){
 
     // update photos paths
     for(auto &&photoPath : fileList){
-        photoPath = m_settings.lastPhotosDirectoryPath + "/" + photoPath;
+        photoPath = m_settings.photos.lastDirectoryPath + "/" + photoPath;
     }
 
     // send photos path to the worker to be loaded
-    emit start_loading_photos_signal(fileList, m_settings.photosLoaded->size());
+    emit start_loading_photos_signal(fileList, m_settings.photos.loaded->size());
 }
 
 
 void PCMainUI::insert_transparent_space(){
 
-    int indexPhoto = m_settings.currentPhotoId;
+    int indexPhoto = m_settings.photos.currentId;
 
     // insert it
-    m_settings.photosLoaded->insert(indexPhoto, std::make_shared<Photo>(Photo("", true)));
+    m_settings.photos.loaded->insert(indexPhoto, std::make_shared<Photo>(Photo("", true)));
 
     // insert new consign in UI
     m_ui.settingsW.insert_individual_set(indexPhoto);
@@ -169,17 +168,18 @@ void PCMainUI::load_new_photos(){
 
     m_isLoadingPhotos = true;
     m_ui.set_ui_state_for_adding_photos(false);
-    emit start_loading_photos_signal(filePaths,  m_settings.currentPhotoId);
+    emit start_loading_photos_signal(filePaths,  m_settings.photos.currentId);
 }
 
 void PCMainUI::remove_all_photos(){
 
-    m_settings.previousPageId      = 0;
-    m_settings.currentPageId       = 0;
-    m_settings.currentPhotoId      = 0;
-    m_settings.currentSetId  = 0;
+    m_settings.pages.previousId = 0;
+    m_settings.pages.currentId  = 0;
+    m_settings.photos.currentId = 0;
+    m_settings.photos.loaded->clear();
+    m_settings.sets.currentId   = 0;
 
-    m_settings.photosLoaded->clear();
+
     m_ui.settingsW.reset_individual_sets(0);
 
     update_settings();
@@ -188,38 +188,39 @@ void PCMainUI::remove_all_photos(){
 
 void PCMainUI::update_settings_with_no_preview(){
 
-    m_settings.noPreviewGeneration = true;
+    m_settings.document.noPreviewGeneration = true;
     update_settings();
-    m_settings.noPreviewGeneration = false;
+    m_settings.document.noPreviewGeneration = false;
 }
 
 void PCMainUI::build_valid_sets(){
 
     // build valid arrays
-    auto nbPhotosLoaded = m_settings.photosLoaded->size();
-    m_settings.photosValided->clear();
-    m_settings.photosValided->reserve(nbPhotosLoaded);
+    auto nbloaded = m_settings.photos.loaded->size();
+    m_settings.photos.valided->clear();
+    m_settings.photos.valided->reserve(nbloaded);
     m_ui.settingsW.setsValidedW.clear();
-    m_ui.settingsW.setsValidedW.reserve(nbPhotosLoaded);
+    m_ui.settingsW.setsValidedW.reserve(nbloaded);
 
     // resets id and valid set list
-    for(int ii = 0; ii < nbPhotosLoaded; ++ii){
+    for(int ii = 0; ii < nbloaded; ++ii){
 
-        m_settings.photosLoaded->at(ii)->loadedId = ii;
+        m_settings.photos.loaded->at(ii)->loadedId = ii;
 
-        if(m_settings.photosLoaded->at(ii)->isRemoved){
+        if(m_settings.photos.loaded->at(ii)->isRemoved){
             continue;
         }
 
-        m_settings.photosValided->push_back(m_settings.photosLoaded->at(ii));
-        m_settings.photosValided->last()->id = m_settings.photosValided->size();
+        m_settings.photos.valided->push_back(m_settings.photos.loaded->at(ii));
+        m_settings.photos.valided->last()->id = m_settings.photos.valided->size()-1;
         m_ui.settingsW.setsValidedW.push_back(m_ui.settingsW.setsLoadedW.at(ii));
     }
 
     // update current PD displayed if necessary
-    auto nbPhotosValid = m_settings.photosValided->size();
-    if(m_settings.currentSetId >= nbPhotosValid && nbPhotosValid > 0){
-        m_settings.currentSetId = nbPhotosValid-1;
+    auto nbPhotosValid = m_settings.photos.valided->size();
+    if(m_settings.sets.currentId >= nbPhotosValid && nbPhotosValid > 0){
+        qDebug() << "SET SHOULD NOT HPPEND";
+        m_settings.sets.currentId = nbPhotosValid-1;
     }
 }
 
@@ -227,28 +228,28 @@ void PCMainUI::build_valid_sets(){
 void PCMainUI::build_pages(){
 
     // update pages ui
-    m_ui.settingsW.update_individual_pages(m_settings);
+    m_ui.settingsW.update_individual_pages(m_settings.pages.nb);
 
     // block signals
     m_ui.mainUI.twMiddle->blockSignals(true);
 
     // reset pages
     m_pcPages.pages.clear();
-    m_pcPages.pages.reserve(m_settings.nbPages);
+    m_pcPages.pages.reserve(m_settings.pages.nb);
 
     // set all photos not in the document
-    for(auto &&loadedPhoto : (*m_settings.photosLoaded)){
+    for(auto &&loadedPhoto : (*m_settings.photos.loaded)){
         loadedPhoto->isOnDocument = false;
         loadedPhoto->pageId = -1;
     }
 
     // general pages parameters
-    m_pcPages.grayScale = m_settings.grayScale;
-    m_pcPages.paperFormat = m_settings.paperFormat;
+    m_pcPages.settings.grayScale = m_settings.document.grayScale;
+    m_pcPages.settings.paperFormat = m_settings.document.paperFormat;
 
     // create new pages
-    int currentPhotoId = 0;
-    for(int ii = 0; ii < m_settings.nbPages; ++ii){
+    int currentId = 0;
+    for(int ii = 0; ii < m_settings.pages.nb; ++ii){
 
         // build page
         SPCPage pcPage = std::make_shared<PCPage>(PCPage());
@@ -259,29 +260,26 @@ void PCMainUI::build_pages(){
         // only global
         // # misc
         pcPage->id                      = ii;
-        pcPage->drawThisPage            = m_settings.saveOnlyCurrentPage ? (ii == m_settings.currentPageId) : true;
+        pcPage->drawThisPage            = m_settings.document.saveOnlyCurrentPage ? (ii == m_settings.pages.currentId) : true;
 
         // # header
-        pcPage->header->settings        = m_settings.headerSettings;
+        pcPage->header->settings        = m_settings.header;
 
         // # footer
-        pcPage->footer->settings        = m_settings.footerSettings;
+        pcPage->footer->settings        = m_settings.footer;
 
         // global or individual
         bool individualPageSettings = pageUI->individual();
-        // # borders
-        pcPage->bordersSettings         = individualPageSettings ? pageUI->bordersW.settings()      : m_settings.bordersSettings;
+
         // # background
-        pcPage->backgroundSettings      = individualPageSettings ? pageUI->backgroundW.settings()   : m_settings.backgroundSettings;
-        // # margins
-        pcPage->margins                 = individualPageSettings ? pageUI->marginsW.settings()      : m_settings.marginsSettings;
-        // # sets
-        pcPage->pageSetsSettings        = individualPageSettings ? pageUI->setsW.settings()         : m_settings.setsSettings;
-        // # misc
-        pcPage->miscSettings            = individualPageSettings ? pageUI->miscW.settings()         : m_settings.miscSettings;
+        if(individualPageSettings){
+            pageUI->update_settings(pcPage->settings);
+        }else{
+            pcPage->settings = m_settings.pages;
+        }
 
         // sets
-        int nbSets = pcPage->pageSetsSettings.customMode ? pcPage->pageSetsSettings.relativePosCustom.size() : pcPage->pageSetsSettings.nbPhotos;
+        int nbSets = pcPage->settings.positions.customMode ? pcPage->settings.positions.relativePosCustom.size() : pcPage->settings.positions.nbPhotos;
 
         pcPage->sets.reserve(nbSets);
         for(int jj = 0; jj < nbSets; ++jj){
@@ -291,30 +289,27 @@ void PCMainUI::build_pages(){
 
             // only global
             set->id      = jj;
-            set->totalId = currentPhotoId;
-            if(currentPhotoId < m_settings.photosValided->size()){
-                set->photo = m_settings.photosValided->at(currentPhotoId);
+            set->totalId = currentId;
+
+            if(currentId < m_settings.photos.valided->size()){
+                set->photo = m_settings.photos.valided->at(currentId);
                 set->photo->isOnDocument = true; // photo will be on the generated document
                 set->photo->pageId = ii;
-                set->consign = std::make_shared<Consign>(Consign());
+                set->text = std::make_shared<Consign>(Consign());
             }else{
                 break;
             }
 
             // global or individual
-            auto setW = m_ui.settingsW.setsValidedW[currentPhotoId].get();
-            bool individualConsignSettings = setW->ui.cbEnableIndividualConsign->isChecked();
-
-            // # text
-            set->consign->html            = individualConsignSettings ? setW->setTextW.html()                                                       : m_settings.consignText;
-            // # style
-            set->consignPositionFromPhoto = individualConsignSettings ? static_cast<Position>(setW->setStyleW.ui.cbPositionConsign->currentIndex()) : m_settings.consignPositionFromPhotos;
-            set->ratio                    = individualConsignSettings ? setW->setStyleW.ui.dsbRatioPC->value()                                      : m_settings.PCRatio;
-            set->photo->adjust            = individualConsignSettings ? Utility::photo_adjust_from_comboBox(setW->setStyleW.ui.cbAdjustPhoto)       : m_settings.photoAdust;
-            set->photo->alignment         = individualConsignSettings ? Utility::photo_alignment_from_comboBox(setW->setStyleW.ui.cbPhotoAlignment) : m_settings.photoAlignment;
+            auto setW = m_ui.settingsW.setsValidedW[currentId].get();
+            if(setW->ui.cbEnableIndividualConsign->isChecked()){
+                setW->update_settings(set->settings);
+            }else{
+                set->settings       = m_settings.sets;
+            }
 
             pcPage->sets.push_back(set);
-            currentPhotoId++;
+            currentId++;
         }
 
         // add page to pages list widget and update the ui
@@ -322,8 +317,9 @@ void PCMainUI::build_pages(){
     }
 
     // check row
-    if(m_settings.currentPageId >= m_settings.nbPages){
-        m_settings.currentPageId = m_settings.nbPages-1;
+    if(m_settings.pages.currentId >= m_settings.pages.nb){
+        qDebug() << "SHOULD NOT HAPPEND: " << m_settings.pages.nb;
+        m_settings.pages.currentId = m_settings.pages.nb-1;
     }
 
     // unlock signals
@@ -349,9 +345,9 @@ void PCMainUI::update_photo_to_display(SPhoto photo)
 
 void PCMainUI::define_selected_set_from_current_photo()
 {
-    for(int ii = 0; ii < m_settings.photosValided->size(); ++ii){
-        if(m_settings.photosValided->at(ii)->loadedId ==  m_settings.currentPhotoId){
-            m_settings.currentSetId = m_settings.photosValided->at(ii)->id;
+    for(int ii = 0; ii < m_settings.photos.valided->size(); ++ii){
+        if(m_settings.photos.valided->at(ii)->loadedId ==  m_settings.photos.currentId){
+            m_settings.sets.currentId = m_settings.photos.valided->at(ii)->id;
             break;
         }
     }
@@ -359,36 +355,36 @@ void PCMainUI::define_selected_set_from_current_photo()
 
 void PCMainUI::select_photo(int index, bool displayPhotoPanel){
 
-    if(index >= m_settings.photosLoaded->size()){
+    if(index >= m_settings.photos.loaded->size()){
         qWarning() << "-Error: select_photo : " << index;
         return;
     }
 
-    m_settings.previousPhotoId = m_settings.currentPhotoId;
+    m_settings.photos.previousId = m_settings.photos.currentId;
 
-    auto nbPhotosLoaded = m_settings.photosLoaded->size();
-    if(index == -1 || nbPhotosLoaded == 0){
-        qWarning() << "-WARNING: define_selected_pc -> bad index: " << index << " " << nbPhotosLoaded;
+    auto nbloaded = m_settings.photos.loaded->size();
+    if(index == -1 || nbloaded == 0){
+        qWarning() << "-WARNING: define_selected_pc -> bad index: " << index << " " << nbloaded;
         return;
     }
 
-    if(index >= nbPhotosLoaded){
-        m_settings.currentPhotoId = 0;
+    if(index >= nbloaded){
+        m_settings.photos.currentId = 0;
     }
 
     // update index
-    m_settings.currentPhotoId = index;
+    m_settings.photos.currentId = index;
 
     // set order buttons states
-    m_ui.mainUI.pbOrderMinus->setEnabled(m_settings.currentPhotoId != 0);
-    m_ui.mainUI.pbOrderPlus->setEnabled(m_settings.currentPhotoId != nbPhotosLoaded-1);
+    m_ui.mainUI.pbOrderMinus->setEnabled(m_settings.photos.currentId != 0);
+    m_ui.mainUI.pbOrderPlus->setEnabled(m_settings.photos.currentId != nbloaded-1);
 
     // display selected image
     if(displayPhotoPanel){
-        update_photo_to_display(m_settings.photosLoaded.get()->at(m_settings.currentPhotoId));
+        update_photo_to_display(m_settings.photos.loaded.get()->at(m_settings.photos.currentId));
     }
 
-    // reconstruct sets
+    // reconstruct sets    
     build_valid_sets();
     define_selected_page_from_current_photo();
     define_selected_set_from_current_photo();
@@ -404,7 +400,7 @@ void PCMainUI::define_selected_page(int index){
     if(index > m_ui.settingsW.pagesW.size()-1){
         return;
     }
-    m_settings.currentPageId = index;
+    m_settings.pages.currentId = index;
 }
 
 void PCMainUI::define_selected_page_from_current_photo(){
@@ -414,7 +410,7 @@ void PCMainUI::define_selected_page_from_current_photo(){
 
         for(const auto &set : page->sets){
 
-            if(set->photo->loadedId == m_settings.photosLoaded->at(m_settings.currentPhotoId)->loadedId){
+            if(set->photo->loadedId == m_settings.photos.loaded->at(m_settings.photos.currentId)->loadedId){
                 idPage = page->id;
                 break;
             }
@@ -425,8 +421,10 @@ void PCMainUI::define_selected_page_from_current_photo(){
     }
 
     if(idPage != -1){
-        m_settings.currentPageId = idPage;
+        m_settings.pages.currentId = idPage;
     }
+
+    qDebug() << "################################ SELECTED PAGE: " << m_settings.pages.currentId;
 }
 
 void PCMainUI::from_main_UI_connections()
@@ -449,7 +447,7 @@ void PCMainUI::from_main_UI_connections()
             m_previewLocker.lockForWrite();
             m_isPreviewComputing = true;
             m_previewLocker.unlock();
-            emit start_preview_generation_signal(m_pcPages, m_settings.currentPageId, false);
+            emit start_preview_generation_signal(m_pcPages, m_settings.pages.currentId, false);
         }
     });
 
@@ -463,7 +461,7 @@ void PCMainUI::from_main_UI_connections()
     // # checkboxes
     // ## grayscale
     connect(m_ui.mainUI.cbBAndW, &QCheckBox::clicked, this, [=](bool checked){
-        m_settings.grayScale = checked;
+        m_settings.document.grayScale = checked;
         update_settings();
     });
 
@@ -487,31 +485,33 @@ void PCMainUI::from_main_UI_connections()
     // ## left photo
     connect(m_ui.mainUI.pbLeft, &QPushButton::clicked, this, [&]{ // previous image
 
-        int currRow = m_settings.currentPhotoId;
+        qDebug() << "left m_settings.photos.currentId: " << m_settings.photos.currentId;
+        int currRow = m_settings.photos.currentId;
         if(currRow == -1){
             return;
         }
 
         if(currRow == 0){
-            currRow = m_settings.photosLoaded->size()-1;
+            currRow = m_settings.photos.loaded->size()-1;
         } else{
             currRow--;
         }
 
         select_photo(currRow, m_ui.mainUI.twMiddle->currentIndex() == 0);
         update_settings();
-        m_ui.previewW.set_current_pc(m_settings.currentSetId);
+        m_ui.previewW.set_current_pc(m_settings.sets.currentId);
+        qDebug() << "m_settings.photos.currentId: " << m_settings.photos.currentId;
 
     });
     // ## right photo
     connect(m_ui.mainUI.pbRight, &QPushButton::clicked, this, [&]{ // next image
 
-        int currRow = m_settings.currentPhotoId;
+        int currRow = m_settings.photos.currentId;
         if(currRow == -1){
             return;
         }
 
-        if(currRow == m_settings.photosLoaded->size()-1){
+        if(currRow == m_settings.photos.loaded->size()-1){
             currRow = 0;
         }else{
             currRow++;
@@ -519,17 +519,17 @@ void PCMainUI::from_main_UI_connections()
 
         select_photo(currRow, m_ui.mainUI.twMiddle->currentIndex() == 0);        
         update_settings();
-        qDebug() << "update pc: " << m_settings.currentSetId;
-        m_ui.previewW.set_current_pc(m_settings.currentSetId);
+        qDebug() << "update pc: " << m_settings.sets.currentId;
+        m_ui.previewW.set_current_pc(m_settings.sets.currentId);
     });
     // ## rotate photot to the left
     connect(m_ui.mainUI.pbRotateLeft, &QPushButton::clicked, this, [&] {// rotate left photo
 
-        if(m_settings.currentPhotoId == -1 || m_settings.photosLoaded->size() == 0){
+        if(m_settings.photos.currentId == -1 || m_settings.photos.loaded->size() == 0){
             return;
         }
 
-        SPhoto photo       = m_settings.photosLoaded.get()->at(m_settings.currentPhotoId);
+        SPhoto photo       = m_settings.photos.loaded.get()->at(m_settings.photos.currentId);
         photo->rotation    =(photo->rotation - 90)%360;
         photo->scaledPhoto = photo->scaledPhoto.transformed(QTransform().rotate(-90));
         update_photo_to_display(photo);
@@ -538,11 +538,11 @@ void PCMainUI::from_main_UI_connections()
     // ## rotate photot to the right
     connect(m_ui.mainUI.pbRotateRight, &QPushButton::clicked, this, [&]{ // rotate right photo
 
-        if(m_settings.currentPhotoId == -1 || m_settings.photosLoaded->size() == 0){
+        if(m_settings.photos.currentId == -1 || m_settings.photos.loaded->size() == 0){
             return;
         }
 
-        SPhoto photo        = m_settings.photosLoaded.get()->at(m_settings.currentPhotoId);
+        SPhoto photo        = m_settings.photos.loaded.get()->at(m_settings.photos.currentId);
         photo->rotation     = (photo->rotation + 90)%360;
         photo->scaledPhoto  = photo->scaledPhoto.transformed(QTransform().rotate(90));
         update_photo_to_display(photo);
@@ -551,23 +551,23 @@ void PCMainUI::from_main_UI_connections()
     // ## add again the photo in the list
     connect(m_ui.mainUI.pbAdd, &QPushButton::clicked, this, [&]{// add/remove photo from list
 
-        if(m_settings.currentPhotoId == -1 || m_settings.photosLoaded->size() == 0){
+        if(m_settings.photos.currentId == -1 || m_settings.photos.loaded->size() == 0){
             return;
         }
 
-        m_settings.photosLoaded.get()->at(m_settings.currentPhotoId)->isRemoved = false;
+        m_settings.photos.loaded.get()->at(m_settings.photos.currentId)->isRemoved = false;
 
-        select_photo(m_settings.currentPhotoId, m_ui.mainUI.twMiddle->currentIndex() == 0);
+        select_photo(m_settings.photos.currentId, m_ui.mainUI.twMiddle->currentIndex() == 0);
         update_settings();
     });
     // ## remove the photo from the list
     connect(m_ui.mainUI.pbRemove, &QPushButton::clicked, this, [&] {// add/remove photo from list
 
-        if(m_settings.currentPhotoId == -1 || m_settings.photosLoaded->size() == 0){
+        if(m_settings.photos.currentId == -1 || m_settings.photos.loaded->size() == 0){
             return;
         }
 
-        SPhoto currPhoto = m_settings.photosLoaded->at(m_settings.currentPhotoId);
+        SPhoto currPhoto = m_settings.photos.loaded->at(m_settings.photos.currentId);
         currPhoto->isRemoved = true;
 
         int idPhotoSelected = 0;
@@ -575,15 +575,15 @@ void PCMainUI::from_main_UI_connections()
 
 
             // delete photo
-            m_settings.photosLoaded->takeAt(m_settings.currentPhotoId);
+            m_settings.photos.loaded->takeAt(m_settings.photos.currentId);
 
             // insert new consign in UI
-            m_ui.settingsW.remove_individual_set(m_settings.currentPhotoId);
+            m_ui.settingsW.remove_individual_set(m_settings.photos.currentId);
 
             // define selected id photo
-            idPhotoSelected = m_settings.currentPhotoId;
+            idPhotoSelected = m_settings.photos.currentId;
 
-            int count = m_settings.photosLoaded->size();
+            int count = m_settings.photos.loaded->size();
             if(idPhotoSelected >= count){
                 idPhotoSelected = count-1;
             }
@@ -591,8 +591,8 @@ void PCMainUI::from_main_UI_connections()
         }else{
 
             // define selected id photo
-            int currRow = m_settings.currentPhotoId;
-            if(currRow < m_settings.photosLoaded->size()-1){
+            int currRow = m_settings.photos.currentId;
+            if(currRow < m_settings.photos.loaded->size()-1){
                 idPhotoSelected = currRow + 1;
             }else if(currRow > 0){
                 idPhotoSelected = currRow - 1;
@@ -605,20 +605,20 @@ void PCMainUI::from_main_UI_connections()
     // ## duplicate the photo in the list
     connect(m_ui.mainUI.pbDuplicate, &QPushButton::clicked, this, [&]{
 
-        if(m_settings.currentPhotoId == -1 || m_settings.photosLoaded->size() == 0){
+        if(m_settings.photos.currentId == -1 || m_settings.photos.loaded->size() == 0){
             return;
         }
 
         // copy current photo
-        SPhoto duplicatedPhoto = std::make_shared<Photo>(Photo(*(m_settings.photosLoaded.get()->at(m_settings.currentPhotoId))));
+        SPhoto duplicatedPhoto = std::make_shared<Photo>(Photo(*(m_settings.photos.loaded.get()->at(m_settings.photos.currentId))));
         duplicatedPhoto->isRemoved    = false;
         duplicatedPhoto->isADuplicate = true;
 
         // insert it
-        m_settings.photosLoaded->insert(m_settings.currentPhotoId+1, duplicatedPhoto);
+        m_settings.photos.loaded->insert(m_settings.photos.currentId+1, duplicatedPhoto);
 
         // insert new consign in UI
-        m_ui.settingsW.insert_individual_set(m_settings.currentPhotoId+1);
+        m_ui.settingsW.insert_individual_set(m_settings.photos.currentId+1);
         update_settings();
     });
     // ## change photo order (minus)
@@ -630,17 +630,17 @@ void PCMainUI::from_main_UI_connections()
     // ## change photo order
     connect(m_ui.mainUI.sbOrder, QOverload<int>::of(&QSpinBox::valueChanged), this, [&](int index){
 
-        if(m_settings.currentPhotoId == -1 || m_settings.photosLoaded->size() == 0){
+        if(m_settings.photos.currentId == -1 || m_settings.photos.loaded->size() == 0){
             return;
         }
 
-        int row = m_settings.currentPhotoId;
+        int row = m_settings.photos.currentId;
         if(row < 0){
             qWarning() << "-Warning: order photo -> bad index";
             return;
         }
 
-        m_settings.photosLoaded->swap(row,index);
+        m_settings.photos.loaded->swap(row,index);
         m_ui.settingsW.setsLoadedW.insert(index, m_ui.settingsW.setsLoadedW.takeAt(row));
 
         select_photo(index, m_ui.mainUI.twMiddle->currentIndex() == 0);
@@ -651,7 +651,7 @@ void PCMainUI::from_main_UI_connections()
      connect(m_ui.mainUI.twMiddle, &QTabWidget::currentChanged, this, [&](int index){
 
         if(index == 0){
-            select_photo(m_settings.currentPhotoId);
+            select_photo(m_settings.photos.currentId);
         }else{
             update_settings();
         }
@@ -668,7 +668,7 @@ void PCMainUI::from_main_UI_connections()
     // ## pages list
     connect(m_ui.mainUI.lwPagesList, &QListWidget::currentRowChanged, this, [&](int row){
 
-        m_settings.previousPageId = m_settings.currentPageId;
+        m_settings.pages.previousId = m_settings.pages.currentId;
         if(row != -1){
             define_selected_page(row);
             m_ui.display_preview_panel();
@@ -677,7 +677,7 @@ void PCMainUI::from_main_UI_connections()
     });
     connect(m_ui.mainUI.lwPagesList, &QListWidget::clicked, this, [&](QModelIndex index){
 
-        m_settings.previousPageId = m_settings.currentPageId;
+        m_settings.pages.previousId = m_settings.pages.currentId;
         if(index.row() != -1){
             define_selected_page(index.row());
             m_ui.display_preview_panel();
@@ -708,7 +708,6 @@ void PCMainUI::from_main_module_connections(){
     connect(this, &PCMainUI::start_preview_generation_signal,   m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::generate_preview);
     connect(this, &PCMainUI::start_PDF_generation_signal,       m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::generate_PDF);
     connect(this, &PCMainUI::init_document_signal,              m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::init_document);
-    connect(this, &PCMainUI::select_pc_signal,                  m_pdfGeneratorWorker.get(), &PDFGeneratorWorker::update_PC_selection_with_id);
 
     // to photo display worker
     connect(this, &PCMainUI::kill_signal,            m_loadPhotoWorker.get(), &PhotoLoaderWorker::kill);
@@ -727,7 +726,7 @@ void PCMainUI::from_pdf_generator_worker_connections(){
 
         m_ui.previewW.set_image(std::move(previewImage));
         m_ui.previewW.set_page(previewPage);
-        m_ui.previewW.set_current_pc(m_settings.currentSetId);
+        m_ui.previewW.set_current_pc(m_settings.sets.currentId);
         m_ui.previewW.update();
 
         m_ui.mainUI.pbSavePDF->setEnabled(true);
@@ -762,27 +761,6 @@ void PCMainUI::from_pdf_generator_worker_connections(){
         m_ui.mainUI.laLoadingText->setText("Echec génération du PDF");
         m_ui.set_ui_state_for_generating_pdf(true);
     });
-//    connect(worker, &PDFGeneratorWorker::current_pc_selected_signal, this, [=](QRectF pcRectRelative, int totalIdPC){
-
-//        if(totalIdPC == -1){
-//            m_ui.settingsW.display_header_panel();
-//            m_ui.previewW.draw_current_pc_rect(totalIdPC, pcRectRelative);
-//            m_ui.previewW.update();
-//            return;
-//        }else if(totalIdPC == -2){
-//            m_ui.settingsW.display_footer_panel();
-//            m_ui.previewW.draw_current_pc_rect(totalIdPC, pcRectRelative);
-//            m_ui.previewW.update();
-//            return;
-//        }
-
-//        m_settings.currentSetId = totalIdPC;
-//        m_ui.previewW.draw_current_pc_rect(totalIdPC, pcRectRelative);
-//        m_ui.previewW.update();
-
-//        // update photo list selection
-//        select_photo(m_settings.photosValided->at(m_settings.currentSetId)->loadedId, false);
-//    });
 }
 
 void PCMainUI::from_photos_loader_worker_connections(){
@@ -796,11 +774,11 @@ void PCMainUI::from_photos_loader_worker_connections(){
     connect(worker, &PhotoLoaderWorker::photo_loaded_signal,this, [&](SPhoto photo, int indexToInsert){
 
         // add loaded photo
-        m_settings.photosLoaded->insert(indexToInsert, photo);
+        m_settings.photos.loaded->insert(indexToInsert, photo);
         m_ui.settingsW.insert_individual_set(indexToInsert);
 
         // update current photo row
-        m_settings.currentPhotoId = indexToInsert;
+        m_settings.photos.currentId = indexToInsert;
 
         update_settings();
     });
@@ -815,7 +793,7 @@ void PCMainUI::from_photos_loader_worker_connections(){
         m_isLoadingPhotos = false;
         m_ui.set_ui_state_for_adding_photos(true);
 
-        select_photo(m_settings.currentPhotoId, m_ui.mainUI.twMiddle->currentIndex() == 0);
+        select_photo(m_settings.photos.currentId, m_ui.mainUI.twMiddle->currentIndex() == 0);
         update_settings();        
     });
 }
@@ -832,8 +810,8 @@ void PCMainUI::from_UI_elements_connections(){
     // # preview label
     // ### double click
     connect(&previewW, &PreviewW::double_click_on_photo_signal, this, [&]{
-        if(m_settings.currentSetId < m_settings.photosValided->size()){
-            select_photo(m_settings.photosValided->at(m_settings.currentSetId)->loadedId);
+        if(m_settings.sets.currentId < m_settings.photos.valided->size()){
+            select_photo(m_settings.photos.valided->at(m_settings.sets.currentId)->loadedId);
         }
     });
     connect(&previewW, &PreviewW::current_pc_selected_signal, this, [=](int totalIdPC){
@@ -846,10 +824,10 @@ void PCMainUI::from_UI_elements_connections(){
             return;
         }
 
-        m_settings.currentSetId = totalIdPC;
+        m_settings.sets.currentId = totalIdPC;
 
         // update photo list selection
-        select_photo(m_settings.photosValided->at(m_settings.currentSetId)->loadedId, false);
+        select_photo(m_settings.photos.valided->at(m_settings.sets.currentId)->loadedId, false);
         m_ui.settingsW.display_current_set_panel();
     });
 
@@ -864,37 +842,25 @@ void PCMainUI::from_UI_elements_connections(){
 
 void PCMainUI::update_settings(){
 
-    DebugMessage dbgMess("update_settings");
-
-    qDebug() << "1";
     // update global settings
     m_ui.update_global_settings(m_settings);
 
-    qDebug() << "2";
     // reconstruct sets
     build_valid_sets();    
 
-    qDebug() << "3";
     // reconstruct the pages from global and individual settings
     build_pages();
 
-    qDebug() << "4";
     m_ui.update_photos_list(m_settings);
     m_ui.update_pages_list(m_pcPages);
 
-    qDebug() << "5";
     // update ui
     m_ui.update_UI(m_settings);
 
-    qDebug() << "55";
 
     if(m_ui.settingsW.setsValidedW.size() >0){
-        m_settings.currentSetIdDisplayed = m_ui.settingsW.setsValidedW[m_settings.currentSetId]->id;
+        m_settings.sets.currentIdDisplayed = m_ui.settingsW.setsValidedW[m_settings.sets.currentId]->id;
     }
-    if(m_ui.settingsW.pagesW.size() > 0){
-        m_settings.currentPageIdDisplayed= m_ui.settingsW.pagesW[m_settings.currentPageId]->id;        
-    }
-    qDebug() << "6";
 
     // check if the preview is already computing and will ask later to a new update if it's the case
     m_previewLocker.lockForWrite();
@@ -903,13 +869,12 @@ void PCMainUI::update_settings(){
     m_previewLocker.unlock();
 
     // ask for a preview generation
-    if(!m_settings.noPreviewGeneration && !isPreviewComputing){
+    if(!m_settings.document.noPreviewGeneration && !isPreviewComputing){
         m_previewLocker.lockForWrite();
         m_isPreviewComputing = true;
         m_previewLocker.unlock();
-        emit start_preview_generation_signal(m_pcPages, m_settings.currentPageId, m_ui.zonesTimer.isActive());
+        emit start_preview_generation_signal(m_pcPages, m_settings.pages.currentId, m_ui.zonesTimer.isActive());
     }
-    qDebug() << "7";
 }
 
 

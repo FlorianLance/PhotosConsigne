@@ -140,6 +140,8 @@
     <qresource prefix="/images/pages">
         <file alias="nb_pages">resources/images/pages/nb_pages.png</file>
         <file alias="page">resources/images/pages/page.png</file>
+        <file alias="footer">resources/images/pages/footer.png</file>
+        <file alias="header">resources/images/pages/header.png</file>
     </qresource>
     <qresource prefix="/images/position">
         <file alias="textBottom">resources/images/position/textBottom.png</file>

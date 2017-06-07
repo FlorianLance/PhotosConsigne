@@ -101,7 +101,7 @@ private:
     QString m_version;
 
     PCPages m_pcPages;                  /**< document pages to be drawn */
-    GlobalDocumentSettings m_settings;  /**< global parameters of the document */
+    GlobalSettings m_settings;  /**< global parameters of the document */
 
     // ui
     UIElements m_ui; /**< dynamic ui elements */

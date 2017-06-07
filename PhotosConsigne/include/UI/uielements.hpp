@@ -74,15 +74,15 @@ public slots:
     void set_ui_state_for_adding_photos(bool state = true);
     void set_ui_state_for_generating_pdf(bool state = true);
 
-    void update_global_settings(GlobalDocumentSettings &settings) const;
+    void update_global_settings(GlobalSettings &settings) const;
 
-    void update_photos_list(const GlobalDocumentSettings &settings);
+    void update_photos_list(const GlobalSettings &settings);
     void update_pages_list(const PCPages &pcPages);
 
-    void display_current_individual_set_ui(const GlobalDocumentSettings &settings);
-    void display_current_individual_page_ui(const GlobalDocumentSettings &settings);
+    void display_current_individual_set_ui(const GlobalSettings &settings);
+    void display_current_individual_page_ui(const GlobalSettings &settings);
 
-    void update_UI(const GlobalDocumentSettings &settings);
+    void update_UI(const GlobalSettings &settings);
 
 private:
 

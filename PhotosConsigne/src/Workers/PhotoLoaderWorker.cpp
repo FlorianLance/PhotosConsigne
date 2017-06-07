@@ -2,7 +2,6 @@
 
 // local
 #include "PhotoLoaderWorker.hpp"
-#include "GlobalDocumentSettings.hpp"
 #include "DocumentElements.hpp"
 
 // Qt
@@ -12,7 +11,7 @@ pc::PhotoLoaderWorker::PhotoLoaderWorker(){
 
     qRegisterMetaType<SPhoto>("SPhoto");
     qRegisterMetaType<SPhotos>("SPhotos");
-    qRegisterMetaType<GlobalDocumentSettings>("GlobalDocumentSettings");
+    qRegisterMetaType<GlobalSettings>("GlobalDocumentSettings");
     qRegisterMetaType<PCPages>("PCPages");
     qRegisterMetaType<PCPage>("PCPage");
     qRegisterMetaType<SPCPage>("SPCPage");

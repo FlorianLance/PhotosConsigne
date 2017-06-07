@@ -35,10 +35,6 @@ public slots :
 
     void generate_PDF(PCPages pcPages);
 
-    void update_PC_selection_with_id(int idSet);
-
-    void update_PC_selection_with_pos(QPointF pos);
-
     void init_document();
 
     void add_resource(QUrl url, QImage image);

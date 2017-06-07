@@ -2162,7 +2162,22 @@ QPushButton {
                        </item>
                        <item>
                         <property name="text">
+                         <string>220</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
                          <string>300</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>400</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>500</string>
                         </property>
                        </item>
                        <item>
@@ -2172,7 +2187,22 @@ QPushButton {
                        </item>
                        <item>
                         <property name="text">
+                         <string>700</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>800</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
                          <string>900</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>1000</string>
                         </property>
                        </item>
                        <item>

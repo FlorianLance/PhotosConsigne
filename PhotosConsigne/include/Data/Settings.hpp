@@ -40,7 +40,7 @@ namespace pc {
         bool doNotDisplayFooter;
     };
 
-    struct PageSetsSettings{
+    struct SetsPositionSettings{
 
         bool customMode;
 
@@ -64,12 +64,34 @@ namespace pc {
         SPhoto photo = nullptr;
     };
 
+    struct StyleSettings{
+
+        int photoAlignment;
+        qreal ratioTextPhoto;
+        Position textPositionFromPhotos;
+        PhotoAdjust photoAdust = PhotoAdjust::adjust;
+    };
+
+    struct PhotosSettings{
+
+        int previousId     = 0;
+        int currentId      = 0;    /**< id of the current selcted photo (photo list widget) */
+        QString lastDirectoryPath= "";
+        SPhotos loaded  = std::make_shared<QList<SPhoto>>(QList<SPhoto>());
+        SPhotos valided = std::make_shared<QList<SPhoto>>(QList<SPhoto>());
+    };
+
+
+    struct TextSettings{
+        std::shared_ptr<QString> html = nullptr;
+    };
+
     struct HeaderSettings{
 
         bool enabled;
         qreal ratio;
         BackGroundSettings background;
-        std::shared_ptr<QString> text = nullptr;
+        TextSettings text;
     };
 
     struct FooterSettings{
@@ -77,6 +99,60 @@ namespace pc {
         bool enabled;
         qreal ratio;
         BackGroundSettings background;
-        std::shared_ptr<QString> text = nullptr;
+        TextSettings text;
     };
+
+    struct SetSettings{
+
+        int currentId            = 0;    /**< id of the current set (Photo + consign) */
+        int currentIdDisplayed   = -1;
+
+        StyleSettings style;
+        BordersSettings borders;
+        TextSettings text;
+    };
+
+    struct PageSettings{
+
+        int previousId         = -2;
+        int currentId          =  0;    /**< id of the current selected page (page list widget) */
+        int nb                 = 1;     /**< number of pages for the document */
+
+        MarginsSettings margins;
+        BackGroundSettings background;
+        SetsPositionSettings positions;
+        MiscSettings misc;        
+    };
+
+    struct DocumentSettings{
+
+        bool grayScale           = false;
+        bool saveOnlyCurrentPage = false;
+        bool noPreviewGeneration = false;
+
+        PaperFormat paperFormat;
+    };
+
+
+    struct GlobalSettings{
+
+        // photos
+        PhotosSettings photos;
+
+        // pages
+        PageSettings pages;
+
+        // sets
+        SetSettings sets;
+
+        // header
+        HeaderSettings header;
+
+        // footer
+        FooterSettings footer;
+
+        // document
+        DocumentSettings document;
+    };
+
 }

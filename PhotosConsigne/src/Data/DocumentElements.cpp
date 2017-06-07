@@ -11,8 +11,13 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
 
     rectOnPage = std::move(upperRect);
 
+    MarginsSettings &margins        = settings.margins;
+    MiscSettings &misc              = settings.misc;
+    SetsPositionSettings &positions = settings.positions;
+
     // extern margins
     qreal heightTopMargin = 0., heightBottomMargin = 0., widthLeftMargin = 0., widthRightMargin = 0.;
+
     if(margins.exteriorMarginsEnabled){
         heightTopMargin     = rectOnPage.height() * margins.top;
         heightBottomMargin  = rectOnPage.height() * margins.bottom;
@@ -29,8 +34,8 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
 
     // header/footer ratios
     qreal headerFooterSetsHeight = pageMinusMarginsRect.height() - footerMarginHeight - headerMarginHeight;
-    qreal footerRatio            = (footer->settings.enabled && !miscSettings.doNotDisplayFooter) ? footer->settings.ratio : 0.;
-    qreal headerRatio            = (header->settings.enabled && !miscSettings.doNotDisplayHeader) ? header->settings.ratio : 0.;
+    qreal footerRatio            = (footer->settings.enabled && !misc.doNotDisplayFooter) ? footer->settings.ratio : 0.;
+    qreal headerRatio            = (header->settings.enabled && !misc.doNotDisplayHeader) ? header->settings.ratio : 0.;
 
     qreal sum = footerRatio + headerRatio;
     if(sum > 1.){
@@ -73,8 +78,8 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
     footer->compute_sizes(footerRect);
 
     // intern margins
-    int nbInterVMargins     = pageSetsSettings.nbPhotosV - 1;
-    int nbInterHMargins     = pageSetsSettings.nbPhotosH - 1;
+    int nbInterVMargins     = positions.nbPhotosV - 1;
+    int nbInterHMargins     = positions.nbPhotosH - 1;
     qreal heightInterMargin = 0., widthInterMargin = 0.;
     if(margins.interiorMarginsEnabled){
         if(nbInterVMargins > 0){
@@ -86,25 +91,25 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
     }
 
     // PC
-    qreal widthSets   = (setsRect.width()  - nbInterHMargins * widthInterMargin)  / pageSetsSettings.nbPhotosH;
-    qreal heightSets  = (setsRect.height() - nbInterVMargins * heightInterMargin) / pageSetsSettings.nbPhotosV;
+    qreal widthSets   = (setsRect.width()  - nbInterHMargins * widthInterMargin)  / positions.nbPhotosH;
+    qreal heightSets  = (setsRect.height() - nbInterVMargins * heightInterMargin) / positions.nbPhotosV;
 
     int currPC = 0;
 
-    if(!pageSetsSettings.customMode){
+    if(!positions.customMode){
         interMarginsRects.clear();
         interMarginsRects.reserve(sets.size());
         qreal offsetV = setsRect.y();
-        for(int ii = 0; ii < pageSetsSettings.nbPhotosV; ++ii){
+        for(int ii = 0; ii < positions.nbPhotosV; ++ii){
             qreal offsetH = setsRect.x();
-            for(int jj = 0; jj < pageSetsSettings.nbPhotosH; ++jj){
+            for(int jj = 0; jj < positions.nbPhotosH; ++jj){
                 if(currPC >= sets.size())
                     break;
 
                 sets[currPC]->compute_sizes(QRectF(offsetH, offsetV, widthSets, heightSets));
                 interMarginsRects.push_back(QRectF(offsetH, offsetV,
-                                                   (jj < pageSetsSettings.nbPhotosH-1) ? widthSets  + widthInterMargin  : widthSets,
-                                                   (ii < pageSetsSettings.nbPhotosV-1) ? heightSets + heightInterMargin : heightSets));
+                                                   (jj < positions.nbPhotosH-1) ? widthSets  + widthInterMargin  : widthSets,
+                                                   (ii < positions.nbPhotosV-1) ? heightSets + heightInterMargin : heightSets));
 
                 offsetH += widthSets + widthInterMargin;
                 ++currPC;
@@ -115,11 +120,11 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
     }else{
 
         interMarginsRects.clear();
-        for(int ii = 0; ii < pageSetsSettings.relativePosCustom.size(); ++ii){
+        for(int ii = 0; ii < positions.relativePosCustom.size(); ++ii){
             if(currPC >= sets.size())
                 break;
 
-            QRectF &relRect = pageSetsSettings.relativePosCustom[ii];
+            QRectF &relRect = positions.relativePosCustom[ii];
 
             sets[currPC]->compute_sizes(QRectF(setsRect.x() + relRect.x()*setsRect.width(),
                                                setsRect.y() + relRect.y()*setsRect.height(),
@@ -133,20 +138,20 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
 void pc::PCSet::compute_sizes(QRectF upperRect){
     rectOnPage = std::move(upperRect);
 
-    //  consign
-    qreal heightConsigneV = rectOnPage.height() * (1. - ratio);
+    //  text
+    qreal heightConsigneV = rectOnPage.height() * (1. - settings.style.ratioTextPhoto);
     qreal widthConsigneV  = rectOnPage.width();
     qreal heightConsigneH = rectOnPage.height();
-    qreal widthConsigneH  = rectOnPage.width() * (1. - ratio);
+    qreal widthConsigneH  = rectOnPage.width() * (1. - settings.style.ratioTextPhoto);
     //  photo
-    qreal heightPhotoV    = ratio * rectOnPage.height();
+    qreal heightPhotoV    = settings.style.ratioTextPhoto * rectOnPage.height();
     qreal widthPhotoV     = rectOnPage.width();
     qreal heightPhotoH    = rectOnPage.height();
-    qreal widthPhotoH     = ratio * rectOnPage.width();
+    qreal widthPhotoH     = settings.style.ratioTextPhoto * rectOnPage.width();
 
     QRectF consignRect, photoRect;
 
-    switch (consignPositionFromPhoto) {
+    switch (settings.style.textPositionFromPhotos) {
     case Position::top:
         consignRect = QRectF(rectOnPage.x(), rectOnPage.y(), widthConsigneV, heightConsigneV);
         photoRect   = QRectF(rectOnPage.x(), rectOnPage.y() + heightConsigneV, widthPhotoV, heightPhotoV);
@@ -168,11 +173,7 @@ void pc::PCSet::compute_sizes(QRectF upperRect){
         break;
     }
 
-    consign->compute_sizes(consignRect);
+    text->compute_sizes(consignRect);
     photo->compute_sizes(photoRect);
 }
 
-
-void Consign::compute_sizes(QRectF upperRect){
-    rectOnPage = std::move(upperRect);
-}

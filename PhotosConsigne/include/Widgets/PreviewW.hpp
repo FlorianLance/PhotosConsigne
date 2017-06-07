@@ -25,11 +25,6 @@ public:
 
     PreviewWorker(){}
 
-
-    virtual ~PreviewWorker(){
-        DebugMessage("~PreviewWorker");
-    }
-
 public slots:
 
     void loop_update();

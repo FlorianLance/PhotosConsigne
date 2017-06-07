@@ -9,7 +9,6 @@
  */
 
 // local
-#include "BordersW.hpp"
 #include "MarginsW.hpp"
 #include "BackgroundW.hpp"
 #include "PageSetsW.hpp"
@@ -40,14 +39,22 @@ struct PageW : public SettingsW{
     void set_enabled(bool enabled) noexcept;
 
 
+    void update_settings(PageSettings &settings) const{
+
+        backgroundW.update_settings(settings.background);
+        marginsW.update_settings(settings.margins);
+        setsW.update_settings(settings.positions);
+        miscW.update_settings(settings.misc);
+    }
+
+
 public :
 
-    int id;
+    int id = 0;
     QColor borderColor = QColor(0,0,0,0);
     QPen borderPen = QPen(QColor(0,0,0,0));
 
-    BackgroundW  backgroundW;
-    BordersW     bordersW;
+    BackgroundW  backgroundW;    
     MarginsW     marginsW;
     PageSetsW    setsW;
     MiscPageW    miscW;

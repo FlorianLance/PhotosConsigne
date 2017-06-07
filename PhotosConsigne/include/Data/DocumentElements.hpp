@@ -25,19 +25,20 @@ namespace pc {
     using SPCPages = std::shared_ptr<PCPages>;
 
 
-
     struct Consign : public RectPageItem {
 
-        virtual ~Consign(){}
-
-        std::shared_ptr<QString> html = nullptr;
-        virtual void compute_sizes(QRectF upperRect);
+        // sizes
+        void compute_sizes(QRectF upperRect){
+             rectOnPage = std::move(upperRect);
+        }
     };
 
     struct Header : public RectPageItem {
 
+        // settings
         HeaderSettings settings;
 
+        // sizes
         void compute_sizes(QRectF upperRect){
             rectOnPage = std::move(upperRect);            
         }
@@ -45,9 +46,10 @@ namespace pc {
 
     struct Footer : public RectPageItem {
 
+        // settings
         FooterSettings settings;
 
-        std::shared_ptr<QString> html = nullptr;
+        // sizes
         void compute_sizes(QRectF upperRect){
             rectOnPage = std::move(upperRect);
         }
@@ -55,84 +57,74 @@ namespace pc {
 
     struct PCSet : public RectPageItem{
 
-        virtual ~PCSet(){
-//            DebugMessage("~PCSet");
-        }
+        // settings
+        SetSettings settings;
 
-        int id; /**< id of the set in its page */
-        int totalId; /**< global id of the set */
+        // current
+        int id;         /**< id of the set in its page */
+        int totalId;    /**< global id of the set */
 
+        // sub elements
+        // # photo
         SPhoto photo = nullptr;
-        SConsign consign = nullptr;
+        // # text
+        SConsign text = nullptr;
 
-        qreal ratio;
-        Position consignPositionFromPhoto;
-
+        // sizes
         void compute_sizes(QRectF upperRect);
     };
 
     struct PCPage : public RectPageItem{
 
-        virtual ~PCPage(){
-//            DebugMessage("~PCPage");
-        }
+        // settings
+        PageSettings settings;
 
-        int id; /**< id of the page */
-        bool drawThisPage;
+        // current
+        int id;
+        bool drawThisPage;        
 
-        // margins
-        MarginsSettings margins;
-
-        // border
-        BordersSettings bordersSettings;
-
-        // background
-        BackGroundSettings backgroundSettings;
-
-        // sets
-        PageSetsSettings pageSetsSettings;
-
-        // misc
-        MiscSettings miscSettings;
-
-        // header
+        // sub elements
+        // # header
         SHeader header = std::make_shared<Header>();
-
-        // footer
+        // # footer
         SFooter footer = std::make_shared<Footer>();
-
-        // sets
+        // # sets
         QVector<SPCSet> sets;
 
-        // rects
-        QRectF setsRect;
-        QRectF pageMinusMarginsRect;
+        // sizes
         QRectF marginHeaderRect;
         QRectF marginFooterRect;
+        QRectF setsRect;
+        QRectF pageMinusMarginsRect;
         QVector<QRectF> interMarginsRects;
-
         void compute_sizes(QRectF upperRect);                
     };
 
     struct PCPages{
 
-        bool grayScale;
-        QString pdfFileName = "";
-        QVector<SPCPage> pages;
-        PaperFormat paperFormat;
+        // settings
+        DocumentSettings settings;
 
+        // current
+        QString pdfFileName = "";
+
+        // sub elemetns
+        // # pages
+        QVector<SPCPage> pages;
+
+        // sizes
+        void compute_all_pages_sizes(int width, int height){
+            for(auto &&page : pages)
+                page->compute_sizes(QRectF(0,0,width,height));
+        }
+
+        // others
         ~PCPages(){
             pages.clear();
         }
 
-
         int page_photos_number(int index) const{
             return pages[index]->sets.size();
-        }
-
-        void compute_all_pages_sizes(int width, int height){
-            for(auto &&page : pages)
-                page->compute_sizes(QRectF(0,0,width,height));
         }
     };
 }

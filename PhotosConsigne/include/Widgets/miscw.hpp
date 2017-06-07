@@ -48,14 +48,10 @@ public :
         Utility::safe_init_checkboxe_checked_state(p1.ui.cbDoNotShowFooter, p2.ui.cbDoNotShowFooter->isChecked());
     }
 
-    MiscSettings settings() const noexcept {
+    void update_settings(MiscSettings &settings) const{
 
-        MiscSettings miscSettings;
-
-        miscSettings.doNotDisplayHeader = ui.cbDoNotShowHeader->isChecked();
-        miscSettings.doNotDisplayFooter = ui.cbDoNotShowFooter->isChecked();
-
-        return miscSettings;
+        settings.doNotDisplayHeader = ui.cbDoNotShowHeader->isChecked();
+        settings.doNotDisplayFooter = ui.cbDoNotShowFooter->isChecked();
     }
 
 signals:

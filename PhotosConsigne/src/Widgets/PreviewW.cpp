@@ -101,6 +101,7 @@ void PreviewW::set_current_pc(int idPC){
     }
 
     m_rectTimer.start(2000);
+    emit start_update_loop_signal();
     auto set =  m_previewPage->sets[idSet];
     QRectF rectPage = m_previewPage->rectOnPage;
     m_pcRectRelative = QRectF(set->rectOnPage.x()/rectPage.width(), set->rectOnPage.y()/rectPage.height(),

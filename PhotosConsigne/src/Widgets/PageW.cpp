@@ -9,15 +9,12 @@ pc::PageW::PageW() : SettingsW(){
     ui.setupUi(this);
     ui.framePage->setEnabled(false);
     ui.vlBackground->addWidget(&backgroundW);
-    ui.vlBorders->addWidget(&bordersW);
     ui.vlMargins->addWidget(&marginsW);
     ui.vlSets->addWidget(&setsW);
     ui.vlMisc->addWidget(&miscW);
     backgroundW.hide();
-    bordersW.hide();
     marginsW.hide();
     miscW.hide();
-
 
     init_checkboxes_connections({ui.cbEnableIndividualPage}, true);
     Utility::checkbox_enable_UI(ui.cbEnableIndividualPage, {ui.framePage});
@@ -25,7 +22,6 @@ pc::PageW::PageW() : SettingsW(){
     connect(ui.tabPage, &QTabWidget::currentChanged, this, [&]{
 
         backgroundW.hide();
-        bordersW.hide();
         marginsW.hide();
         setsW.hide();
         miscW.hide();
@@ -38,26 +34,22 @@ pc::PageW::PageW() : SettingsW(){
             marginsW.show();
             break;
         case 2:
-            bordersW.show();
-            break;
-        case 3:
             backgroundW.show();
             break;
-        case 4:
+        case 3:
             miscW.show();
             break;
         }
     });
+    ui.tabPage->setCurrentIndex(0);
 
-//     # background
+    // # background
     connect(&backgroundW, &BackgroundW::settings_updated_signal, this, &PageW::settings_updated_signal);
-//     # borders
-    connect(&bordersW, &BordersW::settings_updated_signal, this, &PageW::settings_updated_signal);
-//     # margins
+    // # margins
     connect(&marginsW, &MarginsW::settings_updated_signal, this, &PageW::settings_updated_signal);
-//     # sets
+    // # sets
     connect(&setsW, &PageSetsW::settings_updated_signal, this, &PageW::settings_updated_signal);
-//     # misc
+    // # misc
     connect(&miscW, &MiscPageW::settings_updated_signal, this, &PageW::settings_updated_signal);
 
     id = pageUICounter++;
@@ -68,8 +60,7 @@ void pc::PageW::init_ui(pc::PageW &p1, const pc::PageW &p2){
 
     // init ui with
     PageSetsW::init_ui(p1.setsW, p2.setsW);
-    BackgroundW::init_ui(p1.backgroundW, p2.backgroundW);
-    BordersW::init_ui(p1.bordersW, p2.bordersW);
+    BackgroundW::init_ui(p1.backgroundW, p2.backgroundW);    
     MarginsW::init_ui(p1.marginsW, p2.marginsW);
     MiscPageW::init_ui(p1.miscW, p2.miscW);
 }
