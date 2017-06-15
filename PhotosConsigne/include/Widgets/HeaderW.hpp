@@ -68,7 +68,7 @@ struct HeaderW : public SettingsW{
                 break;
             case 2:
                 ui.vlHeader->addStretch();;
-                ui.tabHeader->setMaximumHeight(130);
+                ui.tabHeader->setMaximumHeight(600);
                 break;
             }
         });

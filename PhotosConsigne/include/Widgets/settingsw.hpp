@@ -28,7 +28,7 @@ struct Utility{
     static PhotoAdjust photo_adjust_from_comboBox(QComboBox *cb);
     static qreal borders_line_width_from_comboBox(QComboBox *cb);
     static Qt::PenJoinStyle borders_join_style_from_comboBox(QComboBox *cb);
-    static Qt::PenStyle borders_line_style_from_comboBox(QComboBox *cb);
+    static void borders_line_style_from_comboBox(QComboBox *cb, QPen &pen);
     static Qt::BrushStyle pattern_style_comboBox(QComboBox *cb);
     static void associate_double_spinbox_with_slider(QDoubleSpinBox *sb, QSlider *slider);
     static void associate_double_spinbox_with_slider(QDoubleSpinBox *sb1, QSlider *slider1, QDoubleSpinBox *sb2, QSlider *slider2);
@@ -62,12 +62,13 @@ public :
     // connections
     void init_checkboxes_connections(QVector<QCheckBox*> checkBoxes, bool displayZones = false);
     void init_comboboxes_connections(QVector<QComboBox*> comboBox, bool displayZones);
-    void init_color_dialog_connections(QToolButton *tb, QString actionToolTip, QString dialogColorText, QColor *color, QSize iconSize);
+    void init_color_dialog_connections(QToolButton *tb, QString actionToolTip, QString dialogColorText, QColor *color, QSize iconSize, bool alpha = true);
     void init_image_dialog_connections(QToolButton *tb, QString actionToolTip, QString dialogText, SPhoto &photo, QSize iconeSIze);
     void init_pushbuttons_connections(QVector<QPushButton*> buttons, bool displayZones = false);
     void init_sliders_connections(QVector<QSlider*> sliders, bool displayZones = false);
     void init_spinboxes_connections(QVector<QSpinBox*> spinBoxes, bool displayZones = false);
     void init_doublespinboxes_connections(QVector<QDoubleSpinBox*> dSpinBoxes, bool displayZones);
+    void init_radiobuttons_connections(QVector<QRadioButton*> buttons, bool displayZones);
 
 signals:
 

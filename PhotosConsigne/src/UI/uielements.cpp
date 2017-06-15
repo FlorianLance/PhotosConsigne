@@ -297,7 +297,18 @@ void UIElements::update_UI(const GlobalSettings &settings){
 
     if(settings.photos.loaded->size() > 0){
         SPhoto currentDisplayedPhoto = settings.photos.loaded->at(settings.photos.currentId);
-        QString textInfo = "<p><b>Chemin:</b> "  + currentDisplayedPhoto->pathPhoto + "<br /><b>Taille photo:</b> " +
+
+
+        QStringList split = currentDisplayedPhoto->pathPhoto.split("/");
+        QString path = "";
+        for(int ii = 0; ii < split.size(); ++ii){
+            path += split[ii] + "/";
+            if(ii== split.size()/2 && currentDisplayedPhoto->pathPhoto.size() > 45){
+                path += "<br />";
+            }
+        }
+
+        QString textInfo = "<p><b>Chemin:</b> "  + path + "<br /><b>Taille photo:</b> " +
                 QString::number(currentDisplayedPhoto->info.size()*0.000001, 'f', 2 ) + "Mo - <b>Dimensions:</b> " +
                 QString::number(currentDisplayedPhoto->size().width())  + "x" +
                 QString::number(currentDisplayedPhoto->size().height()) + "</p>";
@@ -335,11 +346,43 @@ void UIElements::display_current_individual_set_ui(const GlobalSettings &setting
         return;
     }
 
-    for(auto &&setW : settingsW.setsValidedW){
-        setW->hide();
+    int currentVisiblesW = 0;
+    for(int ii = 0; ii < settingsW.setsLoadedW.size(); ++ii){
+        if(!settingsW.setsLoadedW[ii]->isHidden()){
+            ++currentVisiblesW;
+        }
     }
+
+    if(currentVisiblesW > 1){
+        for(auto &&w : settingsW.setsLoadedW){
+            w->hide();
+        }
+    }
+
+    if(currentVisiblesW == 1){
+
+        int currentShownW = 0;
+        int curretShownId = 0;
+        for(int ii = 0; ii < settingsW.setsLoadedW.size(); ++ii){
+            if(!settingsW.setsLoadedW[ii]->isHidden()){
+                currentShownW = settingsW.setsLoadedW[ii]->id;
+                curretShownId = ii;
+                break;
+            }
+        }
+
+        if(settingsW.setsValidedW[settings.sets.currentId]->id == currentShownW){
+            return;
+        }
+
+        settingsW.setsLoadedW[curretShownId]->hide();
+        settingsW.setsValidedW[settings.sets.currentId]->show();
+    }else{
+        settingsW.setsValidedW[settings.sets.currentId]->show();
+    }
+
     settingsW.setsValidedW[settings.sets.currentId]->show();
-    settingsW.ui.tbRight->setItemText(3, "ENSEMBLE (Photo+Texte) N°" + QString::number(settings.sets.currentId+1));
+    settingsW.ui.tbRight->setItemText(3, "ENSEMBLE N°" + QString::number(settings.sets.currentId+1));
 }
 
 void UIElements::display_current_individual_page_ui(const GlobalSettings &settings){
@@ -357,9 +400,14 @@ void UIElements::display_current_individual_page_ui(const GlobalSettings &settin
     mainUI.lwPagesList->setCurrentRow(settings.pages.currentId);
     mainUI.lwPagesList->blockSignals(false);
 
-    for(auto &&pageW : settingsW.pagesW){
-        pageW->hide();
+    for(int ii = 0; ii < settingsW.pagesW.size(); ++ii){
+        if(ii == settings.pages.currentId){
+            settingsW.pagesW[ii]->show();
+        }else{
+            settingsW.pagesW[ii]->hide();
+        }
     }
+
     settingsW.pagesW[settings.pages.currentId]->show();
     settingsW.ui.vlSelectedPage->setAlignment(Qt::AlignmentFlag::AlignTop);
 

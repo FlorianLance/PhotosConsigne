@@ -15,7 +15,8 @@ CustomPageW::CustomPageW() : SettingsW(){
     QHBoxLayout *layout = new QHBoxLayout();
     this->setLayout(layout);
 
-    this->setMaximumWidth(350);
+//    this->setMinimumWidth(400);
+//    this->setMaximumWidth(400);
     layout->addWidget(&m_frame);
 
     m_layout = new QGridLayout();
@@ -26,10 +27,10 @@ CustomPageW::CustomPageW() : SettingsW(){
 
 void CustomPageW::init(int gridW, int gridH){
 
+    sizeGrid = QSize(gridW, gridH);
     currentFirstPoint = QPoint(-1,-1);
     currentSecondPoint = QPoint(-1,-1);
     relativePositions.clear();
-//    m_positions.clear();
 
     for(auto &&hCBoxes : m_points){
         for(auto &&cb : hCBoxes){
@@ -39,11 +40,48 @@ void CustomPageW::init(int gridW, int gridH){
     m_points.clear();
 
 
+    QString style =
+
+            /*
+            "QCheckBox::indicator {"
+                "width: 10px;"
+                "height: 10px;"
+            "}"
+                    */
+            "QCheckBox::indicator:unchecked:hover {"
+                "image: url(:/images/transparent/tcb_unchecked_hover);"
+            "}"
+
+            "QCheckBox::indicator:unchecked {"
+                "image: url(:/images/transparent/tcb_unchecked);"
+            "}"
+
+            "QCheckBox::indicator:unchecked:pressed {"
+                "image: url(:/images/transparent/tcb_unchecked_pressed);"
+            "}"
+
+            "QCheckBox::indicator:checked {"
+                "image: url(:/images/transparent/tcb_checked);"
+            "}"
+
+            "QCheckBox::indicator:checked:hover {"
+                "image: url(:/images/transparent/tcb_checked_hover);"
+            "}"
+
+            "QCheckBox::indicator:checked:pressed {"
+                "image: url(:/images/transparent/tcb_checked_pressed);"
+            "}"
+
+        ;
+
     for(int ii = 0; ii < gridH; ++ii){
         QVector<QCheckBox*> hBBoxes;
         for(int jj = 0; jj < gridW; ++jj){
 
             hBBoxes.push_back(new QCheckBox());
+
+            hBBoxes.last()->setStyleSheet(style);
+
             m_layout->addWidget(hBBoxes.last(),ii,jj, Qt::AlignCenter);
 
             connect(hBBoxes.last(), &QCheckBox::clicked, this, [=]{
@@ -122,6 +160,7 @@ void CustomPageW::init(int gridW, int gridH){
                 update();
             });
 
+
         }
         m_points.push_back(hBBoxes);
     }
@@ -150,10 +189,23 @@ void CustomPageW::init_ui(CustomPageW &p1, const CustomPageW &p2){
     p1.update();
 }
 
+void CustomPageW::update_ui_with_settings(const SetsPositionSettings &pos){
+
+    blockSignals(true);
+    init(pos.nbPhotosH, pos.nbPhotosV);
+
+    currentFirstPoint = QPoint(-1,-1);
+    currentSecondPoint = QPoint(-1,-1);
+    relativePositions =  pos.relativePosCustom;
+
+    blockSignals(false);
+    update();
+}
+
 void CustomPageW::update_format(const PaperFormat &format){
 
-    constexpr qreal maxW = 300.;
-    constexpr qreal maxH = 300.;
+    constexpr qreal maxW = 350.;
+    constexpr qreal maxH = 350.;
 
     qreal width,height;
     if(format.heightRatio > format.widthRatio){
@@ -197,8 +249,6 @@ void CustomPageW::paintEvent(QPaintEvent *event){
 
     QPoint pStart = firstCB->pos() + m_frame.pos() + QPoint(firstCB->width()/2, firstCB->height()/2);
     QPoint pEnd   = lastCB->pos()  + m_frame.pos() + QPoint(lastCB->width()/2, lastCB->height()/2);;
-    int height = pEnd.y()-pStart.y();
-    int width =  pEnd.x()-pStart.x();
 
     painter.fillRect(QRectF(m_frame.x(), m_frame.y(), m_frame.width(), m_frame.height()),Qt::gray);
 

@@ -35,7 +35,7 @@ struct BordersW : public SettingsW {
         settings.display = ui.cbEnableBorders->isChecked();
         settings.width   = Utility::borders_line_width_from_comboBox(ui.cbBordersLineWidth);
         settings.pen.setColor(color);
-        settings.pen.setStyle(Utility::borders_line_style_from_comboBox(ui.cbBordersLineStyle));
+        Utility::borders_line_style_from_comboBox(ui.cbBordersLineStyle, settings.pen);
         settings.pen.setJoinStyle(Utility::borders_join_style_from_comboBox(ui.cbBordersJoin));
     }
 

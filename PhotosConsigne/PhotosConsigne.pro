@@ -45,7 +45,8 @@ SOURCES += \
     src/Widgets/SettingsW.cpp \
     src/Widgets/RichTextEditW.cpp \
     src/Data/DocumentElements.cpp \
-    src/Data/PaperFormat.cpp
+    src/Data/PaperFormat.cpp \
+    src/Widgets/PageSetsW.cpp
 
 HEADERS += \
     include/UI/PCMainUI.hpp \
@@ -77,7 +78,9 @@ HEADERS += \
     include/Widgets/PageSetsW.hpp \
     include/Widgets/RightSettingsW.hpp \
     include/DebugMessage.hpp \
-    include/Widgets/MiscW.hpp
+    include/Widgets/MiscW.hpp \
+    include/Widgets/DegradedW.hpp \
+    include/Widgets/ImagePositionW.hpp
 
 FORMS += \
     ui/PhotosConsigneMainW.ui \
@@ -96,7 +99,9 @@ FORMS += \
     ui/PageSets.ui \
     ui/RightSettings.ui \
     ui/MiscPage.ui \
-    ui/MiscSet.ui
+    ui/MiscSet.ui \
+    ui/Degraded.ui \
+    ui/ImagePosition.ui
 
 DISTFILES += \
     deploiement/PhotosConsigne_x64.iss \

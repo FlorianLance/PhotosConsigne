@@ -14,137 +14,75 @@
 // generated ui
 #include "ui_PageSets.h"
 
+// Qt
+#include <QDirIterator>
+
 namespace Ui {
     class PageSetsUI;
 }
 
+
 namespace pc{
 
 
-struct PageSetsW : public SettingsW{
+class PageSetsW : public SettingsW{
 
-    PageSetsW() : SettingsW(){
+    Q_OBJECT
 
-        // init ui
-        ui.setupUi(this);
+public :
+    PageSetsW();
 
-        connect(ui.sbPhotosNbWidth, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
+    void read_pos_files();
 
-            int nbMaxPhotos = ui.sbPhotosNbWidth->value() * ui.sbPhotosNbHeight->value();
-            if(nbMaxPhotos < ui.sbPhotosNbPerPage->value()){
-                Utility::safe_init_spinbox_value(ui.sbPhotosNbPerPage, nbMaxPhotos);
-            }
-            emit settings_updated_signal(true);
-        });
+    static void init_ui(PageSetsW &p1, const PageSetsW &p2);
 
-        connect(ui.sbPhotosNbHeight, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
+    void update_settings(SetsPositionSettings &settings) const;
 
-            int nbMaxPhotos = ui.sbPhotosNbWidth->value() * ui.sbPhotosNbHeight->value();
-            if(nbMaxPhotos < ui.sbPhotosNbPerPage->value()){
-                Utility::safe_init_spinbox_value(ui.sbPhotosNbPerPage, nbMaxPhotos);
-            }
-            emit settings_updated_signal(true);
-        });
+    void update_grid_sizes_ui();
 
-        connect(ui.sbPhotosNbPerPage, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
+public slots :
 
-            int nbMaxPhotos = ui.sbPhotosNbWidth->value() * ui.sbPhotosNbHeight->value();
-            if(nbMaxPhotos < ui.sbPhotosNbPerPage->value()){
-                Utility::safe_init_spinbox_value(ui.sbPhotosNbPerPage, nbMaxPhotos);
-            }
-            emit settings_updated_signal(true);
-        });
+    void init_ui_with_settings(int id);
 
-        ui.vlCustom->addWidget(&customW);
-//        ui.vlCustom->setAlignment(Qt::AlignLeft);
+signals :
 
-        ui.frameCustom->hide();
-        ui.pbValidate->setEnabled(false);
-        ui.pbRemoveLast->setEnabled(false);
-        customW.init(ui.sbWPerso->value(),ui.sbHPerso->value());
-        connect(ui.sbHPerso, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
-            customW.init(ui.sbWPerso->value(),ui.sbHPerso->value());
-            emit settings_updated_signal(true);
-        });
-        connect(ui.sbWPerso, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
-            customW.init(ui.sbWPerso->value(),ui.sbHPerso->value());
-            emit settings_updated_signal(true);
-        });
-        connect(ui.rbGrid, &QRadioButton::clicked, this, [=]{
-            ui.frameCustom->setEnabled(false);
-            ui.framePhotosNb->setEnabled(true);
-            ui.frameCustom->hide();
-            ui.framePhotosNb->show();
-            emit settings_updated_signal(false);
-        });
-        connect(ui.rbPersonnalised, &QRadioButton::clicked, this, [=]{
-            ui.frameCustom->setEnabled(true);
-            ui.framePhotosNb->setEnabled(false);
-            ui.frameCustom->show();
-            ui.framePhotosNb->hide();
-            qDebug() << "ui.rbPersonnalised";
-            emit settings_updated_signal(false);
-            qDebug() << "end ui.rbPersonnalised";
-        });
+    void reset_pos_signal();
 
-        connect(&customW, &CustomPageW::current_state_signal, this, [&](QPoint p1, QPoint p2, int validSets){
-            Q_UNUSED(p1);
-            ui.pbValidate->setEnabled(p2.x() != -1);
-            ui.pbRemoveLast->setEnabled(validSets>0 || p2.x() != -1);
-            ui.laNbSets->setText("Nb: " + QString::number(validSets + ((p2.x() != -1)?1:0)));
-            emit settings_updated_signal(false);
-        });
-        connect(ui.pbValidate, &QPushButton::clicked, &customW, &CustomPageW::validate_current_set);
-        connect(ui.pbRemoveLast, &QPushButton::clicked, &customW, &CustomPageW::remove_last_set);
-
-
-    }
-
-
-    static void init_ui(PageSetsW &p1, const PageSetsW &p2){
-
-        Utility::safe_init_spinbox_value(p1.ui.sbPhotosNbHeight,    p2.ui.sbPhotosNbHeight->value());
-        Utility::safe_init_spinbox_value(p1.ui.sbPhotosNbWidth,     p2.ui.sbPhotosNbWidth->value());
-        Utility::safe_init_spinbox_value(p1.ui.sbPhotosNbPerPage,   p2.ui.sbPhotosNbPerPage->value());
-
-        Utility::safe_init_spinbox_value(p1.ui.sbHPerso, p2.ui.sbHPerso->value());
-        Utility::safe_init_spinbox_value(p1.ui.sbWPerso, p2.ui.sbWPerso->value());
-        Utility::safe_init_radio_button_state(p1.ui.rbGrid, p2.ui.rbGrid->isChecked());
-        Utility::safe_init_radio_button_state(p1.ui.rbPersonnalised, p2.ui.rbPersonnalised->isChecked());
-
-        if(p2.ui.frameCustom->isEnabled()){
-            p1.ui.frameCustom->setEnabled(true);
-            p1.ui.framePhotosNb->setEnabled(false);
-            p1.ui.frameCustom->show();
-            p1.ui.framePhotosNb->hide();
-        }else{
-            p1.ui.frameCustom->setEnabled(false);
-            p1.ui.framePhotosNb->setEnabled(true);
-            p1.ui.frameCustom->hide();
-            p1.ui.framePhotosNb->show();
-        }
-
-        CustomPageW::init_ui(p1.customW, p2.customW);
-    }
-
-    void update_settings(SetsPositionSettings &settings) const{
-
-        settings.nbPhotosH          = ui.sbPhotosNbWidth->value();
-        settings.nbPhotosV          = ui.sbPhotosNbHeight->value();
-        settings.nbPhotos           = ui.sbPhotosNbPerPage->value();
-        settings.customMode         = ui.rbPersonnalised->isChecked();
-        settings.relativePosCustom  = customW.relativePositions;
-
-        if(customW.currentSecondPoint.x() > -1){
-            settings.relativePosCustom.push_back(customW.currRelativePos);
-        }
-    }
-
-
+public :
 
     // ui
     Ui::PageSetsUI    ui;
     CustomPageW customW;
+
+    QVector<QDoubleSpinBox*> columnsWidthDsb;
+    QVector<QDoubleSpinBox*> linesHeightDsb;
+
+    static bool posLoaded;
+    static QVector<SetsPositionSettings> predefPositions;
+
+private :
+
+    QVector<QPushButton*> predefButtons;
+
+    QString dsbStyle =
+            "QWidget {"
+                "color : rgb(0,106,255);"
+                 "font:  bold 10 ptCalibri;"
+             "}"
+            "QWidget:!enabled {"
+                "color : rgb(150,150,150);"
+                 "font:  bold 10 ptCalibri;"
+             "}";
+
+//    const QVector<QColor> m_colors = {Qt::blue,Qt::green,Qt::red, Qt::yellow,
+//                                      Qt::lightGray, Qt::black, Qt::cyan, Qt::darkGray,
+//                                      Qt::magenta, Qt::darkRed, Qt::darkGreen, Qt::darkBlue,
+//                                      Qt::darkCyan, Qt::darkMagenta, Qt::darkYellow};
+
+    const QVector<QColor> m_colors = {qRgb(96,72,204), qRgb(98,106,213), qRgb(148,154,226), qRgb(173,177,233),
+                                     qRgb(196,171,235), qRgb(159,118,222), qRgb(126,70,210), qRgb(154,169,207),
+                                     qRgb(109,131,186), qRgb(74,97,157), qRgb(122,164,167), qRgb(148,182,186),
+                                     qRgb(197,216,218), qRgb(108,182,255), qRgb(13,134,255), qRgb(0,92,185)};
 };
 }
 

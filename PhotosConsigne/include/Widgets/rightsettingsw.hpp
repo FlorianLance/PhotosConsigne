@@ -43,8 +43,15 @@ namespace pc{
             ui.vlAllPages->addWidget(&globalPageW);
             ui.vlAllPages->setAlignment(Qt::AlignmentFlag::AlignTop);
             delete globalPageW.ui.frameIndividualSettings;
+
             globalPageW.ui.framePage->setEnabled(true);
             connect(&globalPageW, &PageW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
+
+            connect(&globalPageW.setsW, &PageSetsW::reset_pos_signal, this, [&]{
+                for(auto &&page : pagesW){
+                    page->setsW.read_pos_files();
+                }
+            });
 
             // misc all pages
             connect(&globalPageW.miscW, &MiscPageW::all_global_pages_signal, this, [&]{
@@ -71,7 +78,7 @@ namespace pc{
 
                 emit settings_updated_signal(true);
             });
-            delete globalPageW.miscW.ui.pbReplaceLocalWIthGlobal;
+            delete globalPageW.miscW.ui.pbReplaceGlobalWithLocal;
 
             // misc all sets
             connect(globalSetW.miscW.ui.pbGlobal, &QPushButton::clicked, this, [&]{
@@ -145,6 +152,15 @@ namespace pc{
                         PageW::init_ui(globalPageW, *pageW);
                         emit settings_updated_signal(true);
                     });
+
+                    connect(&pageW->setsW, &PageSetsW::reset_pos_signal, this, [=]{
+
+                        for(auto &&page : pagesW){
+                            if(pageW->id != page->id){
+                                page->setsW.read_pos_files();
+                            }
+                        }
+                    });
                 }
 
             }else if(diff > 0){ // remove diff pages
@@ -168,7 +184,7 @@ namespace pc{
 
             connect(setW->textW.textEdit(), &TextEdit::resource_added_signal, this, &RightSettingsW::resource_added_signal);
 
-            // # set style
+            //  set style
             connect(setW, &SetW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
             connect(&setW->miscW, &MiscSetW::replace_global_with_individual_signal, this, [=]{
                 SetW::init_ui(globalSetW, *setW, true);

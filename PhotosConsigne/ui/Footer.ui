@@ -65,7 +65,7 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>Utiliser les paramètres définis ci-dessous pour cet ensemble</string>
+         <string>Afficher le bas de page</string>
         </property>
         <property name="styleSheet">
          <string notr="true">QWidget {

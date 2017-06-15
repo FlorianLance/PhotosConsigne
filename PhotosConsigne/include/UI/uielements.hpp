@@ -44,11 +44,6 @@ public :
 
     UIElements(QMainWindow *parent);
 
-    ~UIElements(){
-//        DebugMessage("~UIElements");
-    }
-
-
     QTimer zonesTimer;  /**< timer for displaying the zones in the preview */
 
     std::unique_ptr<QWidget> supportW   = nullptr;  /**< support window */
@@ -57,7 +52,6 @@ public :
     RightSettingsW settingsW;           /**< right settings widgets */
     PhotoW   photoW;                    /**< photo widget */
     PreviewW previewW;                  /**< preview widget */
-
 
     Ui::PhotosConsigneMainUI mainUI;    /**< ui of the main window */
 

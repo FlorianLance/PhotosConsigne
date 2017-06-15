@@ -85,6 +85,11 @@ void PreviewW::set_current_pc(int idPC){
         return;
     }
 
+
+    if(m_currentPCRectId == idPC){ // rectangle already selected
+        return;
+    }
+
     m_currentPCRectId = -1;
 
     int idSet = 0;

@@ -20,8 +20,6 @@ public :
 
     PDFGeneratorWorker(){}
 
-    virtual ~PDFGeneratorWorker();
-
     void draw_page(QPainter &painter, PCPages &pcPages, const int idPageToDraw, const qreal factorUpscale, const bool preview, const bool drawZones);
 
     void draw_html(QPainter &painter, QString html, QRectF upperRect, QRectF docRect);
@@ -56,6 +54,8 @@ signals :
 private :
 
     void draw_zones(QPainter &painter, SPCPage pcPage);
+
+    void draw_degraded(QPainter &painter, const QRectF &rectPage, const ColorsSettings &colors, const ExtraPCInfo &infos);
 
     void draw_backgrounds(QPainter &painter, SPCPage pcPage, ExtraPCInfo &infos);
 

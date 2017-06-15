@@ -219,7 +219,6 @@ void PCMainUI::build_valid_sets(){
     // update current PD displayed if necessary
     auto nbPhotosValid = m_settings.photos.valided->size();
     if(m_settings.sets.currentId >= nbPhotosValid && nbPhotosValid > 0){
-        qDebug() << "SET SHOULD NOT HPPEND";
         m_settings.sets.currentId = nbPhotosValid-1;
     }
 }
@@ -292,21 +291,22 @@ void PCMainUI::build_pages(){
             set->totalId = currentId;
 
             if(currentId < m_settings.photos.valided->size()){
+
+                auto setW = m_ui.settingsW.setsValidedW[currentId].get();
+                if(setW->ui.cbEnableIndividualConsign->isChecked()){
+                    setW->update_settings(set->settings);
+                }else{
+                    set->settings       = m_settings.sets;
+                }
+
                 set->photo = m_settings.photos.valided->at(currentId);
                 set->photo->isOnDocument = true; // photo will be on the generated document
-                set->photo->pageId = ii;
-                set->text = std::make_shared<Consign>(Consign());
+                set->photo->pageId = ii;                
+                set->text = std::make_shared<Consign>(Consign());                
+
             }else{
                 break;
-            }
-
-            // global or individual
-            auto setW = m_ui.settingsW.setsValidedW[currentId].get();
-            if(setW->ui.cbEnableIndividualConsign->isChecked()){
-                setW->update_settings(set->settings);
-            }else{
-                set->settings       = m_settings.sets;
-            }
+            }                       
 
             pcPage->sets.push_back(set);
             currentId++;
@@ -318,7 +318,6 @@ void PCMainUI::build_pages(){
 
     // check row
     if(m_settings.pages.currentId >= m_settings.pages.nb){
-        qDebug() << "SHOULD NOT HAPPEND: " << m_settings.pages.nb;
         m_settings.pages.currentId = m_settings.pages.nb-1;
     }
 
@@ -423,8 +422,6 @@ void PCMainUI::define_selected_page_from_current_photo(){
     if(idPage != -1){
         m_settings.pages.currentId = idPage;
     }
-
-    qDebug() << "################################ SELECTED PAGE: " << m_settings.pages.currentId;
 }
 
 void PCMainUI::from_main_UI_connections()

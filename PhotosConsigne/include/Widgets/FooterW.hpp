@@ -68,7 +68,7 @@ struct FooterW : public SettingsW{
                 break;
             case 2:
                 ui.vlFooter->addStretch();;
-                ui.tabFooter->setMaximumHeight(130);
+                ui.tabFooter->setMaximumHeight(600);
                 break;
             }
         });

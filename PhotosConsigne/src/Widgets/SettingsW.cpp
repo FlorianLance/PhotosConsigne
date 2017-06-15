@@ -99,25 +99,39 @@ Qt::PenJoinStyle Utility::borders_join_style_from_comboBox(QComboBox *cb){
     return style;
 }
 
-Qt::PenStyle Utility::borders_line_style_from_comboBox(QComboBox *cb){
+void Utility::borders_line_style_from_comboBox(QComboBox *cb, QPen &pen){
 
-    Qt::PenStyle style = Qt::SolidLine;
+    QVector<qreal> dashes;
+    qreal space;
     switch(cb->currentIndex()){
-        case 1:
-            style = Qt::DotLine;
+            case 0:
+            pen.setStyle(Qt::SolidLine);
         break;
-        case 2:
-            style = Qt::DashLine;
+            case 1:
+            pen.setStyle(Qt::CustomDashLine);
+            space = 6.;
+            dashes << 1 <<space;
+            pen.setDashPattern(dashes);
         break;
-        case 3:
-            style = Qt::DashDotLine;
+            case 2:
+            pen.setStyle(Qt::CustomDashLine);
+            space = 4.;
+            dashes << 7 << space;
+            pen.setDashPattern(dashes);
         break;
-        case 4:
-            style = Qt::DashDotDotLine;
+            case 3:
+            pen.setStyle(Qt::CustomDashLine);
+            space = 4.;
+            dashes << 1 <<space << 5 << space;
+            pen.setDashPattern(dashes);
+        break;
+            case 4:
+            pen.setStyle(Qt::CustomDashLine);
+            space = 4.;
+            dashes << 1 <<space << 1 << space << 5 << space;
+            pen.setDashPattern(dashes);
         break;
     }
-
-    return style;
 }
 
 Qt::BrushStyle Utility::pattern_style_comboBox(QComboBox *cb){
@@ -304,16 +318,24 @@ void SettingsW::init_comboboxes_connections(QVector<QComboBox *> comboBox, bool 
     }
 }
 
-void pc::SettingsW::init_color_dialog_connections(QToolButton *tb, QString actionToolTip, QString dialogColorText, QColor *color, QSize iconSize){
+void pc::SettingsW::init_color_dialog_connections(QToolButton *tb, QString actionToolTip, QString dialogColorText, QColor *color, QSize iconSize, bool alpha){
 
     QPixmap pixColor(iconSize.width(), iconSize.height());
     pixColor.fill(*color);
     QAction *actionColor = new QAction(pixColor, actionToolTip, this);
     connect(actionColor, &QAction::triggered, this, [=]{
 
-        *color = QColorDialog::getColor(*color, nullptr, dialogColorText);
-        if (!color->isValid())
+        QColor newColor;
+        if(alpha){
+            newColor = QColorDialog::getColor(*color, nullptr, dialogColorText, QColorDialog::ColorDialogOption::ShowAlphaChannel);
+        }else{
+            newColor = QColorDialog::getColor(*color, nullptr, dialogColorText);
+        }
+
+        if (!newColor.isValid())
             return;
+
+        *color = newColor;
 
         QPixmap pix(iconSize.width(), iconSize.height());
         pix.fill(*color);
@@ -368,6 +390,15 @@ void pc::SettingsW::init_doublespinboxes_connections(QVector<QDoubleSpinBox *> d
     for(auto &&dSpinBox : dSpinBoxes){
         connect(dSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, [=]{
             emit settings_updated_signal(displayZones);;
+        });
+    }
+}
+
+void SettingsW::init_radiobuttons_connections(QVector<QRadioButton *> buttons, bool displayZones){
+
+    for(auto &&cb : buttons){
+        connect(cb, &QRadioButton::clicked, this, [=]{
+            emit settings_updated_signal(displayZones);
         });
     }
 }

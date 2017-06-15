@@ -5,13 +5,10 @@
 
 // Qt
 #include <QCoreApplication>
+#include <QVector2D>
 
 
 using namespace pc;
-
-PDFGeneratorWorker::~PDFGeneratorWorker(){
-    DebugMessage("~PDFGeneratorWorker");
-}
 
 
 void PDFGeneratorWorker::draw_zones(QPainter &painter, SPCPage pcPage){
@@ -41,7 +38,7 @@ void PDFGeneratorWorker::draw_zones(QPainter &painter, SPCPage pcPage){
         Drawing::draw_filled_rect(painter, pcPage->interMarginsRects[set->id], qRgb(200,0,0), 0.3);
 
         // remove set
-        Drawing::draw_filled_rect(painter, set->rectOnPage, qRgb(255,255,255), 1.);
+        Drawing::draw_filled_rect(painter, set->rectOnPage, qRgb(255,255,255), 0.3);
 
         // photo
         Drawing::draw_filled_rect(painter, set->photo->rectOnPage, qRgb(255,255,0), 0.3);
@@ -50,6 +47,78 @@ void PDFGeneratorWorker::draw_zones(QPainter &painter, SPCPage pcPage){
         Drawing::draw_filled_rect(painter, set->text->rectOnPage, qRgb(0,0,200), 0.3);
     }
 }
+
+
+void PDFGeneratorWorker::draw_degraded(QPainter &painter, const QRectF &rectPage, const ColorsSettings &colors, const ExtraPCInfo &infos){
+
+    QPointF startR(rectPage.width()*colors.start.x(), rectPage.height()*colors.start.y());
+    QPointF endR(rectPage.width()*colors.end.x(), rectPage.height()*colors.end.y());
+    switch(colors.degradedType){
+    case DegradedType::padSpread:{
+            QLinearGradient grad(startR, endR);
+            grad.setSpread(QGradient::PadSpread);
+            grad.setCoordinateMode(QGradient::CoordinateMode::LogicalMode);
+            grad.setColorAt(0, colors.color1);
+            grad.setColorAt(1, colors.color2);
+            painter.fillRect(rectPage,grad);
+        }
+        break;
+//    case DegradedType::reflectSpread:{
+//            QLinearGradient grad(startR, endR);
+//            grad.setSpread(QGradient::ReflectSpread);
+//            grad.setCoordinateMode(QGradient::CoordinateMode::LogicalMode);
+//            grad.setColorAt(0, colors.color1);
+//            grad.setColorAt(1, colors.color2);
+//            painter.fillRect(rectPage,grad);
+//        }
+//        break;
+//    case DegradedType::repeatSpread:{
+//            QLinearGradient grad(startR, endR);
+//            grad.setSpread(QGradient::RepeatSpread);
+//            grad.setCoordinateMode(QGradient::CoordinateMode::LogicalMode);
+//            grad.setColorAt(0, colors.color1);
+//            grad.setColorAt(1, colors.color2);
+//            painter.fillRect(rectPage,grad);
+//        }
+//        break;
+    case DegradedType::radPadSpread:{
+            QRadialGradient grad(startR, static_cast<qreal>(QVector2D(startR-endR).length()));
+            grad.setSpread(QGradient::PadSpread);
+            grad.setCoordinateMode(QGradient::CoordinateMode::LogicalMode);
+            grad.setColorAt(0, colors.color1);
+            grad.setColorAt(1, colors.color2);
+            painter.fillRect(rectPage,grad);
+        }
+        break;
+//    case DegradedType::radReflectSpread:{
+//            QRadialGradient grad(startR, static_cast<qreal>(QVector2D(startR-endR).length()));
+//            grad.setSpread(QGradient::ReflectSpread);
+//            grad.setCoordinateMode(QGradient::CoordinateMode::LogicalMode);
+//            grad.setColorAt(0, colors.color1);
+//            grad.setColorAt(1, colors.color2);
+//            painter.fillRect(rectPage,grad);
+//        }
+//        break;
+//    case DegradedType::radRepeatSpread:{
+//            QRadialGradient grad(startR, static_cast<qreal>(QVector2D(startR-endR).length()));
+//            grad.setSpread(QGradient::RepeatSpread);
+//            grad.setCoordinateMode(QGradient::CoordinateMode::LogicalMode);
+//            grad.setColorAt(0, colors.color1);
+//            grad.setColorAt(1, colors.color2);
+//            painter.fillRect(rectPage,grad);
+//        }
+//        break;
+    case DegradedType::conical:{
+            QConicalGradient grad(startR, static_cast<qreal>(QVector2D(startR-endR).length()));
+            grad.setCoordinateMode(QGradient::CoordinateMode::LogicalMode);
+            grad.setColorAt(0, colors.color1);
+            grad.setColorAt(1, colors.color2);
+            painter.fillRect(rectPage,grad);
+        }
+        break;
+    }
+}
+
 
 void PDFGeneratorWorker::draw_backgrounds(QPainter &painter, SPCPage pcPage, ExtraPCInfo &infos){
 
@@ -60,47 +129,67 @@ void PDFGeneratorWorker::draw_backgrounds(QPainter &painter, SPCPage pcPage, Ext
 
     BackGroundSettings &background = pcPage->settings.background;
 
-    brush.setColor(background.color);
+    // # white background
+    brush.setStyle(Qt::SolidPattern);
+    brush.setColor(Qt::white);
     painter.fillRect(pcPage->rectOnPage,brush);
 
     // # photo
     if(pcPage->settings.background.displayPhoto){
 
         if(background.photo != nullptr){
-            background.photo->draw(painter, pcPage->rectOnPage, infos, pcPage->rectOnPage.size());
+            background.photo->draw(painter, pcPage->settings.background.imagePosition, pcPage->rectOnPage, infos, pcPage->rectOnPage.size());
         }
     }
 
-    // # pattern
-    if(background.displayPattern){
-
-        qreal widthPattern  = m_referenceDPI * infos.paperFormat.widthRatio;
-        qreal heightPattern = m_referenceDPI * infos.paperFormat.heightRatio;
-        QRectF patternRect(0., 0., widthPattern, heightPattern);
-
-        QImage patternImage(static_cast<int>(patternRect.width()),static_cast<int>(patternRect.height()), QImage::Format_ARGB32);
-        QPainter patternPainter(&patternImage);
-        brush.setStyle(background.patternBrushStyle);
-        brush.setColor(background.colorPattern);
-        patternPainter.fillRect(patternRect, brush);
-        patternPainter.end();
-
-        Photo patternPhoto(std::move(patternImage));
-        patternPhoto.draw(painter, pcPage->rectOnPage, infos);
+    // # colors
+    if(background.colors.type == ColorType::color1){
+        brush.setColor(background.colors.color1);
+        painter.fillRect(pcPage->rectOnPage,brush);
+    }else if(background.colors.type == ColorType::color2){
+        brush.setColor(background.colors.color2);
+        painter.fillRect(pcPage->rectOnPage,brush);
+    }else{
+        draw_degraded(painter, pcPage->rectOnPage, background.colors, infos);
     }
+
+    // # pattern
+//    if(background.displayPattern){
+
+//        qreal widthPattern  = m_referenceDPI * infos.paperFormat.widthRatio;
+//        qreal heightPattern = m_referenceDPI * infos.paperFormat.heightRatio;
+//        QRectF patternRect(0., 0., widthPattern, heightPattern);
+
+//        QImage patternImage(static_cast<int>(patternRect.width()),static_cast<int>(patternRect.height()), QImage::Format_ARGB32);
+//        QPainter patternPainter(&patternImage);
+//        brush.setStyle(background.patternBrushStyle);
+//        brush.setColor(background.colorPattern);
+//        patternPainter.fillRect(patternRect, brush);
+//        patternPainter.end();
+
+//        Photo patternPhoto(std::move(patternImage));
+//        patternPhoto.draw(painter, pcPage->rectOnPage, infos);
+//    }
 
     // header background
     if(pcPage->header->settings.enabled){
 
         // # color
         brush.setStyle(Qt::SolidPattern);
-        brush.setColor(pcPage->header->settings.background.color);
-        painter.fillRect(pcPage->header->rectOnPage, brush);
+        if(pcPage->header->settings.background.colors.type == ColorType::color1){
+            brush.setColor(pcPage->header->settings.background.colors.color1);
+            painter.fillRect(pcPage->header->rectOnPage,brush);
+        }else if(pcPage->header->settings.background.colors.type == ColorType::color2){
+            brush.setColor(pcPage->header->settings.background.colors.color2);
+            painter.fillRect(pcPage->header->rectOnPage,brush);
+        }else{
+            draw_degraded(painter, pcPage->header->rectOnPage, pcPage->header->settings.background.colors, infos);
+        }
 
         // # photo
         if(pcPage->header->settings.background.displayPhoto){
             if(pcPage->header->settings.background.photo != nullptr){
-                pcPage->header->settings.background.photo->draw(painter, pcPage->header->rectOnPage, infos, pcPage->header->rectOnPage.size());
+                pcPage->header->settings.background.photo->draw(painter, pcPage->header->settings.background.imagePosition, pcPage->header->rectOnPage, infos, pcPage->header->rectOnPage.size());
             }
         }
     }
@@ -110,14 +199,21 @@ void PDFGeneratorWorker::draw_backgrounds(QPainter &painter, SPCPage pcPage, Ext
 
         // # color
         brush.setStyle(Qt::SolidPattern);
-        brush.setColor(pcPage->footer->settings.background.color);
-        painter.fillRect(pcPage->footer->rectOnPage,brush);
+        if(pcPage->footer->settings.background.colors.type == ColorType::color1){
+            brush.setColor(pcPage->footer->settings.background.colors.color1);
+            painter.fillRect(pcPage->footer->rectOnPage,brush);
+        }else if(pcPage->footer->settings.background.colors.type == ColorType::color2){
+            brush.setColor(pcPage->footer->settings.background.colors.color2);
+            painter.fillRect(pcPage->footer->rectOnPage,brush);
+        }else{
+            draw_degraded(painter, pcPage->footer->rectOnPage, pcPage->footer->settings.background.colors, infos);
+        }
 
         // # photo
         if(pcPage->footer->settings.background.displayPhoto){
 
             if(pcPage->footer->settings.background.photo != nullptr){
-                pcPage->footer->settings.background.photo->draw(painter, pcPage->footer->rectOnPage, infos, pcPage->footer->rectOnPage.size());
+                pcPage->footer->settings.background.photo->draw(painter,  pcPage->footer->settings.background.imagePosition, pcPage->footer->rectOnPage, infos, pcPage->footer->rectOnPage.size());
             }
         }
     }
@@ -156,7 +252,7 @@ void PDFGeneratorWorker::draw_contents(QPainter &painter, SPCPage pcPage, ExtraP
         if(pcSet->photo != nullptr){
             if(pcSet->photo->rectOnPage.width() > 0 && pcSet->photo->rectOnPage.height() > 0){ // ############################ costly
 
-                pcSet->photo->draw(painter, pcSet->photo->rectOnPage, infos, pcPage->rectOnPage.size());
+                pcSet->photo->draw(painter,pcSet->settings.style.imagePosition ,pcSet->photo->rectOnPage, infos, pcPage->rectOnPage.size());
             }
         }
 
@@ -184,7 +280,7 @@ void PDFGeneratorWorker::draw_contents(QPainter &painter, SPCPage pcPage, ExtraP
     }
 
     // header
-    if(pcPage->header->settings.enabled){
+    if(pcPage->header->settings.enabled && !pcPage->settings.misc.doNotDisplayHeader){
 
         // text
         if(pcPage->header->rectOnPage.height() > 0){
@@ -205,22 +301,25 @@ void PDFGeneratorWorker::draw_contents(QPainter &painter, SPCPage pcPage, ExtraP
     }
 
     // footer
-    if(pcPage->footer->settings.enabled){
+    if(pcPage->footer->settings.enabled && !pcPage->settings.misc.doNotDisplayFooter){
 
         // text
-        painter.setOpacity(1.);
-        infos.photoNum      = 0;
-        infos.photoPCNum    = 0;
+        if(pcPage->footer->rectOnPage.height() > 0){
 
-        if(!infos.preview){
-            emit set_progress_bar_text_signal("Dessin base de page");
-            QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+            painter.setOpacity(1.);
+            infos.photoNum      = 0;
+            infos.photoPCNum    = 0;
+
+            if(!infos.preview){
+                emit set_progress_bar_text_signal("Dessin base de page");
+                QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+            }
+
+            draw_html(painter, Drawing::format_html_for_generation(*pcPage->footer->settings.text.html.get(), infos),
+                      QRectF(pcPage->footer->rectOnPage.x(),        pcPage->footer->rectOnPage.y(),
+                             pcPage->footer->rectOnPage.width(),    pcPage->rectOnPage.height()),
+                      pcPage->footer->rectOnPage);
         }
-
-        draw_html(painter, Drawing::format_html_for_generation(*pcPage->footer->settings.text.html.get(), infos),
-                  QRectF(pcPage->footer->rectOnPage.x(),        pcPage->footer->rectOnPage.y(),
-                         pcPage->footer->rectOnPage.width(),    pcPage->rectOnPage.height()),
-                  pcPage->footer->rectOnPage);
     }
 }
 
@@ -232,26 +331,26 @@ void PDFGeneratorWorker::draw_page(QPainter &painter, pc::PCPages &pcPages, cons
     ExtraPCInfo infos;
     infos.pagesNb       = pcPages.pages.size();
     infos.pageNum       = idPageToDraw;
-    infos.pageColor     = pcPage->settings.background.color;
+//    infos.pageColor     = pcPage->settings.background.color;
     infos.photoNum      = 0;
     infos.photoPCNum    = 0;
     infos.preview       = preview;
     infos.paperFormat   = pcPages.settings.paperFormat;
     infos.factorUpscale = factorUpscale;
+    infos.displaySizes  = drawZones;
+
     for(auto &&page : pcPages.pages){
         infos.photoTotalNum += page->sets.size();
     }
 
-
     if(drawZones){
         draw_zones(painter,pcPage);
-    }else{
-        draw_backgrounds(painter, pcPage, infos);
     }
+//    else{
+        draw_backgrounds(painter, pcPage, infos);
+//    }
 
     draw_contents(painter, pcPage, infos);
-
-
 }
 
 void PDFGeneratorWorker::draw_html(QPainter &painter, QString html, QRectF upperRect, QRectF docRect){
@@ -325,6 +424,8 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
     emit set_progress_bar_state_signal(0);
 
     QPrinter pdfWriter(QPrinter::HighResolution);
+
+
     pdfWriter.setOutputFormat(QPrinter::PdfFormat);
     pdfWriter.setOutputFileName(pcPages.pdfFileName);
     pdfWriter.setCreator("created with PhotosConsigne (https://github.com/FlorianLance/PhotosConsigne)");
@@ -337,6 +438,8 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
 
     // init painter
     QPainter pdfPainter;
+    pdfPainter.setRenderHints(QPainter::Antialiasing, true);
+    pdfPainter.setPen(Qt::NoPen);
     if(!pdfPainter.begin(&pdfWriter)){
         qWarning() << "-Error: can't write on file: " << pcPages.pdfFileName << ", file may not exists";
 

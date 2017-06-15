@@ -10,6 +10,9 @@ namespace pc {
     // define enums
     enum class PageOrientation { landScape = 0, portrait = 1};
     enum class Position { top = 0, bottom = 1, left = 2, right = 3, on = 4};
+    enum class ColorType { color1 = 0, color2 = 1, degraded = 2};
+//    enum class DegradedType {padSpread = 0, reflectSpread =1, repeatSpread = 2, radPadSpread = 3, radReflectSpread = 4, radRepeatSpread = 5, conical = 6};
+    enum class DegradedType {padSpread = 0, radPadSpread = 1, conical = 2};
 
     // define classes
     struct MarginsSettings{
@@ -48,28 +51,49 @@ namespace pc {
         int nbPhotosH;
         int nbPhotosV;
 
+        QVector<qreal> columnsWidth;
+        QVector<qreal> linesHeight;
+
         QVector<QRectF> relativePosCustom;
+    };
+
+    struct ColorsSettings{
+
+        ColorType type;
+
+        QColor color1;
+        QColor color2;
+
+        QPointF start;
+        QPointF end;
+        DegradedType degradedType;
     };
 
     struct BackGroundSettings{
 
         bool displayPhoto = false;
-        bool displayPattern = false;
+//        bool displayPattern = false;
 
-        Qt::BrushStyle patternBrushStyle = Qt::BDiagPattern;
+//        Qt::BrushStyle patternBrushStyle = Qt::BDiagPattern;
 
-        QColor color = Qt::white;
-        QColor colorPattern = Qt::black;
+//        QColor color = Qt::white;
+//        QColor colorPattern = Qt::black;
 
+        ImagePositionSettings imagePosition;
+        ColorsSettings colors;
         SPhoto photo = nullptr;
     };
 
+
     struct StyleSettings{
 
-        int photoAlignment;
+        ImagePositionSettings imagePosition;
+
+//        int photoAlignment;
         qreal ratioTextPhoto;
+//        qreal scalePhoto;
         Position textPositionFromPhotos;
-        PhotoAdjust photoAdust = PhotoAdjust::adjust;
+//        PhotoAdjust photoAdust = PhotoAdjust::adjust;
     };
 
     struct PhotosSettings{

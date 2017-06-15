@@ -112,6 +112,9 @@
              <height>50</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Type de ligne de la bordure</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">QComboBox {
     border: 1px solid rgb(0,106,255);
@@ -275,6 +278,9 @@ QWidget:!enabled {
              <width>80</width>
              <height>50</height>
             </size>
+           </property>
+           <property name="toolTip">
+            <string>Epaisseur du trait de la bordure</string>
            </property>
            <property name="styleSheet">
             <string notr="true">QComboBox {
@@ -450,6 +456,9 @@ QWidget:!enabled {
              <height>50</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Sytle de jointure de la bordure</string>
+           </property>
            <property name="styleSheet">
             <string notr="true">QComboBox {
     border: 1px solid rgb(0,106,255);
@@ -605,6 +614,9 @@ QWidget:!enabled {
              <height>50</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>Couleur de la bordure</string>
+           </property>
            <property name="styleSheet">
             <string notr="true"> QToolButton:pressed {
  background-color: white;
@@ -686,7 +698,7 @@ QWidget {
       <item row="1" column="0" colspan="4" alignment="Qt::AlignHCenter">
        <widget class="QCheckBox" name="cbEnableBorders">
         <property name="toolTip">
-         <string>Activation des marges extérieures</string>
+         <string>Afficher des bordures autour des ensembles</string>
         </property>
         <property name="styleSheet">
          <string notr="true">QWidget {

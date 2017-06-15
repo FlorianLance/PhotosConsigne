@@ -42,7 +42,7 @@ pc::Photo::Photo(const QString &path, bool isWhiteSpace) : isWhiteSpace(isWhiteS
     }
 }
 
-void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, const ExtraPCInfo &infos, const QSizeF &pageSize){
+void pc::Photo::draw(QPainter &painter, const ImagePositionSettings &position, const QRectF &rectPhoto, const ExtraPCInfo &infos, const QSizeF &pageSize){
 
     if(isWhiteSpace){
         return;
@@ -54,18 +54,19 @@ void pc::Photo::draw(QPainter &painter, const QRectF &rectPhoto, const ExtraPCIn
     }
 
     if(infos.preview){
-        draw_small(painter, rectPhoto, scaledPhoto, infos, pageSize);
+        draw_small(painter, position, rectPhoto, scaledPhoto, infos, pageSize);
     }else{
         if(rectPhoto.width() > 32000 || rectPhoto.height() > 32000){
 //            draw_huge(painter, rectPhoto);
             qWarning() << "-Error: Format too huge: " << namePhoto << " can't be drawn.";
         }else{
-            draw_small(painter, rectPhoto, (pathPhoto.size() > 0) ? QImage(pathPhoto) : scaledPhoto, infos, pageSize);
+//            draw_small(painter, rectPhoto, (pathPhoto.size() > 0) ? QImage(pathPhoto) : scaledPhoto, infos, pageSize);
+            draw_small(painter, position, rectPhoto, (pathPhoto.size() > 0) ? QImage(pathPhoto).transformed((QTransform().rotate(rotation))) : scaledPhoto, infos, pageSize);
         }
     }
 }
 
-QRectF pc::Photo::draw_small(QPainter &painter, const QRectF &rectPhoto, const QImage &photo, const ExtraPCInfo &infos, const QSizeF &pageSize){
+QRectF pc::Photo::draw_small(QPainter &painter, const ImagePositionSettings &position, const QRectF &rectPhoto, const QImage &photo, const ExtraPCInfo &infos, const QSizeF &pageSize){
 
     int startX, startY;
     qreal newX, newY, newWidth, newHeight;
@@ -75,48 +76,26 @@ QRectF pc::Photo::draw_small(QPainter &painter, const QRectF &rectPhoto, const Q
     int rectPhotoHeight = static_cast<int>(rectPhoto.height());
 
     // scale and rotate photo
-    switch(adjust){
+    qreal scaleCenter;
+    switch(position.adjustment){
 
         case PhotoAdjust::adjust:
 
-            photoToDraw = infos.preview ? photo.scaled(rectPhotoWidth,rectPhotoHeight, Qt::KeepAspectRatio) :
-                                   (photo.transformed(QTransform().rotate(rotation))).scaled(rectPhotoWidth, rectPhotoHeight, Qt::KeepAspectRatio);
+            photoToDraw = photo.scaled(rectPhotoWidth,rectPhotoHeight, Qt::KeepAspectRatio);
 
-            newX      = rectPhoto.x();
-            newY      = rectPhoto.y();
-            newWidth  = photoToDraw.width();
-            newHeight = photoToDraw.height();
-
-            if(photoToDraw.width() < rectPhoto.width()){
-                if(alignment & Qt::AlignRight){
-                    newX += rectPhoto.width()-photoToDraw.width();
-                }
-                else if(alignment & Qt::AlignHCenter){
-                    newX += rectPhoto.width()*0.5  - photoToDraw.width()*0.5;
-                }
-            }
-            if(photoToDraw.height() < rectPhoto.height()){
-                if(alignment & Qt::AlignBottom){
-                    newY += rectPhoto.height()-photoToDraw.height();
-                }
-                else if(alignment & Qt::AlignVCenter){
-                    newY += rectPhoto.height()*0.5-photoToDraw.height()*0.5;
-                }
-            }
-
-            if((rectPhoto.width()-photoToDraw.width()) > (rectPhoto.height()-photoToDraw.height())){
-                newHeight = rectPhoto.height();
-                newY      = rectPhoto.y();
-            }else{
-                newWidth  = rectPhoto.width();
-                newX      = rectPhoto.x();
+            {
+                qreal diffX = rectPhoto.width() - photoToDraw.width();
+                qreal diffY = rectPhoto.height() - photoToDraw.height();
+                newX      = static_cast<int>(diffX * position.xPos) + rectPhoto.x();
+                newY      = static_cast<int>(diffY * (1. - position.yPos)) + rectPhoto.y();
+                newWidth  = photoToDraw.width();
+                newHeight = photoToDraw.height();
             }
 
         break;
         case PhotoAdjust::extend:
 
-            photoToDraw = infos.preview ? photo.scaled(rectPhotoWidth, rectPhotoHeight, Qt::IgnoreAspectRatio) :
-                                    (photo.transformed(QTransform().rotate(rotation))).scaled(rectPhotoWidth, rectPhotoHeight, Qt::IgnoreAspectRatio);
+            photoToDraw = photo.scaled(rectPhotoWidth, rectPhotoHeight, Qt::IgnoreAspectRatio);
             newX      = rectPhoto.x();
             newY      = rectPhoto.y();
             newWidth  = photoToDraw.width();
@@ -124,58 +103,37 @@ QRectF pc::Photo::draw_small(QPainter &painter, const QRectF &rectPhoto, const Q
 
         break;
         case PhotoAdjust::center:
-            photoToDraw = photo;
-            if(!infos.preview){
-                photoToDraw = photoToDraw.transformed(QTransform().rotate(rotation));
-            }
 
-            if(photoToDraw.width() > rectPhoto.width() || photoToDraw.height() > rectPhoto.height()){
-                photoToDraw = photoToDraw.scaled(rectPhotoWidth, rectPhotoHeight, Qt::KeepAspectRatio);
-            }
+//            if(photo.width() > rectPhoto.width() || photo.height() > rectPhoto.height()){
+//                scaleCenter = position.scale;//(position.scale < 1.) ? position.scale : 1.;
+//                qDebug() << "rescale";
+//                photoToDraw = photo.scaled(static_cast<int>(rectPhotoWidth*position.scale), static_cast<int>(rectPhotoHeight*position.scale), Qt::KeepAspectRatio);
+//            }else{
+//                photoToDraw = photo;
+//            }
 
-            startX = 0; // left
-            if(alignment & Qt::AlignHCenter){ // right
-                startX  = static_cast<int>((rectPhoto.width()  - photoToDraw.width())/2.);
-            }else if(alignment & Qt::AlignRight){ // h center
-                startX = static_cast<int>(rectPhoto.width() - photoToDraw.width());
-            }
+            photoToDraw = photo.scaled(static_cast<int>(rectPhotoWidth*position.scale), static_cast<int>(rectPhotoHeight*position.scale), Qt::KeepAspectRatio);
 
-            startY = 0; // top
-            if(alignment & Qt::AlignVCenter){ // V center
-                startY  = static_cast<int>((rectPhoto.height() - photoToDraw.height())/2.);
-            }else if(alignment & Qt::AlignBottom){ // bottom
-                startY = static_cast<int>(rectPhoto.height() - photoToDraw.height());
-            }
 
-            newX      = startX + rectPhoto.x();
-            newY      = startY + rectPhoto.y();
-            newWidth  = photoToDraw.width();
-            newHeight = photoToDraw.height();
+            {
+                qreal diffX = rectPhoto.width() - photoToDraw.width();
+                qreal diffY = rectPhoto.height() - photoToDraw.height();
+                newX      = static_cast<int>(diffX * position.xPos) + rectPhoto.x();
+                newY      = static_cast<int>(diffY * (1. - position.yPos)) + rectPhoto.y();
+                newWidth  = photoToDraw.width();
+                newHeight = photoToDraw.height();
+            }
 
         break;
         case PhotoAdjust::fill:
 
-            photoToDraw = infos.preview ? photo.scaled(rectPhotoWidth, rectPhotoHeight, Qt::KeepAspectRatioByExpanding) :
-                                    (photo.transformed(QTransform().rotate(rotation))).scaled(rectPhotoWidth, rectPhotoHeight, Qt::KeepAspectRatioByExpanding);
+            scaleCenter = (position.scale > 1.) ? position.scale : 1.;
+            photoToDraw = photo.scaled(static_cast<int>(rectPhotoWidth*scaleCenter), static_cast<int>(rectPhotoHeight*scaleCenter), Qt::KeepAspectRatioByExpanding);
 
+            startX = static_cast<int>((photoToDraw.width() - rectPhoto.width())*position.xPos);
+            startY = static_cast<int>((photoToDraw.height() - rectPhoto.height())*(1. - position.yPos));
 
-            startX = 0; // left
-            if(alignment & Qt::AlignHCenter){ // right
-                startX = static_cast<int>((photoToDraw.width() - rectPhoto.width())*0.5);
-            }else if(alignment & Qt::AlignRight){ // h center
-                startX = static_cast<int>(photoToDraw.width() - rectPhoto.width());
-            }
-
-            startY = 0; // top
-            if(alignment & Qt::AlignVCenter){ // V center
-                startY = static_cast<int>((photoToDraw.height() - rectPhoto.height())*0.5);
-            }else if(alignment & Qt::AlignBottom){ // bottom
-                startY = static_cast<int>(photoToDraw.height() - rectPhoto.height());
-            }
-
-
-            photoToDraw = photoToDraw.copy(QRect(startX, startY, rectPhoto.width(), rectPhoto.height()));
-
+            photoToDraw = photoToDraw.copy(QRect(startX, startY, static_cast<int>(rectPhoto.width()), static_cast<int>(rectPhoto.height())));
             newX      = rectPhoto.x();
             newY      = rectPhoto.y();
             newWidth  = photoToDraw.width();
@@ -184,11 +142,14 @@ QRectF pc::Photo::draw_small(QPainter &painter, const QRectF &rectPhoto, const Q
         break;
         case PhotoAdjust::mosaic:
 
-            QImage tile = photo;
+            QSize scaledSize(infos.factorUpscale* position.scale*photo.width(), infos.factorUpscale*position.scale*photo.height());
+
             if(!infos.preview){
-                tile = tile.transformed(QTransform().rotate(rotation));
+                scaledSize.setWidth(scaledSize.width() *(1.*scaledPhoto.width()/photo.width()));
+                scaledSize.setHeight(scaledSize.height() *(1.*scaledPhoto.height()/photo.height()));
             }
 
+            QImage tile = photo.scaled(scaledSize, Qt::IgnoreAspectRatio);
             if(tile.width() > rectPhoto.width() || tile.height() > rectPhoto.height()){
                 tile = tile.scaled(rectPhotoWidth, rectPhotoHeight, Qt::KeepAspectRatio);
             }
@@ -206,19 +167,23 @@ QRectF pc::Photo::draw_small(QPainter &painter, const QRectF &rectPhoto, const Q
             tilePainter.end();
 
 
-            startX = 0; // left
-            if(alignment & Qt::AlignHCenter){ // right
-                startX = static_cast<int>((tiles.width() - rectPhoto.width())*0.5);
-            }else if(alignment & Qt::AlignRight){ // h center
-                startX = static_cast<int>(tiles.width() - rectPhoto.width());
-            }
+//            startX = 0; // left
+//            if(alignment & Qt::AlignHCenter){ // right
+//                startX = static_cast<int>((tiles.width() - rectPhoto.width())*0.5);
+//            }else if(alignment & Qt::AlignRight){ // h center
+//                startX = static_cast<int>(tiles.width() - rectPhoto.width());
+//            }
 
-            startY = 0; // top
-            if(alignment & Qt::AlignVCenter){ // V center
-                startY = static_cast<int>((tiles.height() - rectPhoto.height())*0.5);
-            }else if(alignment & Qt::AlignBottom){ // bottom
-                startY = static_cast<int>(tiles.height() - rectPhoto.height());
-            }
+//            startY = 0; // top
+//            if(alignment & Qt::AlignVCenter){ // V center
+//                startY = static_cast<int>((tiles.height() - rectPhoto.height())*0.5);
+//            }else if(alignment & Qt::AlignBottom){ // bottom
+//                startY = static_cast<int>(tiles.height() - rectPhoto.height());
+//            }
+
+            startX = static_cast<int>((tiles.width() - rectPhoto.width())*position.xPos);
+            startY = static_cast<int>((tiles.height() - rectPhoto.height())*(1. - position.yPos));
+
 
             photoToDraw = tiles.copy(QRect(startX,startY,rectPhotoWidth,rectPhotoHeight));
 

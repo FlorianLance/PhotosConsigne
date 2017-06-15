@@ -125,6 +125,7 @@
         <file alias="top_center">resources/images/alignment/top_center.png</file>
         <file alias="top_left">resources/images/alignment/top_left.png</file>
         <file alias="top_right">resources/images/alignment/top_right.png</file>
+        <file alias="align_perso">resources/images/alignment/perso.png</file>
     </qresource>
     <qresource prefix="/images/margins">
         <file alias="extern_margins">resources/images/margins/extern_margins.png</file>
@@ -153,5 +154,22 @@
     <qresource prefix="/icons">
         <file alias="textLeft">resources/icons/textleft.png</file>
         <file alias="textRight">resources/icons/textright.png</file>
+    </qresource>
+    <qresource prefix="/images/transparent">
+        <file alias="tcb_checked">resources/images/transparent_check_boxes/checkbox_checked.png</file>
+        <file alias="tcb_checked_hover">resources/images/transparent_check_boxes/checkbox_checked_hover.png</file>
+        <file alias="tcb_checked_pressed">resources/images/transparent_check_boxes/checkbox_checked_pressed.png</file>
+        <file alias="tcb_unchecked">resources/images/transparent_check_boxes/checkbox_unchecked.png</file>
+        <file alias="tcb_unchecked_hover">resources/images/transparent_check_boxes/checkbox_unchecked_hover.png</file>
+        <file alias="tcb_unchecked_pressed">resources/images/transparent_check_boxes/checkbox_unchecked_pressed.png</file>
+    </qresource>
+    <qresource prefix="/images/degraded">
+        <file alias="conical">resources/images/degraded/conical.png</file>
+        <file alias="padSpread">resources/images/degraded/padSpread.png</file>
+        <file alias="radPadSpread">resources/images/degraded/radPadSpread.png</file>
+        <file alias="radReflectSpread">resources/images/degraded/radReflectSpread.png</file>
+        <file alias="radRepeatSpread">resources/images/degraded/radRepeatSpread.png</file>
+        <file alias="reflectSpread">resources/images/degraded/reflectSpread.png</file>
+        <file alias="repeatSpread">resources/images/degraded/repeatSpread.png</file>
     </qresource>
 </RCC>

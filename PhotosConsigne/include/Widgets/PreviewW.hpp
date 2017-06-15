@@ -56,8 +56,6 @@ public :
 
 public slots:
 
-//    void draw_current_pc_rect(int idRect, QRectF pcRectRelative);
-
     void set_page(SPCPage previewPage);
 
     void set_current_pc(int idPc);

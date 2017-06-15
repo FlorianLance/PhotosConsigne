@@ -91,33 +91,37 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
     }
 
     // PC
-    qreal widthSets   = (setsRect.width()  - nbInterHMargins * widthInterMargin)  / positions.nbPhotosH;
-    qreal heightSets  = (setsRect.height() - nbInterVMargins * heightInterMargin) / positions.nbPhotosV;
+    qreal widthSets   = (setsRect.width()  - nbInterHMargins * widthInterMargin);//  / positions.nbPhotosH;
+    qreal heightSets  = (setsRect.height() - nbInterVMargins * heightInterMargin);// / positions.nbPhotosV;
 
     int currPC = 0;
 
-    if(!positions.customMode){
+    if(!positions.customMode){ // grid
+
         interMarginsRects.clear();
-        interMarginsRects.reserve(sets.size());
+        interMarginsRects.reserve(sets.size());        
         qreal offsetV = setsRect.y();
         for(int ii = 0; ii < positions.nbPhotosV; ++ii){
             qreal offsetH = setsRect.x();
+            qreal heightSet = heightSets*positions.linesHeight[ii];
+
             for(int jj = 0; jj < positions.nbPhotosH; ++jj){
                 if(currPC >= sets.size())
                     break;
 
-                sets[currPC]->compute_sizes(QRectF(offsetH, offsetV, widthSets, heightSets));
+                qreal widthSet = widthSets*positions.columnsWidth[jj];
+                sets[currPC]->compute_sizes(QRectF(offsetH, offsetV, widthSet, heightSet));
                 interMarginsRects.push_back(QRectF(offsetH, offsetV,
-                                                   (jj < positions.nbPhotosH-1) ? widthSets  + widthInterMargin  : widthSets,
-                                                   (ii < positions.nbPhotosV-1) ? heightSets + heightInterMargin : heightSets));
+                                                   (jj < positions.nbPhotosH-1) ? widthSet  + widthInterMargin  : widthSet,
+                                                   (ii < positions.nbPhotosV-1) ? heightSet + heightInterMargin : heightSet));
 
-                offsetH += widthSets + widthInterMargin;
+                offsetH += widthSet + widthInterMargin;
                 ++currPC;
             }
 
-            offsetV += heightSets + heightInterMargin;
+            offsetV += heightSet + heightInterMargin;
         }
-    }else{
+    }else{ // custom mode
 
         interMarginsRects.clear();
         for(int ii = 0; ii < positions.relativePosCustom.size(); ++ii){
@@ -150,7 +154,6 @@ void pc::PCSet::compute_sizes(QRectF upperRect){
     qreal widthPhotoH     = settings.style.ratioTextPhoto * rectOnPage.width();
 
     QRectF consignRect, photoRect;
-
     switch (settings.style.textPositionFromPhotos) {
     case Position::top:
         consignRect = QRectF(rectOnPage.x(), rectOnPage.y(), widthConsigneV, heightConsigneV);
