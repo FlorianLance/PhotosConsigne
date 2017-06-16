@@ -85,6 +85,37 @@ void UIElements::ask_for_update(bool displayZones){
     emit settings_updated_signal();
 }
 
+void UIElements::write_to_xml(QXmlStreamWriter &xml) const{
+
+    xml.writeStartElement("Document");
+    xml.writeAttribute("orientation", QString::number(mainUI.cbOrientation->currentIndex()));
+    xml.writeAttribute("format", QString::number(mainUI.cbFormat->currentIndex()));
+    xml.writeAttribute("nbPages", QString::number(mainUI.sbNbPages->value()));
+    xml.writeAttribute("dpi", QString::number(mainUI.cbDPI->currentIndex()));
+    xml.writeAttribute("onlyCurrPage", QString::number(mainUI.cbSaveOnlyCurrentPage->isChecked()));
+    xml.writeAttribute("blackAndWhite", QString::number(mainUI.cbBAndW->isChecked()));
+    settingsW.write_to_xml(xml);
+    xml.writeEndElement();
+}
+
+
+void UIElements::load_from_xml(QXmlStreamReader &xml, bool firstPart){
+
+    qDebug() << "load_from_xml: " << xml.name() << firstPart << xml.hasError();
+    if(xml.name() == "Document"){
+
+        if(firstPart){ // read only arguments
+            Utility::safe_init_combo_box_index(mainUI.cbOrientation, xml.attributes().value("orientation").toInt());
+            Utility::safe_init_combo_box_index(mainUI.cbFormat, xml.attributes().value("format").toInt());
+            Utility::safe_init_combo_box_index(mainUI.cbDPI, xml.attributes().value("dpi").toInt());
+            Utility::safe_init_spinbox_value(mainUI.sbNbPages, xml.attributes().value("nbPages").toInt());
+            Utility::safe_init_checkboxe_checked_state(mainUI.cbSaveOnlyCurrentPage, xml.attributes().value("onlyCurrPage").toInt() == 1);
+            Utility::safe_init_checkboxe_checked_state(mainUI.cbBAndW, xml.attributes().value("blackAndWhite").toInt() == 1);
+        }else{
+            settingsW.load_from_xml(xml);
+        }
+    }
+}
 
 void UIElements::display_donate_window(){
 
@@ -317,9 +348,9 @@ void UIElements::update_UI(const GlobalSettings &settings){
     }
 
     // custom page format
-    settingsW.globalPageW.setsW.customW.update_format(settings.document.paperFormat);
+    settingsW.globalPageW.pageSetsW.customW.update_format(settings.document.paperFormat);
     for(int ii = 0; ii < settingsW.pagesW.size(); ++ii){
-        settingsW.pagesW[ii]->setsW.customW.update_format(settings.document.paperFormat);
+        settingsW.pagesW[ii]->pageSetsW.customW.update_format(settings.document.paperFormat);
     }
 
     Utility::safe_init_spinbox_value(mainUI.sbOrder, settings.photos.currentId);

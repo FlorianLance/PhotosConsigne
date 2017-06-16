@@ -32,6 +32,10 @@ public:
 
     void paintEvent(QPaintEvent *event);
 
+    void write_to_xml(QXmlStreamWriter &xml) const;
+
+    void load_from_xml(QXmlStreamReader &xml);
+
 public slots:
 
     void validate_current_set();
@@ -54,10 +58,6 @@ public :
 
 private :
 
-    const QVector<QColor> m_colors = {qRgb(96,72,204), qRgb(98,106,213), qRgb(148,154,226), qRgb(173,177,233),
-                                     qRgb(196,171,235), qRgb(159,118,222), qRgb(126,70,210), qRgb(154,169,207),
-                                     qRgb(109,131,186), qRgb(74,97,157), qRgb(122,164,167), qRgb(148,182,186),
-                                     qRgb(197,216,218), qRgb(108,182,255), qRgb(13,134,255), qRgb(0,92,185)};
 
     QVector<QVector<QCheckBox*>> m_points;
     QGridLayout *m_layout = nullptr;

@@ -106,6 +106,47 @@ public:
         BordersW::init_ui(s1.bordersW, s2.bordersW);
     }
 
+    void write_to_xml(QXmlStreamWriter &xml) const{
+
+        xml.writeStartElement("Set");
+        xml.writeAttribute("id", QString::number(id));
+        xml.writeAttribute("global", QString::number(global));
+        xml.writeAttribute("enabled", global ? "0" : QString::number(ui.cbEnableIndividualConsign->isChecked()));
+        textW.write_to_xml(xml);
+        bordersW.write_to_xml(xml);
+        styleW.write_to_xml(xml);
+        xml.writeEndElement();
+    }
+
+    void load_from_xml(QXmlStreamReader &xml){
+
+        id = xml.attributes().value("id").toInt();
+        global = xml.attributes().value("global").toInt() == 1;
+        if(!global){
+            Utility::safe_init_checkboxe_checked_state(ui.cbEnableIndividualConsign, xml.attributes().value("enabled").toInt() == 1);
+        }
+
+        QXmlStreamReader::TokenType token = QXmlStreamReader::TokenType::StartElement;
+        while(!xml.hasError()) {
+
+            if(token == QXmlStreamReader::TokenType::EndElement && xml.name() == "Set"){
+                break;
+            }else if(token == QXmlStreamReader::TokenType::StartElement){
+
+                if(xml.name() == "RichText"){
+                    textW.load_from_xml(xml);
+                }else if(xml.name() == "SetStyle"){
+                    styleW.load_from_xml(xml);
+                }else if(xml.name() == "Borders"){
+                    bordersW.load_from_xml(xml);
+                }
+            }
+
+            token = xml.readNext();
+        }
+    }
+
+
     void update_settings(SetSettings &settings) const{
 
         settings.text.html  = textW.html();

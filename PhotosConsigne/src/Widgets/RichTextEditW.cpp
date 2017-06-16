@@ -334,6 +334,46 @@ void RichTextEditW::init_with_another(const RichTextEditW &richTextEdit, std::sh
     m_backgroundColorTextButton->blockSignals(false);
 }
 
+
+void RichTextEditW::write_to_xml(QXmlStreamWriter &xml) const{
+
+    xml.writeStartElement("RichText");
+    xml.writeAttribute("foreGroundColor", StrUtility::to_str(m_foreGround));
+    xml.writeAttribute("backGroundColor", StrUtility::to_str(m_backGround));
+    xml.writeTextElement("xml", (m_html != nullptr) ? *m_html : "");
+    xml.writeEndElement();
+}
+
+void RichTextEditW::load_from_xml(QXmlStreamReader &xml){
+
+    qDebug() << "RichText: load_from_xml";
+
+    QStringList col = xml.attributes().value("foreGroundColor").toString().split(" ");
+    m_foreGround = QColor(col[0].toInt(), col[1].toInt(),col[2].toInt(),col[3].toInt());
+    col = xml.attributes().value("backGroundColor").toString().split(" ");
+    m_backGround = QColor(col[0].toInt(), col[1].toInt(),col[2].toInt(),col[3].toInt());
+
+    QXmlStreamReader::TokenType token = QXmlStreamReader::TokenType::StartElement;
+    while(!xml.hasError()) {
+
+        if(token == QXmlStreamReader::TokenType::EndElement && xml.name() == "RichText"){
+            break;
+
+        }else if(token == QXmlStreamReader::TokenType::StartElement){
+
+            if(xml.name() == "xml"){
+
+                m_textEdit->blockSignals(true);
+                textEdit()->setHtml(xml.readElementText());
+                m_html = std::make_shared<QString>(textEdit()->toHtml());
+                m_textEdit->blockSignals(false);
+            }
+        }
+
+        token = xml.readNext();
+    }
+}
+
 void RichTextEditW::setup_edit_actions()
 {
     m_menuLayoutCenter->setContentsMargins(0,0,0,0);
@@ -568,13 +608,13 @@ void RichTextEditW::setup_text_actions(){
     const QIcon imageIcon = QIcon(":/images/insertimage");
     actionInsertImage = new QAction(imageIcon, tr("Insérer image"), this);
     actionInsertImage->setShortcut(Qt::CTRL + Qt::Key_P);
-    actionInsertImage->setCheckable(true);
+    actionInsertImage->setCheckable(false);
     actionInsertImage->setPriority(QAction::LowPriority);
 
     m_insertImageButton = new QToolButton();
     m_insertImageButton->setDefaultAction(actionInsertImage);
     m_menuLayoutBottom->addWidget(m_insertImageButton);
-    connect(m_insertImageButton,&QToolButton::clicked, this, [=]{
+    connect(m_insertImageButton,&QToolButton::triggered, this, [=]{
         textEdit()->insert_image();
         textEdit()->setFocus();
     });
@@ -585,13 +625,14 @@ void RichTextEditW::setup_text_actions(){
     const QIcon linkIcon = QIcon(":/images/link");
     actionLink = new QAction(linkIcon, tr("Insérer lien web"), this);
     actionLink->setShortcut(Qt::CTRL + Qt::Key_W);
-    actionLink->setCheckable(true);
+    actionLink->setCheckable(false);
     actionLink->setPriority(QAction::LowPriority);
 
     m_insertLinkButton = new QToolButton();
     m_insertLinkButton->setDefaultAction(actionLink);
     m_menuLayoutBottom->addWidget(m_insertLinkButton);
-    connect(m_insertLinkButton,&QToolButton::clicked, this, [=]{
+
+    connect(m_insertLinkButton, &QToolButton::triggered, this, [=]{
         textEdit()->insert_link();
         textEdit()->setFocus();
     });
@@ -601,19 +642,23 @@ void RichTextEditW::setup_text_actions(){
     // textes codes inserts
     m_comboCodes = new QComboBox();
     m_menuLayoutBottom->addWidget(m_comboCodes);
+    m_comboCodes->setStyleSheet("color : rgb(0,106,255);");
     m_comboCodes->setToolTip("Insérer un code, il sera remplacé dans l'aperçu.");
     m_comboCodes->addItem("Nom photo");
     m_comboCodes->addItem("Date");
     m_comboCodes->addItem("Date de la photo");
     m_comboCodes->addItem("Numéro de la photo");
     m_comboCodes->addItem("Numéro de page");
+    m_comboCodes->addItem("Numéro total de pages");
+    m_comboCodes->addItem("Numéro total de photos");
+    m_comboCodes->addItem("Nom de la page");
     connect(m_comboCodes, QOverload<int>::of(&QComboBox::activated), this, [=](int index){
         m_comboCodes->clearFocus();
         textEdit()->setFocus();
         QString code;
         switch(index){
         case 0:
-            code = "$nom$";
+            code = "$nom_photo$";
             break;
         case 1:
             code = "$date$";
@@ -627,6 +672,15 @@ void RichTextEditW::setup_text_actions(){
         case 4:
             code = "$num_page$";
             break;
+        case 5:
+            code = "$nb_pages$";
+            break;
+        case 6:
+            code = "$nb_photos$";
+            break;
+        case 7:
+            code = "$nom_page$";
+            break;
         }
 
         textEdit()->textCursor().insertText(code);
@@ -637,7 +691,8 @@ void RichTextEditW::setup_text_actions(){
 
 
     m_comboStyle = new QComboBox();
-    m_comboStyle->setMaximumWidth(50);
+    m_comboStyle->setStyleSheet("color : rgb(0,106,255);");
+    m_comboStyle->setMaximumWidth(230);
     m_menuLayoutBottom->addWidget(m_comboStyle);
     m_comboStyle->setToolTip("Insérer une liste");
     m_comboStyle->addItem("Standard (pas de liste)"); // Standard
@@ -649,6 +704,7 @@ void RichTextEditW::setup_text_actions(){
     m_comboStyle->addItem("Liste ordonnée (Alpha maj.)"); // Ordered List (Alpha upper)
     m_comboStyle->addItem("Liste ordonnée (Roman min.)"); // Ordered List (Roman lower)
     m_comboStyle->addItem("Liste ordonnée (Roman maj.)"); // Ordered List (Roman upper)
+
 
     connect(m_comboStyle, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
         m_comboStyle->clearFocus();
@@ -680,6 +736,7 @@ void RichTextEditW::setup_text_actions(){
     QPixmap pixColor(16, 16);
     pixColor.fill(Qt::black);
     actionTextColor = new QAction(pixColor, tr("Couleur du texte"), this);
+    actionTextColor->setShortcut(Qt::CTRL + Qt::Key_Q);
     connect(actionTextColor, &QAction::triggered, this, [=]{
         text_color();
         textEdit()->setFocus();
@@ -694,6 +751,7 @@ void RichTextEditW::setup_text_actions(){
     QPixmap pixBgColor(16, 16);
     pixBgColor.fill(Qt::white);
     actionBackgroundTextColor = new QAction(pixBgColor, tr("Couleur de l'arrière plan du texte"), this);
+    actionBackgroundTextColor->setShortcut(Qt::CTRL + Qt::Key_F);
     connect(actionBackgroundTextColor, &QAction::triggered, this, [=]{
         background_text_color();
         textEdit()->setFocus();
@@ -707,6 +765,7 @@ void RichTextEditW::setup_text_actions(){
     typedef void (QComboBox::*QComboStringSignal)(const QString &);
     m_comboFont = new QFontComboBox();
     m_comboFont->setToolTip("Choix de la police");
+    m_comboFont->setStyleSheet("color : rgb(0,106,255);");
     connect(m_comboFont, static_cast<QComboStringSignal>(&QComboBox::activated), this, [=](QString police){
         text_family(police);
         textEdit()->setFocus();
@@ -717,6 +776,7 @@ void RichTextEditW::setup_text_actions(){
     // font size
     m_comboSize = new QComboBox();
     m_comboSize->setToolTip("Définir la taille de la police");
+    m_comboSize->setStyleSheet("color : rgb(0,106,255);");
     m_comboSize->setObjectName("comboSize");
     m_comboSize->setEditable(true);
     m_comboSize->setInsertPolicy(QComboBox::InsertAtBottom);

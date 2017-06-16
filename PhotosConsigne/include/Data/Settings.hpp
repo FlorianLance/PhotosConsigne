@@ -5,7 +5,92 @@
 #include "Photo.hpp"
 
 
+// Qt
+#include <QDoubleSpinBox>
+
+
 namespace pc {
+
+    static const QVector<QColor> UIColors = {qRgb(96,72,204), qRgb(98,106,213), qRgb(148,154,226), qRgb(173,177,233),
+                                                   qRgb(196,171,235), qRgb(159,118,222), qRgb(126,70,210), qRgb(154,169,207),
+                                                   qRgb(109,131,186), qRgb(74,97,157), qRgb(122,164,167), qRgb(148,182,186),
+                                                   qRgb(197,216,218), qRgb(108,182,255), qRgb(13,134,255), qRgb(0,92,185)};
+
+    class StrUtility{
+
+    public :
+        static QString to_str(const QColor &color){
+            return QString::number(color.red()) +  " " + QString::number(color.green()) + " " + QString::number(color.blue()) + " " + QString::number(color.alpha());
+        }
+
+        static QString to_str(const QPoint &pt){
+            return QString::number(pt.x()) +  " " + QString::number(pt.y());
+        }
+
+        static QString to_str(const QPointF &pt){
+            return QString::number(pt.x()) +  " " + QString::number(pt.y());
+        }
+
+        static QString to_str(const QSize &size){
+            return QString::number(size.width()) +  " " + QString::number(size.height());
+        }
+
+        static QString to_str(const QRect &rect){
+            return QString::number(rect.x()) +  " " + QString::number(rect.y()) + " " + QString::number(rect.width()) + " " + QString::number(rect.height());
+        }
+
+        static QString to_str(const QRectF &rect){
+            return QString::number(rect.x()) +  " " + QString::number(rect.y()) + " " + QString::number(rect.width()) + " " + QString::number(rect.height());
+        }
+    };
+
+    class StreamData{
+
+    public:
+        static void write(QTextStream &stream, QString name, const QRectF &rect){
+            stream << name << " " << rect.x() << " " << rect.y() << " " << rect.width() << " " << rect.height() << "\n";
+        }
+        static void write(QTextStream &stream, QString name, const QRect &rect){
+            stream << name << " " << rect.x() << " " << rect.y() << " " << rect.width() << " " << rect.height() << "\n";
+        }
+        static void write(QTextStream &stream, QString name, const QColor &col){
+            stream << name << " " << col.red() << " " << col.green() << " " << col.blue() << " " << col.alpha() << "\n";
+        }
+        static void write(QTextStream &stream, QString name, const QPoint &pt){
+            stream << name << " " << pt.x() << " " << pt.y() << "\n";
+        }
+        static void write(QTextStream &stream, QString name, const QPointF &pt){
+            stream << name << " " << pt.x() << " " << pt.y() << "\n";
+        }
+        static void write(QTextStream &stream, QString name, const QSize &size){
+            stream << name << " " << size.width() << " " << size.height() << "\n";
+        }
+        static void write(QTextStream &stream, QString name, int value){
+            stream << name << " " << value << "\n";
+        }
+        static void write(QTextStream &stream, QString name, qreal value){
+            stream << name << " " << value << "\n";
+        }
+        static void write(QTextStream &stream, QString name, bool state){
+            stream << name << " " << static_cast<int>(state) << "\n";
+        }
+        static void write(QTextStream &stream, QString name, QString txt){
+            stream << name << " " << txt << "\n";
+        }
+
+        static void write(QTextStream &stream, QString name, QDoubleSpinBox *dsb){
+            stream << name << " " << dsb->value() << "\n";
+        }
+
+        template<typename T>
+        static void write(QTextStream &stream, QString name, const QVector<T> &array){
+            stream << name << " " << array.size() << "\n";
+            for(const auto &elem : array){
+                write(stream, "e", elem);
+            }
+        }
+    };
+
 
     // define enums
     enum class PageOrientation { landScape = 0, portrait = 1};
@@ -72,13 +157,6 @@ namespace pc {
     struct BackGroundSettings{
 
         bool displayPhoto = false;
-//        bool displayPattern = false;
-
-//        Qt::BrushStyle patternBrushStyle = Qt::BDiagPattern;
-
-//        QColor color = Qt::white;
-//        QColor colorPattern = Qt::black;
-
         ImagePositionSettings imagePosition;
         ColorsSettings colors;
         SPhoto photo = nullptr;
@@ -88,12 +166,8 @@ namespace pc {
     struct StyleSettings{
 
         ImagePositionSettings imagePosition;
-
-//        int photoAlignment;
         qreal ratioTextPhoto;
-//        qreal scalePhoto;
         Position textPositionFromPhotos;
-//        PhotoAdjust photoAdust = PhotoAdjust::adjust;
     };
 
     struct PhotosSettings{
@@ -138,9 +212,9 @@ namespace pc {
 
     struct PageSettings{
 
-        int previousId         = -2;
         int currentId          =  0;    /**< id of the current selected page (page list widget) */
         int nb                 = 1;     /**< number of pages for the document */
+        QString name;
 
         MarginsSettings margins;
         BackGroundSettings background;

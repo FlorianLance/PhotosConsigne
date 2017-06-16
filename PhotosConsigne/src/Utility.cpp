@@ -5,10 +5,11 @@ using namespace pc;
 
 QString Drawing::format_html_for_generation(QString html, pc::ExtraPCInfo infos){
 
-    //        QElapsedTimer timer;
-    //        timer.start();
+//    QElapsedTimer timer;
+//    timer.start();
 
     int index = 0;
+//    qDebug() << "HTML BEFORE\n " << html;
     html = html.replace("margin-top:12px; margin-bottom:12px", "margin-top:0px; margin-bottom:0px margin-left:0px margin-right:0px padding:0px");
     html = html.replace("style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\"",
                         "B_#B_#B_#B_");
@@ -39,18 +40,17 @@ QString Drawing::format_html_for_generation(QString html, pc::ExtraPCInfo infos)
         html = html.insert(index, "font-size:" + QString::number(sizes[currentIdSize++])  + "pt;");
     }
 
-    html = html.replace("B_#B_#B_#B_","style=\"font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:300; "
-                                      " font-style:normal;\"");
+    html = html.replace("B_#B_#B_#B_","style=\"font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:300; font-style:normal;\"");
 
     // text-decoration:line-through;  // text-decoration:overline ; oblique // tables
-
-    html = html.replace("$nom$", "$name$");
+    html = html.replace("$nom_photo$", "$name_photo$");
+    html = html.replace("$nom_page$", "$name_page$");
     index = 0;
     while(index != -1){
-        index = html.indexOf(QString("$name$"));
+        index = html.indexOf(QString("$name_photo$"));
         if(index == -1)
             break;
-        html = html.remove(index, 6);
+        html = html.remove(index, 12);
         html = html.insert(index, infos.namePCAssociatedPhoto);
     }
 
@@ -78,7 +78,7 @@ QString Drawing::format_html_for_generation(QString html, pc::ExtraPCInfo infos)
         if(index == -1)
             break;
         html = html.remove(index, 10);
-        html = html.insert(index, QString::number(infos.pageNum+1) + "/" + QString::number(infos.pagesNb));
+        html = html.insert(index, QString::number(infos.pageNum+1));
     }
 
     index = 0;
@@ -89,6 +89,34 @@ QString Drawing::format_html_for_generation(QString html, pc::ExtraPCInfo infos)
         html = html.remove(index, 11);
         html = html.insert(index, QString::number(infos.photoNum+1) + "/" + QString::number(infos.photoTotalNum+1));
     }
+
+    index = 0;
+    while(index != -1){
+        index = html.indexOf(QString("$nb_photos$"));
+        if(index == -1)
+            break;
+        html = html.remove(index, 11);
+        html = html.insert(index, QString::number(infos.photoTotalNum+1));
+    }
+
+    index = 0;
+    while(index != -1){
+        index = html.indexOf(QString("$nb_pages$"));
+        if(index == -1)
+            break;
+        html = html.remove(index, 10);
+        html = html.insert(index, QString::number(infos.pagesNb));
+    }
+
+    index = 0;
+    while(index != -1){
+        index = html.indexOf(QString("$name_page$"));
+        if(index == -1)
+            break;
+        html = html.remove(index, 11);
+        html = html.insert(index, infos.pageName);
+    }
+
 
     index = 0;
     int currentImage = 0;
@@ -136,7 +164,8 @@ QString Drawing::format_html_for_generation(QString html, pc::ExtraPCInfo infos)
     }
 
     //        qDebug() << html;
-    //        qDebug() << "Format html took" << timer.elapsed() << "milliseconds";
+//    qDebug() << "Format html took" << timer.elapsed() << "milliseconds";
+//    qDebug() << "HTML AFTER\n " << html << "\n";
     return html;
 }
 

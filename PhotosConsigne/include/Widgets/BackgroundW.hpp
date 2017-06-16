@@ -64,6 +64,40 @@ struct BackgroundW : public SettingsW{
         DegradedW::init_ui(b1.degradedW, b2.degradedW);
     }
 
+    void write_to_xml(QXmlStreamWriter &xml) const{
+        xml.writeStartElement("Background");
+        xml.writeAttribute("pathPhoto", ((photo != nullptr) ? photo->pathPhoto : ""));
+        xml.writeAttribute("photoEnabled", QString::number(ui.cbUseBackgroundImage->isChecked()));
+        degradedW.write_to_xml(xml);
+        imagePositionW.write_to_xml(xml);
+        xml.writeEndElement();
+    }
+
+    void load_from_xml(QXmlStreamReader &xml){
+
+        QString path = xml.attributes().value("pathPhoto").toString();
+        if(path.size() > 0){
+            photo = std::make_shared<Photo>(path);
+        }
+        Utility::safe_init_checkboxe_checked_state(ui.cbUseBackgroundImage,xml.attributes().value("photoEnabled").toInt() == 1);
+
+        QXmlStreamReader::TokenType token = QXmlStreamReader::TokenType::StartElement;
+        while(!xml.hasError()) {
+
+            if(token == QXmlStreamReader::TokenType::EndElement && xml.name() == "Background"){
+                break;
+            }else if(token == QXmlStreamReader::TokenType::StartElement){
+
+                if(xml.name() == "Degraded"){
+                    degradedW.load_from_xml(xml);
+                }else if(xml.name() == "ImagePosition"){
+                    imagePositionW.load_from_xml(xml);
+                }
+            }
+
+            token = xml.readNext();
+        }
+    }
 
 
     SPhoto photo        = nullptr;

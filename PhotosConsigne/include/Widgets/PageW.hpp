@@ -38,12 +38,18 @@ struct PageW : public SettingsW{
 
     void set_enabled(bool enabled) noexcept;
 
+    void write_to_xml(QXmlStreamWriter &xml) const;
+
+    void load_from_xml(QXmlStreamReader &xml);
+
+
 
     void update_settings(PageSettings &settings) const{
 
+        settings.name = pageSetsW.ui.leNamePage->text();
         backgroundW.update_settings(settings.background);
         marginsW.update_settings(settings.margins);
-        setsW.update_settings(settings.positions);
+        pageSetsW.update_settings(settings.positions);
         miscW.update_settings(settings.misc);
     }
 
@@ -51,12 +57,14 @@ struct PageW : public SettingsW{
 public :
 
     int id = 0;
-    QColor borderColor = QColor(0,0,0,0);
-    QPen borderPen = QPen(QColor(0,0,0,0));
+//    QColor borderColor = QColor(0,0,0,0);
+//    QPen borderPen = QPen(QColor(0,0,0,0));
+
+    bool global = false;
 
     BackgroundW  backgroundW;    
     MarginsW     marginsW;
-    PageSetsW    setsW;
+    PageSetsW    pageSetsW;
     MiscPageW    miscW;
 
     Ui::PageUI   ui;

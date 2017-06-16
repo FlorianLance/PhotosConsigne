@@ -43,13 +43,14 @@ namespace pc{
             ui.vlAllPages->addWidget(&globalPageW);
             ui.vlAllPages->setAlignment(Qt::AlignmentFlag::AlignTop);
             delete globalPageW.ui.frameIndividualSettings;
+            globalPageW.global = true;
 
             globalPageW.ui.framePage->setEnabled(true);
             connect(&globalPageW, &PageW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
 
-            connect(&globalPageW.setsW, &PageSetsW::reset_pos_signal, this, [&]{
+            connect(&globalPageW.pageSetsW, &PageSetsW::reset_pos_signal, this, [&]{
                 for(auto &&page : pagesW){
-                    page->setsW.read_pos_files();
+                    page->pageSetsW.read_pos_files();
                 }
             });
 
@@ -146,6 +147,8 @@ namespace pc{
                     pageW->hide();
 
                     PageW::init_ui(*pageW, globalPageW);
+                    pageW->pageSetsW.ui.leNamePage->setText("Page n°" + QString::number(pagesW.size()));
+
                     connect(pageW, &PageW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
 
                     connect(&pageW->miscW, &MiscPageW::replace_global_with_individual_signal, this, [=]{
@@ -153,11 +156,11 @@ namespace pc{
                         emit settings_updated_signal(true);
                     });
 
-                    connect(&pageW->setsW, &PageSetsW::reset_pos_signal, this, [=]{
+                    connect(&pageW->pageSetsW, &PageSetsW::reset_pos_signal, this, [=]{
 
                         for(auto &&page : pagesW){
                             if(pageW->id != page->id){
-                                page->setsW.read_pos_files();
+                                page->pageSetsW.read_pos_files();
                             }
                         }
                     });
@@ -240,7 +243,76 @@ namespace pc{
             Utility::safe_init_tool_box_index(ui.tbRight, 5);
         }
 
-        int id = 0;
+        void write_to_xml(QXmlStreamWriter &xml) const{
+
+            headerW.write_to_xml(xml);
+            footerW.write_to_xml(xml);
+
+            xml.writeStartElement("Global");
+            globalPageW.write_to_xml(xml);
+            globalSetW.write_to_xml(xml);
+            xml.writeEndElement();
+
+            xml.writeStartElement("Individual");
+            xml.writeAttribute("nb_pages", QString::number(pagesW.size()));
+            xml.writeAttribute("nb_sets", QString::number(pagesW.size()));
+            for(const auto &pageW : pagesW){
+                pageW->write_to_xml(xml);
+            }
+            for(const auto &set : setsLoadedW){
+                set->write_to_xml(xml);
+            }
+
+            xml.writeEndElement();
+        }
+
+
+        void load_from_xml(QXmlStreamReader &xml){
+
+            QXmlStreamReader::TokenType token = QXmlStreamReader::TokenType::StartElement;
+            bool global = false;
+            bool individual = false;
+            int currentPageId = 0;
+            int currentSetId  = 0;
+            while(!xml.hasError()) {
+
+                if(token == QXmlStreamReader::TokenType::EndElement && xml.name() == "Document"){                    
+                    break;
+
+                }else if(token == QXmlStreamReader::TokenType::StartElement){
+
+                    if(xml.name() == "Header"){
+                        headerW.load_from_xml(xml);
+                    }else if(xml.name() == "Footer"){
+                        footerW.load_from_xml(xml);
+                    }else if(xml.name() == "Global"){
+                        global = true;
+                    }
+                    else if(xml.name() == "Individual"){
+                        individual = true;
+                        global = false;
+                    }
+                    else if(xml.name() == "Page"){
+                        if(global){
+                            globalPageW.load_from_xml(xml);
+                        }else if(individual){
+                            if(pagesW.size() > currentPageId){
+                                pagesW[currentPageId++]->load_from_xml(xml);
+                            }
+                        }
+                    }else if(xml.name() == "Set"){
+                        if(global){
+                            globalSetW.load_from_xml(xml);
+                        }else if(individual){
+                            setsLoadedW[currentSetId++]->load_from_xml(xml);
+                        }
+                    }
+                }
+
+                token = xml.readNext();
+            }
+        }
+
 
         // ui
         Ui::RightSettingsUI ui;

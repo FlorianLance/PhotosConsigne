@@ -159,6 +159,45 @@ public :
         });
     }
 
+    void write_to_xml(QXmlStreamWriter &xml) const{
+        xml.writeStartElement("ImagePosition");
+        xml.writeAttribute("Position", QString::number(ui.cbPosition->currentIndex()));
+        xml.writeAttribute("Adjust", QString::number(ui.cbAdjust->currentIndex()));
+        xml.writeAttribute("SliderH", QString::number(ui.hsPositionH->value()));
+        xml.writeAttribute("SliderV", QString::number(ui.vsPositionV->value()));
+        xml.writeAttribute("PreSliderH", QString::number(previousHPosition));
+        xml.writeAttribute("PreSliderV", QString::number(previousVPosition));
+        xml.writeAttribute("Scale", QString::number(ui.dsbScale->value()));
+        xml.writeAttribute("ScaleEnabled", QString::number(ui.dsbScale->isEnabled()));
+        xml.writeAttribute("ScaleMin", QString::number(ui.dsbScale->minimum()));
+        xml.writeAttribute("ScaleMax", QString::number(ui.dsbScale->maximum()));
+        xml.writeAttribute("PreCenterScale", QString::number(previousCenterAdjustScaling));
+        xml.writeAttribute("PreFillScale", QString::number(previousFillAdjustScaling));
+        xml.writeAttribute("PreMosaicScale", QString::number(previousMosaicAdjustScaling));
+        xml.writeEndElement();
+    }
+
+    void load_from_xml(QXmlStreamReader &xml){
+
+        Utility::safe_init_combo_box_index(ui.cbPosition, xml.attributes().value("Position").toInt());
+        Utility::safe_init_combo_box_index(ui.cbAdjust, xml.attributes().value("Adjust").toInt());
+        Utility::safe_init_slider_value(ui.hsPositionH, xml.attributes().value("SliderH").toInt());
+        Utility::safe_init_slider_value(ui.vsPositionV, xml.attributes().value("SliderV").toInt());
+        previousHPosition = xml.attributes().value("PreSliderH").toInt();
+        previousVPosition = xml.attributes().value("PreSliderV").toInt();
+
+        ui.dsbScale->blockSignals(true);
+        ui.dsbScale->setEnabled(xml.attributes().value("ScaleEnabled").toInt()==1);
+        ui.dsbScale->setMinimum(xml.attributes().value("ScaleMin").toDouble());
+        ui.dsbScale->setMaximum(xml.attributes().value("ScaleMax").toDouble());
+        ui.dsbScale->setValue(xml.attributes().value("Scale").toDouble());
+        ui.dsbScale->blockSignals(false);
+
+        previousCenterAdjustScaling = xml.attributes().value("PreCenterScale").toDouble();
+        previousFillAdjustScaling = xml.attributes().value("PreFillScale").toDouble();
+        previousMosaicAdjustScaling = xml.attributes().value("PreMosaicScale").toDouble();
+    }
+
     static void init_ui(ImagePositionW &i1, const ImagePositionW &i2){
 
         Utility::safe_init_slider_value(i1.ui.vsPositionV, i2.ui.vsPositionV->value());
@@ -180,6 +219,9 @@ public :
         i1.previousFillAdjustScaling    = i2.previousFillAdjustScaling;
         i1.previousMosaicAdjustScaling  = i2.previousMosaicAdjustScaling;
     }
+
+
+
 
     void update_settings(ImagePositionSettings &settings) const{
 

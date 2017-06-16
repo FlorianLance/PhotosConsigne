@@ -338,6 +338,7 @@ void PDFGeneratorWorker::draw_page(QPainter &painter, pc::PCPages &pcPages, cons
     infos.paperFormat   = pcPages.settings.paperFormat;
     infos.factorUpscale = factorUpscale;
     infos.displaySizes  = drawZones;
+    infos.pageName      = pcPage->settings.name;
 
     for(auto &&page : pcPages.pages){
         infos.photoTotalNum += page->sets.size();

@@ -80,7 +80,8 @@ HEADERS += \
     include/DebugMessage.hpp \
     include/Widgets/MiscW.hpp \
     include/Widgets/DegradedW.hpp \
-    include/Widgets/ImagePositionW.hpp
+    include/Widgets/ImagePositionW.hpp \
+    include/Data/Work.hpp
 
 FORMS += \
     ui/PhotosConsigneMainW.ui \

@@ -48,6 +48,20 @@ public :
         Utility::safe_init_checkboxe_checked_state(p1.ui.cbDoNotShowFooter, p2.ui.cbDoNotShowFooter->isChecked());
     }
 
+    void write_to_xml(QXmlStreamWriter &xml) const{
+
+        xml.writeStartElement("MiscPage");
+        xml.writeAttribute("showHeader", QString::number(ui.cbDoNotShowHeader->isChecked()));
+        xml.writeAttribute("showFooter", QString::number(ui.cbDoNotShowFooter->isChecked()));
+        xml.writeEndElement();
+    }
+
+    void load_from_xml(QXmlStreamReader &xml){
+
+        Utility::safe_init_checkboxe_checked_state(ui.cbDoNotShowHeader, xml.attributes().value("showHeader").toInt() == 1);
+        Utility::safe_init_checkboxe_checked_state(ui.cbDoNotShowFooter, xml.attributes().value("showFooter").toInt() == 1);
+    }
+
     void update_settings(MiscSettings &settings) const{
 
         settings.doNotDisplayHeader = ui.cbDoNotShowHeader->isChecked();
@@ -86,6 +100,8 @@ public :
         connect(ui.pbReplaceLocalWIthGlobal, &QPushButton::clicked, this, &MiscSetW::replace_individual_with_global_signal);
         connect(ui.pbReplaceGlobalWithLocal, &QPushButton::clicked, this, &MiscSetW::replace_global_with_individual_signal);
     }
+
+
 
 signals:
 

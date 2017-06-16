@@ -50,6 +50,7 @@ namespace pc
 
         QFileInfo fileInfo;
         QString namePCAssociatedPhoto = "";
+        QString pageName;
 
         bool preview        = false;
         bool displaySizes   = false;

@@ -42,6 +42,86 @@
     <number>0</number>
    </property>
    <item>
+    <widget class="QFrame" name="frameNamePage">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>6</number>
+      </property>
+      <property name="leftMargin">
+       <number>9</number>
+      </property>
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="rightMargin">
+       <number>9</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="laNamePage">
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+    font:  bold 10pt Calibri;
+ }
+</string>
+        </property>
+        <property name="text">
+         <string>Nom page:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="leNamePage">
+        <property name="text">
+         <string>Page globale</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="Line" name="line_3">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>1</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">	background-color: rgb(0,106,255);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QFrame" name="framePreDef">
      <property name="minimumSize">
       <size>
@@ -62,6 +142,12 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="topMargin">
+       <number>5</number>
+      </property>
+      <property name="bottomMargin">
+       <number>5</number>
+      </property>
       <item>
        <widget class="QLabel" name="laPreDef">
         <property name="styleSheet">
@@ -82,7 +168,7 @@ QWidget:!enabled {
 </string>
         </property>
         <property name="text">
-         <string>Positions pré-définies (/data/positions)</string>
+         <string>Positions pré-définies</string>
         </property>
        </widget>
       </item>
@@ -103,7 +189,7 @@ QWidget:!enabled {
            <x>0</x>
            <y>0</y>
            <width>389</width>
-           <height>251</height>
+           <height>216</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="glPreDef">
@@ -126,8 +212,20 @@ QWidget:!enabled {
         </widget>
        </widget>
       </item>
-      <item alignment="Qt::AlignRight">
+      <item alignment="Qt::AlignHCenter">
        <widget class="QPushButton" name="pbAddPositions">
+        <property name="minimumSize">
+         <size>
+          <width>220</width>
+          <height>20</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="styleSheet">
          <string notr="true">
 
@@ -218,7 +316,7 @@ QPushButton:hover:!pressed{
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
+     <layout class="QVBoxLayout" name="verticalLayout_4">
       <property name="leftMargin">
        <number>5</number>
       </property>
@@ -231,50 +329,7 @@ QPushButton:hover:!pressed{
       <property name="bottomMargin">
        <number>3</number>
       </property>
-      <property name="horizontalSpacing">
-       <number>3</number>
-      </property>
-      <property name="verticalSpacing">
-       <number>10</number>
-      </property>
-      <item row="0" column="3">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>213</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="2">
-       <widget class="QRadioButton" name="rbPersonnalised">
-        <property name="styleSheet">
-         <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-    font:  bold 10pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-    font:  bold 10pt Calibri;
- }
-</string>
-        </property>
-        <property name="text">
-         <string>Positionnement personnalisé</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
+      <item>
        <widget class="QRadioButton" name="rbGrid">
         <property name="styleSheet">
          <string notr="true">QWidget {
@@ -298,6 +353,52 @@ QWidget:!enabled {
         </property>
         <property name="checked">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rbPersonnalised">
+        <property name="styleSheet">
+         <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+    font:  bold 10pt Calibri;
+ }
+</string>
+        </property>
+        <property name="text">
+         <string>Positionnement personnalisé</string>
+        </property>
+       </widget>
+      </item>
+      <item alignment="Qt::AlignHCenter">
+       <widget class="Line" name="line_2">
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>1</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">	background-color: rgb(0,106,255);</string>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
@@ -763,6 +864,12 @@ QWidget {
              <layout class="QHBoxLayout" name="hlColumns">
               <item alignment="Qt::AlignLeft">
                <widget class="QLabel" name="laColumns">
+                <property name="minimumSize">
+                 <size>
+                  <width>75</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">
 
@@ -794,7 +901,7 @@ QWidget {
                 </property>
                </widget>
               </item>
-              <item alignment="Qt::AlignLeft">
+              <item alignment="Qt::AlignRight">
                <widget class="QComboBox" name="cbColumnsWidth"/>
               </item>
               <item alignment="Qt::AlignLeft">
@@ -830,6 +937,12 @@ QWidget {
              <layout class="QHBoxLayout" name="hlLines">
               <item alignment="Qt::AlignLeft">
                <widget class="QLabel" name="laLines">
+                <property name="minimumSize">
+                 <size>
+                  <width>75</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="styleSheet">
                  <string notr="true">
 
@@ -861,7 +974,7 @@ QWidget {
                 </property>
                </widget>
               </item>
-              <item alignment="Qt::AlignLeft">
+              <item alignment="Qt::AlignRight">
                <widget class="QComboBox" name="cbLinesHeight"/>
               </item>
               <item>

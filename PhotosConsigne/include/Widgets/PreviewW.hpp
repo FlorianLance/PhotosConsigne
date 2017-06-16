@@ -80,9 +80,9 @@ signals:
 
 private:
 
-    int m_currentPCRectId;
+    int m_currentRectId;
     QRectF m_currentPCRect;
-    QRectF m_pcRectRelative;
+    QRectF m_rectRelative;
 
     QTimer m_rectTimer;
 

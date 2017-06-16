@@ -42,7 +42,7 @@ void pc::PhotoLoaderWorker::load_photos_directory(QStringList photosPath, int st
 
     SPhotos photosLoaded = std::make_shared<QList<SPhoto>>();
     photosLoaded->reserve(nbPhotos);
-    for(auto &&photoPath : photosPath){
+    for(const auto &photoPath : photosPath){
 
         QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
 
@@ -55,8 +55,12 @@ void pc::PhotoLoaderWorker::load_photos_directory(QStringList photosPath, int st
             break;
         }
 
-        emit set_progress_bar_text_signal("Chargement de " + photoPath);
 
+        QString splitPath = photoPath;
+        if(splitPath.size() > 30){
+//            splitPath = splitPath.insert(30, "\n");
+        }
+        emit set_progress_bar_text_signal("Chargement de " + splitPath);
         SPhoto photo = std::make_shared<Photo>(Photo(photoPath));
         if(!photo->scaledPhoto.isNull()){
             photosLoaded->push_back(photo);

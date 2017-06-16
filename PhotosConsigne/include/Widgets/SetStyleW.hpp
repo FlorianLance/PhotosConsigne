@@ -41,6 +41,22 @@ struct SetStyleW : public SettingsW{
         connect(&imagePositionW, &ImagePositionW::settings_updated_signal, this, &SetStyleW::settings_updated_signal);
     }
 
+    void write_to_xml(QXmlStreamWriter &xml) const{
+
+        xml.writeStartElement("SetStyle");
+        xml.writeAttribute("ratioPC", QString::number(ui.dsbRatioPC->value()));
+        xml.writeAttribute("position", QString::number(ui.cbPositionConsign->currentIndex()));
+        imagePositionW.write_to_xml(xml);
+        xml.writeEndElement();
+    }
+
+    void load_from_xml(QXmlStreamReader &xml){
+
+        Utility::safe_init_combo_box_index(ui.cbPositionConsign, xml.attributes().value("position").toInt());
+        Utility::safe_init_double_spinbox_value(ui.dsbRatioPC, xml.attributes().value("ratioPC").toDouble());
+        Utility::safe_init_slider_value(ui.hsRatioPC, static_cast<int>(ui.dsbRatioPC->value()*10000));
+    }
+
     static void init_ui(pc::SetStyleW &s1, const pc::SetStyleW &s2){
 
         Utility::safe_init_combo_box_index(s1.ui.cbPositionConsign,   s2.ui.cbPositionConsign->currentIndex());

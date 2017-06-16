@@ -10,6 +10,8 @@
 #include <QPushButton>
 #include <QToolBox>
 #include <QRadioButton>
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
 // # dialogs
 #include <QColorDialog>
 #include <QFileDialog>
@@ -44,6 +46,7 @@ struct Utility{
     static void safe_init_combo_box_index(QComboBox *cb, int index);    
     static void safe_init_tab_widget_index(QTabWidget *tw, int index);
     static void safe_init_tool_box_index(QToolBox *tb, int index);
+
 };
 
 
@@ -54,10 +57,6 @@ struct SettingsW : public QWidget {
 public :
 
     SettingsW() : QWidget(nullptr){}
-
-    virtual ~SettingsW(){
-//        DebugMessage("~SettingsW");
-    }
 
     // connections
     void init_checkboxes_connections(QVector<QCheckBox*> checkBoxes, bool displayZones = false);

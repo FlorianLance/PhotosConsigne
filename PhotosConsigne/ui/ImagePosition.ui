@@ -105,7 +105,7 @@
          </size>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choix du motif de fond&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>Choix de la position de la photo</string>
         </property>
         <property name="styleSheet">
          <string notr="true">QComboBox {
@@ -249,6 +249,9 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
           <height>16777215</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>Alignement horizontal de la photo</string>
+        </property>
         <property name="maximum">
          <number>1000</number>
         </property>
@@ -273,6 +276,9 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
           <width>16777215</width>
           <height>110</height>
          </size>
+        </property>
+        <property name="toolTip">
+         <string>Alignement vertical de la photo</string>
         </property>
         <property name="minimum">
          <number>0</number>
@@ -465,7 +471,7 @@ QWidget:!enabled {
          </size>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajustement de l'image de fond&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajustement de la photo dans son espace&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="styleSheet">
          <string notr="true">QComboBox {
@@ -590,6 +596,9 @@ QWidget:!enabled {
        <widget class="QDoubleSpinBox" name="dsbScale">
         <property name="enabled">
          <bool>false</bool>
+        </property>
+        <property name="toolTip">
+         <string>Facteur de taille de la photo</string>
         </property>
         <property name="minimum">
          <double>0.010000000000000</double>

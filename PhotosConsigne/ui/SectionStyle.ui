@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>151</width>
+    <width>165</width>
     <height>52</height>
    </rect>
   </property>
@@ -101,10 +101,10 @@
          <string>Ratio par défaut de l'espace entre la photo et la consigne</string>
         </property>
         <property name="maximum">
-         <number>1000</number>
+         <number>10000</number>
         </property>
         <property name="value">
-         <number>150</number>
+         <number>1500</number>
         </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>

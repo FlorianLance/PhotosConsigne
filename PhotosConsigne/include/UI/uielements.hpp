@@ -59,6 +59,10 @@ public slots:
 
     void ask_for_update(bool displayZones);
 
+
+    void write_to_xml(QXmlStreamWriter &xml) const;
+    void load_from_xml(QXmlStreamReader &xml, bool firstPart);
+
     void display_donate_window();
     void display_help_window();
 

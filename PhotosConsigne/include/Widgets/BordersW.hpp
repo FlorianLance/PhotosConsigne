@@ -30,6 +30,29 @@ struct BordersW : public SettingsW {
         init_comboboxes_connections({ui.cbBordersLineWidth, ui.cbBordersLineStyle, ui.cbBordersJoin,}, false);
     }
 
+    void write_to_xml(QXmlStreamWriter &xml) const{
+
+        xml.writeStartElement("Borders");
+        xml.writeAttribute("width", QString::number(ui.cbBordersLineWidth->currentIndex()));
+        xml.writeAttribute("style", QString::number(ui.cbBordersLineStyle->currentIndex()));
+        xml.writeAttribute("join", QString::number(ui.cbBordersJoin->currentIndex()));
+        xml.writeAttribute("color", StrUtility::to_str(color));
+        xml.writeEndElement();
+    }
+
+    void load_from_xml(QXmlStreamReader &xml){
+
+        Utility::safe_init_combo_box_index(ui.cbBordersLineWidth, xml.attributes().value("width").toInt());
+        Utility::safe_init_combo_box_index(ui.cbBordersLineWidth, xml.attributes().value("style").toInt());
+        Utility::safe_init_combo_box_index(ui.cbBordersLineWidth, xml.attributes().value("join").toInt());
+        QStringList col = xml.attributes().value("color").toString().split(" ");
+        color = QColor(col[0].toInt(),col[1].toInt(),col[2].toInt(),col[3].toInt());
+
+        QPixmap pix(50,50);
+        pix.fill(color);
+        ui.tbColorBorder->actions()[0]->setIcon(QIcon(pix));
+    }
+
     void update_settings(BordersSettings &settings) const{
 
         settings.display = ui.cbEnableBorders->isChecked();

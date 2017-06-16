@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>662</width>
-    <height>338</height>
+    <width>719</width>
+    <height>397</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -44,10 +44,41 @@
 </string>
      </property>
      <property name="text">
-      <string>J'ai réalisé ce logiciel sur mon temps libre, sa conception m'a demandé des centaines d'heures de travail.
+      <string>PhotosConsigne a été réalisé sur mon temps libre, sa conception m'a demandé des centaines d'heures de travail.
 J'ai choisi d'en faire profiter la communauté en le proposant gratuitement à tous.
+J'espère qu'il vous fera gagner du temps!</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>1</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">	background-color : rgb(0,106,255);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item alignment="Qt::AlignHCenter">
+    <widget class="QLabel" name="label_2">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  11pt Calibri;
 
-Si ce logiciel vous est utile, vous pouvez me remercier et contribuer à sa pérennité en:</string>
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Si ce logiciel vous est utile, vous pouvez me remercier et contribuer à sa pérennité en:</string>
      </property>
     </widget>
    </item>
@@ -66,6 +97,9 @@ Si ce logiciel vous est utile, vous pouvez me remercier et contribuer à sa pér
          <width>130</width>
          <height>50</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Ouvrir la page web Paypal pour réaliser un don</string>
        </property>
        <property name="styleSheet">
         <string notr="true">
@@ -219,6 +253,9 @@ QPushButton:hover:!pressed{
          <height>50</height>
         </size>
        </property>
+       <property name="toolTip">
+        <string>Ouvrir votre gestionnaire de mail par défaut</string>
+       </property>
        <property name="styleSheet">
         <string notr="true">
 
@@ -281,6 +318,35 @@ QPushButton:hover:!pressed{
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="Line" name="line_2">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>1</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">	background-color : rgb(0,106,255);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item alignment="Qt::AlignHCenter">
     <widget class="QLabel" name="laThanks">

@@ -86,22 +86,22 @@ void PreviewW::set_current_pc(int idPC){
     }
 
 
-    if(m_currentPCRectId == idPC){ // rectangle already selected
+    if(m_currentRectId == idPC){ // rectangle already selected
         return;
     }
 
-    m_currentPCRectId = -1;
+    m_currentRectId = -1;
 
     int idSet = 0;
     for(int ii = 0; ii < m_previewPage->sets.size(); ++ii){
         if(m_previewPage->sets[ii]->totalId == idPC){
-            m_currentPCRectId = idPC;
+            m_currentRectId = idPC;
             idSet = ii;
             break;
         }
     }
 
-    if(m_currentPCRectId == -1){
+    if(m_currentRectId == -1){
         return;
     }
 
@@ -109,7 +109,7 @@ void PreviewW::set_current_pc(int idPC){
     emit start_update_loop_signal();
     auto set =  m_previewPage->sets[idSet];
     QRectF rectPage = m_previewPage->rectOnPage;
-    m_pcRectRelative = QRectF(set->rectOnPage.x()/rectPage.width(), set->rectOnPage.y()/rectPage.height(),
+    m_rectRelative = QRectF(set->rectOnPage.x()/rectPage.width(), set->rectOnPage.y()/rectPage.height(),
                           set->rectOnPage.width()/rectPage.width(), set->rectOnPage.height()/rectPage.height());
 }
 
@@ -129,27 +129,47 @@ void PreviewW::mousePressEvent(QMouseEvent *ev){
         QRectF rectPage = m_previewPage->rectOnPage;
         QPointF realPos(rectPage.x() + posRelative.x()*rectPage.width(), rectPage.y() + posRelative.y()*rectPage.height());
 
-        int previousRectId = m_currentPCRectId;
-        m_currentPCRectId = -1;
+        int previousRectId = m_currentRectId;
+        m_currentRectId = -1;
         for(auto &&set : m_previewPage->sets){
             if(set->rectOnPage.contains(realPos)){
-                if(set->totalId > m_currentPCRectId){
-                    m_currentPCRectId = set->totalId;
-                    m_pcRectRelative = QRectF(set->rectOnPage.x()/rectPage.width(), set->rectOnPage.y()/rectPage.height(),
+                if(set->totalId > m_currentRectId){
+                    m_currentRectId = set->totalId;
+                    m_rectRelative = QRectF(set->rectOnPage.x()/rectPage.width(), set->rectOnPage.y()/rectPage.height(),
                                           set->rectOnPage.width()/rectPage.width(), set->rectOnPage.height()/rectPage.height());
                 }
             }
         }
 
-        if(m_currentPCRectId > -1){
+        if(m_currentRectId > -1){ // click on set
 
-            if(m_doubleClickTimer.isActive() && m_currentPCRectId == previousRectId){ // second click on same pc before timer finish
-                emit double_click_on_photo_signal(m_currentPCRectId);
+            if(m_doubleClickTimer.isActive() && m_currentRectId == previousRectId){ // second click on same pc before timer finish
+                emit double_click_on_photo_signal(m_currentRectId);
             }else{ // reset timer
                 m_doubleClickTimer.start(300);
                 m_rectTimer.start(2000);
                 emit start_update_loop_signal();
-                emit current_pc_selected_signal(m_currentPCRectId);
+                emit current_pc_selected_signal(m_currentRectId);
+            }
+        }else{
+
+            if(m_previewPage->header->rectOnPage.contains(realPos)){ // click on header
+                m_rectRelative = QRectF(m_previewPage->header->rectOnPage.x()/rectPage.width(), m_previewPage->header->rectOnPage.y()/rectPage.height(),
+                                        m_previewPage->header->rectOnPage.width()/rectPage.width(), m_previewPage->header->rectOnPage.height()/rectPage.height());
+                m_rectTimer.start(2000);
+                m_currentRectId = -2;
+
+                emit start_update_loop_signal();
+                emit current_pc_selected_signal(m_currentRectId);
+
+            }else if(m_previewPage->footer->rectOnPage.contains(realPos)){ // click on footer
+                m_rectRelative = QRectF(m_previewPage->footer->rectOnPage.x()/rectPage.width(), m_previewPage->footer->rectOnPage.y()/rectPage.height(),
+                                        m_previewPage->footer->rectOnPage.width()/rectPage.width(), m_previewPage->footer->rectOnPage.height()/rectPage.height());
+                m_rectTimer.start(2000);
+                m_currentRectId = -3;
+
+                emit start_update_loop_signal();
+                emit current_pc_selected_signal(m_currentRectId);
             }
         }
     }
@@ -161,12 +181,12 @@ void PreviewW::paintEvent(QPaintEvent *event){
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-    if(m_pcRectRelative.width() > 0 && m_rectTimer.isActive() && m_currentPCRectId > -1){
+    if(m_rectRelative.width() > 0 && m_rectTimer.isActive() && m_currentRectId != -1){
 
-        m_currentPCRect = QRectF(m_imageRect.x() + m_pcRectRelative.x()*m_imageRect.width(),
-                                 m_imageRect.y() + m_pcRectRelative.y()*m_imageRect.height(),
-                                 m_pcRectRelative.width()*m_imageRect.width(),
-                                 m_pcRectRelative.height()*m_imageRect.height());
+        m_currentPCRect = QRectF(m_imageRect.x() + m_rectRelative.x()*m_imageRect.width(),
+                                 m_imageRect.y() + m_rectRelative.y()*m_imageRect.height(),
+                                 m_rectRelative.width()*m_imageRect.width(),
+                                 m_rectRelative.height()*m_imageRect.height());
 
         int alpha = (m_rectTimer.remainingTime() > 1500) ? 90 : (90*m_rectTimer.remainingTime()/1500.);
         painter.fillRect(m_currentPCRect, QColor(0,0,255,alpha));

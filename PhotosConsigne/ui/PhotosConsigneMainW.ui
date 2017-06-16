@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1399</width>
-    <height>1118</height>
+    <width>1277</width>
+    <height>1036</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,6 +15,21 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>3</number>
+    </property>
+    <property name="topMargin">
+     <number>3</number>
+    </property>
+    <property name="rightMargin">
+     <number>3</number>
+    </property>
+    <property name="bottomMargin">
+     <number>3</number>
+    </property>
+    <property name="spacing">
+     <number>3</number>
+    </property>
     <item row="1" column="0">
      <layout class="QVBoxLayout" name="vlMainLayout" stretch="1,8">
       <item>
@@ -25,14 +40,14 @@
         <item>
          <widget class="QFrame" name="frameActions">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="minimumSize">
            <size>
-            <width>440</width>
+            <width>365</width>
             <height>120</height>
            </size>
           </property>
@@ -187,7 +202,7 @@ QTabBar::tab:selected {
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>16777215</width>
+                   <width>420</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -223,7 +238,7 @@ QTabBar::tab:selected {
                     </property>
                     <property name="maximumSize">
                      <size>
-                      <width>150</width>
+                      <width>110</width>
                       <height>16777215</height>
                      </size>
                     </property>
@@ -269,7 +284,7 @@ QTabBar::tab:selected {
                        </property>
                        <property name="minimumSize">
                         <size>
-                         <width>120</width>
+                         <width>100</width>
                          <height>40</height>
                         </size>
                        </property>
@@ -333,7 +348,7 @@ QPushButton:hover:!pressed{
                        </property>
                        <property name="minimumSize">
                         <size>
-                         <width>120</width>
+                         <width>100</width>
                          <height>40</height>
                         </size>
                        </property>
@@ -596,13 +611,13 @@ QPushButton:hover:!pressed{
                       <number>5</number>
                      </property>
                      <property name="topMargin">
-                      <number>2</number>
+                      <number>0</number>
                      </property>
                      <property name="rightMargin">
                       <number>5</number>
                      </property>
                      <property name="bottomMargin">
-                      <number>5</number>
+                      <number>3</number>
                      </property>
                      <property name="spacing">
                       <number>0</number>
@@ -909,7 +924,7 @@ QPushButton:hover:!pressed{
           </property>
           <property name="minimumSize">
            <size>
-            <width>480</width>
+            <width>380</width>
             <height>0</height>
            </size>
           </property>
@@ -978,7 +993,7 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
     border-radius: 0px;
 
 	height:3ex;
-	min-width:30ex;
+	min-width:20ex;
     padding: 2px;
 }
 
@@ -1071,6 +1086,19 @@ QTabBar::tab:last{
                   <property name="bottomMargin">
                    <number>3</number>
                   </property>
+                  <item>
+                   <spacer name="verticalSpacer_4">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
                   <item alignment="Qt::AlignHCenter">
                    <widget class="QComboBox" name="cbOrientation">
                     <property name="minimumSize">
@@ -1147,6 +1175,19 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                     </item>
                    </widget>
                   </item>
+                  <item>
+                   <spacer name="verticalSpacer_2">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
                   <item alignment="Qt::AlignHCenter">
                    <widget class="QLabel" name="laOrientation">
                     <property name="styleSheet">
@@ -1211,8 +1252,21 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                    <number>3</number>
                   </property>
                   <property name="bottomMargin">
-                   <number>6</number>
+                   <number>3</number>
                   </property>
+                  <item>
+                   <spacer name="verticalSpacer_6">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
                   <item>
                    <widget class="QFrame" name="frame_8">
                     <property name="frameShape">
@@ -1318,6 +1372,19 @@ QPushButton {
                     </layout>
                    </widget>
                   </item>
+                  <item>
+                   <spacer name="verticalSpacer_5">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
                   <item alignment="Qt::AlignHCenter">
                    <widget class="QLabel" name="label_2">
                     <property name="styleSheet">
@@ -1395,31 +1462,7 @@ QPushButton {
                   <property name="spacing">
                    <number>3</number>
                   </property>
-                  <item row="1" column="0" colspan="2" alignment="Qt::AlignHCenter">
-                   <widget class="QLabel" name="laDefinition">
-                    <property name="maximumSize">
-                     <size>
-                      <width>16777215</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-    font:  10pt Calibri;
-
- }
-
-
-</string>
-                    </property>
-                    <property name="text">
-                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Défintion: &lt;span style=&quot; font-weight:400;&quot;&gt;... x ... pixels&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="0">
+                  <item row="1" column="0">
                    <widget class="QFrame" name="frame_13">
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>
@@ -1443,11 +1486,102 @@ QPushButton {
                      <property name="spacing">
                       <number>3</number>
                      </property>
-                     <item row="0" column="0">
+                     <item row="3" column="0">
+                      <widget class="QComboBox" name="cbDPI">
+                       <property name="maximumSize">
+                        <size>
+                         <width>75</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choix de la résolution du document PDF en DPI (points par pouce)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+
+ }
+</string>
+                       </property>
+                       <property name="currentIndex">
+                        <number>2</number>
+                       </property>
+                       <item>
+                        <property name="text">
+                         <string>72</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>96</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>150</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>220</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>300</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>400</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>500</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>600</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>700</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>800</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>900</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>1000</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>1200</string>
+                        </property>
+                       </item>
+                      </widget>
+                     </item>
+                     <item row="0" column="0" alignment="Qt::AlignLeft">
                       <widget class="QLabel" name="laFormat">
                        <property name="minimumSize">
                         <size>
-                         <width>90</width>
+                         <width>0</width>
                          <height>0</height>
                         </size>
                        </property>
@@ -1472,7 +1606,30 @@ QPushButton {
                        </property>
                       </widget>
                      </item>
-                     <item row="0" column="1">
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="laDPI">
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+</string>
+                       </property>
+                       <property name="text">
+                        <string>Résolution (dpi)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
                       <widget class="QComboBox" name="cbFormat">
                        <property name="minimumSize">
                         <size>
@@ -2122,125 +2279,178 @@ QPushButton {
                        </item>
                       </widget>
                      </item>
-                     <item row="1" column="0">
-                      <widget class="QLabel" name="laDPI">
-                       <property name="maximumSize">
-                        <size>
-                         <width>16777215</width>
-                         <height>16777215</height>
-                        </size>
-                       </property>
-                       <property name="styleSheet">
-                        <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-    font:  9pt Calibri;
-
- }
-
-</string>
-                       </property>
-                       <property name="text">
-                        <string>Résolution (dpi)</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="1">
-                      <widget class="QComboBox" name="cbDPI">
-                       <property name="maximumSize">
-                        <size>
-                         <width>75</width>
-                         <height>16777215</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choix de la résolution du document PDF en DPI (points par pouce)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="styleSheet">
-                        <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-    font:  bold 10pt Calibri;
-
-
- }
-</string>
-                       </property>
-                       <property name="currentIndex">
-                        <number>2</number>
-                       </property>
-                       <item>
-                        <property name="text">
-                         <string>72</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>96</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>150</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>220</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>300</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>400</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>500</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>600</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>700</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>800</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>900</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>1000</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>1200</string>
-                        </property>
-                       </item>
-                      </widget>
-                     </item>
                     </layout>
                    </widget>
                   </item>
+                  <item row="2" column="0">
+                   <spacer name="verticalSpacer_9">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="3" column="0" colspan="2" alignment="Qt::AlignHCenter">
+                   <widget class="QLabel" name="laDefinition">
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  10pt Calibri;
+
+ }
+
+
+</string>
+                    </property>
+                    <property name="text">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Défintion: &lt;span style=&quot; font-weight:400;&quot;&gt;... x ... pixels&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <spacer name="verticalSpacer_10">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
                  </layout>
                 </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tabFile">
+              <attribute name="title">
+               <string>FICHIER</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_2">
+               <item row="0" column="1">
+                <widget class="QPushButton" name="pbSaveWork">
+                 <property name="minimumSize">
+                  <size>
+                   <width>230</width>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">
+
+QPushButton {
+    font: bold 12pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
+	border-bottom-left-radius: 0px;	
+	 border-bottom-right-radius: 0px;	
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+ }
+ 
+QPushButton::enabled {
+	color : rgb(0,106,255);
+    border: 1px solid rgb(0,106,255);
+ }
+
+QPushButton:hover:!pressed{
+
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+ QPushButton:pressed{
+    background-color:  rgb(220,220,220);
+
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Sauvegarder le travail en cours</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QPushButton" name="pbLoadWork">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">
+
+QPushButton {
+    font: bold 12pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
+	border-bottom-left-radius: 0px;	
+	 border-bottom-right-radius: 0px;	
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+ }
+ 
+QPushButton::enabled {
+	color : rgb(0,106,255);
+    border: 1px solid rgb(0,106,255);
+ }
+
+QPushButton:hover:!pressed{
+
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+ QPushButton:pressed{
+    background-color:  rgb(220,220,220);
+
+}</string>
+                 </property>
+                 <property name="text">
+                  <string>Charger un travail sauvegardé</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <spacer name="horizontalSpacer_5">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>0</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0">
+                <spacer name="horizontalSpacer_7">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>0</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
               </layout>
              </widget>
@@ -2248,13 +2458,11 @@ QPushButton {
               <attribute name="title">
                <string>OPTIONS</string>
               </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_5">
-               <item>
-                <layout class="QVBoxLayout" name="verticalLayout_5">
-                 <item>
-                  <widget class="QCheckBox" name="cbSaveOnlyCurrentPage">
-                   <property name="styleSheet">
-                    <string notr="true">QWidget {
+              <layout class="QGridLayout" name="gridLayout_7">
+               <item row="0" column="1">
+                <widget class="QCheckBox" name="cbSaveOnlyCurrentPage">
+                 <property name="styleSheet">
+                  <string notr="true">QWidget {
   
 	color : rgb(0,106,255);
     font:  bold 10pt Calibri;
@@ -2262,16 +2470,16 @@ QPushButton {
 
  }
 </string>
-                   </property>
-                   <property name="text">
-                    <string>générer uniquement la page courante</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="cbBAndW">
-                   <property name="styleSheet">
-                    <string notr="true">QWidget {
+                 </property>
+                 <property name="text">
+                  <string>Générer uniquement la page courante</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QCheckBox" name="cbBAndW">
+                 <property name="styleSheet">
+                  <string notr="true">QWidget {
   
 	color : rgb(0,106,255);
     font:  bold 10pt Calibri;
@@ -2279,13 +2487,37 @@ QPushButton {
 
  }
 </string>
-                   </property>
-                   <property name="text">
-                    <string>document en niveaux de gris</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+                 </property>
+                 <property name="text">
+                  <string>Document en niveaux de gris</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <spacer name="horizontalSpacer_8">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>0</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="2">
+                <spacer name="horizontalSpacer_9">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>0</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
               </layout>
              </widget>
@@ -2304,8 +2536,14 @@ QPushButton {
           </property>
           <property name="minimumSize">
            <size>
-            <width>300</width>
+            <width>260</width>
             <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
            </size>
           </property>
           <property name="styleSheet">
@@ -2336,14 +2574,14 @@ QPushButton {
            <item row="0" column="1">
             <widget class="QTabWidget" name="tabWInfos">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
              <property name="minimumSize">
               <size>
-               <width>200</width>
+               <width>0</width>
                <height>0</height>
               </size>
              </property>
@@ -2444,13 +2682,19 @@ QTabBar::tab:selected {
                <property name="verticalSpacing">
                 <number>2</number>
                </property>
-               <item row="0" column="0">
+               <item row="0" column="0" alignment="Qt::AlignLeft">
                 <widget class="QFrame" name="frame_19">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
                  </property>
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
@@ -2486,7 +2730,7 @@ QTabBar::tab:selected {
                       </property>
                       <property name="sizeHint" stdset="0">
                        <size>
-                        <width>40</width>
+                        <width>1</width>
                         <height>20</height>
                        </size>
                       </property>
@@ -2496,7 +2740,7 @@ QTabBar::tab:selected {
                      <widget class="QPushButton" name="pbDonate">
                       <property name="minimumSize">
                        <size>
-                        <width>200</width>
+                        <width>180</width>
                         <height>40</height>
                        </size>
                       </property>
@@ -2563,13 +2807,13 @@ QPushButton:hover:!pressed{
                      <widget class="QPushButton" name="pbHelp">
                       <property name="minimumSize">
                        <size>
-                        <width>80</width>
+                        <width>90</width>
                         <height>40</height>
                        </size>
                       </property>
                       <property name="maximumSize">
                        <size>
-                        <width>70</width>
+                        <width>100</width>
                         <height>40</height>
                        </size>
                       </property>
@@ -2625,7 +2869,7 @@ QPushButton:hover:!pressed{
                       </property>
                       <property name="sizeHint" stdset="0">
                        <size>
-                        <width>40</width>
+                        <width>1</width>
                         <height>20</height>
                        </size>
                       </property>
@@ -2638,6 +2882,12 @@ QPushButton:hover:!pressed{
                </item>
                <item row="1" column="0">
                 <widget class="QFrame" name="frame_10">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
                  </property>
@@ -2662,9 +2912,15 @@ QPushButton:hover:!pressed{
                   </property>
                   <item>
                    <widget class="QFrame" name="wLoading">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
-                      <width>100</width>
+                      <width>0</width>
                       <height>0</height>
                      </size>
                     </property>
@@ -2759,6 +3015,19 @@ margin-right: 2px; /* space */
                        </property>
                       </widget>
                      </item>
+                     <item>
+                      <spacer name="horizontalSpacer_2">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
                     </layout>
                    </widget>
                   </item>
@@ -2814,19 +3083,6 @@ margin-right: 2px; /* space */
            </item>
           </layout>
          </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </item>
@@ -4525,12 +4781,22 @@ QTabBar::tab:selected {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1399</width>
+     <width>1277</width>
      <height>21</height>
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>5</height>
+    </size>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="../resources.qrc"/>

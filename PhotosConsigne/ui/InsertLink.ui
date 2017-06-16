@@ -37,6 +37,44 @@
      </item>
      <item>
       <widget class="QPushButton" name="pbCancel">
+       <property name="minimumSize">
+        <size>
+         <width>75</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Annuler l'insertion du lien</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">
+
+QPushButton {
+    font: bold 10pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
+	border-bottom-left-radius: 0px;	
+	 border-bottom-right-radius: 0px;	
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+ }
+ 
+QPushButton::enabled {
+	color : rgb(0,106,255);
+    border: 1px solid rgb(0,106,255);
+ }
+
+QPushButton:hover:!pressed{
+
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+ QPushButton:pressed{
+    background-color:  rgb(220,220,220);
+
+}</string>
+       </property>
        <property name="text">
         <string>Annuler</string>
        </property>
@@ -44,6 +82,44 @@
      </item>
      <item>
       <widget class="QPushButton" name="pbValidate">
+       <property name="minimumSize">
+        <size>
+         <width>75</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Valider l'insertion du lien</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">
+
+QPushButton {
+    font: bold 10pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
+	border-bottom-left-radius: 0px;	
+	 border-bottom-right-radius: 0px;	
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+ }
+ 
+QPushButton::enabled {
+	color : rgb(0,106,255);
+    border: 1px solid rgb(0,106,255);
+ }
+
+QPushButton:hover:!pressed{
+
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+ QPushButton:pressed{
+    background-color:  rgb(220,220,220);
+
+}</string>
+       </property>
        <property name="text">
         <string>Valider</string>
        </property>
@@ -55,23 +131,69 @@
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QLabel" name="label">
+       <property name="styleSheet">
+        <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+    font:  bold 10pt Calibri;
+ }
+</string>
+       </property>
        <property name="text">
         <string>Texte</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="leText"/>
+      <widget class="QLineEdit" name="leText">
+       <property name="toolTip">
+        <string>Entrez le texte qui sera affiché ici</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_2">
+       <property name="styleSheet">
+        <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+    font:  bold 10pt Calibri;
+ }
+</string>
+       </property>
        <property name="text">
         <string>Lien</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="leLink"/>
+      <widget class="QLineEdit" name="leLink">
+       <property name="toolTip">
+        <string>Entrez le lien vers le site web souhaité ici</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

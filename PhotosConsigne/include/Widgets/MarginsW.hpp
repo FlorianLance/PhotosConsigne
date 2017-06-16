@@ -41,6 +41,52 @@ struct MarginsW : public SettingsW{
         init_doublespinboxes_connections({ui.dsbLeftMargins, ui.dsbRightMargins, ui.dsbTopMargins,ui.dsbBottomMargins,ui.dsbHorizontalMargins,ui.dsbVerticalMargins, ui.dsbFooterMargin, ui.dsbHeaderMargin},true);
     }
 
+    void write_to_xml(QXmlStreamWriter &xml) const{
+
+        xml.writeStartElement("Margins");
+        xml.writeAttribute("exterior", QString::number(ui.cbAddExteriorMargins->isChecked()));
+        xml.writeAttribute("interior", QString::number(ui.cbAddInteriorMargins->isChecked()));
+        xml.writeAttribute("headerFooter", QString::number(ui.cbAddFooterHeaderMargins->isChecked()));
+
+        xml.writeAttribute("left", QString::number(ui.dsbLeftMargins->value()));
+        xml.writeAttribute("right", QString::number(ui.dsbRightMargins->value()));
+        xml.writeAttribute("top", QString::number(ui.dsbTopMargins->value()));
+        xml.writeAttribute("bottom", QString::number(ui.dsbBottomMargins->value()));
+
+        xml.writeAttribute("interW", QString::number(ui.dsbHorizontalMargins->value()));
+        xml.writeAttribute("interH", QString::number(ui.dsbVerticalMargins->value()));
+        xml.writeAttribute("footer", QString::number(ui.dsbFooterMargin->value()));
+        xml.writeAttribute("header", QString::number(ui.dsbHeaderMargin->value()));
+
+        xml.writeEndElement();
+    }
+
+    void load_from_xml(QXmlStreamReader &xml){
+
+        Utility::safe_init_checkboxe_checked_state(ui.cbAddExteriorMargins, xml.attributes().value("exterior").toInt() == 1);
+        Utility::safe_init_checkboxe_checked_state(ui.cbAddInteriorMargins, xml.attributes().value("interior").toInt() == 1);
+        Utility::safe_init_checkboxe_checked_state(ui.cbAddFooterHeaderMargins, xml.attributes().value("headerFooter").toInt() == 1);
+
+        Utility::safe_init_double_spinbox_value(ui.dsbLeftMargins, xml.attributes().value("left").toDouble());
+        Utility::safe_init_double_spinbox_value(ui.dsbRightMargins, xml.attributes().value("right").toDouble());
+        Utility::safe_init_double_spinbox_value(ui.dsbTopMargins, xml.attributes().value("top").toDouble());
+        Utility::safe_init_double_spinbox_value(ui.dsbBottomMargins, xml.attributes().value("bottom").toDouble());
+
+        Utility::safe_init_slider_value(ui.hsLeftMargins, static_cast<int>(ui.dsbLeftMargins->value()*10000));
+        Utility::safe_init_slider_value(ui.hsRightMargins, static_cast<int>(ui.dsbRightMargins->value()*10000));
+        Utility::safe_init_slider_value(ui.hsTopMargins, static_cast<int>(ui.dsbTopMargins->value()*10000));
+        Utility::safe_init_slider_value(ui.hsBottomMargins, static_cast<int>(ui.dsbBottomMargins->value()*10000));
+
+        Utility::safe_init_double_spinbox_value(ui.dsbHorizontalMargins, xml.attributes().value("interW").toDouble());
+        Utility::safe_init_double_spinbox_value(ui.dsbVerticalMargins, xml.attributes().value("interH").toDouble());
+        Utility::safe_init_double_spinbox_value(ui.dsbFooterMargin, xml.attributes().value("footer").toDouble());
+        Utility::safe_init_double_spinbox_value(ui.dsbHeaderMargin, xml.attributes().value("header").toDouble());
+
+        Utility::safe_init_slider_value(ui.hsHorizontalMargins, static_cast<int>(ui.dsbHorizontalMargins->value()*10000));
+        Utility::safe_init_slider_value(ui.hsVerticalMargins, static_cast<int>(ui.dsbVerticalMargins->value()*10000));
+        Utility::safe_init_slider_value(ui.hsFooterMargin, static_cast<int>(ui.dsbFooterMargin->value()*10000));
+        Utility::safe_init_slider_value(ui.hsHeaderMargin, static_cast<int>(ui.dsbHeaderMargin->value()*10000));
+    }
 
     void update_settings(MarginsSettings &settings) const{
 

@@ -37,15 +37,15 @@ struct FooterW : public SettingsW{
         Utility::checkbox_enable_UI(ui.cbEnableFooter, {ui.frameFooter});
 
         // text
-        footerTextW.init_style(RichTextType::footer);
-        ui.vlFooterText->addWidget(&footerTextW);
-        connect(footerTextW.textEdit(), &TextEdit::textChanged, this, [=]{
+        richTextW.init_style(RichTextType::footer);
+        ui.vlFooterText->addWidget(&richTextW);
+        connect(richTextW.textEdit(), &TextEdit::textChanged, this, [=]{
             emit settings_updated_signal(false);
         });
 
         // background
-        ui.vlFooterBackground->addWidget(&footerBackgroundW);
-        connect(&footerBackgroundW, &BackgroundW::settings_updated_signal, this, &FooterW::settings_updated_signal);
+        ui.vlFooterBackground->addWidget(&backgroundW);
+        connect(&backgroundW, &BackgroundW::settings_updated_signal, this, &FooterW::settings_updated_signal);
 
         // section style
         ui.vlStyle->addWidget(&sectionStyleW);
@@ -74,21 +74,55 @@ struct FooterW : public SettingsW{
         });
     }
 
+    void write_to_xml(QXmlStreamWriter &xml) const{
+
+        xml.writeStartElement("Footer");
+        xml.writeAttribute("enabled", QString::number(ui.cbEnableFooter->isChecked()));
+        richTextW.write_to_xml(xml);
+        backgroundW.write_to_xml(xml);
+        sectionStyleW.write_to_xml(xml);
+        xml.writeEndElement();
+    }
+
+    void load_from_xml(QXmlStreamReader &xml){
+
+        Utility::safe_init_checkboxe_checked_state(ui.cbEnableFooter,xml.attributes().value("enabled").toInt() == 1);
+
+        QXmlStreamReader::TokenType token = QXmlStreamReader::TokenType::StartElement;
+        while(!xml.hasError()) {
+
+            if(token == QXmlStreamReader::TokenType::EndElement && xml.name() == "Footer"){
+                break;
+            }else if(token == QXmlStreamReader::TokenType::StartElement){
+
+                if(xml.name() == "RichText"){
+                    richTextW.load_from_xml(xml);
+                }else if(xml.name() == "Background"){
+                    backgroundW.load_from_xml(xml);
+                }else if(xml.name() == "SectionStyle"){
+                    sectionStyleW.load_from_xml(xml);
+                }
+            }
+
+            token = xml.readNext();
+        }
+    }
+
 
     void update_settings(FooterSettings &settings) const{
 
         settings.enabled     = ui.cbEnableFooter->isChecked();
-        footerBackgroundW.update_settings(settings.background);
+        backgroundW.update_settings(settings.background);
         settings.ratio       = sectionStyleW.ui.dsbRatioSection->value();
-        settings.text.html   = footerTextW.html();
+        settings.text.html   = richTextW.html();
     }
 
     // ui
     Ui::FooterUI    ui;
 
     // sub widgets
-    RichTextEditW   footerTextW;
-    BackgroundW     footerBackgroundW;
+    RichTextEditW   richTextW;
+    BackgroundW     backgroundW;
     SectionStyleW   sectionStyleW;
 
     QSpacerItem *spacerItem = nullptr;

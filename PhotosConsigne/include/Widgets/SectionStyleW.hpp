@@ -33,6 +33,18 @@ struct SectionStyleW : public SettingsW{
         init_doublespinboxes_connections({ui.dsbRatioSection}, true);
     }
 
+    void write_to_xml(QXmlStreamWriter &xml) const{
+        xml.writeStartElement("SectionStyle");
+        xml.writeAttribute("ratio", QString::number(ui.dsbRatioSection->value()));
+        xml.writeEndElement();
+    }
+
+    void load_from_xml(QXmlStreamReader &xml){
+
+        Utility::safe_init_double_spinbox_value(ui.dsbRatioSection, xml.attributes().value("ratio").toDouble());
+        Utility::safe_init_slider_value(ui.hsRatioSection, static_cast<int>(ui.dsbRatioSection->value()*10000));
+    }
+
 
     Ui::SectionStyleUI ui;
 };

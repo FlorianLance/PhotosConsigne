@@ -89,6 +89,43 @@ public:
         p1.draw_color_zone();
     }
 
+    void write_to_xml(QXmlStreamWriter &xml) const{
+        xml.writeStartElement("Degraded");
+        xml.writeAttribute("color1", StrUtility::to_str(color1));
+        xml.writeAttribute("color2", StrUtility::to_str(color2));
+        xml.writeAttribute("start", StrUtility::to_str(start));
+        xml.writeAttribute("end", StrUtility::to_str(end));
+        xml.writeAttribute("type", QString::number(ui.cbDegradedType->currentIndex()));
+        xml.writeAttribute("choice", QString::number((ui.rbColor1->isChecked() ? 0 : (ui.rbColor2->isChecked() ? 1 : 2))));
+        xml.writeEndElement();
+    }
+
+    void load_from_xml(QXmlStreamReader &xml){
+
+        QStringList col = xml.attributes().value("color1").toString().split(" ");
+        color1 = QColor(col[0].toInt(),col[1].toInt(),col[2].toInt(), col[3].toInt());
+
+        col = xml.attributes().value("color2").toString().split(" ");
+        color2 = QColor(col[0].toInt(),col[1].toInt(),col[2].toInt(), col[3].toInt());
+        QPixmap pix(50,50);
+        pix.fill(color1);
+        ui.tbColor1->actions()[0]->setIcon(pix);
+
+        pix.fill(color2);
+        ui.tbColor2->actions()[0]->setIcon(pix);
+
+        QStringList pt =xml.attributes().value("start").toString().split(" ");
+        start = QPointF(pt[0].toDouble(),pt[1].toDouble());
+        pt =xml.attributes().value("end").toString().split(" ");
+        end = QPointF(pt[0].toDouble(),pt[1].toDouble());
+
+        Utility::safe_init_combo_box_index(ui.cbDegradedType, xml.attributes().value("type").toInt());
+        Utility::safe_init_radio_button_state(ui.rbColor1, xml.attributes().value("choice").toInt() == 0);
+        Utility::safe_init_radio_button_state(ui.rbColor2, xml.attributes().value("choice").toInt() == 1);
+        Utility::safe_init_radio_button_state(ui.rbDegraded, xml.attributes().value("choice").toInt() == 2);
+    }
+
+
     void update_settings(ColorsSettings &settings) const{
 
         if(ui.rbColor1->isChecked()){

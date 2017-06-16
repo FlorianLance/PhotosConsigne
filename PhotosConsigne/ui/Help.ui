@@ -6,116 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>289</width>
-    <height>286</height>
+    <width>284</width>
+    <height>440</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Aide</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="6" column="0">
-    <widget class="QLabel" name="label_5">
-     <property name="styleSheet">
-      <string notr="true">color : rgb(0,106,255);</string>
-     </property>
-     <property name="text">
-      <string>Texte àgauche:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="label_4">
-     <property name="styleSheet">
-      <string notr="true">color : rgb(0,106,255);</string>
-     </property>
-     <property name="text">
-      <string>Souligné:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QPushButton" name="pbVideosTutorials">
-     <property name="minimumSize">
-      <size>
-       <width>130</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">
-
-QPushButton {
-    font: bold 12pt Calibri;  
-    border: 1px solid gray;
-    border-radius: 3px;
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
- }
- 
-QPushButton::enabled {
-	color : rgb(0,106,255);
-    border: 1px solid rgb(0,106,255);
- }
-
-QPushButton:hover:!pressed{
-
-     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}
-
- QPushButton:pressed{
-    background-color:  rgb(220,220,220);
-
-}</string>
-     </property>
-     <property name="text">
-      <string>Tutoriels vidéos</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label">
-     <property name="styleSheet">
-      <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
-
-
- }
-</string>
-     </property>
-     <property name="text">
-      <string>Raccourcis claviers:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="styleSheet">
-      <string notr="true">color : rgb(0,106,255);</string>
-     </property>
-     <property name="text">
-      <string>Gras:</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="1">
     <widget class="QPushButton" name="pbFAQ">
      <property name="minimumSize">
@@ -129,6 +27,9 @@ QPushButton:hover:!pressed{
        <width>16777215</width>
        <height>16777215</height>
       </size>
+     </property>
+     <property name="toolTip">
+      <string>Afficher la page FAQ du site officiel</string>
      </property>
      <property name="styleSheet">
       <string notr="true">
@@ -162,8 +63,11 @@ QPushButton:hover:!pressed{
      </property>
     </widget>
    </item>
-   <item row="11" column="1">
+   <item row="22" column="1">
     <widget class="QPushButton" name="pbReturn">
+     <property name="toolTip">
+      <string>Fermer cette fenêtre</string>
+     </property>
      <property name="styleSheet">
       <string notr="true">
 
@@ -196,27 +100,7 @@ QPushButton:hover:!pressed{
      </property>
     </widget>
    </item>
-   <item row="9" column="0">
-    <widget class="QLabel" name="label_14">
-     <property name="styleSheet">
-      <string notr="true">color : rgb(0,106,255);</string>
-     </property>
-     <property name="text">
-      <string>Texte justifié:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="styleSheet">
-      <string notr="true">color : rgb(0,106,255);</string>
-     </property>
-     <property name="text">
-      <string>Italique:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
+   <item row="14" column="1">
     <widget class="QLabel" name="label_11">
      <property name="styleSheet">
       <string notr="true">QWidget {
@@ -235,45 +119,27 @@ QPushButton:hover:!pressed{
      </property>
     </widget>
    </item>
-   <item row="7" column="1">
-    <widget class="QLabel" name="label_12">
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_3">
      <property name="styleSheet">
-      <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
-
-
- }
-</string>
+      <string notr="true">color : rgb(0,106,255);</string>
      </property>
      <property name="text">
-      <string>Ctrl+E</string>
+      <string>Italique:</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="1">
-    <widget class="QLabel" name="label_13">
+   <item row="16" column="0">
+    <widget class="QLabel" name="label_7">
      <property name="styleSheet">
-      <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-	font-style: normal;
-	font-size: 10pt;
-	font-weight: bold;
-
-
- }
-</string>
+      <string notr="true">color : rgb(0,106,255);</string>
      </property>
      <property name="text">
-      <string>Ctrl+R</string>
+      <string>Texte à droite: </string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="6" column="1">
     <widget class="QLabel" name="label_8">
      <property name="styleSheet">
       <string notr="true">QWidget {
@@ -292,18 +158,40 @@ QPushButton:hover:!pressed{
      </property>
     </widget>
    </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="label_7">
+   <item row="18" column="0" colspan="2" alignment="Qt::AlignHCenter">
+    <widget class="Line" name="line_4">
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>200</width>
+       <height>1</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">	background-color: rgb(0,106,255);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="17" column="0">
+    <widget class="QLabel" name="label_14">
      <property name="styleSheet">
       <string notr="true">color : rgb(0,106,255);</string>
      </property>
      <property name="text">
-      <string>Texte à droite: </string>
+      <string>Texte justifié:</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
-    <widget class="QLabel" name="label_9">
+   <item row="20" column="1">
+    <widget class="QLabel" name="label_23">
      <property name="styleSheet">
       <string notr="true">QWidget {
   
@@ -317,11 +205,238 @@ QPushButton:hover:!pressed{
 </string>
      </property>
      <property name="text">
-      <string>Ctrl+I</string>
+      <string>Ctrl+W</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="11" column="1">
+    <widget class="QLabel" name="label_25">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+Q</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0">
+    <widget class="QLabel" name="label_24">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Couleur texte:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="Line" name="line_5">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>1</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">	background-color: rgb(0,106,255);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="1">
+    <widget class="QLabel" name="label_27">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+F</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="0">
+    <widget class="QLabel" name="label_26">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Couleur fond:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Souligner:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="19" column="1">
+    <widget class="QLabel" name="label_21">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+P</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QPushButton" name="pbVideosTutorials">
+     <property name="minimumSize">
+      <size>
+       <width>130</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Afficher la page des tutoriels vidéos du site officiel</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+
+QPushButton {
+    font: bold 12pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+ }
+ 
+QPushButton::enabled {
+	color : rgb(0,106,255);
+    border: 1px solid rgb(0,106,255);
+ }
+
+QPushButton:hover:!pressed{
+
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+ QPushButton:pressed{
+    background-color:  rgb(220,220,220);
+
+}</string>
+     </property>
+     <property name="text">
+      <string>Tutoriels vidéos</string>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Texte àgauche:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Gras:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2" alignment="Qt::AlignLeft">
+    <widget class="QLabel" name="label">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Raccourcis claviers</string>
+     </property>
+    </widget>
+   </item>
+   <item row="15" column="1">
+    <widget class="QLabel" name="label_12">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+E</string>
+     </property>
+    </widget>
+   </item>
+   <item row="20" column="0">
+    <widget class="QLabel" name="label_22">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Insérer lien web</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
     <widget class="QLabel" name="label_10">
      <property name="styleSheet">
       <string notr="true">QWidget {
@@ -340,7 +455,71 @@ QPushButton:hover:!pressed{
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="7" column="1">
+    <widget class="QLabel" name="label_9">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+I</string>
+     </property>
+    </widget>
+   </item>
+   <item row="16" column="1">
+    <widget class="QLabel" name="label_13">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+R</string>
+     </property>
+    </widget>
+   </item>
+   <item row="21" column="0" colspan="2">
+    <widget class="Line" name="line_2">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>1</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">	background-color: rgb(0,106,255);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="label_16">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Surligner:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="15" column="0">
     <widget class="QLabel" name="label_6">
      <property name="styleSheet">
       <string notr="true">color : rgb(0,106,255);</string>
@@ -350,7 +529,17 @@ QPushButton:hover:!pressed{
      </property>
     </widget>
    </item>
-   <item row="9" column="1">
+   <item row="10" column="0">
+    <widget class="QLabel" name="label_19">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Barrer:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="17" column="1">
     <widget class="QLabel" name="label_15">
      <property name="styleSheet">
       <string notr="true">QWidget {
@@ -369,10 +558,114 @@ QPushButton:hover:!pressed{
      </property>
     </widget>
    </item>
-   <item row="10" column="0" colspan="2">
-    <widget class="Line" name="line_2">
+   <item row="9" column="1">
+    <widget class="QLabel" name="label_17">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+O</string>
+     </property>
+    </widget>
+   </item>
+   <item row="19" column="0">
+    <widget class="QLabel" name="label_20">
+     <property name="styleSheet">
+      <string notr="true">color : rgb(0,106,255);</string>
+     </property>
+     <property name="text">
+      <string>Insérer image</string>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="0" colspan="2" alignment="Qt::AlignHCenter">
+    <widget class="Line" name="line_3">
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>200</width>
+       <height>1</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">	background-color: rgb(0,106,255);</string>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="1">
+    <widget class="QLabel" name="label_18">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 10pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Ctrl+S</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="2" alignment="Qt::AlignHCenter">
+    <widget class="Line" name="line_6">
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>200</width>
+       <height>1</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">	background-color: rgb(0,106,255);</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="2" alignment="Qt::AlignHCenter">
+    <widget class="QLabel" name="label_28">
+     <property name="styleSheet">
+      <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+	font-style: normal;
+	font-size: 9pt;
+	font-weight: bold;
+
+
+ }
+</string>
+     </property>
+     <property name="text">
+      <string>Champs de texte</string>
      </property>
     </widget>
    </item>

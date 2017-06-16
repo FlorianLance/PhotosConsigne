@@ -128,6 +128,11 @@ public:
 
     std::shared_ptr<QString> html() const noexcept{return m_html;}
 
+    void write_to_xml(QXmlStreamWriter &xml) const;
+
+    void load_from_xml(QXmlStreamReader &xml);
+
+
 
 private slots:
 
@@ -169,7 +174,7 @@ private:
     // misc
     QColor m_foreGround = qRgba(0,0,0,255);
     QColor m_backGround = qRgba(255,255,255,0);
-    QString m_fileName = nullptr;
+//    QString m_fileName = nullptr;
 
     // actions
     QAction *actionSave = nullptr;

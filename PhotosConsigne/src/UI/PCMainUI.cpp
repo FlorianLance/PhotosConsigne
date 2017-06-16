@@ -17,7 +17,7 @@
 
 // local
 #include "PCMainUI.hpp"
-
+#include "Work.hpp"
 
 using namespace pc;
 
@@ -173,7 +173,7 @@ void PCMainUI::load_new_photos(){
 
 void PCMainUI::remove_all_photos(){
 
-    m_settings.pages.previousId = 0;
+//    m_settings.pages.previousId = 0;
     m_settings.pages.currentId  = 0;
     m_settings.photos.currentId = 0;
     m_settings.photos.loaded->clear();
@@ -455,6 +455,75 @@ void PCMainUI::from_main_UI_connections()
     connect(m_ui.mainUI.pbInsertNewWhiteSpace, &QPushButton::clicked, this, &PCMainUI::insert_transparent_space);
     connect(m_ui.mainUI.pbInsertNewImage, &QPushButton::clicked, this, &PCMainUI::load_new_photos);
 
+    connect(m_ui.mainUI.pbSaveWork, &QPushButton::clicked, this, [&]{ // save work
+
+        QString filePath = QFileDialog::getSaveFileName(this, "Entrez le nom du document de travail", QDir::homePath(), "Work (*.work)");
+        if(filePath.size() > 0){
+            pc::Work::save(filePath, m_settings.photos.loaded, m_ui);
+        }
+
+    });
+    connect(m_ui.mainUI.pbLoadWork, &QPushButton::clicked, this, [&]{ // load work
+
+        QString filePath = QFileDialog::getOpenFileName(this, "Choisissez un document de travail à charger", QDir::homePath(), "Work (*.work)");
+        if(filePath.size() > 0){
+
+            QFile file(filePath);
+            if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+                return;
+            }
+
+            QXmlStreamReader xml;
+            xml.setDevice(&file);
+
+            m_settings.photos.loaded->clear();
+            m_ui.settingsW.reset_individual_sets(0);
+
+            // update current photo row
+
+
+            QXmlStreamReader::TokenType token;
+            while(!xml.atEnd() && !xml.hasError()) {
+
+                // Read next element
+                token = xml.readNext();
+                qDebug() << "Elem" << xml.name() << token << xml.atEnd() << xml.hasError();
+                if(token == QXmlStreamReader::StartDocument){
+                    continue;
+                }
+                else if(token == QXmlStreamReader::StartElement){
+                    if(xml.name() == "Photos"){
+
+                        m_settings.photos.loaded->reserve(xml.attributes().value("number").toInt());
+
+                    }else if(xml.name() == "Photo"){
+
+                        SPhoto photo = std::make_shared<Photo>(xml.attributes().value("path").toString(), xml.attributes().value("white").toInt());
+                        photo->id           = xml.attributes().value("id").toInt();
+                        photo->pageId       = xml.attributes().value("pageId").toInt();
+                        photo->loadedId     = xml.attributes().value("loadedId").toInt();
+                        photo->rotation     = xml.attributes().value("rotation").toInt();
+                        photo->scaledPhoto  = photo->scaledPhoto.transformed(QTransform().rotate(photo->rotation));
+                        photo->isADuplicate = xml.attributes().value("duplicate").toInt();
+                        photo->isOnDocument = xml.attributes().value("onDoc").toInt();
+                        photo->isRemoved    = xml.attributes().value("removed").toInt();
+                        m_settings.photos.loaded->push_back(photo);
+
+                        m_ui.settingsW.insert_individual_set(m_settings.photos.loaded->size()-1);
+                        m_settings.photos.currentId = m_settings.photos.loaded->size()-1;
+                    }else if(xml.name() == "Document"){
+
+                        m_ui.load_from_xml(xml,true);
+                        update_settings_with_no_preview();
+                        m_ui.load_from_xml(xml,false);
+                    }
+                }
+            }
+
+            update_settings();
+        }
+    });
+
     // # checkboxes
     // ## grayscale
     connect(m_ui.mainUI.cbBAndW, &QCheckBox::clicked, this, [=](bool checked){
@@ -482,7 +551,6 @@ void PCMainUI::from_main_UI_connections()
     // ## left photo
     connect(m_ui.mainUI.pbLeft, &QPushButton::clicked, this, [&]{ // previous image
 
-        qDebug() << "left m_settings.photos.currentId: " << m_settings.photos.currentId;
         int currRow = m_settings.photos.currentId;
         if(currRow == -1){
             return;
@@ -497,7 +565,6 @@ void PCMainUI::from_main_UI_connections()
         select_photo(currRow, m_ui.mainUI.twMiddle->currentIndex() == 0);
         update_settings();
         m_ui.previewW.set_current_pc(m_settings.sets.currentId);
-        qDebug() << "m_settings.photos.currentId: " << m_settings.photos.currentId;
 
     });
     // ## right photo
@@ -516,7 +583,6 @@ void PCMainUI::from_main_UI_connections()
 
         select_photo(currRow, m_ui.mainUI.twMiddle->currentIndex() == 0);        
         update_settings();
-        qDebug() << "update pc: " << m_settings.sets.currentId;
         m_ui.previewW.set_current_pc(m_settings.sets.currentId);
     });
     // ## rotate photot to the left
@@ -665,7 +731,7 @@ void PCMainUI::from_main_UI_connections()
     // ## pages list
     connect(m_ui.mainUI.lwPagesList, &QListWidget::currentRowChanged, this, [&](int row){
 
-        m_settings.pages.previousId = m_settings.pages.currentId;
+//        m_settings.pages.previousId = m_settings.pages.currentId;
         if(row != -1){
             define_selected_page(row);
             m_ui.display_preview_panel();
@@ -674,7 +740,7 @@ void PCMainUI::from_main_UI_connections()
     });
     connect(m_ui.mainUI.lwPagesList, &QListWidget::clicked, this, [&](QModelIndex index){
 
-        m_settings.pages.previousId = m_settings.pages.currentId;
+//        m_settings.pages.previousId = m_settings.pages.currentId;
         if(index.row() != -1){
             define_selected_page(index.row());
             m_ui.display_preview_panel();
@@ -813,10 +879,10 @@ void PCMainUI::from_UI_elements_connections(){
     });
     connect(&previewW, &PreviewW::current_pc_selected_signal, this, [=](int totalIdPC){
 
-        if(totalIdPC == -1){
+        if(totalIdPC == -2){
             m_ui.settingsW.display_header_panel();
             return;
-        }else if(totalIdPC == -2){
+        }else if(totalIdPC == -3){
             m_ui.settingsW.display_footer_panel();
             return;
         }

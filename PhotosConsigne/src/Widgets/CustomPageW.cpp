@@ -265,9 +265,9 @@ void CustomPageW::paintEvent(QPaintEvent *event){
                     pos.width()*pageRect.width(),
                     pos.height()*pageRect.height());
 
-        painter.fillRect(rect, m_colors[color++]);
+        painter.fillRect(rect, UIColors[color++]);
         painter.drawRect(rect);
-        color = color%m_colors.size();
+        color = color%UIColors.size();
     }
 
     // draw current set
@@ -284,12 +284,53 @@ void CustomPageW::paintEvent(QPaintEvent *event){
         int maxX = std::max(pCurrFirst.x(), pCurrSecond.x());
         int maxY = std::max(pCurrFirst.y(), pCurrSecond.y());
 
-        color = relativePositions.size()% m_colors.size();
-        painter.fillRect(QRectF(minX, minY, maxX-minX, maxY-minY),  m_colors[color]);
+        color = relativePositions.size()% UIColors.size();
+        painter.fillRect(QRectF(minX, minY, maxX-minX, maxY-minY),  UIColors[color]);
         painter.drawRect(QRectF(minX, minY, maxX-minX, maxY-minY));
     }
 
     painter.drawRect(pageRect);
+}
+
+void CustomPageW::write_to_xml(QXmlStreamWriter &xml) const{
+
+    xml.writeStartElement("CustomPage");
+    xml.writeAttribute("sizeGrid", StrUtility::to_str(sizeGrid));
+    xml.writeAttribute("currRelPos", StrUtility::to_str(currRelativePos));
+    xml.writeAttribute("currFirstPoint", StrUtility::to_str(currentFirstPoint));
+    xml.writeAttribute("currSecondPoint", StrUtility::to_str(currentSecondPoint));
+    xml.writeAttribute("nbRelPositions", QString::number(relativePositions.size()));
+
+    QXmlStreamAttributes relPositions;
+    int currV = 0;
+    for(const auto &relPos : relativePositions){
+        relPositions.append("h"+QString::number(currV++), StrUtility::to_str(relPos));
+    }
+    xml.writeAttributes(relPositions);
+
+    xml.writeEndElement();
+}
+
+void CustomPageW::load_from_xml(QXmlStreamReader &xml){
+
+    QStringList sizeGrid = xml.attributes().value("sizeGrid").toString().split(" ");
+    init(sizeGrid[0].toInt(), sizeGrid[1].toInt());
+
+    QStringList rect = xml.attributes().value("currRelPos").toString().split(" ");
+    currRelativePos = QRectF(rect[0].toDouble(),rect[1].toDouble(),rect[2].toDouble(),rect[3].toDouble());
+
+    QStringList pt = xml.attributes().value("currFirstPoint").toString().split(" ");
+    currentFirstPoint = QPoint(pt[0].toInt(), pt[1].toInt());
+    pt = xml.attributes().value("currSecondPoint").toString().split(" ");
+    currentSecondPoint = QPoint(pt[0].toInt(), pt[1].toInt());
+
+    int nbRelPositions = xml.attributes().value("nbRelPositions").toInt();
+    relativePositions.clear();
+    for(int ii = 0; ii < nbRelPositions; ++ii){
+
+        rect = xml.attributes().value("h" + QString::number(ii)).toString().split(" ");
+        relativePositions.push_back(QRectF(rect[0].toDouble(),rect[1].toDouble(),rect[2].toDouble(),rect[3].toDouble()));
+    }
 }
 
 void CustomPageW::validate_current_set(){

@@ -13,6 +13,10 @@ PageSetsW::PageSetsW() : SettingsW(){
     // init ui
     ui.setupUi(this);
 
+    connect(ui.leNamePage, &QLineEdit::textChanged, this, [=]{
+        emit settings_updated_signal(false);
+    });
+
     connect(ui.sbPhotosNbWidth, QOverload<int>::of(&QSpinBox::valueChanged), this, [=]{
 
         int nbMaxPhotos = ui.sbPhotosNbWidth->value() * ui.sbPhotosNbHeight->value();
@@ -102,7 +106,9 @@ PageSetsW::PageSetsW() : SettingsW(){
 
     connect(ui.pbAddPositions, &QPushButton::clicked, this, [&]{
 
-        QString filePath = QFileDialog::getSaveFileName(nullptr, "Fichier de positions", QCoreApplication::applicationDirPath() + "/data/positions", "Pos (*.pos)");
+        QString filePath = QFileDialog::getSaveFileName(nullptr, "Fichier de positions",
+                                                        QCoreApplication::applicationDirPath() + "/data/positions",
+                                                        "Pos (*.pos)", Q_NULLPTR);
         if(filePath.size() == 0){
             return;
         }
@@ -152,7 +158,6 @@ PageSetsW::PageSetsW() : SettingsW(){
 
 void PageSetsW::read_pos_files(){
 
-    qDebug() << "read_pos_files: " << posLoaded;
     if(!posLoaded){
         predefPositions.clear();
         QDirIterator dirIt(QCoreApplication::applicationDirPath() + "/data/positions",QDirIterator::Subdirectories);
@@ -318,7 +323,7 @@ void PageSetsW::read_pos_files(){
                               static_cast<int>((rect.width())*iconImg.width()),
                               static_cast<int>((rect.height())*iconImg.height()));
 
-                painter.fillRect(setRect, QBrush(m_colors[jj%m_colors.size()]));
+                painter.fillRect(setRect, QBrush(UIColors[jj%UIColors.size()]));
                 painter.setPen(Qt::black);
                 painter.drawRect(setRect);
             }
@@ -339,7 +344,7 @@ void PageSetsW::read_pos_files(){
 
                     qreal width = predefPositions[ii].columnsWidth[kk];
                     QRect setRect(static_cast<int>(5+offsetX), static_cast<int>(5+offsetY), static_cast<int>(width*interSize.width()), static_cast<int>(height*interSize.height()));
-                    painter.fillRect(setRect, QBrush(m_colors[currentPhoto%m_colors.size()]));
+                    painter.fillRect(setRect, QBrush(UIColors[currentPhoto%UIColors.size()]));
                     painter.setPen(Qt::black);
                     painter.drawRect(setRect);
 
@@ -595,6 +600,77 @@ void PageSetsW::update_grid_sizes_ui(){
 
     columnsWidthDsb[currentColumnsId]->show();
     linesHeightDsb[currentLinesId]->show();
+}
+
+void PageSetsW::write_to_xml(QXmlStreamWriter &xml) const{
+
+    xml.writeStartElement("PageSets");
+
+    xml.writeAttribute("Name", ui.leNamePage->text());
+    xml.writeAttribute("GridMode", QString::number(ui.rbGrid->isChecked()));
+    xml.writeAttribute("NbPhotos", QString::number(ui.sbPhotosNbPerPage->value()));
+
+    xml.writeAttribute("GridHeight", QString::number(ui.sbPhotosNbHeight->value()));
+    xml.writeAttribute("GridWidth", QString::number(ui.sbPhotosNbWidth->value()));
+    xml.writeAttribute("PersoHeight", QString::number(ui.sbHPerso->value()));
+    xml.writeAttribute("PersoWidth", QString::number(ui.sbWPerso->value()));
+
+    QXmlStreamAttributes widths;
+    int currV = 0;
+    for(const auto &width : columnsWidthDsb){
+        widths.append("w"+QString::number(currV++), QString::number(width->value()));
+    }
+    xml.writeAttributes(widths);
+
+    QXmlStreamAttributes heights;
+    currV = 0;
+    for(const auto &height : linesHeightDsb){
+        heights.append("h"+QString::number(currV++), QString::number(height->value()));
+    }
+    xml.writeAttributes(heights);
+
+    customW.write_to_xml(xml);
+
+    xml.writeEndElement();
+}
+
+void PageSetsW::load_from_xml(QXmlStreamReader &xml){
+
+    qDebug() << "PageSetsW";
+    ui.leNamePage->blockSignals(true);
+    ui.leNamePage->setText(xml.attributes().value("Name").toString());
+    ui.leNamePage->blockSignals(false);
+
+    Utility::safe_init_radio_button_state(ui.rbGrid, xml.attributes().value("GridMode").toInt() == 1);
+    Utility::safe_init_radio_button_state(ui.rbPersonnalised, xml.attributes().value("GridMode").toInt() == 0);
+    Utility::safe_init_spinbox_value(ui.sbPhotosNbHeight, xml.attributes().value("GridHeight").toInt());
+    Utility::safe_init_spinbox_value(ui.sbPhotosNbWidth, xml.attributes().value("GridWidth").toInt());
+    Utility::safe_init_spinbox_value(ui.sbHPerso, xml.attributes().value("PersoHeight").toInt());
+    Utility::safe_init_spinbox_value(ui.sbWPerso, xml.attributes().value("PersoWidth").toInt());
+
+    update_grid_sizes_ui();
+
+    for(int ii = 0; ii < ui.sbPhotosNbHeight->value(); ++ii){
+        Utility::safe_init_double_spinbox_value(linesHeightDsb[ii], xml.attributes().value("h" + QString::number(ii)).toDouble());
+    }
+    for(int ii = 0; ii < ui.sbPhotosNbWidth->value(); ++ii){
+        Utility::safe_init_double_spinbox_value(columnsWidthDsb[ii], xml.attributes().value("w" + QString::number(ii)).toDouble());
+    }
+
+    QXmlStreamReader::TokenType token = QXmlStreamReader::TokenType::StartElement;
+    while(!xml.hasError()) {
+
+        if(token == QXmlStreamReader::TokenType::EndElement && xml.name() == "PageSets"){
+            break;
+        }else if(token == QXmlStreamReader::TokenType::StartElement){
+
+            if(xml.name() == "CustomPage"){
+                customW.load_from_xml(xml);
+            }
+        }
+
+        token = xml.readNext();
+    }
 }
 
 void PageSetsW::init_ui_with_settings(int id){

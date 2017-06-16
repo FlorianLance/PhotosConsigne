@@ -10,7 +10,7 @@ pc::PageW::PageW() : SettingsW(){
     ui.framePage->setEnabled(false);
     ui.vlBackground->addWidget(&backgroundW);
     ui.vlMargins->addWidget(&marginsW);
-    ui.vlSets->addWidget(&setsW);
+    ui.vlSets->addWidget(&pageSetsW);
     ui.vlMisc->addWidget(&miscW);
     backgroundW.hide();
     marginsW.hide();
@@ -23,12 +23,12 @@ pc::PageW::PageW() : SettingsW(){
 
         backgroundW.hide();
         marginsW.hide();
-        setsW.hide();
+        pageSetsW.hide();
         miscW.hide();
 
         switch (ui.tabPage->currentIndex()) {
         case 0:
-            setsW.show();
+            pageSetsW.show();
             break;
         case 1:
             marginsW.show();
@@ -48,7 +48,7 @@ pc::PageW::PageW() : SettingsW(){
     // # margins
     connect(&marginsW, &MarginsW::settings_updated_signal, this, &PageW::settings_updated_signal);
     // # sets
-    connect(&setsW, &PageSetsW::settings_updated_signal, this, &PageW::settings_updated_signal);
+    connect(&pageSetsW, &PageSetsW::settings_updated_signal, this, &PageW::settings_updated_signal);
     // # misc
     connect(&miscW, &MiscPageW::settings_updated_signal, this, &PageW::settings_updated_signal);
 
@@ -58,8 +58,10 @@ pc::PageW::PageW() : SettingsW(){
 
 void pc::PageW::init_ui(pc::PageW &p1, const pc::PageW &p2){
 
+    p1.pageSetsW.ui.leNamePage->setText(p2.pageSetsW.ui.leNamePage->text());
+
     // init ui with
-    PageSetsW::init_ui(p1.setsW, p2.setsW);
+    PageSetsW::init_ui(p1.pageSetsW, p2.pageSetsW);
     BackgroundW::init_ui(p1.backgroundW, p2.backgroundW);    
     MarginsW::init_ui(p1.marginsW, p2.marginsW);
     MiscPageW::init_ui(p1.miscW, p2.miscW);
@@ -72,5 +74,48 @@ bool pc::PageW::individual() const noexcept{
 void pc::PageW::set_enabled(bool enabled) noexcept{
     Utility::safe_init_checkboxe_checked_state(ui.cbEnableIndividualPage, enabled);
     ui.framePage->setEnabled(enabled);
+}
+
+void pc::PageW::write_to_xml(QXmlStreamWriter &xml) const {
+
+    xml.writeStartElement("Page");
+    xml.writeAttribute("id", QString::number(id));
+    xml.writeAttribute("global", QString::number(global));
+    xml.writeAttribute("enabled", global ? "0" : QString::number(ui.cbEnableIndividualPage->isChecked()));
+    backgroundW.write_to_xml(xml);
+    marginsW.write_to_xml(xml);
+    pageSetsW.write_to_xml(xml);
+    miscW.write_to_xml(xml);
+    xml.writeEndElement();
+}
+
+void pc::PageW::load_from_xml(QXmlStreamReader &xml){
+
+    id = xml.attributes().value("id").toInt();
+    global = xml.attributes().value("global").toInt() == 1;
+    if(!global){
+        Utility::safe_init_checkboxe_checked_state(ui.cbEnableIndividualPage, xml.attributes().value("enabled").toInt() == 1);
+    }
+
+    QXmlStreamReader::TokenType token = QXmlStreamReader::TokenType::StartElement;
+    while(!xml.hasError()) {
+
+        if(token == QXmlStreamReader::TokenType::EndElement && xml.name() == "Page"){
+            break;
+        }else if(token == QXmlStreamReader::TokenType::StartElement){
+
+            if(xml.name() == "MiscPage"){
+                miscW.load_from_xml(xml);
+            }else if(xml.name() == "Background"){
+                backgroundW.load_from_xml(xml);
+            }else if(xml.name() == "Margins"){
+                marginsW.load_from_xml(xml);
+            }else if(xml.name() == "PageSets"){
+                pageSetsW.load_from_xml(xml);
+            }
+        }
+
+        token = xml.readNext();
+    }
 }
 

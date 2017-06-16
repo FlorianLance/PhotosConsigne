@@ -40,6 +40,9 @@
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QCheckBox" name="cbDoNotShowHeader">
+        <property name="toolTip">
+         <string>Empêche l'affichage du haut de page sur cette page</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">QWidget {
   
@@ -58,6 +61,9 @@
       </item>
       <item row="1" column="0">
        <widget class="QCheckBox" name="cbDoNotShowFooter">
+        <property name="toolTip">
+         <string>Empêche l'affichage du bas de page sur cette page</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">QWidget {
   
@@ -104,6 +110,9 @@
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="1">
        <widget class="QPushButton" name="pbGlobal">
+        <property name="toolTip">
+         <string>Utiliser la configuration globale pour toutes les pages</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">
 
@@ -139,6 +148,9 @@ QPushButton:hover:!pressed{
       </item>
       <item row="1" column="1">
        <widget class="QPushButton" name="pbPerPage">
+        <property name="toolTip">
+         <string>Utiliser la configuration personnalisée pour toutes les pages</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">
 
@@ -221,6 +233,10 @@ la configuration suivante:</string>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="1" column="0">
        <widget class="QPushButton" name="pbReplaceLocalWIthGlobal">
+        <property name="toolTip">
+         <string>Remplacer la configuration de toutes les pages
+avec la configuration globale</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">
 
@@ -257,6 +273,10 @@ avec la configuration globale</string>
       </item>
       <item row="0" column="0">
        <widget class="QPushButton" name="pbReplaceGlobalWithLocal">
+        <property name="toolTip">
+         <string>Remplacer la configuration globale
+avec la configuration de cette page</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">
 
