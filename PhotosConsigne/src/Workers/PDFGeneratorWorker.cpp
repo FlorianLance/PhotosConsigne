@@ -1,7 +1,38 @@
 
+/*******************************************************************************
+** PhotosConsigne                                                             **
+** MIT License                                                                **
+** Copyright (c) [2016] [Florian Lance]                                       **
+**                                                                            **
+** Permission is hereby granted, free of charge, to any person obtaining a    **
+** copy of this software and associated documentation files (the "Software"), **
+** to deal in the Software without restriction, including without limitation  **
+** the rights to use, copy, modify, merge, publish, distribute, sublicense,   **
+** and/or sell copies of the Software, and to permit persons to whom the      **
+** Software is furnished to do so, subject to the following conditions:       **
+**                                                                            **
+** The above copyright notice and this permission notice shall be included in **
+** all copies or substantial portions of the Software.                        **
+**                                                                            **
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR **
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   **
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    **
+** THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER **
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    **
+** FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        **
+** DEALINGS IN THE SOFTWARE.                                                  **
+**                                                                            **
+********************************************************************************/
+
+/**
+ * \file PDFGeneratorWorker.cpp
+ * \brief defines PDFGeneratorWorker
+ * \author Florian Lance
+ * \date 17/05/2017
+ */
+
 // local
 #include "PDFGeneratorWorker.hpp"
-
 
 // Qt
 #include <QCoreApplication>
@@ -35,7 +66,9 @@ void PDFGeneratorWorker::draw_zones(QPainter &painter, SPCPage pcPage){
     for(auto &&set : pcPage->sets){
 
         // inter margins
-        Drawing::draw_filled_rect(painter, pcPage->interMarginsRects[set->id], qRgb(200,0,0), 0.3);
+        if(set->id < pcPage->interMarginsRects.size()){
+            Drawing::draw_filled_rect(painter, pcPage->interMarginsRects[set->id], qRgb(200,0,0), 0.3);
+        }
 
         // remove set
         Drawing::draw_filled_rect(painter, set->rectOnPage, qRgb(255,255,255), 0.3);
@@ -50,6 +83,8 @@ void PDFGeneratorWorker::draw_zones(QPainter &painter, SPCPage pcPage){
 
 
 void PDFGeneratorWorker::draw_degraded(QPainter &painter, const QRectF &rectPage, const ColorsSettings &colors, const ExtraPCInfo &infos){
+
+    Q_UNUSED(infos);
 
     QPointF startR(rectPage.width()*colors.start.x(), rectPage.height()*colors.start.y());
     QPointF endR(rectPage.width()*colors.end.x(), rectPage.height()*colors.end.y());
@@ -380,7 +415,7 @@ void PDFGeneratorWorker::kill(){
 
 void PDFGeneratorWorker::generate_preview(pc::PCPages pcPages, int pageIdToDraw, bool drawZones){
 
-//    DebugMessage dbgMess("generate_preview");
+    DebugMessage dbgMess("generate_preview");
     m_pageToDraw    = pcPages.pages[pageIdToDraw];
     int dpi = pcPages.settings.paperFormat.dpi;
     if(dpi > 300){

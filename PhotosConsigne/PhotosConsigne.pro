@@ -11,6 +11,7 @@ TEMPLATE = app
 include(../PhotosConsigne/config/config.pri)
 
 ####################################### CONFIG
+CONFIG += c++14
 CONFIG -= console
 CONFIG -= app_bundle
 #CONFIG -= opengl

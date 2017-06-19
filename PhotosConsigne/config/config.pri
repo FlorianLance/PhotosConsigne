@@ -1,6 +1,6 @@
 
 ####################################### DEFINE COMPUTER
-COMPUTER = "home" # laptop_home / work / laptop_work / home
+COMPUTER = "home"
 
 ####################################### CONFIG
 CONFIG += warn_on
@@ -20,8 +20,8 @@ win32:{
 
 macx {
     OS = "MACOS"
-    COMPILER = "..." # TODO
-    EXT_O = "..." # TODO
+    COMPILER = "clang"
+    EXT_O = ".o"
 }
 
 unix:!macx{
@@ -32,12 +32,13 @@ unix:!macx{
 
 ####################################### ARCH
 equals(COMPILER, "gcc"){
-    ARCH = "x64"  # TODO
+    ARCH = "x64"
 
     # FLAGS
     QMAKE_CXXFLAGS += -fopenmp
     QMAKE_LFLAGS +=  -fopenmp
     QMAKE_CXXFLAGS_RELEASE += -O3
+    QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-result -Wno-unused-function -Wfatal-errors -Werror
 }
 equals(COMPILER, "vs"){
     win32-msvc*:contains(QMAKE_TARGET.arch, x86_64):{
@@ -48,7 +49,8 @@ equals(COMPILER, "vs"){
     }
 
     # FLAGS
-    QMAKE_CXXFLAGS_RELEASE += /openmp# /Ox
+    QMAKE_CXXFLAGS_RELEASE += /openmp /O2 /W3
+    DEFINES += _CRT_SECURE_NO_WARNINGS
 }
 
 ####################################### CFG
@@ -57,18 +59,6 @@ CONFIG(debug, debug|release){
     CFG = "Debug"
 }else{
     CFG = "Release"
-}
-
-
-####################################### GLOBAL FLAGS
-
-equals(COMPILER, "gcc"){
-    # WARNINGS
-    QMAKE_CXXFLAGS_WARN_ON += -Wno-unused-result -Wno-unused-function -Wfatal-errors -Werror
-}
-equals(COMPILER, "vs"){
-    # DEFINES
-    DEFINES += _CRT_SECURE_NO_WARNINGS
 }
 
 ####################################### INCLUDE/LIBRARY
@@ -83,28 +73,20 @@ GEOTOOLS_LIBS = ""
 
 ################### CHOOSE COMPUTER SETTINGS
 
-#equals(COMPUTER, "work"){
-#    include(work.pri)
-#}
+
 equals(COMPUTER, "home"){
     include(home.pri)
 }
-#equals(COMPUTER, "laptop_work"){
-#    include(laptopWork.pri)
-#}
-#equals(COMPUTER, "laptop_home"){
-#    include(laptopHome.pri)
-#}
 
 ####################################### INCLUDEPATH LOCAL
 
 PHOTOSCONSIGNE_SRC_DIR = $$PHOTOSCONSIGNE_BASE_DIR"/PhotosConsigne"
 
-####################################### HBP BASE INCLUDES
+#######################################  BASE INCLUDES
 
 PHOTOSCONSIGNE_INCLUDES = $$PHOTOSCONSIGNE_SRC_DIR/include
 
-####################################### HBP BASE LIB
+#######################################  BASE LIB
 
 PHOTOSCONSIGNE_DEBUG = $$PHOTOSCONSIGNE_BASE_DIR"/PhotosConsigne_"
 PHOTOSCONSIGNE_RELEASE = $$PHOTOSCONSIGNE_BASE_DIR"/PhotosConsigne_"

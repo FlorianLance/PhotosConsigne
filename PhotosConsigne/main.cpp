@@ -1,24 +1,29 @@
+
 /*******************************************************************************
+** PhotosConsigne                                                             **
+** MIT License                                                                **
+** Copyright (c) [2016] [Florian Lance]                                       **
 **                                                                            **
-**  PhotosConsigne                                                            **
-**  An interface for generating pdf containing images sequences with a common **
-**  text. Intended to be used by teachers for making printed documents        **
-**  containing child work from infant school.                                 **
+** Permission is hereby granted, free of charge, to any person obtaining a    **
+** copy of this software and associated documentation files (the "Software"), **
+** to deal in the Software without restriction, including without limitation  **
+** the rights to use, copy, modify, merge, publish, distribute, sublicense,   **
+** and/or sell copies of the Software, and to permit persons to whom the      **
+** Software is furnished to do so, subject to the following conditions:       **
 **                                                                            **
-**  This program is free software: you can redistribute it and/or modify      **
-**  it under the terms of the GNU Lesser General Public License as published  **
-**  by the Free Software Foundation, either version 3 of the License, or      **
-**  (at your option) any later version.                                       **
+** The above copyright notice and this permission notice shall be included in **
+** all copies or substantial portions of the Software.                        **
 **                                                                            **
-**  This program is distributed in the hope that it will be useful,           **
-**  but WITHOUT ANY WARRANTY; without even the implied warranty of            **
-**  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             **
-**  GNU Lesser General Public License for more details.                       **
-**                                                                            **
-**  You should have received a copy of the GNU Lesser General Public License  **
-**  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.           **
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR **
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   **
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    **
+** THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER **
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    **
+** FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        **
+** DEALINGS IN THE SOFTWARE.                                                  **
 **                                                                            **
 ********************************************************************************/
+
 
 /**
  * \file main.cpp
@@ -28,6 +33,9 @@
  */
 
 
+// local
+#include "PCMainUI.hpp"
+
 // Qt
 #include <QApplication>
 #include <QTranslator>
@@ -35,14 +43,8 @@
 #include <QDesktopWidget>
 
 
-// Photos consigne
-//#include "MainInterface.h"
-#include "MainUI.h"
-#include "PCMainUI.hpp"
-
 int main(int argc,char** argv)
 {    
-
 
     qSetMessagePattern("\033[32m%{time h:mm:ss.zzz}%{if-category}\033[32m %{category}:%{endif} "
                        "%{if-debug}\033[34m%{function}%{endif}"
@@ -50,7 +52,6 @@ int main(int argc,char** argv)
                        "%{if-critical}\033[31m%%{endif}"
                        "%{if-fatal}\033[31m%%{endif}"
                        "\033[0m %{message}");
-//    qSetMessagePattern("");
 
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QTranslator qtTranslator;
@@ -59,27 +60,8 @@ int main(int argc,char** argv)
     QApplication app(argc, argv);
     app.installTranslator(&qtTranslator);
 
-//    QImage image(8000,8000, QImage::Format_ARGB32);
-
-//    QPointF startR(image.width()*0.1, image.height()*0.5);
-//    QPointF endR(image.width()*0.9, image.height()*0.5);
-
-//    QPainter painter(&image);
-
-//    qDebug() << "QVector2D(startR-endR).length(): " << QVector2D(startR-endR).length();
-//    QRadialGradient grad(startR, QVector2D(startR-endR).length()/10);
-////    QLinearGradient grad(startR, endR);
-//    grad.setSpread(QGradient::RepeatSpread);
-//    grad.setCoordinateMode(QGradient::CoordinateMode::LogicalMode);
-//    grad.setColorAt(0, Qt::white);
-//    grad.setColorAt(1, Qt::black);
-//    painter.fillRect(image.rect(),grad);
-
-//    image.save("G:/grad1.png");
-
 
     pc::PCMainUI w(&app);
-
     QDesktopWidget dw;
     QSize sizeWindow(1500,1100);
     QRect rectScreen = dw.availableGeometry();

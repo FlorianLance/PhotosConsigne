@@ -1,4 +1,31 @@
 
+
+/*******************************************************************************
+** PhotosConsigne                                                             **
+** MIT License                                                                **
+** Copyright (c) [2016] [Florian Lance]                                       **
+**                                                                            **
+** Permission is hereby granted, free of charge, to any person obtaining a    **
+** copy of this software and associated documentation files (the "Software"), **
+** to deal in the Software without restriction, including without limitation  **
+** the rights to use, copy, modify, merge, publish, distribute, sublicense,   **
+** and/or sell copies of the Software, and to permit persons to whom the      **
+** Software is furnished to do so, subject to the following conditions:       **
+**                                                                            **
+** The above copyright notice and this permission notice shall be included in **
+** all copies or substantial portions of the Software.                        **
+**                                                                            **
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR **
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   **
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    **
+** THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER **
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    **
+** FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        **
+** DEALINGS IN THE SOFTWARE.                                                  **
+**                                                                            **
+********************************************************************************/
+
+
 /**
  * \file UIElements.cpp
  * \brief defines UIElements
@@ -10,7 +37,7 @@
 // Qt
 #include <QDesktopServices>
 #include <QMessageBox>
-//#include <QtGlobal>
+
 
 // local
 #include "UIElements.hpp"
@@ -231,6 +258,33 @@ void UIElements::set_ui_state_for_generating_pdf(bool state){
     mainUI.tabActions->setEnabled(state);
 }
 
+void UIElements::set_ui_state_for_loading_work(bool state){
+    mainUI.tabActions->setEnabled(state);
+
+    // tabs
+    // # middle
+    mainUI.twMiddle->setEnabled(state);
+    // # right
+    settingsW.ui.tbRight->setEnabled(state);
+    // # action
+    // ## photos
+    mainUI.pbInsertNewImage->setEnabled(state);
+    mainUI.pbInsertNewWhiteSpace->setEnabled(state);
+    mainUI.pbRemoveAllPhoto->setEnabled(state);
+    // ## pdf
+    mainUI.pbSavePDF->setEnabled(state);
+    // # photos list
+    mainUI.lwPhotosList->setEnabled(state);
+    // # pages list
+    mainUI.lwPagesList->setEnabled(state);
+    // # document
+    mainUI.tabWDocument->setEnabled(state);
+
+    if( mainUI.lwPhotosList->count()> 0){
+        mainUI.twMiddle->setTabEnabled(0, true);
+    }
+}
+
 void UIElements::update_photos_list(const GlobalSettings &settings){
 
     mainUI.lwPhotosList->blockSignals(true);
@@ -324,7 +378,7 @@ void UIElements::update_UI(const GlobalSettings &settings){
     settingsW.globalPageW.marginsW.update_mm_values(settings.document.paperFormat);
     for(auto &&pageW : settingsW.pagesW){
         pageW->marginsW.update_mm_values(settings.document.paperFormat);
-     }
+    }
 
     if(settings.photos.loaded->size() > 0){
         SPhoto currentDisplayedPhoto = settings.photos.loaded->at(settings.photos.currentId);
@@ -347,10 +401,24 @@ void UIElements::update_UI(const GlobalSettings &settings){
         mainUI.laPhotoInfo->setText(textInfo);
     }
 
-    // custom page format
-    settingsW.globalPageW.pageSetsW.customW.update_format(settings.document.paperFormat);
-    for(int ii = 0; ii < settingsW.pagesW.size(); ++ii){
-        settingsW.pagesW[ii]->pageSetsW.customW.update_format(settings.document.paperFormat);
+    // header
+    settingsW.headerW.ui.frameHeader->setEnabled(settingsW.headerW.ui.cbEnableHeader->isChecked());
+    // footer
+    settingsW.footerW.ui.frameFooter->setEnabled(settingsW.footerW.ui.cbEnableFooter->isChecked());
+
+
+    // pages
+    // # global
+    settingsW.globalPageW.pageSetsW.customW.update_format(settings.document.paperFormat);    
+    // # individual
+    for(auto &&pageW : settingsW.pagesW){
+        pageW->pageSetsW.customW.update_format(settings.document.paperFormat);
+        pageW->ui.framePage->setEnabled(pageW->ui.cbEnableIndividualPage->isChecked());
+    }
+
+    // sets
+    for(auto &&setW : settingsW.setsLoadedW){
+        setW->ui.frameSet->setEnabled(setW->ui.cbEnableIndividualConsign->isChecked());
     }
 
     Utility::safe_init_spinbox_value(mainUI.sbOrder, settings.photos.currentId);

@@ -1,106 +1,51 @@
 
+/*******************************************************************************
+** PhotosConsigne                                                             **
+** MIT License                                                                **
+** Copyright (c) [2016] [Florian Lance]                                       **
+**                                                                            **
+** Permission is hereby granted, free of charge, to any person obtaining a    **
+** copy of this software and associated documentation files (the "Software"), **
+** to deal in the Software without restriction, including without limitation  **
+** the rights to use, copy, modify, merge, publish, distribute, sublicense,   **
+** and/or sell copies of the Software, and to permit persons to whom the      **
+** Software is furnished to do so, subject to the following conditions:       **
+**                                                                            **
+** The above copyright notice and this permission notice shall be included in **
+** all copies or substantial portions of the Software.                        **
+**                                                                            **
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR **
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   **
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    **
+** THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER **
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    **
+** FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        **
+** DEALINGS IN THE SOFTWARE.                                                  **
+**                                                                            **
+********************************************************************************/
+
 #pragma once
+
+/**
+ * \file Settings.hpp
+ * \brief defines StrUtility/MarginsSettings/BordersSettings/MiscSettings/SetsPositionSettings/ColorsSettings/BackGroundSettings/StyleSettings
+ * PhotosSettings/TextSettings/HeaderSettings/FooterSettings/SetSettings/PageSettings/DocumentSettings/PathsSettings/SoftSettings/GlobalSettings
+ * \author Florian Lance
+ * \date 04/04/2017
+ */
 
 // local
 #include "Photo.hpp"
 
-
 // Qt
 #include <QDoubleSpinBox>
+#include <QCoreApplication>
+#include <QDir>
 
-
-namespace pc {
-
-    static const QVector<QColor> UIColors = {qRgb(96,72,204), qRgb(98,106,213), qRgb(148,154,226), qRgb(173,177,233),
-                                                   qRgb(196,171,235), qRgb(159,118,222), qRgb(126,70,210), qRgb(154,169,207),
-                                                   qRgb(109,131,186), qRgb(74,97,157), qRgb(122,164,167), qRgb(148,182,186),
-                                                   qRgb(197,216,218), qRgb(108,182,255), qRgb(13,134,255), qRgb(0,92,185)};
-
-    class StrUtility{
-
-    public :
-        static QString to_str(const QColor &color){
-            return QString::number(color.red()) +  " " + QString::number(color.green()) + " " + QString::number(color.blue()) + " " + QString::number(color.alpha());
-        }
-
-        static QString to_str(const QPoint &pt){
-            return QString::number(pt.x()) +  " " + QString::number(pt.y());
-        }
-
-        static QString to_str(const QPointF &pt){
-            return QString::number(pt.x()) +  " " + QString::number(pt.y());
-        }
-
-        static QString to_str(const QSize &size){
-            return QString::number(size.width()) +  " " + QString::number(size.height());
-        }
-
-        static QString to_str(const QRect &rect){
-            return QString::number(rect.x()) +  " " + QString::number(rect.y()) + " " + QString::number(rect.width()) + " " + QString::number(rect.height());
-        }
-
-        static QString to_str(const QRectF &rect){
-            return QString::number(rect.x()) +  " " + QString::number(rect.y()) + " " + QString::number(rect.width()) + " " + QString::number(rect.height());
-        }
-    };
-
-    class StreamData{
-
-    public:
-        static void write(QTextStream &stream, QString name, const QRectF &rect){
-            stream << name << " " << rect.x() << " " << rect.y() << " " << rect.width() << " " << rect.height() << "\n";
-        }
-        static void write(QTextStream &stream, QString name, const QRect &rect){
-            stream << name << " " << rect.x() << " " << rect.y() << " " << rect.width() << " " << rect.height() << "\n";
-        }
-        static void write(QTextStream &stream, QString name, const QColor &col){
-            stream << name << " " << col.red() << " " << col.green() << " " << col.blue() << " " << col.alpha() << "\n";
-        }
-        static void write(QTextStream &stream, QString name, const QPoint &pt){
-            stream << name << " " << pt.x() << " " << pt.y() << "\n";
-        }
-        static void write(QTextStream &stream, QString name, const QPointF &pt){
-            stream << name << " " << pt.x() << " " << pt.y() << "\n";
-        }
-        static void write(QTextStream &stream, QString name, const QSize &size){
-            stream << name << " " << size.width() << " " << size.height() << "\n";
-        }
-        static void write(QTextStream &stream, QString name, int value){
-            stream << name << " " << value << "\n";
-        }
-        static void write(QTextStream &stream, QString name, qreal value){
-            stream << name << " " << value << "\n";
-        }
-        static void write(QTextStream &stream, QString name, bool state){
-            stream << name << " " << static_cast<int>(state) << "\n";
-        }
-        static void write(QTextStream &stream, QString name, QString txt){
-            stream << name << " " << txt << "\n";
-        }
-
-        static void write(QTextStream &stream, QString name, QDoubleSpinBox *dsb){
-            stream << name << " " << dsb->value() << "\n";
-        }
-
-        template<typename T>
-        static void write(QTextStream &stream, QString name, const QVector<T> &array){
-            stream << name << " " << array.size() << "\n";
-            for(const auto &elem : array){
-                write(stream, "e", elem);
-            }
-        }
-    };
-
-
-    // define enums
-    enum class PageOrientation { landScape = 0, portrait = 1};
-    enum class Position { top = 0, bottom = 1, left = 2, right = 3, on = 4};
-    enum class ColorType { color1 = 0, color2 = 1, degraded = 2};
-//    enum class DegradedType {padSpread = 0, reflectSpread =1, repeatSpread = 2, radPadSpread = 3, radReflectSpread = 4, radRepeatSpread = 5, conical = 6};
-    enum class DegradedType {padSpread = 0, radPadSpread = 1, conical = 2};
+namespace pc {   
 
     // define classes
-    struct MarginsSettings{
+    struct MarginsSettings : public Settings{
 
         bool exteriorMarginsEnabled;
         bool interiorMarginsEnabled;
@@ -115,20 +60,20 @@ namespace pc {
         qreal header;
     };
 
-    struct BordersSettings{
+    struct BordersSettings  : public Settings{
 
         bool display = false;
         qreal width = 1.;
         QPen pen;
     };
 
-    struct MiscSettings{
+    struct MiscSettings : public Settings{
 
         bool doNotDisplayHeader;
         bool doNotDisplayFooter;
     };
 
-    struct SetsPositionSettings{
+    struct SetsPositionSettings  : public Settings{
 
         bool customMode;
 
@@ -142,7 +87,7 @@ namespace pc {
         QVector<QRectF> relativePosCustom;
     };
 
-    struct ColorsSettings{
+    struct ColorsSettings  : public Settings{
 
         ColorType type;
 
@@ -154,7 +99,7 @@ namespace pc {
         DegradedType degradedType;
     };
 
-    struct BackGroundSettings{
+    struct BackGroundSettings  : public Settings{
 
         bool displayPhoto = false;
         ImagePositionSettings imagePosition;
@@ -162,29 +107,26 @@ namespace pc {
         SPhoto photo = nullptr;
     };
 
-
-    struct StyleSettings{
+    struct StyleSettings  : public Settings{
 
         ImagePositionSettings imagePosition;
         qreal ratioTextPhoto;
         Position textPositionFromPhotos;
     };
 
-    struct PhotosSettings{
+    struct PhotosSettings  : public Settings{
 
         int previousId     = 0;
         int currentId      = 0;    /**< id of the current selcted photo (photo list widget) */
-        QString lastDirectoryPath= "";
         SPhotos loaded  = std::make_shared<QList<SPhoto>>(QList<SPhoto>());
         SPhotos valided = std::make_shared<QList<SPhoto>>(QList<SPhoto>());
     };
 
-
-    struct TextSettings{
+    struct TextSettings  : public Settings{
         std::shared_ptr<QString> html = nullptr;
     };
 
-    struct HeaderSettings{
+    struct HeaderSettings  : public Settings{
 
         bool enabled;
         qreal ratio;
@@ -192,7 +134,7 @@ namespace pc {
         TextSettings text;
     };
 
-    struct FooterSettings{
+    struct FooterSettings : public Settings{
 
         bool enabled;
         qreal ratio;
@@ -200,7 +142,7 @@ namespace pc {
         TextSettings text;
     };
 
-    struct SetSettings{
+    struct SetSettings : public Settings{
 
         int currentId            = 0;    /**< id of the current set (Photo + consign) */
         int currentIdDisplayed   = -1;
@@ -210,7 +152,7 @@ namespace pc {
         TextSettings text;
     };
 
-    struct PageSettings{
+    struct PageSettings  : public Settings{
 
         int currentId          =  0;    /**< id of the current selected page (page list widget) */
         int nb                 = 1;     /**< number of pages for the document */
@@ -222,7 +164,7 @@ namespace pc {
         MiscSettings misc;        
     };
 
-    struct DocumentSettings{
+    struct DocumentSettings : public Settings{
 
         bool grayScale           = false;
         bool saveOnlyCurrentPage = false;
@@ -231,8 +173,75 @@ namespace pc {
         PaperFormat paperFormat;
     };
 
+    struct PathsSettings : public Settings{
 
-    struct GlobalSettings{
+        QString importPhotos;
+        QString savePDF;
+        QString works = QCoreApplication::applicationDirPath() + "/data/saves";
+        QString profile = QCoreApplication::applicationDirPath() + "/data/profile.info";
+
+        PathsSettings() {
+
+            QFile pathsFile(profile);
+            if(!pathsFile.open(QIODevice::ReadOnly | QIODevice::Text)){
+                return;
+            }
+
+            QTextStream in(&pathsFile);
+            QString line;
+            while (in.readLineInto(&line)) {
+
+                if(line.size() == 0){
+                    break;
+                }
+
+                QStringList splits = line.split(" ");
+                if(splits[0] == "[PHOTOS]"){
+
+                    int index = line.indexOf(' ');
+                    QString path = line.remove(0, index+1);
+
+                    if(path == "..."){
+                        importPhotos = QDir::homePath();
+                    }else{
+                        importPhotos = path;
+                    }
+
+                }else if(splits[0] == "[PDF]"){
+
+                    int index = line.indexOf(' ');
+                    QString path = line.remove(0, index+1);
+
+                    if(path == "..."){
+                        savePDF = QDir::homePath();
+                    }else{
+                        savePDF = path;
+                    }
+                }
+            }
+        }
+
+        void write_new_paths(){
+
+            QFile file(profile);
+            if(!file.open(QIODevice::WriteOnly | QIODevice::Text)){
+                return;
+            }
+
+            QTextStream out(&file);
+            out << "[PHOTOS] " + importPhotos + "\n";
+            out << "[PDF] " + savePDF +"\n";
+            file.close();
+        }
+    };
+
+    struct SoftSettings : public Settings{
+
+        // paths
+        PathsSettings paths;
+    };
+
+    struct GlobalSettings : public Settings{
 
         // photos
         PhotosSettings photos;
@@ -251,6 +260,9 @@ namespace pc {
 
         // document
         DocumentSettings document;
+
+        // soft
+        SoftSettings soft;
     };
 
 }

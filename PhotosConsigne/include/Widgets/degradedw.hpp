@@ -1,6 +1,40 @@
 
+/*******************************************************************************
+** PhotosConsigne                                                             **
+** MIT License                                                                **
+** Copyright (c) [2016] [Florian Lance]                                       **
+**                                                                            **
+** Permission is hereby granted, free of charge, to any person obtaining a    **
+** copy of this software and associated documentation files (the "Software"), **
+** to deal in the Software without restriction, including without limitation  **
+** the rights to use, copy, modify, merge, publish, distribute, sublicense,   **
+** and/or sell copies of the Software, and to permit persons to whom the      **
+** Software is furnished to do so, subject to the following conditions:       **
+**                                                                            **
+** The above copyright notice and this permission notice shall be included in **
+** all copies or substantial portions of the Software.                        **
+**                                                                            **
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR **
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   **
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    **
+** THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER **
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    **
+** FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        **
+** DEALINGS IN THE SOFTWARE.                                                  **
+**                                                                            **
+********************************************************************************/
+
 
 #pragma once
+
+
+/**
+ * \file DegradedW.hpp
+ * \brief defines DegradedW/Ui::DegradedUI
+ * \author Florian Lance
+ * \date 04/04/2017
+ */
+
 
 // local
 #include "SettingsW.hpp"
@@ -125,22 +159,22 @@ public:
         Utility::safe_init_radio_button_state(ui.rbDegraded, xml.attributes().value("choice").toInt() == 2);
     }
 
+    void update_settings(Settings &settings) const{
 
-    void update_settings(ColorsSettings &settings) const{
-
+        ColorsSettings &colors = dynamic_cast<ColorsSettings&>(settings);
         if(ui.rbColor1->isChecked()){
-            settings.type = ColorType::color1;
+            colors.type = ColorType::color1;
         }else if(ui.rbColor2->isChecked()){
-            settings.type = ColorType::color2;
+            colors.type = ColorType::color2;
         }else{
-            settings.type = ColorType::degraded;
+            colors.type = ColorType::degraded;
         }
 
-        settings.start = start/zoneLength;
-        settings.end   = end/zoneLength;
-        settings.degradedType = static_cast<DegradedType>(ui.cbDegradedType->currentIndex());
-        settings.color1 = color1;
-        settings.color2 = color2;
+        colors.start = start/zoneLength;
+        colors.end   = end/zoneLength;
+        colors.degradedType = static_cast<DegradedType>(ui.cbDegradedType->currentIndex());
+        colors.color1 = color1;
+        colors.color2 = color2;
     }
 
     void draw_color_zone(){

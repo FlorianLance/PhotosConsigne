@@ -367,7 +367,7 @@ QPushButton:hover:!pressed{
       <string notr="true">color : rgb(0,106,255);</string>
      </property>
      <property name="text">
-      <string>Texte àgauche:</string>
+      <string>Texte à gauche:</string>
      </property>
     </widget>
    </item>

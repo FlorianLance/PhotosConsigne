@@ -1,4 +1,29 @@
 
+/*******************************************************************************
+** PhotosConsigne                                                             **
+** MIT License                                                                **
+** Copyright (c) [2016] [Florian Lance]                                       **
+**                                                                            **
+** Permission is hereby granted, free of charge, to any person obtaining a    **
+** copy of this software and associated documentation files (the "Software"), **
+** to deal in the Software without restriction, including without limitation  **
+** the rights to use, copy, modify, merge, publish, distribute, sublicense,   **
+** and/or sell copies of the Software, and to permit persons to whom the      **
+** Software is furnished to do so, subject to the following conditions:       **
+**                                                                            **
+** The above copyright notice and this permission notice shall be included in **
+** all copies or substantial portions of the Software.                        **
+**                                                                            **
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR **
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   **
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    **
+** THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER **
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    **
+** FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        **
+** DEALINGS IN THE SOFTWARE.                                                  **
+**                                                                            **
+********************************************************************************/
+
 #pragma once
 
 /**
@@ -14,7 +39,7 @@
 // generated ui
 #include "ui_Margins.h"
 
-#include <QDebug>
+
 namespace Ui {
     class MarginsUI;
 }
@@ -88,19 +113,20 @@ struct MarginsW : public SettingsW{
         Utility::safe_init_slider_value(ui.hsHeaderMargin, static_cast<int>(ui.dsbHeaderMargin->value()*10000));
     }
 
-    void update_settings(MarginsSettings &settings) const{
+    void update_settings(Settings &settings) const{
 
-        settings.exteriorMarginsEnabled      = ui.cbAddExteriorMargins->isChecked();
-        settings.interiorMarginsEnabled      = ui.cbAddInteriorMargins->isChecked();
-        settings.footerHeaderMarginEnabled   = ui.cbAddFooterHeaderMargins->isChecked();
-        settings.left                        = ui.dsbLeftMargins->value();
-        settings.right                       = ui.dsbRightMargins->value();
-        settings.top                         = ui.dsbTopMargins->value();
-        settings.bottom                      = ui.dsbBottomMargins->value();
-        settings.interWidth                  = ui.dsbHorizontalMargins->value();
-        settings.interHeight                 = ui.dsbVerticalMargins->value();
-        settings.footer                      = ui.dsbFooterMargin->value();
-        settings.header                      = ui.dsbHeaderMargin->value();
+        MarginsSettings &margins = dynamic_cast<MarginsSettings&>(settings);
+        margins.exteriorMarginsEnabled      = ui.cbAddExteriorMargins->isChecked();
+        margins.interiorMarginsEnabled      = ui.cbAddInteriorMargins->isChecked();
+        margins.footerHeaderMarginEnabled   = ui.cbAddFooterHeaderMargins->isChecked();
+        margins.left                        = ui.dsbLeftMargins->value();
+        margins.right                       = ui.dsbRightMargins->value();
+        margins.top                         = ui.dsbTopMargins->value();
+        margins.bottom                      = ui.dsbBottomMargins->value();
+        margins.interWidth                  = ui.dsbHorizontalMargins->value();
+        margins.interHeight                 = ui.dsbVerticalMargins->value();
+        margins.footer                      = ui.dsbFooterMargin->value();
+        margins.header                      = ui.dsbHeaderMargin->value();
     }
 
     void update_mm_values(const PaperFormat &format){
