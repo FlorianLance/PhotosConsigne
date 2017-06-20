@@ -39,7 +39,9 @@ Un trombinoscope d'une classe
 Des étiquettes de bouteilles
 <a href="https://raw.githubusercontent.com/FlorianLance/PhotosConsigne/master/screenshots/%C3%A9tiquettes.png"><img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/étiquettes.png" alt="Génération d'étiquettes" width="800"></a>
 </p>
+
 --------------------------
+
 **NOUVELLE VERSION: PhotosConsigne 4.0** 
 
 **Liste des nouveautées:**
