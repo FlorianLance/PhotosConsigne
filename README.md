@@ -42,7 +42,7 @@ Des étiquettes de bouteilles
 
 --------------------------
 
-**NOUVELLE VERSION: PhotosConsigne 4.0** 
+## NOUVELLE VERSION: PhotosConsigne 4.0
 
 **Liste des nouveautées:**
 * `haut et bas de page`
