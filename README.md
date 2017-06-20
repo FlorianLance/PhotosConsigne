@@ -19,7 +19,7 @@ Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa
 
 [**CLIQUEZ ICI POUR ACCEDER A LA FAQ (FOIRE AUX QUESTIONS)**](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
 
-[**CLIQUEZ ICI POUR ACCEDER AUX TUTORIELS)**](https://github.com/FlorianLance/PhotosConsigne/wiki/Tutoriels "Tutoriels")
+[**CLIQUEZ ICI POUR ACCEDER AUX TUTORIELS**](https://github.com/FlorianLance/PhotosConsigne/wiki/Tutoriels "Tutoriels")
 
 
  ## Exemples d'utilisations
