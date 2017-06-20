@@ -188,24 +188,6 @@ void PDFGeneratorWorker::draw_backgrounds(QPainter &painter, SPCPage pcPage, Ext
         draw_degraded(painter, pcPage->rectOnPage, background.colors, infos);
     }
 
-    // # pattern
-//    if(background.displayPattern){
-
-//        qreal widthPattern  = m_referenceDPI * infos.paperFormat.widthRatio;
-//        qreal heightPattern = m_referenceDPI * infos.paperFormat.heightRatio;
-//        QRectF patternRect(0., 0., widthPattern, heightPattern);
-
-//        QImage patternImage(static_cast<int>(patternRect.width()),static_cast<int>(patternRect.height()), QImage::Format_ARGB32);
-//        QPainter patternPainter(&patternImage);
-//        brush.setStyle(background.patternBrushStyle);
-//        brush.setColor(background.colorPattern);
-//        patternPainter.fillRect(patternRect, brush);
-//        patternPainter.end();
-
-//        Photo patternPhoto(std::move(patternImage));
-//        patternPhoto.draw(painter, pcPage->rectOnPage, infos);
-//    }
-
     // header background
     if(pcPage->header->settings.enabled){
 
@@ -254,7 +236,6 @@ void PDFGeneratorWorker::draw_backgrounds(QPainter &painter, SPCPage pcPage, Ext
     }
 }
 
-
 void PDFGeneratorWorker::draw_contents(QPainter &painter, SPCPage pcPage, ExtraPCInfo &infos){
 
     // PC
@@ -301,11 +282,79 @@ void PDFGeneratorWorker::draw_contents(QPainter &painter, SPCPage pcPage, ExtraP
             }
         }
 
-        if(pcSet->settings.borders.display){
-            pcSet->settings.borders.pen.setWidthF(pcSet->settings.borders.width*infos.factorUpscale);
+
+        BordersSettings &borders = pcSet->settings.borders;
+        if(borders.display){
+            borders.pen.setWidthF(borders.width*infos.factorUpscale);
             painter.setOpacity(1.);
-            painter.setPen(pcSet->settings.borders.pen);
-            painter.drawRect(pcSet->rectOnPage);
+            painter.setPen(borders.pen);
+
+            if(borders.between){
+
+                if(pcSet->settings.style.textPositionFromPhotos == Position::top){
+                    painter.drawLine(pcSet->text->rectOnPage.bottomLeft(), pcSet->text->rectOnPage.bottomRight());
+                }else if(pcSet->settings.style.textPositionFromPhotos == Position::bottom){
+                    painter.drawLine(pcSet->text->rectOnPage.topLeft(), pcSet->text->rectOnPage.topRight());
+                }else if(pcSet->settings.style.textPositionFromPhotos == Position::left){
+                    painter.drawLine(pcSet->text->rectOnPage.bottomRight(), pcSet->text->rectOnPage.topRight());
+                }else if(pcSet->settings.style.textPositionFromPhotos == Position::right){
+                    painter.drawLine(pcSet->text->rectOnPage.bottomLeft(), pcSet->text->rectOnPage.topLeft());
+                }
+            }
+
+            if(borders.left && borders.right && borders.top && borders.bottom){
+                painter.drawRect(pcSet->rectOnPage);
+            }else{
+
+                QPolygonF poly1,poly2;
+                if(borders.left){ // 1
+                    if(borders.right){ // 2
+                        if(borders.top){ // 3 // left / right / top
+                            poly1 << pcSet->rectOnPage.bottomLeft() << pcSet->rectOnPage.topLeft() << pcSet->rectOnPage.topRight() << pcSet->rectOnPage.bottomRight();
+                        }else if(borders.bottom){ // 3 // left / right / bottom
+                            poly1 << pcSet->rectOnPage.topRight() << pcSet->rectOnPage.bottomRight() << pcSet->rectOnPage.bottomLeft() << pcSet->rectOnPage.topLeft();
+                        }else{ // 2 // left / right
+                            poly1 << pcSet->rectOnPage.bottomLeft() << pcSet->rectOnPage.topLeft();
+                            poly2 << pcSet->rectOnPage.topRight() << pcSet->rectOnPage.bottomRight();
+                        }
+                    }else{ // 1
+                        if(borders.top){ // 2
+                            if(borders.bottom){ // 3 // left / top / bottom
+                                poly1 <<  pcSet->rectOnPage.bottomRight() <<  pcSet->rectOnPage.bottomLeft() <<  pcSet->rectOnPage.topLeft() <<  pcSet->rectOnPage.topRight();
+                            }else{ // 2 // left / top
+                                poly1 <<  pcSet->rectOnPage.bottomLeft() <<  pcSet->rectOnPage.topLeft() <<  pcSet->rectOnPage.topRight();
+                            }
+                        }else if(borders.bottom){ // 2 // left / bottom
+                            poly1 << pcSet->rectOnPage.bottomRight() <<  pcSet->rectOnPage.bottomLeft() <<  pcSet->rectOnPage.topLeft();
+                        }else{ // 1 // left
+                            poly1 << pcSet->rectOnPage.bottomLeft() <<  pcSet->rectOnPage.topLeft();
+                        }
+                    }
+                }else{ // 0
+                    if(borders.right){ // 1
+                        if(borders.top){ // 2 // right / top
+                            poly1 << pcSet->rectOnPage.topLeft() <<  pcSet->rectOnPage.topRight() <<  pcSet->rectOnPage.bottomRight();
+                        }else if(borders.bottom){ // 2 // right / bottom
+                            poly1 << pcSet->rectOnPage.topRight() <<  pcSet->rectOnPage.bottomRight() <<  pcSet->rectOnPage.bottomLeft();
+                        }else{ // 1 // right
+                            poly1 << pcSet->rectOnPage.topRight() <<  pcSet->rectOnPage.bottomRight();
+                        }
+                    }else{ // 0
+                        if(borders.top){ // 1 // top
+                            poly1 <<  pcSet->rectOnPage.topLeft() <<  pcSet->rectOnPage.topRight();
+                        }else if(borders.bottom){ // 1 // bottom
+                            poly1 <<  pcSet->rectOnPage.bottomLeft() <<  pcSet->rectOnPage.bottomRight();
+                        }
+                    }
+                }                
+
+                if(poly1.size() > 0){
+                    painter.drawPolyline(poly1);
+                }
+                if(poly2.size() > 0){
+                    painter.drawPolyline(poly2);
+                }
+            }
         }
 
         if(!infos.preview){
@@ -366,7 +415,6 @@ void PDFGeneratorWorker::draw_page(QPainter &painter, pc::PCPages &pcPages, cons
     ExtraPCInfo infos;
     infos.pagesNb       = pcPages.pages.size();
     infos.pageNum       = idPageToDraw;
-//    infos.pageColor     = pcPage->settings.background.color;
     infos.photoNum      = 0;
     infos.photoPCNum    = 0;
     infos.preview       = preview;
@@ -382,10 +430,8 @@ void PDFGeneratorWorker::draw_page(QPainter &painter, pc::PCPages &pcPages, cons
     if(drawZones){
         draw_zones(painter,pcPage);
     }
-//    else{
-        draw_backgrounds(painter, pcPage, infos);
-//    }
 
+    draw_backgrounds(painter, pcPage, infos);
     draw_contents(painter, pcPage, infos);
 }
 
@@ -394,8 +440,7 @@ void PDFGeneratorWorker::draw_html(QPainter &painter, QString html, QRectF upper
     if(static_cast<int>(upperRect.width()) == 0 || static_cast<int>(upperRect.height()) == 0){
         return;
     }
-    //        QElapsedTimer timer;
-    //        timer.start();
+
     m_doc->setPageSize(QSizeF(upperRect.width(), upperRect.height()));
     m_doc->setHtml(std::move(html));
     painter.translate(QPointF(docRect.x(),docRect.y()));
@@ -403,7 +448,6 @@ void PDFGeneratorWorker::draw_html(QPainter &painter, QString html, QRectF upper
     m_doc->setIndentWidth(0);
     m_doc->drawContents(&painter, QRectF(0,0,docRect.width(),docRect.height()));
     painter.translate(QPointF(-docRect.x(),-docRect.y()));
-    //        qDebug() << "   draw_html " << timer.elapsed() << "ms";
 }
 
 void PDFGeneratorWorker::kill(){
@@ -415,7 +459,6 @@ void PDFGeneratorWorker::kill(){
 
 void PDFGeneratorWorker::generate_preview(pc::PCPages pcPages, int pageIdToDraw, bool drawZones){
 
-    DebugMessage dbgMess("generate_preview");
     m_pageToDraw    = pcPages.pages[pageIdToDraw];
     int dpi = pcPages.settings.paperFormat.dpi;
     if(dpi > 300){
@@ -460,15 +503,18 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
     emit set_progress_bar_state_signal(0);
 
     QPrinter pdfWriter(QPrinter::HighResolution);
-
-
     pdfWriter.setOutputFormat(QPrinter::PdfFormat);
     pdfWriter.setOutputFileName(pcPages.pdfFileName);
     pdfWriter.setCreator("created with PhotosConsigne (https://github.com/FlorianLance/PhotosConsigne)");
     pdfWriter.setColorMode(pcPages.settings.grayScale ? QPrinter::ColorMode::GrayScale : QPrinter::ColorMode::Color);
-
     pdfWriter.setResolution(pcPages.settings.paperFormat.dpi);
-    pdfWriter.setPageSize(QPageSize(static_cast<QPageSize::PageSizeId>(pcPages.settings.paperFormat.format)));
+
+    if(pcPages.settings.paperFormat.isCustom){
+        pdfWriter.setPageSize(QPageSize(pcPages.settings.paperFormat.customSize));
+    }else{
+        pdfWriter.setPageSize(QPageSize(static_cast<QPageSize::PageSizeId>(pcPages.settings.paperFormat.format)));
+    }
+
     pdfWriter.setPageOrientation(pcPages.settings.paperFormat.landscape ? QPageLayout::Landscape : QPageLayout::Portrait);
     pdfWriter.setPageMargins(QMarginsF(0.,0.,0.,0.));
 
@@ -517,13 +563,20 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
     emit end_generation_signal(true);
 }
 
-
-
 void PDFGeneratorWorker::init_document(){
     m_doc = std::make_unique<QTextDocument>();
 }
 
 void PDFGeneratorWorker::add_resource(QUrl url, QImage image){
-    m_doc->addResource(QTextDocument::ImageResource, std::move(url), std::move(image));
-}
 
+    qDebug() << "URL: " << url;
+    if(url.toString().left(14) == "dropped_image_"){
+        droppedUrl.push_back(url);
+        droppedImages.push_back(image);
+    }else{
+        insertedUrl.push_back(url);
+        insertedImages.push_back(image);
+    }
+
+    m_doc->addResource(QTextDocument::ImageResource, std::move(url), std::move(image));    
+}

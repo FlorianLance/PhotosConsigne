@@ -108,6 +108,9 @@ public slots:
 
     void update_UI(const GlobalSettings &settings);
 
+
+    void add_resource_from_xml(QUrl url, QImage image);
+
 private:
 
     QMainWindow *m_parent = nullptr;

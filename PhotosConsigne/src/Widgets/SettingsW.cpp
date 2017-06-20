@@ -103,7 +103,13 @@ qreal Utility::borders_line_width_from_comboBox(QComboBox *cb){
             borderWidth = 9.;
         break;
         case 5:
-            borderWidth = 15.;
+            borderWidth = 12.;
+        break;
+        case 6:
+            borderWidth = 20.;
+        break;
+        case 7:
+            borderWidth = 30.;
         break;
     }
     return borderWidth;

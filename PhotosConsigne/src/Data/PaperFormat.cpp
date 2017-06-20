@@ -47,8 +47,15 @@ pc::PaperFormat::PaperFormat(QString dpiStr, QString formatStr, bool landScape){
     if(formatStr == "A4"){
         widthRatio =  8.2633 ;
         heightRatio =  11.6933 ;
-        format = QPagedPaintDevice::PageSize::A4;
+        format = QPagedPaintDevice::PageSize::A4;        
         sizeMM = QSizeF(210.00,297.00);
+    }else if(formatStr == "A4 Double page"){
+        isCustom = true;
+        customSize  = QSize(595, 842*2);
+        widthRatio =  8.2633 ;
+        heightRatio =  11.6933*2 ;
+        format = QPagedPaintDevice::PageSize::Custom;
+        sizeMM = QSizeF(210.00,297.00*2);
     }else if(formatStr == "B5"){
         widthRatio =  6.9300 ;
         heightRatio =  9.8467 ;

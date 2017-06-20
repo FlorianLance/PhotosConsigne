@@ -40,6 +40,9 @@
 namespace pc {
     struct PaperFormat
     {
+        bool isCustom     = false;
+        QSize customSize;
+
         bool landscape    = false;
         int dpi           = 300;
         qreal widthRatio  = 8.263;

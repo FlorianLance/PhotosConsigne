@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>519</width>
-    <height>371</height>
+    <width>406</width>
+    <height>150</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>150</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -43,7 +49,7 @@
      <property name="minimumSize">
       <size>
        <width>250</width>
-       <height>115</height>
+       <height>150</height>
       </size>
      </property>
      <property name="styleSheet">
@@ -68,350 +74,6 @@
       <property name="verticalSpacing">
        <number>0</number>
       </property>
-      <item row="0" column="2">
-       <widget class="QFrame" name="frameBorderLineStyle">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_30">
-         <property name="spacing">
-          <number>3</number>
-         </property>
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item alignment="Qt::AlignHCenter">
-          <widget class="QComboBox" name="cbBordersLineStyle">
-           <property name="minimumSize">
-            <size>
-             <width>90</width>
-             <height>50</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>90</width>
-             <height>50</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Type de ligne de la bordure</string>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QComboBox {
-    border: 1px solid rgb(0,106,255);
-    border-radius: 3px;
-    padding: 1px -4px 1px 1px;
-
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}
-
-QComboBox::drop-down {
-	width: 0px;
-}
-
-QComboBox:hover{
-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-
-}
- QComboBox QAbstractItemView {
-     selection-background-color: lightgray;
- }
-
-
-QComboBox:!enabled {
-
-    border: 1px solid rgb(150,150,150);
-
-}
-
-</string>
-           </property>
-           <property name="currentIndex">
-            <number>0</number>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>86</width>
-             <height>53</height>
-            </size>
-           </property>
-           <property name="frame">
-            <bool>true</bool>
-           </property>
-           <item>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="../resources.qrc">
-              <normaloff>:/images/borders/solid_lines</normaloff>:/images/borders/solid_lines</iconset>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="../resources.qrc">
-              <normaloff>:/images/borders/dot_line</normaloff>:/images/borders/dot_line</iconset>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="../resources.qrc">
-              <normaloff>:/images/borders/dash_line</normaloff>:/images/borders/dash_line</iconset>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="../resources.qrc">
-              <normaloff>:/images/borders/dash_dot_line</normaloff>:/images/borders/dash_dot_line</iconset>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="../resources.qrc">
-              <normaloff>:/images/borders/dash_dot_dot_line</normaloff>:/images/borders/dash_dot_dot_line</iconset>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item alignment="Qt::AlignHCenter">
-          <widget class="QLabel" name="laBorderLineStyle">
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  9pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-     font:  9pt Calibri;
- }
-</string>
-           </property>
-           <property name="text">
-            <string>Ligne</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QFrame" name="frameBorderWidth">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_18">
-         <property name="spacing">
-          <number>3</number>
-         </property>
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item alignment="Qt::AlignHCenter">
-          <widget class="QComboBox" name="cbBordersLineWidth">
-           <property name="minimumSize">
-            <size>
-             <width>80</width>
-             <height>50</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>80</width>
-             <height>50</height>
-            </size>
-           </property>
-           <property name="toolTip">
-            <string>Epaisseur du trait de la bordure</string>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QComboBox {
-    border: 1px solid rgb(0,106,255);
-    border-radius: 3px;
-    padding: 1px 1px 1px 1px;
-
-	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
-}
-
-QComboBox::drop-down {
-	width: 0px;
-}
-
-QComboBox:hover{
-background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
-                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
-}
-
-
- QComboBox QAbstractItemView {
-     selection-background-color: lightgray;
- }
-
-
-QComboBox:!enabled {
-
-    border: 1px solid rgb(150,150,150);
-
-}
-
-</string>
-           </property>
-           <property name="currentIndex">
-            <number>0</number>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>86</width>
-             <height>53</height>
-            </size>
-           </property>
-           <property name="frame">
-            <bool>true</bool>
-           </property>
-           <item>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="../resources.qrc">
-              <normaloff>:/images/borders/width1</normaloff>:/images/borders/width1</iconset>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="../resources.qrc">
-              <normaloff>:/images/borders/width2</normaloff>:/images/borders/width2</iconset>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="../resources.qrc">
-              <normaloff>:/images/borders/width3</normaloff>:/images/borders/width3</iconset>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="../resources.qrc">
-              <normaloff>:/images/borders/width4</normaloff>:/images/borders/width4</iconset>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="../resources.qrc">
-              <normaloff>:/images/borders/width5</normaloff>:/images/borders/width5</iconset>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="../resources.qrc">
-              <normaloff>:/images/borders/width6</normaloff>:/images/borders/width6</iconset>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item alignment="Qt::AlignHCenter">
-          <widget class="QLabel" name="laBorderWidth">
-           <property name="styleSheet">
-            <string notr="true">
-
-QWidget {
-  
-	color : rgb(0,106,255);
-     font:  9pt Calibri;
-
-
- }
-
-
-QWidget:!enabled {
-  
-	color : rgb(150,150,150);
-     font:  9pt Calibri;
- }
-</string>
-           </property>
-           <property name="text">
-            <string>Epaisseur</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
       <item row="0" column="3">
        <widget class="QFrame" name="frameBordersJoin">
         <property name="sizePolicy">
@@ -695,8 +357,571 @@ QWidget {
         </layout>
        </widget>
       </item>
-      <item row="1" column="0" colspan="4" alignment="Qt::AlignHCenter">
+      <item row="0" column="2">
+       <widget class="QFrame" name="frameBorderLineStyle">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_30">
+         <property name="spacing">
+          <number>3</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item alignment="Qt::AlignHCenter">
+          <widget class="QComboBox" name="cbBordersLineStyle">
+           <property name="minimumSize">
+            <size>
+             <width>90</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>90</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Type de ligne de la bordure</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QComboBox {
+    border: 1px solid rgb(0,106,255);
+    border-radius: 3px;
+    padding: 1px -4px 1px 1px;
+
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QComboBox::drop-down {
+	width: 0px;
+}
+
+QComboBox:hover{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+
+}
+ QComboBox QAbstractItemView {
+     selection-background-color: lightgray;
+ }
+
+
+QComboBox:!enabled {
+
+    border: 1px solid rgb(150,150,150);
+
+}
+
+</string>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>86</width>
+             <height>53</height>
+            </size>
+           </property>
+           <property name="frame">
+            <bool>true</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/images/borders/solid_lines</normaloff>:/images/borders/solid_lines</iconset>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/images/borders/dot_line</normaloff>:/images/borders/dot_line</iconset>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/images/borders/dash_line</normaloff>:/images/borders/dash_line</iconset>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/images/borders/dash_dot_line</normaloff>:/images/borders/dash_dot_line</iconset>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/images/borders/dash_dot_dot_line</normaloff>:/images/borders/dash_dot_dot_line</iconset>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignHCenter">
+          <widget class="QLabel" name="laBorderLineStyle">
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+</string>
+           </property>
+           <property name="text">
+            <string>Ligne</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QFrame" name="frameBorderWidth">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_18">
+         <property name="spacing">
+          <number>3</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item alignment="Qt::AlignHCenter">
+          <widget class="QComboBox" name="cbBordersLineWidth">
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>Epaisseur du trait de la bordure</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QComboBox {
+    border: 1px solid rgb(0,106,255);
+    border-radius: 3px;
+    padding: 1px 1px 1px 1px;
+
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+QComboBox::drop-down {
+	width: 0px;
+}
+
+QComboBox:hover{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+}
+
+
+ QComboBox QAbstractItemView {
+     selection-background-color: lightgray;
+ }
+
+
+QComboBox:!enabled {
+
+    border: 1px solid rgb(150,150,150);
+
+}
+
+</string>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>86</width>
+             <height>53</height>
+            </size>
+           </property>
+           <property name="frame">
+            <bool>true</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/images/borders/width1</normaloff>:/images/borders/width1</iconset>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/images/borders/width2</normaloff>:/images/borders/width2</iconset>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/images/borders/width2_5</normaloff>:/images/borders/width2_5</iconset>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/images/borders/width3</normaloff>:/images/borders/width3</iconset>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/images/borders/width4_3</normaloff>:/images/borders/width4_3</iconset>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/images/borders/width4</normaloff>:/images/borders/width4</iconset>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/images/borders/width5</normaloff>:/images/borders/width5</iconset>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="../resources.qrc">
+              <normaloff>:/images/borders/width6</normaloff>:/images/borders/width6</iconset>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignHCenter">
+          <widget class="QLabel" name="laBorderWidth">
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+</string>
+           </property>
+           <property name="text">
+            <string>Epaisseur</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="4">
+       <widget class="QFrame" name="frame">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="spacing">
+          <number>10</number>
+         </property>
+         <property name="leftMargin">
+          <number>3</number>
+         </property>
+         <property name="topMargin">
+          <number>3</number>
+         </property>
+         <property name="rightMargin">
+          <number>3</number>
+         </property>
+         <property name="bottomMargin">
+          <number>3</number>
+         </property>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbLeft">
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+</string>
+           </property>
+           <property name="text">
+            <string>Gauche</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbTop">
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+</string>
+           </property>
+           <property name="text">
+            <string>Haut</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbRight">
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+</string>
+           </property>
+           <property name="text">
+            <string>Droite</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbBottom">
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+</string>
+           </property>
+           <property name="text">
+            <string>Bas</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbBetween">
+           <property name="styleSheet">
+            <string notr="true">
+
+QWidget {
+  
+	color : rgb(0,106,255);
+     font:  9pt Calibri;
+
+
+ }
+
+
+QWidget:!enabled {
+  
+	color : rgb(150,150,150);
+     font:  9pt Calibri;
+ }
+</string>
+           </property>
+           <property name="text">
+            <string>Entre</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>0</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="4" alignment="Qt::AlignHCenter">
        <widget class="QCheckBox" name="cbEnableBorders">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="toolTip">
          <string>Afficher des bordures autour des ensembles</string>
         </property>
@@ -722,6 +947,22 @@ QWidget:!enabled {
         </property>
         <property name="checked">
          <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="4">
+       <widget class="Line" name="line">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>1</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color : rgb(0,106,255);</string>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>

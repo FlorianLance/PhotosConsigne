@@ -111,7 +111,7 @@ public:
                 break;
             case 2:
                 ui.vlSet->addStretch();
-                ui.tabSet->setMaximumHeight(160);
+                ui.tabSet->setMaximumHeight(190);
                 break;
             case 3:
                 ui.vlSet->addStretch();

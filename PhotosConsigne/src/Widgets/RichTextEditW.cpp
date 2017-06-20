@@ -131,6 +131,9 @@ namespace Ui {
 using namespace pc;
 
 
+int TextEdit::currentDroppedImage = 0;
+
+
 #ifdef Q_OS_MAC
 const QString rsrcPath = ":/images/mac";
 #else
@@ -1064,8 +1067,7 @@ void TextEdit::insertFromMimeData(const QMimeData *source){
 
     if (source->hasImage()){
 
-        static int i = 1;
-        QUrl url(QString("dropped_image_%1").arg(i++));
+        QUrl url(QString("dropped_image_%1").arg(currentDroppedImage++));
         drop_image(url, qvariant_cast<QImage>(source->imageData()));
     }
     else if (source->hasUrls()) {

@@ -104,4 +104,11 @@ private :
     SPCPage m_pageToDraw = nullptr;
 
     std::unique_ptr<QTextDocument> m_doc = nullptr;
+
+public :
+    QVector<QImage> droppedImages;
+    QVector<QUrl> droppedUrl;
+
+    QVector<QImage> insertedImages;
+    QVector<QUrl> insertedUrl;
 };}

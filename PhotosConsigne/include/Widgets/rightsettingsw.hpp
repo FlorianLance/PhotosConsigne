@@ -58,11 +58,13 @@ namespace pc{
 
             // header
             ui.vlHeader->addWidget(&headerW);
-            connect(&headerW, &HeaderW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
+            connect(&headerW, &HeaderW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);            
+            connect(headerW.richTextW.textEdit(), &TextEdit::resource_added_signal, this, &RightSettingsW::resource_added_signal);
 
             // footer
             ui.vlFooter->addWidget(&footerW);
             connect(&footerW, &FooterW::settings_updated_signal, this, &RightSettingsW::settings_updated_signal);
+            connect(footerW.richTextW.textEdit(), &TextEdit::resource_added_signal, this, &RightSettingsW::resource_added_signal);
 
             // all pages
             ui.vlAllPages->addWidget(&globalPageW);

@@ -141,6 +141,8 @@ private:
 
     std::unique_ptr<QWidget> m_insertLinkW = nullptr;
 
+public :
+    static int currentDroppedImage;
 };
 
 enum class RichTextType { globalConsign, individualConsign, footer, header};
@@ -261,5 +263,5 @@ private:
     QLabel *m_insertLabel = nullptr;
 
     // curent html
-    std::shared_ptr<QString> m_html = nullptr;
+    std::shared_ptr<QString> m_html = nullptr;    
 };}

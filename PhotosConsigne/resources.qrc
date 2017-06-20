@@ -107,6 +107,8 @@
         <file alias="bevel_join">resources/images/borders/bevel_join.png</file>
         <file alias="miter_join">resources/images/borders/miter_join.png</file>
         <file alias="round_join">resources/images/borders/round_join.png</file>
+        <file alias="width2_5">resources/images/borders/width2_5.png</file>
+        <file alias="width4_3">resources/images/borders/width43.png</file>
     </qresource>
     <qresource prefix="/images/adjust">
         <file alias="adjust_bg_image">resources/images/adjust/adjust.png</file>

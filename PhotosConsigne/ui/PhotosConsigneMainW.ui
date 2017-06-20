@@ -1819,6 +1819,11 @@ QPushButton {
                        </item>
                        <item>
                         <property name="text">
+                         <string>A4 Double page</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
                          <string>B5</string>
                         </property>
                        </item>

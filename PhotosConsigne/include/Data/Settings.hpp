@@ -63,6 +63,11 @@ namespace pc {
     struct BordersSettings  : public Settings{
 
         bool display = false;
+        bool left = true;
+        bool top = true;
+        bool right = true;
+        bool bottom = true;
+        bool between = false;
         qreal width = 1.;
         QPen pen;
     };

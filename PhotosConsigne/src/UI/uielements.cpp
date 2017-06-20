@@ -434,6 +434,17 @@ void UIElements::update_UI(const GlobalSettings &settings){
     }
 }
 
+void UIElements::add_resource_from_xml(QUrl url, QImage image){
+
+    settingsW.headerW.richTextW.textEdit()->document()->addResource(QTextDocument::ImageResource, url, image);
+    settingsW.footerW.richTextW.textEdit()->document()->addResource(QTextDocument::ImageResource, url, image);
+
+    for(auto &&set : settingsW.setsLoadedW){
+        set->textW.textEdit()->document()->addResource(QTextDocument::ImageResource, url, image);
+    }
+    settingsW.globalSetW.textW.textEdit()->document()->addResource(QTextDocument::ImageResource, url, image);
+}
+
 void UIElements::display_current_individual_set_ui(const GlobalSettings &settings){
 
     if(settingsW.setsValidedW.size() == 0){ // empty

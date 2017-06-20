@@ -480,7 +480,74 @@ void PCMainUI::from_main_UI_connections()
 
         QString filePath = QFileDialog::getSaveFileName(this, "Entrez le nom du document de travail", m_settings.soft.paths.works, "Work (*.work)");
         if(filePath.size() > 0){
-            pc::Work::save(filePath, m_settings.photos.loaded, m_ui);
+
+            QFile file(filePath);
+            if(!file.open(QIODevice::WriteOnly | QIODevice::Text)){
+                return false;
+            }
+
+            QString dirResourcesPath = filePath;
+            dirResourcesPath.resize(dirResourcesPath.size()-5);
+            dirResourcesPath += "_resources";
+
+            QDir dirResources(dirResourcesPath);
+            if(!dirResources.exists()){
+                dirResources.mkdir(".");
+            }
+
+            QXmlStreamWriter xml;
+            xml.setDevice(&file);
+            xml.setAutoFormatting(true);
+
+            xml.writeStartElement("Work");
+            xml.writeStartElement("Resources");
+                xml.writeAttribute("nbImages", QString::number(m_pdfGeneratorWorker->droppedUrl.size()+m_pdfGeneratorWorker->insertedUrl.size()));
+
+                    for(int ii = 0; ii < m_pdfGeneratorWorker->droppedUrl.size(); ++ii){
+
+                        QString path = dirResourcesPath + "/" + m_pdfGeneratorWorker->droppedUrl[ii].toString() + ".png";
+                        if(m_pdfGeneratorWorker->droppedImages[ii].save(path)){
+                            xml.writeStartElement("ImageAdded");
+                            xml.writeAttribute("url", m_pdfGeneratorWorker->droppedUrl[ii].toString());
+                            xml.writeAttribute("path", path);
+                            xml.writeEndElement();
+                        }
+                    }
+
+                    for(int ii = 0; ii < m_pdfGeneratorWorker->insertedUrl.size(); ++ii){
+
+                        QString path = dirResourcesPath + "/inserted_image_" + QString::number(ii) + ".png";
+                        if(m_pdfGeneratorWorker->insertedImages[ii].save(path)){
+                            xml.writeStartElement("ImageAdded");
+                            xml.writeAttribute("url", m_pdfGeneratorWorker->insertedUrl[ii].toString());
+                            xml.writeAttribute("path", path);
+                            xml.writeEndElement();
+                        }
+                    }
+
+            xml.writeEndElement();
+            xml.writeStartElement("Photos");
+                xml.writeAttribute("number", QString::number(m_settings.photos.loaded->size()));
+                for(const auto &photo : *m_settings.photos.loaded){
+                    xml.writeStartElement("Photo");
+                    xml.writeAttribute("path", photo->pathPhoto);
+                    xml.writeAttribute("id", QString::number(photo->id));
+                    xml.writeAttribute("pageId", QString::number(photo->pageId));
+                    xml.writeAttribute("loadedId", QString::number(photo->loadedId));
+                    xml.writeAttribute("rotation", QString::number(photo->rotation));
+                    xml.writeAttribute("white", QString::number(photo->isWhiteSpace));
+                    xml.writeAttribute("duplicate", QString::number(photo->isADuplicate));
+                    xml.writeAttribute("onDoc", QString::number(photo->isOnDocument));
+                    xml.writeAttribute("removed", QString::number(photo->isRemoved));
+                    xml.writeEndElement();
+                }
+            xml.writeEndElement();
+            m_ui.write_to_xml(xml);
+            xml.writeEndElement();
+            xml.writeEndDocument();
+
+            return true;
+
         }
 
     });
@@ -519,7 +586,21 @@ void PCMainUI::from_main_UI_connections()
                     continue;
                 }
                 else if(token == QXmlStreamReader::StartElement){
-                    if(xml.name() == "Photos"){
+                    if(xml.name() == "ImageAdded"){
+                        qDebug() << "image added: " << xml.attributes().value("url").toString() << " | " << xml.attributes().value("path").toString();
+                        QImage img(xml.attributes().value("path").toString());
+                        QUrl url(xml.attributes().value("url").toString());
+                        if(!img.isNull()){
+
+                            m_ui.add_resource_from_xml(url, img);
+
+                            emit m_ui.resource_added_signal(url,std::move(img));
+                            if(xml.attributes().value("url").toString().left(14) == "dropped_image_"){
+                                TextEdit::currentDroppedImage++;
+                            }
+                        }
+                    }
+                    else if(xml.name() == "Photos"){
 
                         nbPhotos = xml.attributes().value("number").toInt();
                         m_settings.photos.loaded->reserve(nbPhotos);

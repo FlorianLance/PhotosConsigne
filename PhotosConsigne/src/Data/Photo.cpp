@@ -94,7 +94,6 @@ void pc::Photo::draw(QPainter &painter, const ImagePositionSettings &position, c
 //            draw_huge(painter, rectPhoto);
             qWarning() << "-Error: Format too huge: " << namePhoto << " can't be drawn.";
         }else{
-//            draw_small(painter, rectPhoto, (pathPhoto.size() > 0) ? QImage(pathPhoto) : scaledPhoto, infos, pageSize);
             draw_small(painter, position, rectPhoto, (pathPhoto.size() > 0) ? QImage(pathPhoto).transformed((QTransform().rotate(rotation))) : scaledPhoto, infos, pageSize);
         }
     }
@@ -232,7 +231,20 @@ QRectF pc::Photo::draw_small(QPainter &painter, const ImagePositionSettings &pos
 
     // draw image
     QRectF newRectPhoto(newX, newY, newWidth, newHeight);
+
+    // ########### TEST
+//    qreal square = std::min(newRectPhoto.right()-newRectPhoto.left(), newRectPhoto.bottom()-newRectPhoto.top());
+//    QRect ree(newRectPhoto.center().x()-square*0.5, newRectPhoto.center().y()-square*0.5, square,square);
+//    painter.setClipping(true);
+//    QRegion r(ree, QRegion::Ellipse);
+//    painter.setClipRegion(r);
+
+    // ###########
     painter.drawImage(newRectPhoto, photoToDraw, QRectF(0.,0.,photoToDraw.width(),photoToDraw.height()));
+    // ###########
+
+//    painter.setClipping(false);
+    // ########### END TEST
 
     // draw size
     if(infos.displaySizes && newWidth > 100 && newHeight > 50){

@@ -343,7 +343,8 @@ void PageSetsW::read_pos_files(){
         button->setIconSize(QSize(60,60));
 
 
-        QImage iconImg(60,60, QImage::Format_ARGB32);
+        QImage iconImg(140,140, QImage::Format_ARGB32);
+        QSize interSize(120,120);
         iconImg.fill(qRgba(255,255,255,0));
 
         QPainter painter(&iconImg);
@@ -351,10 +352,10 @@ void PageSetsW::read_pos_files(){
             for(int jj = 0; jj < predefPositions[ii].relativePosCustom.size(); ++jj){
 
                 const QRectF &rect = predefPositions[ii].relativePosCustom[jj];
-                QRect setRect(static_cast<int>(rect.x()*iconImg.width()),
-                              static_cast<int>(rect.y()*iconImg.height()),
-                              static_cast<int>((rect.width())*iconImg.width()),
-                              static_cast<int>((rect.height())*iconImg.height()));
+                QRect setRect(static_cast<int>(rect.x()*interSize.width()   + (iconImg.width()-interSize.width())*0.5),
+                              static_cast<int>(rect.y()*interSize.height()  + (iconImg.height()-interSize.height())*0.5),
+                              static_cast<int>((rect.width())*interSize.width()),
+                              static_cast<int>((rect.height())*interSize.height()));
 
                 painter.fillRect(setRect, QBrush(UIColors[jj%UIColors.size()]));
                 painter.setPen(Qt::black);
@@ -362,21 +363,20 @@ void PageSetsW::read_pos_files(){
             }
         }else{
 
-            QSize interSize(50,50);
             int currentPhoto = 0;
-            qreal offsetX = 0.;
-            qreal offsetY = 0.;
+
+            qreal offsetY = (iconImg.height()-interSize.height())*0.5;
             for(int jj = 0; jj < predefPositions[ii].nbPhotosV; ++jj){
 
                 qreal height= predefPositions[ii].linesHeight[jj];
-                offsetX = 0.;
+                qreal offsetX = (iconImg.width()-interSize.width())*0.5;
                 for(int kk = 0; kk < predefPositions[ii].nbPhotosH; ++kk){
                     if(currentPhoto == predefPositions[ii].nbPhotos){
                         break;
                     }
 
                     qreal width = predefPositions[ii].columnsWidth[kk];
-                    QRect setRect(static_cast<int>(5+offsetX), static_cast<int>(5+offsetY), static_cast<int>(width*interSize.width()), static_cast<int>(height*interSize.height()));
+                    QRect setRect(static_cast<int>(offsetX), static_cast<int>(offsetY), static_cast<int>(width*interSize.width()), static_cast<int>(height*interSize.height()));
                     painter.fillRect(setRect, QBrush(UIColors[currentPhoto%UIColors.size()]));
                     painter.setPen(Qt::black);
                     painter.drawRect(setRect);
@@ -511,19 +511,23 @@ void PageSetsW::update_grid_sizes_ui(){
             newDsb->setMaximum(1.);
             newDsb->setSingleStep(0.01);
 
-            if(columnsWidthDsb.size() > 0){
-                newDsb->setValue(1.- (1.*columnsWidthDsb.size()/(columnsWidthDsb.size()+1)));
-            }else{
-                newDsb->setValue(1.);
-            }
             connect(newDsb, QOverload<qreal>::of(&QDoubleSpinBox::valueChanged), this, [&]{
+
+                if(columnsWidthDsb.size() == 1){
+
+                    Utility::safe_init_double_spinbox_value(columnsWidthDsb[0],1.);
+                    emit settings_updated_signal(true);
+                    return;
+                }
 
                 qreal total = 0;
                 for(int ii = 0; ii < columnsWidthDsb.size(); ++ii){
                     total += columnsWidthDsb[ii]->value();
                 }
 
-                qreal factor = 1./total;
+                qreal curentValue = columnsWidthDsb[ui.cbColumnsWidth->currentIndex()]->value();
+                qreal factor = (1. - curentValue)/(total - curentValue);
+
                 for(int ii = 0; ii < columnsWidthDsb.size(); ++ii){
                     if(ii == ui.cbColumnsWidth->currentIndex()){
                         continue;
@@ -533,10 +537,19 @@ void PageSetsW::update_grid_sizes_ui(){
                 emit settings_updated_signal(true);
             });
 
-            if(columnsWidthDsb.size() == 1){
-                columnsWidthDsb[0]->setValue(0.5);
+            if(columnsWidthDsb.size() == 0){
+                Utility::safe_init_double_spinbox_value(newDsb,1.);
             }else{
-                qreal factor = 1. - newDsb->value();
+
+                qreal newValue = 1./(columnsWidthDsb.size()+1);
+                Utility::safe_init_double_spinbox_value(newDsb,newValue);
+
+                qreal total = 0;
+                for(int ii = 0; ii < columnsWidthDsb.size(); ++ii){
+                    total += columnsWidthDsb[ii]->value();
+                }
+
+                qreal factor = (1. - newValue)/total;
                 for(auto && dsb : columnsWidthDsb){
                     Utility::safe_init_double_spinbox_value(dsb,dsb->value()*factor);
                 }
@@ -577,19 +590,24 @@ void PageSetsW::update_grid_sizes_ui(){
             newDsb->setMinimum(0.);
             newDsb->setMaximum(1.);
             newDsb->setSingleStep(0.01);
-            if(linesHeightDsb.size() > 0){
-                newDsb->setValue(1.- (1.*linesHeightDsb.size()/(linesHeightDsb.size()+1)));
-            }else{
-                newDsb->setValue(1.);
-            }
+
             connect(newDsb, QOverload<qreal>::of(&QDoubleSpinBox::valueChanged), this, [&]{
+
+                if(linesHeightDsb.size() == 1){
+
+                    Utility::safe_init_double_spinbox_value(linesHeightDsb[0],1.);
+                    emit settings_updated_signal(true);
+                    return;
+                }
 
                 qreal total = 0;
                 for(int ii = 0; ii < linesHeightDsb.size(); ++ii){
                     total += linesHeightDsb[ii]->value();
                 }
 
-                qreal factor = 1./total;
+                qreal curentValue = linesHeightDsb[ui.cbLinesHeight->currentIndex()]->value();
+                qreal factor = (1. - curentValue)/(total - curentValue);
+
                 for(int ii = 0; ii < linesHeightDsb.size(); ++ii){
                     if(ii == ui.cbLinesHeight->currentIndex()){
                         continue;
@@ -599,11 +617,19 @@ void PageSetsW::update_grid_sizes_ui(){
                 emit settings_updated_signal(true);
             });
 
-
-            if(linesHeightDsb.size() == 1){
-                linesHeightDsb[0]->setValue(0.5);
+            if(linesHeightDsb.size() == 0){
+                Utility::safe_init_double_spinbox_value(newDsb,1.);
             }else{
-                qreal factor = 1. - newDsb->value();
+
+                qreal newValue = 1./(linesHeightDsb.size()+1);
+                Utility::safe_init_double_spinbox_value(newDsb,newValue);
+
+                qreal total = 0;
+                for(int ii = 0; ii < linesHeightDsb.size(); ++ii){
+                    total += linesHeightDsb[ii]->value();
+                }
+
+                qreal factor = (1. - newValue)/total;
                 for(auto && dsb : linesHeightDsb){
                     Utility::safe_init_double_spinbox_value(dsb,dsb->value()*factor);
                 }

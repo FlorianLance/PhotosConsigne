@@ -70,14 +70,11 @@ void pc::PCPage::compute_sizes(QRectF upperRect){
     qreal footerRatio            = (footer->settings.enabled && !misc.doNotDisplayFooter) ? footer->settings.ratio : 0.;
     qreal headerRatio            = (header->settings.enabled && !misc.doNotDisplayHeader) ? header->settings.ratio : 0.;
 
-    qDebug() << "footerRatio: " << footerRatio << " headerRatio: " << headerRatio;
     qreal sum = footerRatio + headerRatio;
-    qDebug() << "sum: " << sum;
     if(sum > 1.){        
         footerRatio -= (sum-1.) *0.5;
         headerRatio -= (sum-1.) *0.5;
     }
-    qDebug() << "footerRatio: " << footerRatio << " headerRatio: " << headerRatio;
 
     // header/footer/sets heights
     qreal footerHeight = footerRatio * headerFooterSetsHeight;
