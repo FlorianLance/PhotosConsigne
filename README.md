@@ -1,5 +1,5 @@
 
- # PhotosConsigne
+ # PhotosConsigne 4.0
 
 <p align="center">
 <a href="https://raw.githubusercontent.com/FlorianLance/PhotosConsigne/master/screenshots/album.png">
@@ -30,7 +30,7 @@ Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa
 <p align="center">
 Un trombinoscope d'une classe
 <a href="https://raw.githubusercontent.com/FlorianLance/PhotosConsigne/master/screenshots/trombinoscope.png">
-  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/ptrombinoscope.png" alt="Génération d'un trombinoscope" width="800"></a>
+  <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/trombinoscope.png" alt="Génération d'un trombinoscope" width="800"></a>
 </p>
 
 <p align="center">
@@ -41,12 +41,25 @@ Des étiquettes de bouteilles
 **NOUVELLE VERSION: PhotosConsigne 4.0** 
 
 **Liste des nouveautées:**
-
-
+* `haut et bas de page`
+* `ajout de plusieurs images à la fois`
+* `possibiilté d'annuler l'import avec le bouton stop`
+* `ajout de chemins sauvegardés`
+* `ajout styles d'alignement d'images`
+* `sauvegarde et chargement des projets`
+* `nouveau code pour les noms de page`
+* `ajout dégradé pour les fonds`
+* `style prédéfinis de pages`
+* `style grille et style personnalisé pour la disposition des images`
+* `changement de taille des lignes et colonnes en mode grille`
+* `bordures par ensembles au lieu de par page`
+* `changement de l'ordre des photos à la volée`
+* `interface lisible en 1024x768`
+* `interface supporte le changement de zoom de la police`
+* `correction de multiples bugs`
+* `beaucoup d'autres!`
 
 * [Liste des nouveautés des versions précédentes](https://github.com/FlorianLance/PhotosConsigne/wiki/Description-des-versions "Liste versions")
-
-
 
 
 
