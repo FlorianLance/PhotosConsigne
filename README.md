@@ -13,7 +13,7 @@ Son principal intérêt est l'automatisation du placement des images qui reste n
 
 J'ai réalisé ce logiciel sur mon temps libre, sa conception m'a demandé des centaines d'heures de travail. J'ai choisi d'en faire profiter la communauté en le proposant gratuitement à tous. J'espère qu'il vous fera gagner du temps!
 
-Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa pérennité en me faisant [**un don en cliquant ici.**](https://www.paypal.me/PhotosConsigne "Faire un don PayPal")
+Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa pérennité en faisant [**un don en cliquant ici.**](https://www.paypal.me/PhotosConsigne "Faire un don PayPal")
 
 [**CLIQUEZ ICI POUR ACCEDER AUX TELECHARGEMENTS**](https://github.com/FlorianLance/PhotosConsigne/wiki/T%C3%A9l%C3%A9chargements "Téléchargements")
 
