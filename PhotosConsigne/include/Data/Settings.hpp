@@ -175,6 +175,10 @@ namespace pc {
         bool saveOnlyCurrentPage = false;
         bool noPreviewGeneration = false;
 
+        bool displayPreviewGrid = false;
+        int nbHoriPreviewGridLine = 1;
+        int nbVertPreviewGridLine = 1;
+
         PaperFormat paperFormat;
     };
 

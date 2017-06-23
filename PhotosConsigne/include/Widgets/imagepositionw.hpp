@@ -213,16 +213,16 @@ public :
         previousHPosition = xml.attributes().value("PreSliderH").toInt();
         previousVPosition = xml.attributes().value("PreSliderV").toInt();
 
+        previousCenterAdjustScaling = xml.attributes().value("PreCenterScale").toDouble();
+        previousFillAdjustScaling = xml.attributes().value("PreFillScale").toDouble();
+        previousMosaicAdjustScaling = xml.attributes().value("PreMosaicScale").toDouble();
+
         ui.dsbScale->blockSignals(true);
         ui.dsbScale->setEnabled(xml.attributes().value("ScaleEnabled").toInt()==1);
         ui.dsbScale->setMinimum(xml.attributes().value("ScaleMin").toDouble());
         ui.dsbScale->setMaximum(xml.attributes().value("ScaleMax").toDouble());
         ui.dsbScale->setValue(xml.attributes().value("Scale").toDouble());
         ui.dsbScale->blockSignals(false);
-
-        previousCenterAdjustScaling = xml.attributes().value("PreCenterScale").toDouble();
-        previousFillAdjustScaling = xml.attributes().value("PreFillScale").toDouble();
-        previousMosaicAdjustScaling = xml.attributes().value("PreMosaicScale").toDouble();
     }
 
     static void init_ui(ImagePositionW &i1, const ImagePositionW &i2){

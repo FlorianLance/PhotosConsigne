@@ -1601,13 +1601,13 @@ QPushButton {
                    <number>3</number>
                   </property>
                   <property name="topMargin">
-                   <number>5</number>
+                   <number>3</number>
                   </property>
                   <property name="rightMargin">
                    <number>3</number>
                   </property>
                   <property name="bottomMargin">
-                   <number>6</number>
+                   <number>3</number>
                   </property>
                   <property name="spacing">
                    <number>3</number>
@@ -1636,98 +1636,7 @@ QPushButton {
                      <property name="spacing">
                       <number>3</number>
                      </property>
-                     <item row="3" column="0">
-                      <widget class="QComboBox" name="cbDPI">
-                       <property name="maximumSize">
-                        <size>
-                         <width>75</width>
-                         <height>16777215</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choix de la résolution du document PDF en DPI (points par pouce)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="styleSheet">
-                        <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-    font:  bold 10pt Calibri;
-
-
- }
-</string>
-                       </property>
-                       <property name="currentIndex">
-                        <number>2</number>
-                       </property>
-                       <item>
-                        <property name="text">
-                         <string>72</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>96</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>150</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>220</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>300</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>400</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>500</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>600</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>700</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>800</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>900</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>1000</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>1200</string>
-                        </property>
-                       </item>
-                      </widget>
-                     </item>
-                     <item row="0" column="0" alignment="Qt::AlignLeft">
+                     <item row="0" column="0" colspan="2">
                       <widget class="QLabel" name="laFormat">
                        <property name="minimumSize">
                         <size>
@@ -1756,34 +1665,11 @@ QPushButton {
                        </property>
                       </widget>
                      </item>
-                     <item row="2" column="0">
-                      <widget class="QLabel" name="laDPI">
-                       <property name="maximumSize">
-                        <size>
-                         <width>16777215</width>
-                         <height>16777215</height>
-                        </size>
-                       </property>
-                       <property name="styleSheet">
-                        <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-    font:  9pt Calibri;
-
- }
-
-</string>
-                       </property>
-                       <property name="text">
-                        <string>Résolution (dpi)</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="0">
+                     <item row="1" column="0" colspan="2">
                       <widget class="QComboBox" name="cbFormat">
                        <property name="minimumSize">
                         <size>
-                         <width>100</width>
+                         <width>50</width>
                          <height>0</height>
                         </size>
                        </property>
@@ -1819,7 +1705,17 @@ QPushButton {
                        </item>
                        <item>
                         <property name="text">
-                         <string>A4 Double page</string>
+                         <string>Petit carré</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>Grand carré</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>A5</string>
                         </property>
                        </item>
                        <item>
@@ -1860,11 +1756,6 @@ QPushButton {
                        <item>
                         <property name="text">
                          <string>A3</string>
-                        </property>
-                       </item>
-                       <item>
-                        <property name="text">
-                         <string>A5</string>
                         </property>
                        </item>
                        <item>
@@ -2434,6 +2325,117 @@ QPushButton {
                        </item>
                       </widget>
                      </item>
+                     <item row="6" column="0">
+                      <widget class="QLabel" name="laDPI">
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+</string>
+                       </property>
+                       <property name="text">
+                        <string>Résolution (dpi)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="6" column="1">
+                      <widget class="QComboBox" name="cbDPI">
+                       <property name="maximumSize">
+                        <size>
+                         <width>75</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Choix de la résolution du document PDF en DPI (points par pouce)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+
+ }
+</string>
+                       </property>
+                       <property name="currentIndex">
+                        <number>5</number>
+                       </property>
+                       <item>
+                        <property name="text">
+                         <string>44</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>72</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>96</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>150</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>220</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>300</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>400</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>500</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>600</string>
+                        </property>
+                       </item>
+                      </widget>
+                     </item>
+                     <item row="3" column="0" colspan="2" alignment="Qt::AlignLeft">
+                      <widget class="QCheckBox" name="cbDoublePage">
+                       <property name="styleSheet">
+                        <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+</string>
+                       </property>
+                       <property name="text">
+                        <string>Double page</string>
+                       </property>
+                      </widget>
+                     </item>
                     </layout>
                    </widget>
                   </item>
@@ -2497,24 +2499,36 @@ QPushButton {
                <string>OPTIONS</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_7">
-               <item row="0" column="1">
-                <widget class="QCheckBox" name="cbSaveOnlyCurrentPage">
-                 <property name="styleSheet">
-                  <string notr="true">QWidget {
-  
-	color : rgb(0,106,255);
-    font:  bold 10pt Calibri;
-
-
- }
-</string>
+               <item row="3" column="0" colspan="2">
+                <widget class="Line" name="line">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>1</height>
+                  </size>
                  </property>
-                 <property name="text">
-                  <string>Générer uniquement la page courante</string>
+                 <property name="styleSheet">
+                  <string notr="true">background-color : rgb(0,106,255);</string>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
                  </property>
                 </widget>
                </item>
                <item row="1" column="1">
+                <spacer name="horizontalSpacer_9">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>0</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0">
                 <widget class="QCheckBox" name="cbBAndW">
                  <property name="styleSheet">
                   <string notr="true">QWidget {
@@ -2531,31 +2545,218 @@ QPushButton {
                  </property>
                 </widget>
                </item>
-               <item row="1" column="0">
-                <spacer name="horizontalSpacer_8">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+               <item row="0" column="0">
+                <widget class="QCheckBox" name="cbSaveOnlyCurrentPage">
+                 <property name="styleSheet">
+                  <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+
+ }
+</string>
                  </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>0</width>
-                   <height>20</height>
-                  </size>
+                 <property name="text">
+                  <string>Générer uniquement la page courante</string>
                  </property>
-                </spacer>
+                </widget>
                </item>
-               <item row="1" column="2">
-                <spacer name="horizontalSpacer_9">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+               <item row="4" column="0">
+                <widget class="QFrame" name="fGrid">
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
                  </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>0</width>
-                   <height>20</height>
-                  </size>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
                  </property>
-                </spacer>
+                 <layout class="QHBoxLayout" name="horizontalLayout_5">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="cbDisplayPreviewGrid">
+                    <property name="styleSheet">
+                     <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+
+ }
+</string>
+                    </property>
+                    <property name="text">
+                     <string>Afficher grille (aperçu)   </string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="laPreviewGridH_2">
+                    <property name="styleSheet">
+                     <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+</string>
+                    </property>
+                    <property name="text">
+                     <string>H</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="sbPreviewGridH">
+                    <property name="styleSheet">
+                     <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+ }
+</string>
+                    </property>
+                    <property name="maximum">
+                     <number>25</number>
+                    </property>
+                    <property name="value">
+                     <number>0</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="laPreviewGridH">
+                    <property name="styleSheet">
+                     <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  9pt Calibri;
+
+ }
+
+</string>
+                    </property>
+                    <property name="text">
+                     <string>V</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="sbPreviewGridV">
+                    <property name="styleSheet">
+                     <string notr="true">QWidget {
+  
+	color : rgb(0,106,255);
+    font:  bold 10pt Calibri;
+
+ }
+</string>
+                    </property>
+                    <property name="maximum">
+                     <number>25</number>
+                    </property>
+                    <property name="value">
+                     <number>0</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout_11">
+                 <item>
+                  <widget class="QPushButton" name="pbDisplayOnlyPhotos">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">
+
+QPushButton {
+    font: bold 10pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+    padding: 0px;
+ }
+ 
+QPushButton::enabled {
+	color : rgb(0,106,255);
+    border: 1px solid rgb(0,106,255);
+ }
+
+QPushButton:hover:!pressed{
+
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+ QPushButton:pressed{
+    background-color:  rgb(220,220,220);
+
+}</string>
+                   </property>
+                   <property name="text">
+                    <string>Afficher que les photos</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pbDisplayOnlyTextes">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">
+
+QPushButton {
+    font: bold 10pt Calibri;  
+    border: 1px solid gray;
+    border-radius: 3px;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #f6f7fa, stop: 1 #dadbde);
+    padding: 0px;
+ }
+ 
+QPushButton::enabled {
+	color : rgb(0,106,255);
+    border: 1px solid rgb(0,106,255);
+ }
+
+QPushButton:hover:!pressed{
+
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #dadbde, stop: 1 #f6f7fa);
+}
+
+ QPushButton:pressed{
+    background-color:  rgb(220,220,220);
+
+}</string>
+                   </property>
+                   <property name="text">
+                    <string>Afficher que les textes</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
               </layout>
              </widget>

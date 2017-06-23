@@ -42,7 +42,6 @@
 #include <QLibraryInfo>
 #include <QDesktopWidget>
 
-
 int main(int argc,char** argv)
 {    
 

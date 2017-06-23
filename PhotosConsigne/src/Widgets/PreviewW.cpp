@@ -37,31 +37,19 @@ using namespace pc;
 
 void PreviewWorker::stop_loop(){
 
-    m_locker.lockForWrite();
     m_isLooping = false;
-    m_locker.unlock();
 }
 
 void PreviewWorker::loop_update(){
 
-    m_locker.lockForWrite();
-    bool isLooping = m_isLooping;
-    m_isLooping = true;
-    m_locker.unlock();
-
-    if(isLooping){
+    if(m_isLooping){
         return;
     }
 
-    while (true){
+    m_isLooping = true;
 
-        m_locker.lockForRead();
-        isLooping = m_isLooping;
-        m_locker.unlock();
+    while (m_isLooping){
 
-        if(!isLooping){
-            break;
-        }
 
         QTime dieTime = QTime::currentTime().addMSecs(33);
         while( QTime::currentTime() < dieTime){

@@ -264,8 +264,7 @@ void PCMainUI::build_pages(){
     }
 
     // general pages parameters
-    m_pcPages.settings.grayScale = m_settings.document.grayScale;
-    m_pcPages.settings.paperFormat = m_settings.document.paperFormat;
+    m_pcPages.settings = m_settings.document;
 
     // create new pages
     int currentId = 0;

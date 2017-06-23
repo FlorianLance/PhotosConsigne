@@ -76,21 +76,7 @@ signals:
 
 protected:
 
-    virtual void mousePressEvent(QMouseEvent *ev){
-
-        bool inside = m_imageRect.contains(ev->pos());
-        if(inside){
-
-            QPointF pos((ev->pos().x()-m_imageRect.x())/m_imageRect.width(), (ev->pos().y()-m_imageRect.y())/m_imageRect.height());
-            emit click_inside_signal(pos);
-
-            if(m_doubleClickTimer.isActive()){
-                emit double_click_signal();
-            }else{
-                m_doubleClickTimer.start(300);
-            }
-        }
-    }
+    virtual void mousePressEvent(QMouseEvent *ev);
 
     /**
      * @brief paintEvent for drawing in the widget

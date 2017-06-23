@@ -38,6 +38,9 @@
 #include "Utility.hpp"
 #include "DocumentElements.hpp"
 
+// std
+#include <atomic>
+
 // Qt
 #include <QPrinter>
 #include <QUrl>
@@ -97,10 +100,10 @@ private :
 
 private :
 
-    bool m_continueLoop = true;
+    std::atomic_bool m_continueLoop{true};
     const int m_referenceDPI  = 100;
     int m_totalPC = 0;
-    QReadWriteLock m_locker;
+
     SPCPage m_pageToDraw = nullptr;
 
     std::unique_ptr<QTextDocument> m_doc = nullptr;

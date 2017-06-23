@@ -79,7 +79,21 @@ struct SetStyleW : public SettingsW{
 
         Utility::safe_init_combo_box_index(ui.cbPositionConsign, xml.attributes().value("position").toInt());
         Utility::safe_init_double_spinbox_value(ui.dsbRatioPC, xml.attributes().value("ratioPC").toDouble());
-        Utility::safe_init_slider_value(ui.hsRatioPC, static_cast<int>(ui.dsbRatioPC->value()*10000));
+        Utility::safe_init_slider_value(ui.hsRatioPC, static_cast<int>(ui.dsbRatioPC->value()*10000));        
+
+        QXmlStreamReader::TokenType token = QXmlStreamReader::TokenType::StartElement;
+        while(!xml.hasError()) {
+
+            if(token == QXmlStreamReader::TokenType::EndElement && xml.name() == "SetStyle"){
+                break;
+            }else if(token == QXmlStreamReader::TokenType::StartElement){
+
+                if(xml.name() == "ImagePosition"){
+                    imagePositionW.load_from_xml(xml);
+                }
+            }
+            token = xml.readNext();
+        }
     }
 
     static void init_ui(pc::SetStyleW &s1, const pc::SetStyleW &s2){

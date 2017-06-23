@@ -77,6 +77,28 @@ pc::UIElements::UIElements(QMainWindow *parent) : m_parent(parent) {
     // # tabs middles
     mainUI.twMiddle->setTabEnabled(0, false);
 
+    mainUI.tabWDocument->setCurrentIndex(1);
+
+    // mainUI connections
+    connect(mainUI.pbDisplayOnlyPhotos, &QPushButton::clicked, this, [&]{
+        Utility::safe_init_double_spinbox_value(settingsW.globalSetW.styleW.ui.dsbRatioPC, 1.);
+        for(auto &&setW : settingsW.setsLoadedW){
+            Utility::safe_init_double_spinbox_value(setW->styleW.ui.dsbRatioPC, 1.);
+            Utility::safe_init_slider_value(setW->styleW.ui.hsRatioPC, 10000.);
+        }
+        ask_for_update(true);
+    });
+    connect(mainUI.pbDisplayOnlyTextes, &QPushButton::clicked, this, [&]{
+        Utility::safe_init_double_spinbox_value(settingsW.globalSetW.styleW.ui.dsbRatioPC, 0.);
+        for(auto &&setW : settingsW.setsLoadedW){
+            Utility::safe_init_double_spinbox_value(setW->styleW.ui.dsbRatioPC, 0.);
+            Utility::safe_init_slider_value(setW->styleW.ui.hsRatioPC, 0.);
+        }
+        ask_for_update(true);
+    });
+
+    settingsW.init_spinboxes_connections({mainUI.sbPreviewGridH,mainUI.sbPreviewGridV}, false);
+    settingsW.init_checkboxes_connections({mainUI.cbDisplayPreviewGrid,mainUI.cbDoublePage}, false);
     // # misc
     connect(mainUI.cbSaveOnlyCurrentPage, &QCheckBox::clicked, this, [=]{
         ask_for_update(false);
@@ -118,9 +140,10 @@ void UIElements::write_to_xml(QXmlStreamWriter &xml) const{
     xml.writeAttribute("orientation", QString::number(mainUI.cbOrientation->currentIndex()));
     xml.writeAttribute("format", QString::number(mainUI.cbFormat->currentIndex()));
     xml.writeAttribute("nbPages", QString::number(mainUI.sbNbPages->value()));
+    xml.writeAttribute("doublePage", QString::number(mainUI.cbDoublePage->isChecked() ? 1 : 0));
     xml.writeAttribute("dpi", QString::number(mainUI.cbDPI->currentIndex()));
-    xml.writeAttribute("onlyCurrPage", QString::number(mainUI.cbSaveOnlyCurrentPage->isChecked()));
-    xml.writeAttribute("blackAndWhite", QString::number(mainUI.cbBAndW->isChecked()));
+    xml.writeAttribute("onlyCurrPage", QString::number(mainUI.cbSaveOnlyCurrentPage->isChecked() ? 1 : 0));
+    xml.writeAttribute("blackAndWhite", QString::number(mainUI.cbBAndW->isChecked() ? 1 : 0));
     settingsW.write_to_xml(xml);
     xml.writeEndElement();
 }
@@ -128,7 +151,6 @@ void UIElements::write_to_xml(QXmlStreamWriter &xml) const{
 
 void UIElements::load_from_xml(QXmlStreamReader &xml, bool firstPart){
 
-    qDebug() << "load_from_xml: " << xml.name() << firstPart << xml.hasError();
     if(xml.name() == "Document"){
 
         if(firstPart){ // read only arguments
@@ -136,6 +158,7 @@ void UIElements::load_from_xml(QXmlStreamReader &xml, bool firstPart){
             Utility::safe_init_combo_box_index(mainUI.cbFormat, xml.attributes().value("format").toInt());
             Utility::safe_init_combo_box_index(mainUI.cbDPI, xml.attributes().value("dpi").toInt());
             Utility::safe_init_spinbox_value(mainUI.sbNbPages, xml.attributes().value("nbPages").toInt());
+            Utility::safe_init_checkboxe_checked_state(mainUI.cbDoublePage, xml.attributes().value("doublePage").toInt() == 1);
             Utility::safe_init_checkboxe_checked_state(mainUI.cbSaveOnlyCurrentPage, xml.attributes().value("onlyCurrPage").toInt() == 1);
             Utility::safe_init_checkboxe_checked_state(mainUI.cbBAndW, xml.attributes().value("blackAndWhite").toInt() == 1);
         }else{
@@ -202,8 +225,12 @@ void UIElements::display_help_window(){
 void UIElements::update_global_settings(GlobalSettings &settings) const{
 
     // # document
-    settings.document.paperFormat           = PaperFormat(mainUI.cbDPI->currentText(), mainUI.cbFormat->currentText(), mainUI.cbOrientation->currentIndex() == 1);
+    settings.document.paperFormat           = PaperFormat(mainUI.cbDPI->currentText(), mainUI.cbFormat->currentText(), mainUI.cbOrientation->currentIndex() == 1, mainUI.cbDoublePage->isChecked());
     settings.document.saveOnlyCurrentPage   = mainUI.cbSaveOnlyCurrentPage->isChecked();
+    settings.document.displayPreviewGrid    = mainUI.cbDisplayPreviewGrid->isChecked();
+    settings.document.nbHoriPreviewGridLine = mainUI.sbPreviewGridH->value();
+    settings.document.nbVertPreviewGridLine = mainUI.sbPreviewGridV->value();
+    qDebug() << "update_global_settings " << settings.document.displayPreviewGrid;
 
     // # set
     settingsW.globalSetW.update_settings(settings.sets);

@@ -2,10 +2,6 @@
 ####################################### DEFINE COMPUTER
 COMPUTER = "home"
 
-####################################### CONFIG
-CONFIG += warn_on
-CONFIG += c++14
-
 ####################################### OS
 COMPILER = "" # vs / gcc / ...
 ARCH = "" # x86 / x64

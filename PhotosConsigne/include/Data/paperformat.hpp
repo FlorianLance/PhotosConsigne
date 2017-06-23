@@ -40,26 +40,26 @@
 namespace pc {
     struct PaperFormat
     {
-        bool isCustom     = false;
-        QSize customSize;
+        bool isCustom       = false;
+        bool isLandScape      = false;
+        bool isDoublePage   = false;
+        int dpi             = 300;
 
-        bool landscape    = false;
-        int dpi           = 300;
-        qreal widthRatio  = 8.263;
-        qreal heightRatio = 11.693;
         QSizeF sizeMM;
+        QSizeF ratioMM;
+
         QPagedPaintDevice::PageSize format = QPagedPaintDevice::PageSize::A4;
 
         PaperFormat(){}
 
-        PaperFormat(QString dpiStr, QString formatStr, bool landScape);
+        PaperFormat(QString dpiStr, QString formatStr, bool landScape, bool doublePage = false);
 
         int64_t width_pixels(int wantedDpi) const noexcept{
-            return static_cast<int64_t>(widthRatio*wantedDpi);
+            return static_cast<int64_t>(ratioMM.width()*wantedDpi);
         }
 
         int64_t height_pixels(int wantedDpi) const noexcept{
-            return static_cast<int64_t>(heightRatio*wantedDpi);
+            return static_cast<int64_t>(ratioMM.height()*wantedDpi);
         }
     };
 

@@ -147,7 +147,8 @@ RichTextEditW::RichTextEditW():  SettingsW() {
 #endif
     setWindowTitle(QCoreApplication::applicationName());
 
-    m_textEdit = new TextEdit();
+//    m_textEdit = new TextEdit();
+    m_textEdit = new Test();
     m_backGround.setAlpha(0);
 
     QFont textFont("Calibri");
@@ -158,10 +159,10 @@ RichTextEditW::RichTextEditW():  SettingsW() {
     format.setBackground(Qt::white);
     format.setFont(textFont);
     format.setForeground(Qt::black);
-    m_textEdit->setCurrentCharFormat(format);
-    connect(m_textEdit, &TextEdit::currentCharFormatChanged,this, &RichTextEditW::current_char_format_changed);
-    connect(m_textEdit, &TextEdit::cursorPositionChanged,this, &RichTextEditW::cursor_position_changed);
-    connect(m_textEdit, &TextEdit::textChanged, this, []{});
+    textEdit()->setCurrentCharFormat(format);
+    connect(textEdit(), &TextEdit::currentCharFormatChanged,this, &RichTextEditW::current_char_format_changed);
+    connect(textEdit(), &TextEdit::cursorPositionChanged,this, &RichTextEditW::cursor_position_changed);
+    connect(textEdit(), &TextEdit::textChanged, this, []{});
 
     // set ui
     m_mainLayout = new QVBoxLayout();
@@ -188,13 +189,7 @@ RichTextEditW::RichTextEditW():  SettingsW() {
     m_mainLayout->addWidget(line);
     m_mainLayout->addWidget(menuWBottom);
     m_mainLayout->addWidget(m_textEdit);
-
-//    m_textEdit->setMinimumHeight(600);
-
     m_mainLayout->setStretchFactor(m_textEdit, 30);
-//    m_mainLayout->setStretch(0,1);
-//    m_mainLayout->setStretch(1,1);
-//    m_mainLayout->setStretch(2,30);
 
     m_mainLayout->setSpacing(2);
     m_mainLayout->setContentsMargins(1,1,1,1);
@@ -208,31 +203,29 @@ RichTextEditW::RichTextEditW():  SettingsW() {
     setup_edit_actions();
     setup_text_actions();
 
-    font_changed(m_textEdit->font());
-    color_text_changed(m_textEdit->textColor());
-    background_color_text_changed(m_textEdit->textBackgroundColor());
-    alignment_changed(m_textEdit->alignment());
+    font_changed(textEdit()->font());
+    color_text_changed(textEdit()->textColor());
+    background_color_text_changed(textEdit()->textBackgroundColor());
+    alignment_changed(textEdit()->alignment());
 
-    connect(m_textEdit->document(), &QTextDocument::modificationChanged, this, &QWidget::setWindowModified);
-    connect(m_textEdit->document(), &QTextDocument::undoAvailable, actionUndo, &QAction::setEnabled);
-    connect(m_textEdit->document(), &QTextDocument::redoAvailable,actionRedo, &QAction::setEnabled);
+    connect(textEdit()->document(), &QTextDocument::modificationChanged, this, &QWidget::setWindowModified);
+    connect(textEdit()->document(), &QTextDocument::undoAvailable, actionUndo, &QAction::setEnabled);
+    connect(textEdit()->document(), &QTextDocument::redoAvailable,actionRedo, &QAction::setEnabled);
 
-    setWindowModified(m_textEdit->document()->isModified());
-    actionUndo->setEnabled(m_textEdit->document()->isUndoAvailable());
-    actionRedo->setEnabled(m_textEdit->document()->isRedoAvailable());
+    setWindowModified(textEdit()->document()->isModified());
+    actionUndo->setEnabled(textEdit()->document()->isUndoAvailable());
+    actionRedo->setEnabled(textEdit()->document()->isRedoAvailable());
     actionCut->setEnabled(true);
     actionCopy->setEnabled(true);
     connect(QApplication::clipboard(), &QClipboard::dataChanged, this, &RichTextEditW::clipboard_data_changed);
 
-    m_textEdit->setFocus();
+    textEdit()->setFocus();
 
     // send html
-    connect(m_textEdit, &TextEdit::textChanged, this, [=]{
-        m_html = std::make_shared<QString>(m_textEdit->toHtml());
+    connect(textEdit(), &TextEdit::textChanged, this, [=]{
+        m_html = std::make_shared<QString>(textEdit()->toHtml());
         emit settings_updated_signal(false);
     });
-
-
 }
 
 void RichTextEditW::init_style(RichTextType type){
@@ -318,10 +311,10 @@ void RichTextEditW::init_colors_icons(QColor foreGround, QColor backGround){
 void RichTextEditW::init_with_another(const RichTextEditW &richTextEdit, std::shared_ptr<QString> html){
 
     if(html != nullptr){
-        m_textEdit->blockSignals(true);
-        m_textEdit->setHtml(*html);
+        textEdit()->blockSignals(true);
+        textEdit()->setHtml(*html);
         m_html = std::make_shared<QString>(*html);
-        m_textEdit->blockSignals(false);
+        textEdit()->blockSignals(false);
     }
 
     m_comboStyle->blockSignals(true);
@@ -400,10 +393,10 @@ void RichTextEditW::load_from_xml(QXmlStreamReader &xml){
 
             if(xml.name() == "xml"){
 
-                m_textEdit->blockSignals(true);
+                textEdit()->blockSignals(true);
                 textEdit()->setHtml(xml.readElementText());
                 m_html = std::make_shared<QString>(textEdit()->toHtml());
-                m_textEdit->blockSignals(false);
+                textEdit()->blockSignals(false);
             }
         }
 
@@ -419,7 +412,7 @@ void RichTextEditW::setup_edit_actions()
     const QIcon undoIcon = QIcon(":/images/editundo");
     actionUndo = new QAction(undoIcon,tr("Annuler"), this );
     actionUndo->setShortcut(QKeySequence::Undo);
-    connect(actionUndo, &QAction::triggered, m_textEdit, &QTextEdit::undo);
+    connect(actionUndo, &QAction::triggered, textEdit(), &QTextEdit::undo);
 
     QToolButton *undoButton = new QToolButton();
     undoButton->setDefaultAction(actionUndo);
@@ -429,7 +422,7 @@ void RichTextEditW::setup_edit_actions()
     // redo
     const QIcon redoIcon = QIcon(":/images/editredo");
     actionRedo = new QAction(redoIcon,tr("Rétablir"), this );
-    connect(actionRedo, &QAction::triggered, m_textEdit, &QTextEdit::redo);
+    connect(actionRedo, &QAction::triggered, textEdit(), &QTextEdit::redo);
     actionRedo->setShortcut(QKeySequence::Redo);
     actionRedo->setPriority(QAction::LowPriority);
 
@@ -442,7 +435,7 @@ void RichTextEditW::setup_edit_actions()
     // cut
     const QIcon cutIcon = QIcon(":/images/editcut");
     actionCut = new QAction(cutIcon,tr("Couper"), this );
-    connect(actionCut, &QAction::triggered, m_textEdit, &QTextEdit::cut);
+    connect(actionCut, &QAction::triggered, textEdit(), &QTextEdit::cut);
     actionCut->setPriority(QAction::LowPriority);
     actionCut->setShortcut(QKeySequence::Cut);
 
@@ -453,7 +446,7 @@ void RichTextEditW::setup_edit_actions()
     // copy
     const QIcon copyIcon = QIcon(":/images/editcopy");
     actionCopy = new QAction(copyIcon,tr("Copier"), this );
-    connect(actionCopy, &QAction::triggered, m_textEdit, &QTextEdit::copy);
+    connect(actionCopy, &QAction::triggered, textEdit(), &QTextEdit::copy);
     actionCopy->setShortcut(QKeySequence::Copy);
     actionCopy->setPriority(QAction::LowPriority);
 
@@ -464,7 +457,7 @@ void RichTextEditW::setup_edit_actions()
     // paste
     const QIcon pasteIcon = QIcon(":/images/editpaste");
     actionPaste = new QAction(pasteIcon,tr("Coller"), this );
-    connect(actionPaste, &QAction::triggered, m_textEdit, &QTextEdit::paste);
+    connect(actionPaste, &QAction::triggered, textEdit(), &QTextEdit::paste);
     actionPaste->setShortcut(QKeySequence::Paste);
     actionPaste->setPriority(QAction::LowPriority);
 
@@ -827,13 +820,43 @@ void RichTextEditW::setup_text_actions(){
     });
 
     m_menuLayoutTop->addWidget(m_comboSize);
+    m_menuLayoutTop->addSpacing(4);
 
-    const QList<int> standardSizes = QFontDatabase::standardSizes();
+    const QList<int> standardSizes = {6,7,8,9,10,11,12,13,14,15,16,18,20,22,24,26,28,30,32,34,36,40,44,48,52,56,60,66,72,78,84,90,100,120};// QFontDatabase::standardSizes();
     foreach (int size, standardSizes)
         m_comboSize->addItem(QString::number(size));
     m_comboSize->setCurrentIndex(standardSizes.indexOf(QApplication::font().pointSize()));
 
     connect(m_comboSize, static_cast<QComboStringSignal>(&QComboBox::activated), this, &RichTextEditW::text_size);
+
+    // zoom
+    m_comboZoom = new QComboBox();
+    m_comboZoom->setToolTip("Définir le zoom de la zone d'édition");
+    m_comboZoom->setStyleSheet("color : rgb(0,106,255);");
+    m_comboZoom->setObjectName("comboZoom");
+    m_comboZoom->setEditable(false);
+    m_comboZoom->setMinimumWidth(53);
+    m_comboZoom->setMaximumWidth(53);
+
+    QStringList items;
+    items << "10%" << "20%" << "30%" << "40%" << "50%" << "75%" << "100%";// << "150%" << "200%" << "300%";
+    m_comboZoom->addItems(items);
+    m_comboZoom->setCurrentIndex(6);
+    m_textEdit->set_scale_factor(1.);
+
+    connect(m_comboZoom, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [=]{
+        m_comboZoom->clearFocus();
+        textEdit()->setFocus();
+    });
+    connect(m_comboZoom, static_cast<QComboStringSignal>(&QComboBox::activated), this, [&]{
+        QString txt = m_comboZoom->currentText();
+        txt.resize(txt.size()-1);
+        m_textEdit->set_scale_factor(txt.toDouble()*0.01);
+    });
+
+    m_menuLayoutTop->addWidget(m_comboZoom);
+
+
     m_menuLayoutTop->addStretch();
 
     return;
@@ -894,7 +917,7 @@ void RichTextEditW::text_size(const QString &p){
 
 void RichTextEditW::text_style(int styleIndex){
 
-    QTextCursor cursor = m_textEdit->textCursor();
+    QTextCursor cursor = textEdit()->textCursor();
 
     if (styleIndex != 0) {
         QTextListFormat::Style style = QTextListFormat::ListDisc;
@@ -983,13 +1006,13 @@ void RichTextEditW::background_text_color(){
 void RichTextEditW::text_align(QAction *a){
 
     if (a == actionAlignLeft)
-        m_textEdit->setAlignment(Qt::AlignLeft | Qt::AlignAbsolute);
+        textEdit()->setAlignment(Qt::AlignLeft | Qt::AlignAbsolute);
     else if (a == actionAlignCenter)
-        m_textEdit->setAlignment(Qt::AlignHCenter);
+        textEdit()->setAlignment(Qt::AlignHCenter);
     else if (a == actionAlignRight)
-        m_textEdit->setAlignment(Qt::AlignRight | Qt::AlignAbsolute);
+        textEdit()->setAlignment(Qt::AlignRight | Qt::AlignAbsolute);
     else if (a == actionAlignJustify)
-        m_textEdit->setAlignment(Qt::AlignJustify);
+        textEdit()->setAlignment(Qt::AlignJustify);
 }
 
 void RichTextEditW::current_char_format_changed(const QTextCharFormat &format){
@@ -1001,7 +1024,7 @@ void RichTextEditW::current_char_format_changed(const QTextCharFormat &format){
 
 void RichTextEditW::cursor_position_changed(){
 
-    alignment_changed(m_textEdit->alignment());
+    alignment_changed(textEdit()->alignment());
 }
 
 void RichTextEditW::clipboard_data_changed(){
@@ -1013,13 +1036,13 @@ void RichTextEditW::clipboard_data_changed(){
 
 void RichTextEditW::merge_format_on_word_or_selection(const QTextCharFormat &format){
 
-    QTextCursor cursor = m_textEdit->textCursor();
+    QTextCursor cursor = textEdit()->textCursor();
     if (!cursor.hasSelection()){
         cursor.select(QTextCursor::WordUnderCursor);
     }
     cursor.mergeCharFormat(format);
 
-    m_textEdit->mergeCurrentCharFormat(format);
+    textEdit()->mergeCurrentCharFormat(format);
 }
 
 void RichTextEditW::font_changed(const QFont &f){

@@ -267,7 +267,6 @@ void PDFGeneratorWorker::draw_contents(QPainter &painter, SPCPage pcPage, ExtraP
         // draw photo
         if(pcSet->photo != nullptr){
             if(pcSet->photo->rectOnPage.width() > 0 && pcSet->photo->rectOnPage.height() > 0){ // ############################ costly
-
                 pcSet->photo->draw(painter,pcSet->settings.style.imagePosition ,pcSet->photo->rectOnPage, infos, pcPage->rectOnPage.size());
             }
         }
@@ -433,6 +432,25 @@ void PDFGeneratorWorker::draw_page(QPainter &painter, pc::PCPages &pcPages, cons
 
     draw_backgrounds(painter, pcPage, infos);
     draw_contents(painter, pcPage, infos);
+
+    // draw preview lines
+    if(pcPages.settings.displayPreviewGrid && preview){
+
+        painter.setPen(Qt::black);
+        qreal offsetX = pcPage->rectOnPage.width()/(pcPages.settings.nbVertPreviewGridLine+1);
+        qreal offsetY = pcPage->rectOnPage.height()/(pcPages.settings.nbHoriPreviewGridLine+1);
+
+        qreal currOffset = offsetX;
+        for(int ii = 0; ii < pcPages.settings.nbVertPreviewGridLine; ++ii){
+            painter.drawLine(QLineF(QPointF(currOffset,0),QPointF(currOffset,pcPage->rectOnPage.height())));
+            currOffset += offsetX;
+        }
+        currOffset = offsetY;
+        for(int ii = 0; ii < pcPages.settings.nbHoriPreviewGridLine; ++ii){
+            painter.drawLine(QLineF(QPointF(0,currOffset),QPointF(pcPage->rectOnPage.width(),currOffset)));
+            currOffset+= offsetY;
+        }
+    }
 }
 
 void PDFGeneratorWorker::draw_html(QPainter &painter, QString html, QRectF upperRect, QRectF docRect){
@@ -452,9 +470,7 @@ void PDFGeneratorWorker::draw_html(QPainter &painter, QString html, QRectF upper
 
 void PDFGeneratorWorker::kill(){
 
-    m_locker.lockForWrite();
     m_continueLoop = false;
-    m_locker.unlock();
 }
 
 void PDFGeneratorWorker::generate_preview(pc::PCPages pcPages, int pageIdToDraw, bool drawZones){
@@ -465,8 +481,20 @@ void PDFGeneratorWorker::generate_preview(pc::PCPages pcPages, int pageIdToDraw,
         dpi = 300;
     }
 
-    qreal widthPreview   = pcPages.settings.paperFormat.widthRatio  * dpi;
-    qreal heightPreview  = pcPages.settings.paperFormat.heightRatio * dpi;
+    QSizeF baseSizeMM = pcPages.settings.paperFormat.ratioMM;
+    qreal factorSize = 1.;
+    if(baseSizeMM.width() < baseSizeMM.height()){
+        if(baseSizeMM.height() > 10.){
+            factorSize = 10./baseSizeMM.height();
+        }
+    }else{
+        if(baseSizeMM.width() > 10.){
+            factorSize = 10./baseSizeMM.width();
+        }
+    }
+
+    qreal widthPreview   = baseSizeMM.width()  * dpi * factorSize;
+    qreal heightPreview  = baseSizeMM.height() * dpi * factorSize;
 
     // create preview image
     QImage image(static_cast<int>(widthPreview), static_cast<int>(heightPreview), QImage::Format_RGB32);
@@ -474,7 +502,7 @@ void PDFGeneratorWorker::generate_preview(pc::PCPages pcPages, int pageIdToDraw,
 
     m_pageToDraw->compute_sizes(QRectF(0 ,0, widthPreview, heightPreview));
 
-    draw_page(painter, pcPages, pageIdToDraw, 1.*dpi/m_referenceDPI, true, drawZones);
+    draw_page(painter, pcPages, pageIdToDraw, 1.*factorSize*dpi/m_referenceDPI, true, drawZones);
 
     painter.end();
 
@@ -510,12 +538,13 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
     pdfWriter.setResolution(pcPages.settings.paperFormat.dpi);
 
     if(pcPages.settings.paperFormat.isCustom){
-        pdfWriter.setPageSize(QPageSize(pcPages.settings.paperFormat.customSize));
+        pdfWriter.setPageSize(QPageSize(pcPages.settings.paperFormat.sizeMM, QPageSize::Millimeter));
+        pdfWriter.setPageOrientation(QPageLayout::Portrait);
     }else{
         pdfWriter.setPageSize(QPageSize(static_cast<QPageSize::PageSizeId>(pcPages.settings.paperFormat.format)));
+        pdfWriter.setPageOrientation(pcPages.settings.paperFormat.isLandScape ? QPageLayout::Landscape : QPageLayout::Portrait);
     }
 
-    pdfWriter.setPageOrientation(pcPages.settings.paperFormat.landscape ? QPageLayout::Landscape : QPageLayout::Portrait);
     pdfWriter.setPageMargins(QMarginsF(0.,0.,0.,0.));
 
     // init painter
@@ -540,12 +569,7 @@ void PDFGeneratorWorker::generate_PDF(pc::PCPages pcPages){
             pdfWriter.newPage();
         }
 
-        bool continueLoop;
-        m_locker.lockForRead();
-        continueLoop = m_continueLoop;
-        m_locker.unlock();
-
-        if(!continueLoop)
+        if(!m_continueLoop)
             return;
 
         emit set_progress_bar_text_signal("Création page " + QString::number(ii));
@@ -569,7 +593,6 @@ void PDFGeneratorWorker::init_document(){
 
 void PDFGeneratorWorker::add_resource(QUrl url, QImage image){
 
-    qDebug() << "URL: " << url;
     if(url.toString().left(14) == "dropped_image_"){
         droppedUrl.push_back(url);
         droppedImages.push_back(image);

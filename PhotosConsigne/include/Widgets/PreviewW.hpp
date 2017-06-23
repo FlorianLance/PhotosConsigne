@@ -38,6 +38,7 @@
 
 // std
 #include <memory>
+#include <atomic>
 
 namespace pc{
 
@@ -59,9 +60,7 @@ public slots:
 
 private :
 
-    bool m_isLooping = false;
-    QReadWriteLock m_locker;
-
+    std::atomic_bool m_isLooping{false};
 
 signals:
 

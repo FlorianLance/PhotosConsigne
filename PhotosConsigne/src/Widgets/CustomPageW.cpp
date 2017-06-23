@@ -238,12 +238,12 @@ void CustomPageW::update_format(const PaperFormat &format){
     constexpr qreal maxH = 350.;
 
     qreal width,height;
-    if(format.heightRatio > format.widthRatio){
+    if(format.ratioMM.height() > format.ratioMM.width()){
         height = maxH;
-        width  = maxW *format.widthRatio / format.heightRatio;
+        width  = maxW *format.ratioMM.width() / format.ratioMM.height();
     }else{
         width   = maxW;
-        height  = maxH *format.heightRatio / format.widthRatio;
+        height  = maxH *format.ratioMM.height() / format.ratioMM.width();
     }
 
     m_frame.setMinimumWidth(static_cast<int>(width));

@@ -697,13 +697,14 @@ void PageSetsW::write_to_xml(QXmlStreamWriter &xml) const{
 
 void PageSetsW::load_from_xml(QXmlStreamReader &xml){
 
-    qDebug() << "PageSetsW";
     ui.leNamePage->blockSignals(true);
     ui.leNamePage->setText(xml.attributes().value("Name").toString());
     ui.leNamePage->blockSignals(false);
 
     Utility::safe_init_radio_button_state(ui.rbGrid, xml.attributes().value("GridMode").toInt() == 1);
     Utility::safe_init_radio_button_state(ui.rbPersonnalised, xml.attributes().value("GridMode").toInt() == 0);
+    Utility::safe_init_spinbox_value(ui.sbPhotosNbPerPage, xml.attributes().value("NbPhotos").toInt());
+
     Utility::safe_init_spinbox_value(ui.sbPhotosNbHeight, xml.attributes().value("GridHeight").toInt());
     Utility::safe_init_spinbox_value(ui.sbPhotosNbWidth, xml.attributes().value("GridWidth").toInt());
     Utility::safe_init_spinbox_value(ui.sbHPerso, xml.attributes().value("PersoHeight").toInt());

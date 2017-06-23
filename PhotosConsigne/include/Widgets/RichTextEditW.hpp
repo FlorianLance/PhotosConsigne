@@ -101,6 +101,10 @@
 #include <QComboBox>
 #include <QFontComboBox>
 
+#include <QScrollBar>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+
 // local
 #include "SettingsW.hpp"
 
@@ -130,6 +134,7 @@ public:
 
     void insert_link();
 
+
 signals:
 
     void resource_added_signal(QUrl url, QImage image);
@@ -143,6 +148,80 @@ private:
 
 public :
     static int currentDroppedImage;
+
+
+};
+
+
+class Test : public QGraphicsView{
+
+    Q_OBJECT
+public:
+
+    Test(){
+
+        scene=  new QGraphicsScene();
+        text = new TextEdit();
+        scene->addWidget(text);
+
+        setAlignment(Qt::AlignmentFlag::AlignTop);
+        setContentsMargins(0,0,0,0);
+        setScene(scene);
+
+        text->setStyleSheet("QTextEdit {border: 0px solid red;}");
+        setStyleSheet("QGraphicsView {border: 1px solid blue;}");
+        this->setHorizontalScrollBarPolicy ( Qt::ScrollBarAlwaysOff );
+    }
+
+protected:
+
+    void resizeEvent(QResizeEvent *event) override{
+
+        Q_UNUSED(event)
+        update_size();
+    }
+
+    void update_size(){
+
+        QMatrix matrix;
+        qreal scale = scaleFactor;
+        matrix.scale(scale, scale);
+        setMatrix(matrix);
+
+        int w = width();
+        int h = height();
+
+        text->setMinimumHeight(static_cast<int>((h-6)*1./scale));
+        text->setMinimumWidth(static_cast<int>((w-6)*1./scale));
+        text->setMaximumHeight(static_cast<int>((h-6)*1./scale));
+        text->setMaximumWidth(static_cast<int>((w-6)*1./scale));
+
+//        QPoint center = viewport()->rect().topLeft();
+//        QPointF center2 = mapToScene(center);
+//        centerOn(center2);
+    }
+
+
+public :
+
+    void set_scale_factor(qreal scale){
+        scaleFactor = scale;
+        update_size();
+    }
+
+    qreal scaleFactor = 1.;
+
+    QTextDocument *document(){return text->document();}
+
+    QColor textColor(){return text->textColor();}
+    QColor textBackgroundColor(){ return text->textBackgroundColor();}
+
+    QGraphicsScene *scene;
+
+    TextEdit* textEdit(){return text;}
+
+private :
+    TextEdit *text;
 };
 
 enum class RichTextType { globalConsign, individualConsign, footer, header};
@@ -157,7 +236,7 @@ public:
 
     void init_style(RichTextType type);
 
-    TextEdit* textEdit() {return m_textEdit;}
+    TextEdit* textEdit() {return m_textEdit->textEdit();}
 
     void init_with_another(const RichTextEditW &richTextEdit, std::shared_ptr<QString> html = nullptr);
 
@@ -165,6 +244,11 @@ public:
 
     void write_to_xml(QXmlStreamWriter &xml) const;
     void load_from_xml(QXmlStreamReader &xml);
+
+    QTransform t = QTransform(1,0,0,0,1,0,0,0,1);
+
+protected:
+
 
 private slots:
 
@@ -238,11 +322,13 @@ private:
 
     // components
     QToolBar *m_tb = nullptr;
-    TextEdit *m_textEdit = nullptr;
+//    TextEdit *m_textEdit = nullptr;
+    Test *m_textEdit = nullptr;
 
     QComboBox *m_comboStyle = nullptr;
     QComboBox *m_comboCodes = nullptr;
     QComboBox *m_comboSize = nullptr;
+    QComboBox *m_comboZoom = nullptr;
     QFontComboBox *m_comboFont = nullptr;
 
     QToolButton *m_boldButton = nullptr;
