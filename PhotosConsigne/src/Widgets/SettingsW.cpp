@@ -167,7 +167,7 @@ void Utility::borders_line_style_from_comboBox(QComboBox *cb, QPen &pen){
 
 Qt::BrushStyle Utility::pattern_style_comboBox(QComboBox *cb){
 
-    Qt::BrushStyle style;
+    Qt::BrushStyle style = Qt::BDiagPattern;
     switch(cb->currentIndex()){
         case 0:
             style = Qt::BDiagPattern;

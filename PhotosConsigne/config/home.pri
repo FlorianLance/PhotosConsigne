@@ -5,5 +5,5 @@ equals(COMPILER, "vs"){
 
 }
 equals(COMPILER, "gcc"){
-    # ...
+    PHOTOSCONSIGNE_BASE_DIR = "/home/ulpaso/Bureau/PhotosConsigne-master"
 }

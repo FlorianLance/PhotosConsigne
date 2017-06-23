@@ -1111,7 +1111,7 @@ void TextEdit::insertFromMimeData(const QMimeData *source){
 
 void TextEdit::insert_image(){
 
-    QString file = QFileDialog::getOpenFileName(this, tr("Sélectionner une image"), QDir::homePath(), tr("Images files (*.bmp *.jpg *jpeg *.gif *.png)"));
+    QString file = QFileDialog::getOpenFileName(nullptr, tr("Sélectionner une image"), QDir::homePath(), tr("Images files (*.bmp *.jpg *jpeg *.gif *.png)"));
     if(file.size() == 0){
         return;
     }

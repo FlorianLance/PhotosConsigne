@@ -102,7 +102,7 @@ void pc::Photo::draw(QPainter &painter, const ImagePositionSettings &position, c
 QRectF pc::Photo::draw_small(QPainter &painter, const ImagePositionSettings &position, const QRectF &rectPhoto, const QImage &photo, const ExtraPCInfo &infos, const QSizeF &pageSize){
 
     int startX, startY;
-    qreal newX, newY, newWidth, newHeight;
+    qreal newX =0., newY =0., newWidth =0., newHeight =0.;
     QImage photoToDraw;
 
     int rectPhotoWidth  = static_cast<int>(rectPhoto.width());

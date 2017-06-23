@@ -482,7 +482,7 @@ void PCMainUI::from_main_UI_connections()
 
             QFile file(filePath);
             if(!file.open(QIODevice::WriteOnly | QIODevice::Text)){
-                return false;
+                return;
             }
 
             QString dirResourcesPath = filePath;
@@ -544,9 +544,6 @@ void PCMainUI::from_main_UI_connections()
             m_ui.write_to_xml(xml);
             xml.writeEndElement();
             xml.writeEndDocument();
-
-            return true;
-
         }
 
     });

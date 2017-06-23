@@ -57,6 +57,12 @@
             <height>16777215</height>
            </size>
           </property>
+          <property name="styleSheet">
+           <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
+          </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
@@ -119,8 +125,8 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
 	border-top-right-radius: 4px;
 	border-top-left-radius: 4px;
 
-	height:3ex;
-	min-width:30ex;
+	height:15px;
+	min-width:80px;
     padding: 2px;
 }
 
@@ -241,6 +247,12 @@ QTabBar::tab:selected {
                       <width>110</width>
                       <height>16777215</height>
                      </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
                     </property>
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>
@@ -432,6 +444,12 @@ QPushButton:hover:!pressed{
                       <height>16777215</height>
                      </size>
                     </property>
+                    <property name="styleSheet">
+                     <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
+                    </property>
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>
                     </property>
@@ -544,6 +562,12 @@ QPushButton:hover:!pressed{
                   </item>
                   <item row="2" column="0">
                    <widget class="QFrame" name="frame">
+                    <property name="styleSheet">
+                     <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
+                    </property>
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>
                     </property>
@@ -599,6 +623,12 @@ QPushButton:hover:!pressed{
                       <width>0</width>
                       <height>0</height>
                      </size>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
                     </property>
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>
@@ -855,6 +885,12 @@ QPushButton:hover:!pressed{
                       <verstretch>0</verstretch>
                      </sizepolicy>
                     </property>
+                    <property name="styleSheet">
+                     <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
+                    </property>
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>
                     </property>
@@ -928,6 +964,12 @@ QPushButton:hover:!pressed{
             <height>0</height>
            </size>
           </property>
+          <property name="styleSheet">
+           <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
+          </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
@@ -992,8 +1034,8 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
     border-top: 1px solid rgb(0,106,255);
     border-radius: 0px;
 
-	height:3ex;
-	min-width:20ex;
+	height:15px;
+	min-width:80px;
     padding: 2px;
 }
 
@@ -1034,7 +1076,7 @@ QTabBar::tab:last{
 </string>
              </property>
              <property name="currentIndex">
-              <number>1</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="tabFile">
               <attribute name="title">
@@ -1214,6 +1256,12 @@ QPushButton:hover:!pressed{
                </property>
                <item row="0" column="0">
                 <widget class="QFrame" name="frame_3">
+                 <property name="styleSheet">
+                  <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
+                 </property>
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
                  </property>
@@ -1380,7 +1428,10 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                   </size>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true"/>
+                  <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
                  </property>
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
@@ -1419,6 +1470,12 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                   </item>
                   <item>
                    <widget class="QFrame" name="frame_8">
+                    <property name="styleSheet">
+                     <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
+                    </property>
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>
                     </property>
@@ -1590,6 +1647,12 @@ QPushButton {
                </item>
                <item row="0" column="4">
                 <widget class="QFrame" name="frameFormatDPI">
+                 <property name="styleSheet">
+                  <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
+                 </property>
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
                  </property>
@@ -1614,6 +1677,12 @@ QPushButton {
                   </property>
                   <item row="1" column="0">
                    <widget class="QFrame" name="frame_13">
+                    <property name="styleSheet">
+                     <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
+                    </property>
                     <property name="frameShape">
                      <enum>QFrame::StyledPanel</enum>
                     </property>
@@ -2564,6 +2633,12 @@ QPushButton {
                </item>
                <item row="4" column="0">
                 <widget class="QFrame" name="fGrid">
+                 <property name="styleSheet">
+                  <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
+                 </property>
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
                  </property>
@@ -2786,7 +2861,10 @@ QPushButton:hover:!pressed{
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true"/>
+           <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
           </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
@@ -2856,8 +2934,8 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
 	border-top-right-radius: 4px;
 	border-top-left-radius: 4px;
 
-	height:3ex;
-	min-width:30ex;
+	height:15px;
+	min-width:60px;
     padding: 2px;
 }
 
@@ -2934,6 +3012,12 @@ QTabBar::tab:selected {
                    <width>16777215</width>
                    <height>16777215</height>
                   </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
                  </property>
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
@@ -3358,13 +3442,13 @@ QTabBar::tab {
     border-top: 1px solid rgb(0,106,255);
     border-radius: 0px;
 
-	height:3.5ex;
-	min-width:5ex;
+	height:15px;
+	min-width:5px;
     padding: 2px;
 }
 
 QTabBar::tab:first{
-	min-width: 15ex;
+	min-width: 15px;
 	border-left: 1px solid rgb(0,106,255);
 	border-top-left-radius: 4px;
 
@@ -3377,7 +3461,7 @@ QTabBar::tab:first{
 
 QTabBar::tab:last{
 	 border-top-right-radius: 4px;
-
+		min-width: 15px;
 
      background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                        stop: 0 #dadbde, stop: 1 #f6f7fa);
@@ -3477,13 +3561,13 @@ QTabBar::tab {
     border-top: 1px solid rgb(0,106,255);
     border-radius: 0px;
 
-	height:3.5ex;
-	min-width:5ex;
+	height:15px;
+	min-width:5px;
     padding: 2px;
 }
 
 QTabBar::tab:first{
-	min-width: 15ex;
+	min-width: 15px;
 	border-left: 1px solid rgb(0,106,255);
 	border-top-left-radius: 4px;
 
@@ -3496,7 +3580,7 @@ QTabBar::tab:first{
 
 QTabBar::tab:last{
 	 border-top-right-radius: 4px;
-
+		min-width: 15px;
 
      background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                        stop: 0 #dadbde, stop: 1 #f6f7fa);
@@ -3602,6 +3686,8 @@ QTabWidget::pane {
     border-radius: 3px;
 }
 
+
+
 QTabBar::tab {
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                        stop: 0 #f6f7fa, stop: 1 #dadbde);
@@ -3611,8 +3697,8 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
     border-top: 1px solid rgb(0,106,255);
     border-radius: 0px;
 
-	height:3.5ex;
-	min-width:30ex;
+	height:15px;
+	min-width:30px;
     padding: 2px;
 }
 
@@ -3640,14 +3726,14 @@ QTabBar::tab:selected {
 
 
 QTabBar::tab:first{
-	min-width: 40ex;
+	min-width: 40px;
 	border-left: 1px solid rgb(0,106,255);
 	border-top-left-radius: 4px;
 }
 
 QTabBar::tab:last{
 	 border-top-right-radius: 4px;
-	min-width:25ex;
+	min-width:25px;
 }
 
 </string>
@@ -3770,6 +3856,12 @@ QWidget
                      <width>75</width>
                      <height>16777215</height>
                     </size>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
                    </property>
                    <property name="frameShape">
                     <enum>QFrame::StyledPanel</enum>
@@ -4109,6 +4201,12 @@ de page</string>
               <width>0</width>
               <height>0</height>
              </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
@@ -4862,6 +4960,12 @@ QPushButton:hover:!pressed
                <height>16777215</height>
               </size>
              </property>
+             <property name="styleSheet">
+              <string notr="true">
+QFrame{
+    border: 0px solid gray;
+}</string>
+             </property>
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
@@ -4934,8 +5038,8 @@ background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
 	border-top-right-radius: 4px;
 	border-top-left-radius: 4px;
 
-	height:3.5ex;
-	min-width:25ex;
+	height:15px;
+	min-width:100px;
     padding: 2px;
 }
 
@@ -5021,7 +5125,7 @@ QTabBar::tab:selected {
      <x>0</x>
      <y>0</y>
      <width>1277</width>
-     <height>21</height>
+     <height>19</height>
     </rect>
    </property>
   </widget>

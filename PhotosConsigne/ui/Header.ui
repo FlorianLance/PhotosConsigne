@@ -192,8 +192,8 @@ QTabBar::tab {
     border-radius: 0px;
 
 	/* size */
-	height:4ex;
-	min-width:20ex;
+	height:15px;
+	min-width:60px;
 
 	/* padding */
     padding: 2px;
