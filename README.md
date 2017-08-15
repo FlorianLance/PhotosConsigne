@@ -6,6 +6,8 @@
   <img src="https://github.com/FlorianLance/PhotosConsigne/blob/master/screenshots/album.png" alt="Exemple 1" width="800"></a>
 </p>
 
+[**CLIQUEZ ICI POUR ACCEDER AUX TELECHARGEMENTS**](https://github.com/FlorianLance/PhotosConsigne/wiki/T%C3%A9l%C3%A9chargements "Téléchargements")
+
 **PhotosConsigne** est un logiciel léger et rapide servant à générer des documents PDF à partir d'un dossier d'images.
 Chaque image peut-être associé à un "texte riche" global ou pas et également contenir d'autres images. Il a été conçu de façon à pouvoir changer très rapidement les paramètres (quantités d'images par page, orientation, alignements, police du texte...) et de visualiser les modifications en temps réel.
 
@@ -15,7 +17,6 @@ J'ai réalisé ce logiciel sur mon temps libre, sa conception m'a demandé des c
 
 Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa pérennité en faisant [**un don en cliquant ici.**](https://www.paypal.me/PhotosConsigne "Faire un don PayPal")
 
-[**CLIQUEZ ICI POUR ACCEDER AUX TELECHARGEMENTS**](https://github.com/FlorianLance/PhotosConsigne/wiki/T%C3%A9l%C3%A9chargements "Téléchargements")
 
 [**CLIQUEZ ICI POUR ACCEDER A LA FAQ (FOIRE AUX QUESTIONS)**](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
 
