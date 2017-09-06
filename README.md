@@ -10,12 +10,11 @@ J'ai réalisé ce logiciel sur mon temps libre, sa conception m'a demandé des c
 
 Si vous trouvez ce programme utile, vous pouvez me remercier et contribuer à sa pérennité en faisant [**un don en cliquant ici.**](https://www.paypal.me/PhotosConsigne "Faire un don PayPal")
 
-[**CLIQUEZ ICI POUR ACCEDER AUX TELECHARGEMENTS**](https://github.com/FlorianLance/PhotosConsigne/wiki/T%C3%A9l%C3%A9chargements "Téléchargements")
+[**TELECHARGEMENTS**](https://github.com/FlorianLance/PhotosConsigne/wiki/T%C3%A9l%C3%A9chargements "Téléchargements")
 
-[**CLIQUEZ ICI POUR ACCEDER A LA FAQ (FOIRE AUX QUESTIONS)**](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
+[**VIDEOS**](https://github.com/FlorianLance/PhotosConsigne/wiki/Tutoriels "Tutoriels")
 
-[**CLIQUEZ ICI POUR ACCEDER AUX TUTORIELS**](https://github.com/FlorianLance/PhotosConsigne/wiki/Tutoriels "Tutoriels")
-
+[**FAQ**](https://github.com/FlorianLance/PhotosConsigne/wiki/FAQ:-Foire-aux-questions "FAQ")
 
  ## Exemples d'utilisations
 
