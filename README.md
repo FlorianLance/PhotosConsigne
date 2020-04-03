@@ -1,3 +1,4 @@
+(version 5.0 en préparation avec une nouvelle interface)
 
  # PhotosConsigne 4.0
 
